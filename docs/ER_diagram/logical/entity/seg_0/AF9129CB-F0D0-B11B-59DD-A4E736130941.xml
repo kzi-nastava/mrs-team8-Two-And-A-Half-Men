@@ -1,0 +1,112 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="AF9129CB-F0D0-B11B-59DD-A4E736130941" name="VEHICLE">
+<createdBy>Mihajlo</createdBy>
+<createdTime>2025-12-08 15:19:27 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="B08C3CAD-4229-1C18-9438-D39DFB5BB399">
+<createdBy>Mihajlo</createdBy>
+<createdTime>2025-12-08 15:20:10 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="model" id="79EB17D6-B2E7-7FC1-4432-183178B65F23">
+<createdBy>Mihajlo</createdBy>
+<createdTime>2025-12-08 15:20:21 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="plateNumber" id="3A747CE9-3EE8-D808-354C-F756C85948C7">
+<createdBy>Mihajlo</createdBy>
+<createdTime>2025-12-08 15:21:16 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="numberOfSeats" id="F807B5EF-5394-EA88-0572-3A0432037C4B">
+<createdBy>Mihajlo</createdBy>
+<createdTime>2025-12-08 15:22:56 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="typeId" id="9785A76A-7916-A0CE-AD68-7D3D260F1AE0">
+<createdBy>Mihajlo</createdBy>
+<createdTime>2025-12-08 15:30:11 UTC</createdTime>
+<generatorID>EC5784F4-8DBD-FCF6-1C22-FC3646DD3F5F</generatorID>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<referedAttribute>1D002C2F-7920-0937-DAA9-74E3F7B00893</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ownerId" id="15A13EDF-0882-888E-CC24-B663739670B4">
+<createdBy>Mihajlo</createdBy>
+<createdTime>2025-12-08 15:37:39 UTC</createdTime>
+<generatorID>F2E58F51-A623-8736-FA34-4712920F9E68</generatorID>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<referedAttribute>77F72364-15EC-A404-9CF9-E5676DEA9B5D</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="02959C8F-EB49-6C33-25A8-7CBAA2C4A07C" name="VEHICLE PK">
+<createdBy>Mihajlo</createdBy>
+<createdTime>2025-12-08 15:20:17 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>B08C3CAD-4229-1C18-9438-D39DFB5BB399</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

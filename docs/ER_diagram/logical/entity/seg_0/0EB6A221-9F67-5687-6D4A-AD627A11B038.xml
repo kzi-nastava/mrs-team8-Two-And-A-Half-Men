@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="0E8D09AB-F711-AB22-A534-E045502E8DA5" name="VEHICLE_TYPE">
-<createdBy>Mihajlo</createdBy>
-<createdTime>2025-12-08 15:27:06 UTC</createdTime>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="0EB6A221-9F67-5687-6D4A-AD627A11B038" name="DRIVER_ACTIVITY">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 17:45:06 UTC</createdTime>
 <ownerDesignName>ER_diagram</ownerDesignName>
 <engineerTo>
 <item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
@@ -15,34 +15,21 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="id" id="1D002C2F-7920-0937-DAA9-74E3F7B00893">
-<createdBy>Mihajlo</createdBy>
-<createdTime>2025-12-08 15:27:51 UTC</createdTime>
+<Attribute name="startActivity" id="ED76E731-3602-0131-A23A-18F1FB078BBB">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 17:46:53 UTC</createdTime>
 <ownerDesignName>ER_diagram</ownerDesignName>
 <engineerTo>
 <item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>50</dataTypeSize>
-<ownDataTypeParameters>50,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="name" id="635EFFC3-E817-BD2A-79A1-72C0D1AB0940">
-<createdBy>Mihajlo</createdBy>
-<createdTime>2025-12-08 15:28:08 UTC</createdTime>
-<ownerDesignName>ER_diagram</ownerDesignName>
-<engineerTo>
-<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
-</engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT040</logicalDatatype>
+<logicalDatatype>LOGDT008</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="description" id="D275A61E-DA17-C90A-6271-B94CD43EB300">
-<createdBy>Mihajlo</createdBy>
-<createdTime>2025-12-08 15:28:16 UTC</createdTime>
+<Attribute name="endActivity" id="F4D325C5-904D-452C-F9B7-21603251EA63">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 17:47:07 UTC</createdTime>
 <ownerDesignName>ER_diagram</ownerDesignName>
 <engineerTo>
 <item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
@@ -50,33 +37,36 @@
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT040</logicalDatatype>
+<logicalDatatype>LOGDT008</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="price" id="CDEA813E-E4BA-293F-94BF-037823D8DBC7">
-<createdBy>Mihajlo</createdBy>
-<createdTime>2025-12-08 15:28:36 UTC</createdTime>
+<Attribute name="driverId" id="E4BB001E-11C7-A945-9094-2714D3C33198">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 17:47:57 UTC</createdTime>
+<generatorID>0A282ACC-DD7B-FC63-DE6E-F1A687E094F2</generatorID>
 <ownerDesignName>ER_diagram</ownerDesignName>
 <engineerTo>
 <item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
 </engineerTo>
+<referedAttribute>77F72364-15EC-A404-9CF9-E5676DEA9B5D</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT020</logicalDatatype>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="78E2FEC2-A530-3ED9-32FA-BD2C7E56B79A" name="VEHICLE_TYPE PK">
-<createdBy>Mihajlo</createdBy>
-<createdTime>2025-12-08 15:28:06 UTC</createdTime>
+<identifier id="B36BDF8C-94D5-5DF5-C977-690E107AAAC5" name="DRIVERACTIVITY PK">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 17:47:57 UTC</createdTime>
 <ownerDesignName>ER_diagram</ownerDesignName>
 <engineerTo>
 <item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>1D002C2F-7920-0937-DAA9-74E3F7B00893</attributeRef>
+<attributeRef>E4BB001E-11C7-A945-9094-2714D3C33198</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Relation_20" directorySegmentName="seg_0" id="116AC866-F0EF-64C0-D038-269C73561E4C">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 17:58:43 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>true</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>DEC3BAC7-28BA-6C5C-2262-5F2ADBCF9F45</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>B97F5CC4-30A8-8663-C3E5-A2E54B9C587E</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

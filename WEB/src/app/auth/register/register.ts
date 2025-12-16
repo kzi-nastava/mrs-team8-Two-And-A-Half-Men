@@ -3,6 +3,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/core';
+
 import { Auth } from '../../service/auth';
 
 @Component({
@@ -10,9 +13,10 @@ import { Auth } from '../../service/auth';
   imports: [ ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './register.html',
   standalone: true,
-  styleUrl: './register.css',
+  styleUrls: ['./register.css'],
 })
 export class Register {
+  constructor(@Inject(DOCUMENT) private document: Document, private authService: Auth) {}
   step = 1;
   registerForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
@@ -34,24 +38,36 @@ export class Register {
       const email = this.registerForm.get('email')?.value ?? '';
       const password = this.registerForm.get('password')?.value ?? '';
       const confirmPassword = this.registerForm.get('confirmPassword')?.value ?? '';
-
+      const errorEl = document.getElementById('error-register');
+       if (errorEl) {
+          errorEl.innerHTML = "";
+        }
       if (password !== confirmPassword) {
-        alert('Passwords do not match.');
+        if (errorEl) {
+          errorEl.innerHTML = "Passwords do not match";
+        }
         return;
-      }
-      
+      }      
       const user = {
+        id: null,
         firstName,
         lastName,
-        phoneNumber,
+        phone : phoneNumber,
         address,
         email,
-        password
+        password,
+        imgUrl : null,
+        isActive: null,
+        isBlocked: null,
+        role: null
       };
-      console.log('Registration successful', user);
-      alert(`Registration successful! Welcome, ${firstName} ${lastName}!`);
-      // Here you would typically send the user data to your backend for registration
-      
+      const result = this.authService.Registar(user);
+      if(result != "") { 
+        if (errorEl) {
+          errorEl.innerHTML = result;
+        }
+        return;
+      }
     } else {
       console.log('Form is invalid');
       alert('Please fill in the form correctly.');

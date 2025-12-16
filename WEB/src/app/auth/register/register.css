@@ -79,7 +79,7 @@
   color: #fff;
   border: none;
   border-radius: 5px;
-  font-size: 2rem;
+  font-size: 1.5rem;
   cursor: pointer;
 }
 .user-form .submit-btn:hover {
@@ -160,4 +160,10 @@ small {
   width: 80%;
   margin-left: 10%;
   
+}
+#error-register{ 
+    color: #ff4d4d;
+    font-size: 1.2rem;
+    width: 80%;
+    margin-left: 10%;
 }

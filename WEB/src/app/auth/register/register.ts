@@ -49,17 +49,12 @@ export class Register {
         return;
       }      
       const user = {
-        id: null,
         firstName,
         lastName,
         phone : phoneNumber,
         address,
         email,
         password,
-        imgUrl : null,
-        isActive: null,
-        isBlocked: null,
-        role: null
       };
       const result = this.authService.Registar(user);
       if(result != "") { 

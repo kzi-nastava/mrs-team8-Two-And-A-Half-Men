@@ -48,9 +48,9 @@ public login(email: string, password: string, rememberMe: boolean): User | null 
 public forgotPassword(email: string): boolean {
     const users = this._users();
     const user = users.find(u => u.email === email);
-    return !!user;  
+    return !!user;
   }
-public Registar(user : User): string  { 
+public Registar(user : User): string  {
   // check if a user with the same email already exists
   const emailExists = this._users().some(u => u.email === user.email);
   if (emailExists) {

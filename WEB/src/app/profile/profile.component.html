@@ -4,6 +4,38 @@
 
 	<!-- Main Content -->
 	<div class="profile-content">
+
+		<!-- Add this section in profile.component.html right before the tab-navigation div -->
+
+		<!-- Pending Review Alert -->
+		<div class="pending-review-alert">
+			<div class="alert-icon">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+					<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+					<path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+				</svg>
+			</div>
+			<div class="alert-content">
+				<h4 class="alert-title">Pending Review</h4>
+				<p class="alert-message">Your profile changes are currently under review by the administrator. You will be notified once they are approved.</p>
+				<div class="pending-changes-list">
+					<div class="pending-item">
+						<span class="change-field">Phone number:</span>
+						<span class="change-value">+381641234567 → +381641234999</span>
+					</div>
+					<div class="pending-item">
+						<span class="change-field">Vehicle model:</span>
+						<span class="change-value">Fiat Punto → Toyota Corolla</span>
+					</div>
+				</div>
+			</div>
+			<button class="cancel-button">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+					<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+				</svg>
+				Cancel Request
+			</button>
+		</div>
 		<!-- Tab Navigation -->
 		<div class="tab-navigation">
 			<button

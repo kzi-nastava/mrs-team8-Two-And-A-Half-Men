@@ -1,0 +1,62 @@
+<h2>History</h2>
+
+<div class="filter-section">
+  <div class="sort-controls">
+    <span class="sort-label">Date</span>
+    <div class="sort-buttons">
+      <button class="sort-btn">ASC</button>
+      <button class="sort-btn">DSC</button>
+    </div>
+  </div>
+  
+  <div class="date-inputs">
+    <div class="date-input-group">
+      <label class="date-label">Start Date:</label>
+      <input type="date" class="date-input">
+    </div>
+    <div class="date-input-group">
+      <label class="date-label">End Date:</label>
+      <input type="date" class="date-input">
+    </div>
+  </div>
+  
+  <button class="filter-btn">Filter</button>
+</div>
+
+<ul class="ride-list">
+  <li *ngFor="let ride of rides"
+      (click)="selectRide(ride)"
+      [class.selected]="ride === selectedRide">
+    
+    <div class="ride-content">
+      <div class="route-info">
+        <div class="location" *ngIf="ride.path">{{ ride.path }}</div>
+        <div class="info-item" *ngIf="ride.userEmail">
+          <strong>User:</strong> {{ ride.userEmail }}
+        </div>
+      </div>
+      
+      <div class="time-info">
+        <div *ngIf="ride.scheduledAt">
+          <div class="time-label">Scheduled:</div>
+          <div class="time-value">{{ ride.scheduledAt | date:'dd.MM.yyyy HH:mm' }}</div>
+        </div>
+        <div *ngIf="ride.startedAt">
+          <div class="time-label">Started:</div>
+          <div class="time-value">{{ ride.startedAt | date:'dd.MM.yyyy HH:mm' }}</div>
+        </div>
+        <div *ngIf="ride.endedAt">
+          <div class="time-label">Ended:</div>
+          <div class="time-value">{{ ride.endedAt | date:'dd.MM.yyyy HH:mm' }}</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="ride-details">
+      <div *ngIf="ride.status"><strong>Status:</strong> {{ ride.status }}</div>
+      <div *ngIf="ride.cost"><strong>Price:</strong> {{ ride.cost }} RSD</div>
+      <div *ngIf="ride.passangersNumber"><strong>Passengers:</strong> {{ ride.passangersNumber }}</div>
+      <div *ngIf="ride.cancelationReason"><strong>Cancellation:</strong> {{ ride.cancelationReason }}</div>
+    </div>
+  </li>
+</ul>

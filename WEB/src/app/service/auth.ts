@@ -50,4 +50,25 @@ public forgotPassword(email: string): boolean {
     const user = users.find(u => u.email === email);
     return !!user;  
   }
+public Registar(user : User): string  { 
+  // check if a user with the same email already exists
+  const emailExists = this._users().some(u => u.email === user.email);
+  if (emailExists) {
+    return "You already have an account";
+  }
+
+  // assign a new id and default fields, then add the user immutably
+  const newUser: User = {
+    ...user,
+    id: String(this._nextId++),
+    role: user.role ?? 'user',
+    imgUrl: user.imgUrl ?? '',
+    isBlocked: user.isBlocked ?? false,
+    isActive: user.isActive ?? true
+  };
+
+  this._users.set([...this._users(), newUser]);
+
+  return "";
+}
 }

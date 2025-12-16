@@ -9,10 +9,10 @@ import { Auth } from '../../service/auth';
   selector: 'app-register',
   imports: [ ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './register.html',
+  standalone: true,
   styleUrl: './register.css',
 })
 export class Register {
-
   step = 1;
   registerForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),

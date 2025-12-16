@@ -6,8 +6,10 @@
   overflow: hidden;
   align-items: flex-end;
   margin-left: -30vw;
+  z-index: 3;
 }
 .user-form {
+  z-index: 2;
   align-self: center;
   display: flex;
   flex-direction: column;
@@ -129,7 +131,7 @@ small {
     font-size: 1rem;
   }
   .user-form h2 {
-    margin-bottom: 10px;
+    margin-bottom: 3rem;
   }
   .user-form .form-group input {
     font-size: 1rem;
@@ -138,8 +140,6 @@ small {
 .user-form .form-group {
   height: 3.2rem;
 }
-
-  
 }
 #rememberMeGroup {
   width: 80%;

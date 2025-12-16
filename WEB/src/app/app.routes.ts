@@ -5,6 +5,7 @@ import { Register } from './auth/register/register';
 import {ProfileComponent} from './profile/profile.component';
 import { DriversHistoryComponent } from './drivers-history/drivers-history';
 import { App } from './app';
+import { NavbarComponent } from './navbar/navbar';
 
 
 export const routes: Routes = [
@@ -13,5 +14,6 @@ export const routes: Routes = [
     { path: 'register', component: Register, data: { animation: 'register' } },
     { path: 'drivers-history', component: DriversHistoryComponent },
     { path: 'profile', component: ProfileComponent},
+    { path: 'navbar', component: NavbarComponent},
     { path: '', component: App }
 ];

@@ -57,7 +57,6 @@ Nothing from the previous sprint.
 - S2.10 - Web navbar - KT1
 - S1.3-1 - User profile page - web - visual
 - S2.5-1 - Drivers ride history list page - web - visual
-- S2.5-3 - Drivers ride history details page - web - visual
 - S3.2-1 - Login page - web - visual
 - S3.3-1 - Registration page - web - visual
 

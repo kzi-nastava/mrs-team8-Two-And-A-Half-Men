@@ -21,7 +21,7 @@ Nothing from the previous sprint.
 |----|------------|----------|---------------------------|
 
 
-## Tasks
+## Added Tasks
 
 | ID | User Story ID | Title | Priority | Estimation (Story Points) |
 |----|------|------|----------|---------------------------|

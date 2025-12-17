@@ -18,34 +18,33 @@
 
 | ID | Title | Priority | Estimation (Story Points) | Status | Notes |
 |----|-------|----------|---------------------------|--------|-------|
-| SA.1 | ER database diagram | High | 3 |  |  |
-| SA.2 | Figma web design - KT1 | High | 13 |  |  |
-| S1.17 | Setup projects | Medium | 1 |  |  |
-| S2.10 | Web navbar - KT1 | Medium | 2 |  |  |
-| S1.3-1 | User profile page - web - visual | Medium | 2 |  |  |
-| S2.5-1 | Drivers ride history list page - web - visual | Medium | 2 |  |  |
-| S3.2-1 | Login page - web - visual | Medium | 2 |  |  |
-| S3.3-1 | Registration page - web - visual | Medium | 2 |  |  |
+| SA.1 | ER database diagram | High | 3 | Done | - |
+| SA.2 | Figma web design - KT1 | High | 13 | Done | - |
+| S1.17 | Setup projects | Medium | 1 | Done | - |
+| S2.10 | Web navbar - KT1 | Medium | 2 | Done | - |
+| S1.3-1 | User profile page - web - visual | Medium | 2 | Done | - |
+| S2.5-1 | Drivers ride history list page - web - visual | Medium | 2 | Done | - |
+| S3.2-1 | Login page - web - visual | Medium | 2 | Done | - |
+| S3.3-1 | Registration page - web - visual | Medium | 2 | Done | - |
 
 
 ## Metrics & Progress
 
 - Planned Story Points: 27
-- Completed Story Points: 
+- Completed Story Points: 27
 - Team Velocity: 
 
 ## Challenges & Observations
 
--
--
+- New tools and technologies introduced some initial learning curve
 
 ## Feedback & Discussion
 
-- Feedback from TA:
-- Questions / Suggestions:
+- Feedback from TA: ok
+- Questions / Suggestions: none
 
 ## Next Steps / Next Sprint
 
-- Planned stories or tasks for next sprint:
-- Carry-over tasks: 
+- Planned stories or tasks for next sprint: mobile interface for KT1 and backend endpoints for KT1
+- Carry-over tasks: none
 

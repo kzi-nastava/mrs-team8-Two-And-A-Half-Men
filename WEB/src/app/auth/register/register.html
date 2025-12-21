@@ -29,8 +29,14 @@
                 <input type="phoneNumber" id="phoneNumber" formControlName="phoneNumber" required placeholder=" ">
                 <label for="phoneNumber" id="focus">Phone Number</label>
             @if (registerForm.get('phoneNumber')?.invalid && (registerForm.get('phoneNumber')?.dirty || registerForm.get('phoneNumber')?.touched)) {
+                      
                       <small> 
+                            @if (registerForm.get('phoneNumber')?.errors?.['required']) {
                         Phone Number is required
+                            }
+                            @else if (registerForm.get('phoneNumber')?.errors?.['pattern']) {
+                                Phone number format is invalid (e.g. 381601234567)                            
+                              }
                       </small>
                   }
             </div>
@@ -53,6 +59,7 @@
                       <small> 
                         Email is required
                       </small>
+            
                   }
             </div>
             <div class="form-group">

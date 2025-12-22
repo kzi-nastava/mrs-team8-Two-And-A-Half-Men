@@ -1,24 +1,90 @@
 package com.project.mobile;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.material.navigation.NavigationView;
+import com.project.mobile.databinding.ActivityMainBinding;
 
+import java.util.HashSet;
+import java.util.Set;
+
+
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private ActivityMainBinding binding;
+    private ActionBarDrawerToggle drawerToggle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolbar);
+        setupNavigationDrawer();
+        setupBottomNavBarRegistered();
+
+
+    }
+    private void setupBottomNavBarRegistered(){
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            int containerId = binding.fragmentContainerViewTag.getId();
+            int itemId = item.getItemId();
+            if(itemId == R.id.nav_home)
+            {
+                FragmentTransition.to(new HomeRegistered(), this, false, containerId);
+                return true;
+            } else if(itemId == R.id.nav_profile)
+            {
+                FragmentTransition.to(new ProfileFragment(), this, false, containerId);
+                return true;
+            }
+            else if(itemId == R.id.nav_active_drive)
+            {
+                FragmentTransition.to(new ActiveDrives(), this, false, containerId);
+                return true;
+            }
+            else if(itemId == R.id.nav_history)
+            {
+                FragmentTransition.to(new History(), this, false, containerId);
+                return true;
+            }
+            else if(itemId == R.id.nav_live_chat)
+            {
+                FragmentTransition.to(new LiveChat(), this, false, containerId);
+                return true;
+            }
+            return false;
         });
+    }
+    private void setupNavigationDrawer(){
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                binding.drawerLayout,
+                binding.toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+        );
+        binding.drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        binding.navView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        return false;
     }
 }

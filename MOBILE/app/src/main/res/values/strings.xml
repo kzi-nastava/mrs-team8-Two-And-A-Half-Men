@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MOBILE</string>
+    <string name="register_text">Don\'t have an account? Sign Up</string>
+    <string name="paswort_forgot_string">Forgot your password?</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="remember_me">remember me</string>
+    <string name="login_title">Login</string>
 </resources>

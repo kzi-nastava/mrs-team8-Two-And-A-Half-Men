@@ -5,36 +5,29 @@ import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.project.mobile.databinding.ActivityAdminBinding;
 import com.project.mobile.databinding.ActivityMainBinding;
+import com.project.mobile.databinding.ActivityUnregisterBinding;
 
-import java.util.HashSet;
-import java.util.Set;
-
-
-
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private ActivityMainBinding binding;
+public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private ActivityAdminBinding binding;
     private ActionBarDrawerToggle drawerToggle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
-
+        setupNavigationDrawer();
         setupBottomNavBarRegistered();
 
 
@@ -45,21 +38,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int itemId = item.getItemId();
             if(itemId == R.id.nav_home)
             {
-                FragmentTransition.to(new HomeRegistered(), this, false, containerId);
+                FragmentTransition.to(new LiveChat(), this, false, containerId);
                 return true;
             } else if(itemId == R.id.nav_profile)
             {
-                FragmentTransition.to(new ProfileFragment(), this, false, containerId);
+                FragmentTransition.to(new LiveChat(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_active_drive)
             {
-                FragmentTransition.to(new ActiveDrives(), this, false, containerId);
+                FragmentTransition.to(new LiveChat(), this, false, containerId);
                 return true;
             }
-            else if(itemId == R.id.nav_history)
+            else if(itemId == R.id.nav_panic_button)
             {
-                FragmentTransition.to(new History(), this, false, containerId);
+                FragmentTransition.to(new LiveChat(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_live_chat)
@@ -81,10 +74,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         binding.drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         binding.navView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+        int containerId = binding.fragmentContainerViewTag.getId();
+        if(menuItem.getItemId() == R.id.registe_driver)
+        {
+            FragmentTransition.to(new LiveChat(), this, false, containerId);
+            return true;
+            
+        } else if (menuItem.getItemId() == R.id.driver_profile_change_approval) {
+            FragmentTransition.to(new LiveChat(), this, false, containerId);
+            return true;
+        } else if (menuItem.getItemId() == R.id.blocking) {
+            FragmentTransition.to(new LiveChat(), this, false, containerId);
+            return true;
+        } else if (menuItem.getItemId() == R.id.nav_history) {
+            FragmentTransition.to(new LiveChat(), this, false, containerId);
+            return true;
+        } else if (menuItem.getItemId() == R.id.price_management) {
+            FragmentTransition.to(new LiveChat(), this, false, binding.fragmentContainerViewTag.getId());
+            return true;
+        }
         return false;
     }
 }

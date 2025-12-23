@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -23,13 +25,23 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        binding = ActivityAdminBinding.inflate(getLayoutInflater());
+            binding = ActivityAdminBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
         setupNavigationDrawer();
         setupBottomNavBarRegistered();
-
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    setEnabled(false); // disable callback
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
 
     }
     private void setupBottomNavBarRegistered(){
@@ -84,21 +96,27 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         if(menuItem.getItemId() == R.id.registe_driver)
         {
             FragmentTransition.to(new LiveChat(), this, false, containerId);
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
-            
+
         } else if (menuItem.getItemId() == R.id.driver_profile_change_approval) {
             FragmentTransition.to(new LiveChat(), this, false, containerId);
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.blocking) {
             FragmentTransition.to(new LiveChat(), this, false, containerId);
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.nav_history) {
             FragmentTransition.to(new LiveChat(), this, false, containerId);
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.price_management) {
             FragmentTransition.to(new LiveChat(), this, false, binding.fragmentContainerViewTag.getId());
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         }
         return false;
     }
+
 }

@@ -12,26 +12,26 @@
         <item
             android:id="@+id/nav_profile"
             android:title="Profile"
-            android:orderInCategory="200"
+            android:orderInCategory="500"
             android:icon="@android:drawable/ic_menu_myplaces"
             />
 
         <item
             android:id="@+id/nav_live_chat"
             android:title="Live chat"
-            android:orderInCategory="300"
+            android:orderInCategory="200"
             android:icon="@android:drawable/ic_menu_send"
             />
         <item
             android:id="@+id/nav_panic_button"
             android:title="Pancic Button"
-            android:orderInCategory="400"
+            android:orderInCategory="300"
             android:icon="@drawable/ic_launcher_background"
             />
         <item
             android:id="@+id/nav_active_drive"
             android:title="Active drives"
-            android:orderInCategory="500"
+            android:orderInCategory="400"
             android:icon="@android:drawable/ic_menu_recent_history"
             />
 

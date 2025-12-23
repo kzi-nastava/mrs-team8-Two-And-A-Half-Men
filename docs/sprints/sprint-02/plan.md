@@ -45,8 +45,8 @@ None
 |----|------|------|----------|---------------------------|
 | B1 | - | Phone number validation | Low | 1/2 |
 | B2 | - | Email validation | Low | 1/2 |
-| SA.3 | - | Backend endpoints - KT1 | High | 13 |
-| SA.4 | - | Initial mobile navigation setup | High | 13 |
+| SA.3 | - | Initial mobile navigation setup | High | 13 |
+| SA.4 | - | Backend endpoints - KT1 | High | 13 |
 | SA.5 | - | Web app refactor | Low | 5 |
 
 
@@ -54,8 +54,8 @@ None
 
 - B1 - Phone number validation
 - B2 - Email validation
-- SA.3 - Backend endpoints - KT1
-- SA.4 - Initial mobile navigation setup
+- SA.3 - Initial mobile navigation setup
+- SA.4 - Backend endpoints - KT1
 - SA.5 - Web app refactor
 - S1.3-2 - User profile page - mobile - visual
 - S2.5-2 - Drivers ride history list page - mobile - visual

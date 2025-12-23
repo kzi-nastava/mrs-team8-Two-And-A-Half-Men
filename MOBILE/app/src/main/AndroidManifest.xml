@@ -21,10 +21,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+
+        </activity>
+        <activity
+            android:name=".DriverActivity"
+            android:exported="false">
+
+>
+        </activity>
+        <activity
+            android:name=".UnregisterActivity"
+            android:exported="false">
+
         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
+
+        </activity>
+        <activity
+            android:name=".DriverActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".UnregisterActivity"
+            android:exported="false">
+
+
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+
 
         </activity>
     </application>

@@ -46,9 +46,13 @@ public class UnregisterActivity extends AppCompatActivity implements NavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();
-        if (id == R.id.nav_home) {
+        if (id == R.id.home) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+
             return true;
         } else if (id == R.id.login ) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+
             return true;
         }
         return false;

@@ -1,5 +1,6 @@
 package com.project.mobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -8,10 +9,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityUnregisterBinding;
@@ -52,7 +50,8 @@ public class UnregisterActivity extends AppCompatActivity implements NavigationV
             return true;
         } else if (id == R.id.login ) {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
-
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             return true;
         }
         return false;

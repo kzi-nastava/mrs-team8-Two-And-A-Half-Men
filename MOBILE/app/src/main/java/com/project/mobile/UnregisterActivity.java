@@ -34,7 +34,7 @@ public class UnregisterActivity extends AppCompatActivity implements NavigationV
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerLayout.closeDrawer(GravityCompat.START);
                 } else {
-                    setEnabled(false); // disable callback
+                    setEnabled(false);
                     getOnBackPressedDispatcher().onBackPressed();
                 }
             }

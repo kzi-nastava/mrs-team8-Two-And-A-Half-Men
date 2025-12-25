@@ -6,27 +6,28 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import androidx.appcompat.widget.Toolbar;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class LoginActivity extends AppCompatActivity {
+import com.project.mobile.databinding.ActivityAdminBinding;
+
+public class ForgetPasswordActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private EditText username;
-    private EditText password;
-    private CheckBox rememberMe;
-    private Button loginButton;
-    private TextView forgotPassword;
+
+    private Button forgotPasswordButton;
     private TextView signUp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_forget_password);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -34,10 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         toolbar = findViewById(R.id.toolbar);
         username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
-        rememberMe = findViewById(R.id.remember_me);
-        loginButton = findViewById(R.id.login_button);
-        forgotPassword = findViewById(R.id.forgot_password);
+        forgotPasswordButton = findViewById(R.id.reset_password_button);
         signUp = findViewById(R.id.sign_up);
 
         setSupportActionBar(toolbar);
@@ -53,17 +51,15 @@ public class LoginActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> {
             finish();
         });
-        loginButton.setOnClickListener(v -> {
-            // Handle login logic here
-        });
-        forgotPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ForgetPasswordActivity.class);
-            startActivity(intent);
+        forgotPasswordButton.setOnClickListener(v -> {
+            // Handle forget password logic here
         });
         signUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
+            finish();
         });
 
     }
+
 }

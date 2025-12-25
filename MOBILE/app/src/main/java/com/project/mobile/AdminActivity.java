@@ -37,7 +37,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerLayout.closeDrawer(GravityCompat.START);
                 } else {
-                    setEnabled(false); // disable callback
+                    setEnabled(false);
                     getOnBackPressedDispatcher().onBackPressed();
                 }
             }

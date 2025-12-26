@@ -12,4 +12,14 @@
     <string name="login">Login</string>
     <string name="remember_me">remember me</string>
     <string name="login_title">Login</string>
+    <string name="sign_in">You have an account? Sign In</string>
+    <string name="next">Next</string>
+    <string name="register">Register</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="address">Address</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="back">Back</string>
+    <string name="restart_password">Restart Password</string>
 </resources>

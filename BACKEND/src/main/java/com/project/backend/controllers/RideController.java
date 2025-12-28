@@ -1,5 +1,6 @@
 package com.project.backend.controllers;
 
+import com.project.backend.DTO.CostTimeDTO;
 import com.project.backend.DTO.HistoryDTO;
 import com.project.backend.DTO.RidesInfoRequestDTO;
 import org.springframework.http.ResponseEntity;
@@ -66,8 +67,11 @@ public class RideController {
      */
     @PatchMapping("/{id}/finish")
     public ResponseEntity<?> finishRide(@PathVariable String id) {
+        CostTimeDTO costTime = new CostTimeDTO();
+        costTime.setCost(30.75);
+        costTime.setTime(45);
         return ResponseEntity.status(200)
-                .body(Map.of("message", "Ride finished successfully" ,"totalPrice",123.45));
+                .body(Map.of("message", "Ride finished successfully" ,"cost", costTime));
     }
 
     @PatchMapping("/{id}/cancel")
@@ -75,8 +79,8 @@ public class RideController {
         if(id.equals("11")){
             return ResponseEntity.ok(Map.of("message", "Ride cancelled successfully"));
         }
-        return  ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+        return  ResponseEntity.status(404)
+                .body(Map.of("error", "Ride not found"));
     }
 
     @PostMapping("/{id}/rating")

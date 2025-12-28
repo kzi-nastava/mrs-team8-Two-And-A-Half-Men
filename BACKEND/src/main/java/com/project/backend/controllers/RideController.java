@@ -132,8 +132,29 @@ public class RideController {
      */
     @PatchMapping("/{id}/finish")
     public ResponseEntity<?> finishRide(@PathVariable String id) {
-        return ResponseEntity.status(200)
-                .body(Map.of("message", "Ride finished successfully" ,"totalPrice",123.45));
+        Long rideId;
+        try {
+            rideId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Invalid ride ID format"));
+        }
+
+        // Does ride exists
+        if (rideId > 100) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("error", "Ride not found"));
+        }
+
+        // Is ride in active status
+        if (rideId == 99) {
+            return ResponseEntity.status(400)
+                    .body(Map.of("error", "Ride is not active or already finished"));
+        }
+
+        // Logic for ride finish
+
+        return ResponseEntity.ok(Map.of("status", "COMPLETED"));
     }
 
     @PatchMapping("/{id}/cancel")

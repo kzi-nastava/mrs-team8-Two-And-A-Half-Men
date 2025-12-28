@@ -3,7 +3,7 @@ package com.project.backend.DTO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class RidesInfoRequestDTO {
+public class RidesInfoDTO {
 
     private String vehicleType;
     private ArrayList<String> additionalServices;
@@ -11,10 +11,10 @@ public class RidesInfoRequestDTO {
     private LocalDateTime scheduledTime;
     private LocalDateTime scheduledAt;
 
-    public RidesInfoRequestDTO() {
+    public RidesInfoDTO() {
     }
 
-    public RidesInfoRequestDTO(String vehicleType, ArrayList<String> additionalServices,
+    public RidesInfoDTO(String vehicleType, ArrayList<String> additionalServices,
                                ArrayList<String> addressPoints, LocalDateTime scheduledTime) {
         this.vehicleType = vehicleType;
         this.additionalServices = additionalServices;

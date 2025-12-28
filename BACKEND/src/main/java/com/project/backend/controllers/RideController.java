@@ -1,10 +1,12 @@
 package com.project.backend.controllers;
 
 import com.project.backend.DTO.HistoryDTO;
+import com.project.backend.DTO.RidesInfoDTO;
 import com.project.backend.DTO.RidesInfoRequestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -17,14 +19,14 @@ public class RideController {
 
         // Dummy estimation logic
 
-        if(rideData.getAddreessPoints() == null || rideData.getAddreessPoints().size() < 2) {
+        if(rideData.getAddressesPoints() == null || rideData.getAddressesPoints().size() < 2) {
             return ResponseEntity.status(400)
                     .body(Map.of("error", "At least one address point is required for estimation") );
         }
         double estimatedPrice = 25.50;
         int estimatedTimeMinutes = 15;
         return ResponseEntity.ok(Map.of(
-                "estimatedPrice", estimatedPrice * rideData.getAddreessPoints().size() ,
+                "estimatedPrice", estimatedPrice * rideData.getAddressesPoints().size() ,
                 "estimatedTimeMinutes", estimatedTimeMinutes
         ));
     }
@@ -37,8 +39,43 @@ public class RideController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getRide(@PathVariable String id) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+        Long rideId;
+        try {
+            rideId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Invalid ride ID format"));
+        }
+
+        // Check if ride exists
+        if (rideId > 100) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("error", "Ride not found"));
+        }
+
+        // Create dummy ride data
+        RidesInfoDTO ride = createDummyRideInfo(rideId);
+
+        return ResponseEntity.ok(ride);
+    }
+
+    private RidesInfoDTO createDummyRideInfo(Long rideId) {
+        ArrayList<String> services = new ArrayList<>();
+        services.add("pet-friendly");
+        services.add("child-seat");
+        services.add("wifi");
+
+        ArrayList<String> addresses = new ArrayList<>();
+        addresses.add("Trg Republike, Beograd");
+        addresses.add("Knez Mihailova 45, Beograd");
+        addresses.add("Aerodrom Nikola Tesla, Beograd");
+
+        return new RidesInfoDTO(
+                "SEDAN",
+                services,
+                addresses,
+                LocalDateTime.now().plusHours(1)
+        );
     }
 
     @GetMapping("/{id}/location")

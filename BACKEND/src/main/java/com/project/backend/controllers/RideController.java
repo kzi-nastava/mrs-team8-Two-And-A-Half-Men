@@ -1,8 +1,6 @@
 package com.project.backend.controllers;
 
-import com.project.backend.DTO.HistoryDTO;
-import com.project.backend.DTO.RidesInfoDTO;
-import com.project.backend.DTO.RidesInfoRequestDTO;
+import com.project.backend.DTO.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,10 +83,41 @@ public class RideController {
     }
 
     @PostMapping("/{id}/notes")
-    public ResponseEntity<?> addRideNote(@PathVariable String id,
-                                         @RequestBody Map<String, Object> noteData) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+    public ResponseEntity<?> addRideNote(
+            @PathVariable String id,
+            @RequestBody NoteRequestDTO noteRequest) {
+        Long rideId;
+        try {
+            rideId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Invalid ride ID format"));
+        }
+
+        // Dummy validation if ride exists
+        if (rideId > 100) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("error", "Ride not found"));
+        }
+
+        // Text validation
+        if (noteRequest.getNoteText() == null || noteRequest.getNoteText().trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Note text is required"));
+        }
+
+        // Check if ride is active
+        if (rideId == 99) {
+            return ResponseEntity.status(400)
+                    .body(Map.of("error", "Cannot add note to completed or cancelled ride"));
+        }
+
+        // Dummy send to service
+        NoteDTO createdNote = new NoteDTO(
+                noteRequest.getNoteText()
+        );
+
+        return ResponseEntity.status(201).body(createdNote);
     }
 
     @PatchMapping("/{id}/start")

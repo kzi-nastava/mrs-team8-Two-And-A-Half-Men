@@ -7,13 +7,14 @@
             android:id="@+id/home"
             android:title="Home"
             android:orderInCategory="100"
-            android:icon="@android:drawable/alert_dark_frame"
+            android:icon="@drawable/ic_home"
+
             />
         <item
             android:id="@+id/login"
             android:title="Login"
             android:orderInCategory="200"
-            android:icon="@android:drawable/ic_menu_myplaces"
+            android:icon="@drawable/ic_login"
             />
     </group>
 </menu>

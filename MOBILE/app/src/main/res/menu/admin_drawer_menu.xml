@@ -7,19 +7,19 @@
             android:id="@+id/registe_driver"
             android:title="Register_driver"
             android:orderInCategory="100"
-            android:icon="@android:drawable/alert_dark_frame"
+            android:icon="@drawable/ic_register_driver"
             />
         <item
             android:id="@+id/driver_profile_change_approval"
             android:title="Driver profile change approval"
             android:orderInCategory="200"
-            android:icon="@android:drawable/ic_menu_myplaces"
+            android:icon="@drawable/ic_driver_changes"
             />
         <item
             android:id="@+id/blocking"
             android:title="Blocking"
             android:orderInCategory="300"
-            android:icon="@drawable/ic_launcher_background"
+            android:icon="@drawable/ic_blocking"
             />
         <item
             android:id="@+id/nav_history"
@@ -31,7 +31,7 @@
             android:id="@+id/price_management"
             android:title="Price management"
             android:orderInCategory="500"
-            android:icon="@android:drawable/ic_menu_send"
+            android:icon="@drawable/ic_price"
             />
 
     </group>

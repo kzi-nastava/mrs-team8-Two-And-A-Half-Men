@@ -39,6 +39,27 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
+
+    implementation libs.core.ktx
+    implementation libs.coordinatorlayout
+
+    // ViewPager2 for tabs
+    implementation libs.viewpager2
+
+    // CardView
+    implementation libs.cardview
+
+    // Fragment
+    implementation libs.fragment
+
+    // Gson for JSON serialization
+    implementation libs.gson
+
+    // Image loading (for profile photo)
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+    // Testing
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core

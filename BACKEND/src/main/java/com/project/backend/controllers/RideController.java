@@ -1,11 +1,11 @@
 package com.project.backend.controllers;
 
 import com.project.backend.DTO.CostTimeDTO;
-import com.project.backend.DTO.HistoryDTO;
-import com.project.backend.DTO.RidesInfoRequestDTO;
+import com.project.backend.DTO.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -18,14 +18,14 @@ public class RideController {
 
         // Dummy estimation logic
 
-        if(rideData.getAddreessPoints() == null || rideData.getAddreessPoints().size() < 2) {
+        if(rideData.getAddressesPoints() == null || rideData.getAddressesPoints().size() < 2) {
             return ResponseEntity.status(400)
                     .body(Map.of("error", "At least one address point is required for estimation") );
         }
         double estimatedPrice = 25.50;
         int estimatedTimeMinutes = 15;
         return ResponseEntity.ok(Map.of(
-                "estimatedPrice", estimatedPrice * rideData.getAddreessPoints().size() ,
+                "estimatedPrice", estimatedPrice * rideData.getAddressesPoints().size() ,
                 "estimatedTimeMinutes", estimatedTimeMinutes
         ));
     }
@@ -38,8 +38,43 @@ public class RideController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getRide(@PathVariable String id) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+        Long rideId;
+        try {
+            rideId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Invalid ride ID format"));
+        }
+
+        // Check if ride exists
+        if (rideId > 100) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("error", "Ride not found"));
+        }
+
+        // Create dummy ride data
+        RidesInfoDTO ride = createDummyRideInfo(rideId);
+
+        return ResponseEntity.ok(ride);
+    }
+
+    private RidesInfoDTO createDummyRideInfo(Long rideId) {
+        ArrayList<String> services = new ArrayList<>();
+        services.add("pet-friendly");
+        services.add("child-seat");
+        services.add("wifi");
+
+        ArrayList<String> addresses = new ArrayList<>();
+        addresses.add("Trg Republike, Beograd");
+        addresses.add("Knez Mihailova 45, Beograd");
+        addresses.add("Aerodrom Nikola Tesla, Beograd");
+
+        return new RidesInfoDTO(
+                "SEDAN",
+                services,
+                addresses,
+                LocalDateTime.now().plusHours(1)
+        );
     }
 
     @GetMapping("/{id}/location")
@@ -49,10 +84,41 @@ public class RideController {
     }
 
     @PostMapping("/{id}/notes")
-    public ResponseEntity<?> addRideNote(@PathVariable String id,
-                                         @RequestBody Map<String, Object> noteData) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+    public ResponseEntity<?> addRideNote(
+            @PathVariable String id,
+            @RequestBody NoteRequestDTO noteRequest) {
+        Long rideId;
+        try {
+            rideId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Invalid ride ID format"));
+        }
+
+        // Dummy validation if ride exists
+        if (rideId > 100) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("error", "Ride not found"));
+        }
+
+        // Text validation
+        if (noteRequest.getNoteText() == null || noteRequest.getNoteText().trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Note text is required"));
+        }
+
+        // Check if ride is active
+        if (rideId == 99) {
+            return ResponseEntity.status(400)
+                    .body(Map.of("error", "Cannot add note to completed or cancelled ride"));
+        }
+
+        // Dummy send to service
+        NoteDTO createdNote = new NoteDTO(
+                noteRequest.getNoteText()
+        );
+
+        return ResponseEntity.status(201).body(createdNote);
     }
 
     @PatchMapping("/{id}/start")
@@ -67,11 +133,29 @@ public class RideController {
      */
     @PatchMapping("/{id}/finish")
     public ResponseEntity<?> finishRide(@PathVariable String id) {
-        CostTimeDTO costTime = new CostTimeDTO();
-        costTime.setCost(30.75);
-        costTime.setTime(45);
-        return ResponseEntity.status(200)
-                .body(Map.of("message", "Ride finished successfully" ,"cost", costTime));
+        Long rideId;
+        try {
+            rideId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Invalid ride ID format"));
+        }
+
+        // Does ride exists
+        if (rideId > 100) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("error", "Ride not found"));
+        }
+
+        // Is ride in active status
+        if (rideId == 99) {
+            return ResponseEntity.status(400)
+                    .body(Map.of("error", "Ride is not active or already finished"));
+        }
+
+        // Logic for ride finish
+
+        return ResponseEntity.ok(Map.of("status", "COMPLETED"));
     }
 
     @PatchMapping("/{id}/cancel")
@@ -85,9 +169,62 @@ public class RideController {
 
     @PostMapping("/{id}/rating")
     public ResponseEntity<?> rateRide(@PathVariable String id,
-                                      @RequestBody Map<String, Object> ratingData) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+                                      @RequestBody RatingRequestDTO ratingRequest) {
+        Long rideId;
+        try {
+            rideId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Invalid ride ID format"));
+        }
+
+        if (rideId > 100) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("error", "Ride not found"));
+        }
+
+        if (rideId == 98) {
+            return ResponseEntity.status(400)
+                    .body(Map.of("error", "Ride is not completed yet"));
+        }
+
+        if (rideId == 97) {
+            return ResponseEntity.status(400)
+                    .body(Map.of("error", "Ride has already been rated"));
+        }
+
+        if (rideId == 96) {
+            return ResponseEntity.status(400)
+                    .body(Map.of("error", "Rating period has expired (3 days limit)"));
+        }
+
+        if (ratingRequest.getVehicleRating() == null ||
+                ratingRequest.getVehicleRating() < 1 ||
+                ratingRequest.getVehicleRating() > 5) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Vehicle rating must be between 1 and 5"));
+        }
+
+        if (ratingRequest.getDriverRating() == null ||
+                ratingRequest.getDriverRating() < 1 ||
+                ratingRequest.getDriverRating() > 5) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Driver rating must be between 1 and 5"));
+        }
+
+        // Service
+
+        RatingDTO response = new RatingDTO(
+                rideId * 100, // dummy ratingId
+                rideId,
+                ratingRequest.getVehicleRating(),
+                ratingRequest.getDriverRating(),
+                ratingRequest.getComment(),
+                LocalDateTime.now(),
+                ratingRequest.getRatedBy()
+        );
+
+        return ResponseEntity.status(201).body(response);
     }
 
     @GetMapping("/history")

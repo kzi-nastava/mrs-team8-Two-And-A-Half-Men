@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
+            android:backgroundTint="@color/primary"
             app:title="@string/title"
             app:titleTextColor="@android:color/white"
             app:navigationIconTint="@android:color/white"

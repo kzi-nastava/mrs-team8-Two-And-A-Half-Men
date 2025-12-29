@@ -5,20 +5,29 @@ import java.util.ArrayList;
 
 public class RidesInfoRequestDTO {
 
-    private String vihecleType;
+    private String vehicleType;
     private ArrayList<String> additionalServices;
-    private ArrayList<String> addreessPoints;
+    private ArrayList<String> addressesPoints;
     private LocalDateTime scheduledTime;
-    private LocalDateTime sheculedAt;
+    private LocalDateTime scheduledAt;
 
-
-
-    public String getVihecleType() {
-        return vihecleType;
+    public RidesInfoRequestDTO() {
     }
 
-    public void setVihecleType(String vihecleType) {
-        this.vihecleType = vihecleType;
+    public RidesInfoRequestDTO(String vehicleType, ArrayList<String> additionalServices,
+                               ArrayList<String> addressPoints, LocalDateTime scheduledTime) {
+        this.vehicleType = vehicleType;
+        this.additionalServices = additionalServices;
+        this.addressesPoints = addressPoints;
+        this.scheduledTime = scheduledTime;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     public ArrayList<String> getAdditionalServices() {
@@ -29,12 +38,12 @@ public class RidesInfoRequestDTO {
         this.additionalServices = additionalServices;
     }
 
-    public ArrayList<String> getAddreessPoints() {
-        return addreessPoints;
+    public ArrayList<String> getAddressesPoints() {
+        return addressesPoints;
     }
 
-    public void setAddreessPoints(ArrayList<String> addreessPoints) {
-        this.addreessPoints = addreessPoints;
+    public void setAddressPoints(ArrayList<String> addressPoints) {
+        this.addressesPoints = addressPoints;
     }
 
     public LocalDateTime getScheduledTime() {
@@ -45,12 +54,12 @@ public class RidesInfoRequestDTO {
         this.scheduledTime = scheduledTime;
     }
 
-    public LocalDateTime getSheculedAt() {
-        return sheculedAt;
+    public LocalDateTime getScheduledAt() {
+        return scheduledAt;
     }
 
-    public void setSheculedAt(LocalDateTime sheculedAt) {
-        this.sheculedAt = sheculedAt;
+    public void setScheduledAt(LocalDateTime scheduledAt) {
+        this.scheduledAt = scheduledAt;
     }
 
 }

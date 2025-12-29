@@ -7,19 +7,19 @@
             android:id="@+id/nav_home"
             android:title="Home"
             android:orderInCategory="100"
-            android:icon="@android:drawable/alert_dark_frame"
+            android:icon="@drawable/ic_home"
             />
         <item
             android:id="@+id/nav_profile"
             android:title="Profile"
             android:orderInCategory="500"
-            android:icon="@android:drawable/ic_menu_myplaces"
+            android:icon="@drawable/ic_profile"
             />
         <item
             android:id="@+id/nav_active_drive"
             android:title="Active drive"
             android:orderInCategory="200"
-            android:icon="@drawable/ic_launcher_background"
+            android:icon="@drawable/ic_active_drive"
             />
         <item
             android:id="@+id/nav_history"

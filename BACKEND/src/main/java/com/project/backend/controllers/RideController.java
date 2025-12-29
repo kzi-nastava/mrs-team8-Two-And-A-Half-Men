@@ -16,7 +16,7 @@ public class RideController {
     @PostMapping("/estimates")
     public ResponseEntity<?> estimateRide(@RequestBody RidesInfoRequestDTO rideData) {
 
-        // Dummy estimation logic
+
 
         if(rideData.getAddressesPoints() == null || rideData.getAddressesPoints().size() < 2) {
             return ResponseEntity.status(400)
@@ -149,13 +149,16 @@ public class RideController {
 
         // Is ride in active status
         if (rideId == 99) {
+
             return ResponseEntity.status(400)
                     .body(Map.of("error", "Ride is not active or already finished"));
         }
 
         // Logic for ride finish
-
-        return ResponseEntity.ok(Map.of("status", "COMPLETED"));
+        CostTimeDTO costTime = new CostTimeDTO();
+        costTime.setCost(45.75);
+        costTime.setTime(32);
+        return ResponseEntity.ok(Map.of("status", "COMPLETED" , "costTime", costTime));
     }
 
     @PatchMapping("/{id}/cancel")

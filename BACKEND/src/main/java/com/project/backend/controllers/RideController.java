@@ -1,5 +1,6 @@
 package com.project.backend.controllers;
 
+import com.project.backend.DTO.CostTimeDTO;
 import com.project.backend.DTO.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class RideController {
     @PostMapping("/estimates")
     public ResponseEntity<?> estimateRide(@RequestBody RidesInfoRequestDTO rideData) {
 
-        // Dummy estimation logic
+
 
         if(rideData.getAddressesPoints() == null || rideData.getAddressesPoints().size() < 2) {
             return ResponseEntity.status(400)
@@ -148,13 +149,16 @@ public class RideController {
 
         // Is ride in active status
         if (rideId == 99) {
+
             return ResponseEntity.status(400)
                     .body(Map.of("error", "Ride is not active or already finished"));
         }
 
         // Logic for ride finish
-
-        return ResponseEntity.ok(Map.of("status", "COMPLETED"));
+        CostTimeDTO costTime = new CostTimeDTO();
+        costTime.setCost(45.75);
+        costTime.setTime(32);
+        return ResponseEntity.ok(Map.of("status", "COMPLETED" , "costTime", costTime));
     }
 
     @PatchMapping("/{id}/cancel")
@@ -162,8 +166,8 @@ public class RideController {
         if(id.equals("11")){
             return ResponseEntity.ok(Map.of("message", "Ride cancelled successfully"));
         }
-        return  ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+        return  ResponseEntity.status(404)
+                .body(Map.of("error", "Ride not found"));
     }
 
     @PostMapping("/{id}/rating")

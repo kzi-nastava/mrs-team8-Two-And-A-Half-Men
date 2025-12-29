@@ -8,5 +8,6 @@
         <item name="colorSecondaryVariant">@color/accent</item>
         <item name="android:windowBackground">@color/background_dark</item>
         <item name="android:statusBarColor">@color/primary</item>
+
     </style>
 </resources>

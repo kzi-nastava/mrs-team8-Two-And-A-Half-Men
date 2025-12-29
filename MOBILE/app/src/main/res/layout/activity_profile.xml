@@ -7,22 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_dark">
 
-    <!-- App Bar -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:elevation="4dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary"
-            app:title="TAXI, TAXI"
-            app:titleTextColor="@android:color/white"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Main Content -->
     <androidx.core.widget.NestedScrollView

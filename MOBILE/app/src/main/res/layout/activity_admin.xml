@@ -7,12 +7,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:backgroundTint="@color/background_dark"
     tools:context=".AdminActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/Admin_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+
+        >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -25,7 +28,9 @@
             app:navigationIconTint="@android:color/white"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="@color/primary"
+            />
 
         <FrameLayout
             android:id="@+id/fragment_container_view_tag"
@@ -42,11 +47,15 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/bottom_menu_nav_admin" />
+            app:menu="@menu/bottom_menu_nav_admin"
+            android:background="@color/background_dark"
+            app:itemIconTint="@color/white"
+            app:itemTextColor="@color/white"
+            app:itemActiveIndicatorStyle="@color/primary"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -58,6 +67,7 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/admin_drawer_menu"
+        android:background="@color/primary"
         />
 
 </androidx.drawerlayout.widget.DrawerLayout>

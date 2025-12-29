@@ -54,7 +54,30 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         });
         loginButton.setOnClickListener(v -> {
-            // Handle login logic here
+            if(username.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
+                if(username.getText().toString().isEmpty()){
+                    username.setError("Username is required");
+                }
+                if(password.getText().toString().isEmpty()){
+                    password.setError("Password is required");
+                }
+                return;
+            }
+            if(username.getText().toString().equals("admin") && password.getText().toString().equals("admin")){
+                Intent intent = new Intent(this, AdminActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                return;
+            }
+            if(username.getText().toString().equals("driver") && password.getText().toString().equals("driver")){
+            Intent intent = new Intent(this, DriverActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+
+            }
+
         });
         forgotPassword.setOnClickListener(v -> {
             Intent intent = new Intent(this, ForgetPasswordActivity.class);

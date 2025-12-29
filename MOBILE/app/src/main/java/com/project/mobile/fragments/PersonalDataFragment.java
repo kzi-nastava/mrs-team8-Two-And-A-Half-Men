@@ -1,5 +1,6 @@
 package com.project.mobile.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.project.mobile.R;
+import com.project.mobile.UnregisterActivity;
 import com.project.mobile.data.ProfileManager;
 import com.project.mobile.models.UserProfile;
 import com.google.android.material.textfield.TextInputEditText;
@@ -18,7 +20,7 @@ public class PersonalDataFragment extends Fragment {
 
     private TextInputEditText etFirstName, etLastName, etPhoneNumber, etAddress, etEmail;
     private TextInputEditText etNewPassword, etConfirmPassword;
-    private MaterialButton btnSavePersonal, btnChangePassword;
+    private MaterialButton btnSavePersonal, btnChangePassword, LogoutButton;
     private ProfileManager profileManager;
 
     @Nullable
@@ -49,6 +51,7 @@ public class PersonalDataFragment extends Fragment {
         etConfirmPassword = view.findViewById(R.id.etConfirmPassword);
         btnSavePersonal = view.findViewById(R.id.btnSavePersonal);
         btnChangePassword = view.findViewById(R.id.btnChangePassword);
+        LogoutButton = view.findViewById(R.id.btnLogout);
     }
 
     private void loadUserProfile() {
@@ -63,6 +66,7 @@ public class PersonalDataFragment extends Fragment {
     private void setupListeners() {
         btnSavePersonal.setOnClickListener(v -> saveUserProfile());
         btnChangePassword.setOnClickListener(v -> changePassword());
+        LogoutButton.setOnClickListener(v -> logout());
     }
 
     private void saveUserProfile() {
@@ -125,7 +129,12 @@ public class PersonalDataFragment extends Fragment {
         etNewPassword.setText("");
         etConfirmPassword.setText("");
     }
-
+    private void logout() {
+        Intent intent = new Intent(getActivity(), UnregisterActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        getActivity().finish();
+    }
     public void populateFields(UserProfile profile) {
         etFirstName.setText(profile.getFirstName());
         etLastName.setText(profile.getLastName());

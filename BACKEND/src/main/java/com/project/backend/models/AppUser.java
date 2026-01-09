@@ -30,7 +30,7 @@ public class AppUser {
     @OneToMany
     HashSet<Notification> notifications;
     @OneToMany
-    List<Massage> massages;
+    List<Message> messages;
 
 
 

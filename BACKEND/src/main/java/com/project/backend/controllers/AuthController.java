@@ -3,6 +3,8 @@ package com.project.backend.controllers;
 import com.project.backend.DTO.RegistretionDTO;
 import com.project.backend.DTO.UserLoginDTO;
 import com.project.backend.DTO.UserLoginRequestDTO;
+import com.project.backend.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1")
 public class AuthController {
+    @Autowired
+    private AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequestDTO credentials) {
@@ -31,13 +35,17 @@ public class AuthController {
 
     @PostMapping("/users/register")
     public ResponseEntity<?> registerUser(@RequestBody RegistretionDTO userData) {
-        if(userData.getUsername().equals("peraperic@gmail.com")) {
-            return ResponseEntity.status(400)
-                    .body(Map.of("error", "User already exists"));
-        }
-        return ResponseEntity.status(201)
-                .body(Map.of("message", "User registered successfully"));
+        try {
+            authService.registerCustomer(userData);
+            return ResponseEntity.ok(Map.of("message", "Registration successful. Please check your email to verify your account."));
 
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "Internal server error"));
+        }
     }
 
     @PostMapping("/drivers/register")

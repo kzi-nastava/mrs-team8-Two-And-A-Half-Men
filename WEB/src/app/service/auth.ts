@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { User } from '../auth/models/user.model';
 import { signal } from '@angular/core';
-
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
+  private readonly http = inject(HttpClient);
   private _users = signal<User[]>([{
     id: "1",
     email: "user@example.com",
@@ -71,4 +73,10 @@ public Registar(user : User): string  {
 
   return "";
 }
+
+public activateAccount(token: string): Observable<{ message: string }> {
+  // Create the service method for link to backend
+  return  this.http.post<{ message: string }>('http://localhost:8080/api/v1/activate', { token });
+}
+
 }

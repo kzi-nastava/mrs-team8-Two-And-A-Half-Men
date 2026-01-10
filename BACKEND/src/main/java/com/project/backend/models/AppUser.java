@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -23,6 +24,15 @@ public class AppUser {
     private String address;
     private String phoneNumber;
     private String imgSrc;
+    private String token;
+    private LocalDateTime tokenExpiration;
+    private Boolean isActive;
+    private Boolean isBLocked;
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    Set<Notification> notifications;
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    List<Message> messages;
+
 
     public Long getId() {
         return id;
@@ -120,15 +130,19 @@ public class AppUser {
         isBLocked = BLocked;
     }
 
-    private String token;
-    private LocalDateTime tokenExpiration;
-    private Boolean isActive;
-    private Boolean isBLocked;
-    @OneToMany
-    HashSet<Notification> notifications;
-    @OneToMany
-    List<Message> messages;
+    public Set<Notification> getNotifications() {
+        return notifications;
+    }
 
+    public void setNotifications(Set<Notification> notifications) {
+        this.notifications =  notifications;
+    }
 
+    public List<Message> getMessages() {
+        return messages;
+    }
 
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
 }

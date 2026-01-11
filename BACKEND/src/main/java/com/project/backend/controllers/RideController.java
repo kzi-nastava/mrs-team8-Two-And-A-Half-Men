@@ -2,6 +2,10 @@ package com.project.backend.controllers;
 
 import com.project.backend.DTO.CostTimeDTO;
 import com.project.backend.DTO.*;
+import com.project.backend.service.impl.RatingService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +15,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/rides")
+@RequiredArgsConstructor
 public class RideController {
+    private final RatingService ratingService;
 
     @PostMapping("/estimates")
     public ResponseEntity<?> estimateRide(@RequestBody RidesInfoRequestDTO rideData) {
@@ -171,63 +177,12 @@ public class RideController {
     }
 
     @PostMapping("/{id}/rating")
-    public ResponseEntity<?> rateRide(@PathVariable String id,
-                                      @RequestBody RatingRequestDTO ratingRequest) {
-        Long rideId;
-        try {
-            rideId = Long.parseLong(id);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Invalid ride ID format"));
-        }
+    public ResponseEntity<?> rateRide(
+            @PathVariable String id,
+            @Valid @RequestBody RatingRequestDTO ratingRequest) {
 
-        if (rideId > 100) {
-            return ResponseEntity.status(404)
-                    .body(Map.of("error", "Ride not found"));
-        }
-
-        if (rideId == 98) {
-            return ResponseEntity.status(400)
-                    .body(Map.of("error", "Ride is not completed yet"));
-        }
-
-        if (rideId == 97) {
-            return ResponseEntity.status(400)
-                    .body(Map.of("error", "Ride has already been rated"));
-        }
-
-        if (rideId == 96) {
-            return ResponseEntity.status(400)
-                    .body(Map.of("error", "Rating period has expired (3 days limit)"));
-        }
-
-        if (ratingRequest.getVehicleRating() == null ||
-                ratingRequest.getVehicleRating() < 1 ||
-                ratingRequest.getVehicleRating() > 5) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Vehicle rating must be between 1 and 5"));
-        }
-
-        if (ratingRequest.getDriverRating() == null ||
-                ratingRequest.getDriverRating() < 1 ||
-                ratingRequest.getDriverRating() > 5) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Driver rating must be between 1 and 5"));
-        }
-
-        // Service
-
-        RatingDTO response = new RatingDTO(
-                rideId * 100, // dummy ratingId
-                rideId,
-                ratingRequest.getVehicleRating(),
-                ratingRequest.getDriverRating(),
-                ratingRequest.getComment(),
-                LocalDateTime.now(),
-                ratingRequest.getRatedBy()
-        );
-
-        return ResponseEntity.status(201).body(response);
+        RatingResponseDTO response = ratingService.rateRide(ratingRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/history")

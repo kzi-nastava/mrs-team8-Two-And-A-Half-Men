@@ -1,50 +1,29 @@
 package com.project.backend.DTO;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RatingRequestDTO {
+    @NotNull(message = "Vehicle rating is required")
+    @Min(value = 1, message = "Vehicle rating must be between 1 and 5")
+    @Max(value = 5, message = "Vehicle rating must be between 1 and 5")
     private Integer vehicleRating;
+
+    @NotNull(message = "Driver rating is required")
+    @Min(value = 1, message = "Driver rating must be between 1 and 5")
+    @Max(value = 5, message = "Driver rating must be between 1 and 5")
     private Integer driverRating;
+
+    @Size(max = 500, message = "Comment cannot exceed 500 characters")
     private String comment;
-    private String ratedBy;
 
-    public RatingRequestDTO() {
-    }
-
-    public RatingRequestDTO(Integer vehicleRating, Integer driverRating, String comment, String ratedBy) {
-        this.vehicleRating = vehicleRating;
-        this.driverRating = driverRating;
-        this.comment = comment;
-        this.ratedBy = ratedBy;
-    }
-
-    public Integer getVehicleRating() {
-        return vehicleRating;
-    }
-
-    public void setVehicleRating(Integer vehicleRating) {
-        this.vehicleRating = vehicleRating;
-    }
-
-    public Integer getDriverRating() {
-        return driverRating;
-    }
-
-    public void setDriverRating(Integer driverRating) {
-        this.driverRating = driverRating;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getRatedBy() {
-        return ratedBy;
-    }
-
-    public void setRatedBy(String ratedBy) {
-        this.ratedBy = ratedBy;
-    }
+    private Long passengerId;
 }

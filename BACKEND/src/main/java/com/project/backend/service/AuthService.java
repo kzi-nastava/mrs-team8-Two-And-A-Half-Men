@@ -1,9 +1,18 @@
 package com.project.backend.service;
 
 import com.project.backend.DTO.RegistretionDTO;
+import com.project.backend.DTO.UserLoginDTO;
+import com.project.backend.DTO.UserLoginRequestDTO;
+import com.project.backend.DTO.UserTokenDTO;
+import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
 import com.project.backend.repositories.AppUserRepository;
+import com.project.backend.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,16 +21,23 @@ import java.time.LocalDateTime;
 public class AuthService {
 
     @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
     private AppUserRepository appUserRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenUtils tokenUtils;
 
     public void registerCustomer(RegistretionDTO userData) throws Exception{
         // Validate user data
         isValid(userData);
         // Create new customer
         Customer customer = new Customer();
-        customer.setPassword(userData.getPassword());
+        customer.setPassword(passwordEncoder.encode(userData.getPassword()));
         customer.setEmail(userData.getUsername());
         customer.setFirstName(userData.getFirstName());
         customer.setLastName(userData.getLastName());
@@ -74,4 +90,26 @@ public class AuthService {
     }
 
 
+    public UserTokenDTO login(UserLoginRequestDTO credentials) throws Exception{
+        AppUser customer =  appUserRepository.findByEmail(credentials.getUsername());
+        if (customer == null) {
+            throw new IllegalArgumentException("Invalid username or password");
+        }
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                            credentials.getUsername(),
+                            credentials.getPassword()
+                    )
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            AppUser user = (AppUser) authentication.getPrincipal();
+            String jwt = tokenUtils.generateToken(user);
+            int expiresIn = tokenUtils.getExpiredIn();
+            return new UserTokenDTO(jwt, expiresIn);
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("Invalid username or password " + e.getMessage());
+        }
+    }
 }

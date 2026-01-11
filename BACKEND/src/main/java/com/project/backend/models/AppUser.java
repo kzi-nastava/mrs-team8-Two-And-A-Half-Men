@@ -2,14 +2,19 @@ package com.project.backend.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Entity
 @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
-public class AppUser {
+public class AppUser implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -129,6 +134,33 @@ public class AppUser {
     @OneToMany
     List<Message> messages;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(this.getClass().getAnnotation(DiscriminatorValue.class).value()));
+    }
 
+    @Override
+    public String getUsername() {
+        return this.getEmail();
+    }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !this.getBLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.getActive();
+    }
 }

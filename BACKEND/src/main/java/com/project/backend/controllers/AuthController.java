@@ -3,6 +3,7 @@ package com.project.backend.controllers;
 import com.project.backend.DTO.RegistretionDTO;
 import com.project.backend.DTO.UserLoginDTO;
 import com.project.backend.DTO.UserLoginRequestDTO;
+import com.project.backend.DTO.UserTokenDTO;
 import com.project.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +20,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequestDTO credentials) {
 
-        if (credentials.getUsername() == null || credentials.getPassword() == null) {
-            return ResponseEntity.status(400)
-                    .body(Map.of("error", "Username and password are required"));
+        try {
+            UserTokenDTO loginResponse = authService.login(credentials);
+            return ResponseEntity.ok(loginResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "Internal server error"));
         }
-        if ("user".equals(credentials.getUsername()) && "pass".equals(credentials.getPassword())) {
-            //Setting dommy user for test purpose
-            UserLoginDTO user = new UserLoginDTO();
-            user.setId(1L);
-            return ResponseEntity.ok(Map.of("user",user,"message", "Login successful", "token", "dummy--token"));
-        }
-        return ResponseEntity.status(401)
-                .body(Map.of("error", "Invalid credentials"));
     }
 
     @PostMapping("/users/register")

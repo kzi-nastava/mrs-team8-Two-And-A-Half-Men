@@ -68,15 +68,12 @@ public class AuthController {
     }
     @PostMapping("/activate")
     public ResponseEntity<Map<String,String>> activate(@RequestBody ActivateRequestDTO token){
-        System.out.println("Request sended" + token.getToken());
         try {
             String message =  authService.activateAccount(token);
             return ResponseEntity.status(201).body(Map.of("message", message));
-
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(400).body(Map.of("message", e.getMessage()));
         } catch (Exception e) {
-            System.out.println("whyyy");
             return ResponseEntity.status(500).body(Map.of("message", e.getMessage()));
         }
     }

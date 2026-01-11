@@ -1,21 +1,35 @@
 package com.project.backend.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     private String model;
+
     private String licensePlate;
-    private int numberOfSeats;
-    @OneToOne
+
+    private Integer numberOfSeats;
+
+    @OneToOne(fetch = FetchType.LAZY)
     private Driver driver;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private VehicleType vehicleType;
-    @ManyToMany
-    private HashSet<AdditionalService> additionalServices;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<AdditionalService> additionalServices;
 }

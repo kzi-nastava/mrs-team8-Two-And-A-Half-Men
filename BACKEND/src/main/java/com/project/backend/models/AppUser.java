@@ -1,134 +1,52 @@
 package com.project.backend.models;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Entity
 @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-
     private String firstName;
+
     private String lastName;
+
     private String email;
+
     private String password;
+
     private String address;
+
     private String phoneNumber;
+
     private String imgSrc;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getImgSrc() {
-        return imgSrc;
-    }
-
-    public void setImgSrc(String imgSrc) {
-        this.imgSrc = imgSrc;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public LocalDateTime getTokenExpiration() {
-        return tokenExpiration;
-    }
-
-    public void setTokenExpiration(LocalDateTime tokenExpiration) {
-        this.tokenExpiration = tokenExpiration;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
-    public Boolean getBLocked() {
-        return isBLocked;
-    }
-
-    public void setBLocked(Boolean BLocked) {
-        isBLocked = BLocked;
-    }
-
     private String token;
+
     private LocalDateTime tokenExpiration;
+
     private Boolean isActive;
+
     private Boolean isBLocked;
-    @OneToMany
-    HashSet<Notification> notifications;
-    @OneToMany
+
+    @OneToMany(fetch = FetchType.LAZY)
+    Set<Notification> notifications;
+
+    @OneToMany(fetch = FetchType.LAZY)
     List<Message> messages;
-
-
-
 }

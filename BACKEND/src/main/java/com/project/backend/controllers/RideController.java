@@ -217,14 +217,12 @@ public class RideController {
 
         // Service
 
-        RatingDTO response = new RatingDTO(
-                rideId * 100, // dummy ratingId
+        RatingResponseDTO response = new RatingResponseDTO(
+                rideId * 100,
                 rideId,
-                ratingRequest.getVehicleRating(),
-                ratingRequest.getDriverRating(),
-                ratingRequest.getComment(),
-                LocalDateTime.now(),
-                ratingRequest.getRatedBy()
+                5,
+                4,
+                "everything was fine"
         );
 
         return ResponseEntity.status(201).body(response);

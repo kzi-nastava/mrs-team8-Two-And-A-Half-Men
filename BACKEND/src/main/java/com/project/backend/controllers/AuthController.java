@@ -1,5 +1,6 @@
 package com.project.backend.controllers;
 
+import com.project.backend.DTO.ActivateRequestDTO;
 import com.project.backend.DTO.RegistretionDTO;
 import com.project.backend.DTO.UserLoginDTO;
 import com.project.backend.DTO.UserLoginRequestDTO;
@@ -64,5 +65,16 @@ public class AuthController {
     public ResponseEntity<?> changePassword(@RequestBody Map<String, Object> passwordData) {
         return ResponseEntity.status(501)
                 .body(Map.of("error", "Not implemented"));
+    }
+    @PostMapping("/activate")
+    public ResponseEntity<Map<String,String>> activate(@RequestBody ActivateRequestDTO token){
+        try {
+            String message =  authService.activateAccount(token);
+            return ResponseEntity.status(201).body(Map.of("message", message));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("message", e.getMessage()));
+        }
     }
 }

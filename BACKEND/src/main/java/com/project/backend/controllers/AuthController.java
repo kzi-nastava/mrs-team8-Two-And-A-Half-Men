@@ -8,6 +8,7 @@ import com.project.backend.DTO.UserTokenDTO;
 import com.project.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -65,6 +66,7 @@ public class AuthController {
         return ResponseEntity.status(501)
                 .body(Map.of("error", "Not implemented"));
     }
+
     @PostMapping("/activate")
     public ResponseEntity<Map<String,String>> activate(@RequestBody ActivateRequestDTO token){
         try {

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,6 +29,15 @@ public class AppUser implements UserDetails{
     private String address;
     private String phoneNumber;
     private String imgSrc;
+    private String token;
+    private LocalDateTime tokenExpiration;
+    private Boolean isActive;
+    private Boolean isBLocked;
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    Set<Notification> notifications;
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    List<Message> messages;
+
 
     public Long getId() {
         return id;
@@ -125,42 +135,19 @@ public class AppUser implements UserDetails{
         isBLocked = BLocked;
     }
 
-    private String token;
-    private LocalDateTime tokenExpiration;
-    private Boolean isActive;
-    private Boolean isBLocked;
-    @OneToMany
-    HashSet<Notification> notifications;
-    @OneToMany
-    List<Message> messages;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(this.getClass().getAnnotation(DiscriminatorValue.class).value()));
+    public Set<Notification> getNotifications() {
+        return notifications;
     }
 
-    @Override
-    public String getUsername() {
-        return this.getEmail();
+    public void setNotifications(Set<Notification> notifications) {
+        this.notifications =  notifications;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public List<Message> getMessages() {
+        return messages;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return !this.getBLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.getActive();
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }

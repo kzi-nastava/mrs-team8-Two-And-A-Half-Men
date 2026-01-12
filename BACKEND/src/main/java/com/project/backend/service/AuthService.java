@@ -1,6 +1,8 @@
 package com.project.backend.service;
 
+import com.project.backend.DTO.ActivateRequestDTO;
 import com.project.backend.DTO.RegistretionDTO;
+import com.project.backend.models.AppUser;
 import com.project.backend.DTO.UserLoginDTO;
 import com.project.backend.DTO.UserLoginRequestDTO;
 import com.project.backend.DTO.UserTokenDTO;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -52,7 +55,28 @@ public class AuthService {
 
 
         // Send conformation email
-        emailService.sendVerificationEmail(customer.getEmail(), customer.getFirstName(), "http://localhost:8080/activate?token=" + token);
+        emailService.sendVerificationEmail(customer.getEmail(), customer.getFirstName(),
+                "http://localhost:4200/activation?token=" + token);
+    }
+    public String activateAccount(ActivateRequestDTO tokenDTO) throws Exception
+    {
+        String token = tokenDTO.getToken();
+        System.out.println(token);
+
+        AppUser user = appUserRepository.findByToken(token).orElseThrow(() -> new IllegalArgumentException("Token do not exist"));
+        System.out.println(user.getEmail());
+        if(user.getActive()) {
+            return "Account is active";
+        }
+        if(user.getTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Token date experied");
+        }
+        user.setActive(true);
+        user.setToken(null);
+        user.setTokenExpiration(null);
+        appUserRepository.save(user);
+
+        return "Account activated";
     }
     private void isValid(RegistretionDTO userData) {
         if (userData.getUsername() == null || userData.getUsername().isEmpty()) {

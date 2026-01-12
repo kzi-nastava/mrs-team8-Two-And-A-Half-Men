@@ -33,7 +33,6 @@ public class TokenUtils {
                 SECRET.getBytes(StandardCharsets.UTF_8).length);
     }
     public String generateToken(AppUser user) {
-        System.out.println(SECRET);
         return Jwts.builder().setIssuer(APP_NAME).setSubject(user.getEmail())
                 .setAudience(generateAudience()).setIssuedAt(new Date())
                 .claim("roles", user.getClass().getSimpleName() ).setExpiration(generateExpirationDate())
@@ -116,8 +115,7 @@ public class TokenUtils {
         final String username = getUsernameFromToken(token);
         final Date created = getIssuedAtDateFromToken(token);
 
-        // Token je validan kada:
-        return (username != null // korisnicko ime nije null
+        return (username != null
                 && username.equals(userDetails.getUsername()) );
     }
 

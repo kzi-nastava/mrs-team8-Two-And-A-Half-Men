@@ -23,18 +23,17 @@ public class JWTAuthetntificationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    public JWTAuthetntificationFilter(TokenUtils tokenUtils, UserDetailsService userDetailsService) {
-        this.tokenUtils = tokenUtils;
-        this.userDetailsService = (CustomUserDetailsService) userDetailsService;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String username;
         String authToken = tokenUtils.getToken(request);
+
         try {
+            System.out.println(authToken);
             if(authToken != null && !authToken.equals("")) {
                 username = tokenUtils.getUsernameFromToken(authToken);
+                System.out.println(username);
                 if(username != null) {
                     var userDetails = userDetailsService.loadUserByUsername(username);
                     if(tokenUtils.validateToken(authToken, userDetails)) {

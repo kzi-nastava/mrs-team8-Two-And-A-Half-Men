@@ -73,7 +73,8 @@ public class AppUser implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        String className = this.getClass().getSimpleName();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + className.toUpperCase()));
     }
 
     public String getPassword() {

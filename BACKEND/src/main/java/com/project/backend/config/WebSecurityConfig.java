@@ -40,7 +40,8 @@ public class WebSecurityConfig {
 
     @Autowired
     private TokenUtils tokenUtils;
-
+    @Autowired
+    private JWTAuthetntificationFilter jwtAuthenticationFilter;
     @Bean
     UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
@@ -54,8 +55,6 @@ public class WebSecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
-        // 2. kroz koji enkoder da provuce lozinku koju je dobio od klijenta u zahtevu
-        // da bi adekvatan hash koji dobije kao rezultat hash algoritma uporedio sa onim koji se nalazi u bazi (posto se u bazi ne cuva plain lozinka)
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -65,7 +64,7 @@ public class WebSecurityConfig {
     }
     // Definisemo prava pristupa za zahteve ka odredjenim URL-ovima/rutama
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults());
         http.csrf((csrf) -> csrf.disable());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -74,10 +73,11 @@ public class WebSecurityConfig {
             request.requestMatchers( "/api/v1/login").permitAll()
                     .requestMatchers("/api/v1/users/register").permitAll()
                     .requestMatchers("/api/v1/rides/estimates").permitAll()
+                    .requestMatchers("/api/v1/activate").permitAll()
                     .requestMatchers("/api/v1/forgot-password/**").permitAll()
                     .anyRequest().authenticated();
         });
-        http.addFilterBefore(new JWTAuthetntificationFilter(tokenUtils, userDetailsService()), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.authenticationProvider(authenticationProvider());
         return http.build();
     }

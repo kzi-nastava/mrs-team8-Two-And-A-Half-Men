@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class AuthService {
@@ -35,7 +36,7 @@ public class AuthService {
     @Autowired
     private TokenUtils tokenUtils;
 
-    public void registerCustomer(RegistretionDTO userData) throws Exception{
+    public void registerCustomer(RegistretionDTO userData) throws Exception {
         // Validate user data
         isValid(userData);
         // Create new customer
@@ -58,17 +59,17 @@ public class AuthService {
         emailService.sendVerificationEmail(customer.getEmail(), customer.getFirstName(),
                 "http://localhost:4200/activation?token=" + token);
     }
-    public String activateAccount(ActivateRequestDTO tokenDTO) throws Exception
-    {
+
+    public String activateAccount(ActivateRequestDTO tokenDTO) throws Exception {
         String token = tokenDTO.getToken();
         System.out.println(token);
 
         AppUser user = appUserRepository.findByToken(token).orElseThrow(() -> new IllegalArgumentException("Token do not exist"));
         System.out.println(user.getEmail());
-        if(user.getActive()) {
+        if (user.getActive()) {
             return "Account is active";
         }
-        if(user.getTokenExpiration().isBefore(LocalDateTime.now())) {
+        if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Token date experied");
         }
         user.setActive(true);
@@ -78,6 +79,7 @@ public class AuthService {
 
         return "Account activated";
     }
+
     private void isValid(RegistretionDTO userData) {
         if (userData.getUsername() == null || userData.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Invalid username");
@@ -88,25 +90,25 @@ public class AuthService {
         if (appUserRepository.existsByEmail(userData.getUsername())) {
             throw new IllegalArgumentException("Email already in use");
         }
-        if(userData.getFirstName() == null || userData.getFirstName().isEmpty()) {
+        if (userData.getFirstName() == null || userData.getFirstName().isEmpty()) {
             throw new IllegalArgumentException("Invalid first name");
         }
-        if(userData.getLastName() == null || userData.getLastName().isEmpty()) {
+        if (userData.getLastName() == null || userData.getLastName().isEmpty()) {
             throw new IllegalArgumentException("Invalid last name");
         }
-        if(userData.getAddress() == null || userData.getAddress().isEmpty()) {
+        if (userData.getAddress() == null || userData.getAddress().isEmpty()) {
             throw new IllegalArgumentException("Invalid address");
         }
-        if(userData.getPhoneNumber() == null || userData.getPhoneNumber().isEmpty()) {
+        if (userData.getPhoneNumber() == null || userData.getPhoneNumber().isEmpty()) {
             throw new IllegalArgumentException("Invalid phone number");
         }
-        if(!userData.getUsername().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (!userData.getUsername().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new IllegalArgumentException("Invalid email format");
         }
-        if(userData.getPassword().length() < 6) {
+        if (userData.getPassword().length() < 6) {
             throw new IllegalArgumentException("Password must be at least 6 characters long");
         }
-        if(!userData.getPhoneNumber().matches("^[0-9]{10,15}$")) {
+        if (!userData.getPhoneNumber().matches("^[0-9]{10,15}$")) {
             throw new IllegalArgumentException("Invalid phone number format");
         }
 
@@ -114,11 +116,15 @@ public class AuthService {
     }
 
 
-    public UserTokenDTO login(UserLoginRequestDTO credentials) throws Exception{
-        AppUser customer =  appUserRepository.findByEmail(credentials.getUsername());
+    public UserTokenDTO login(UserLoginRequestDTO credentials) throws Exception {
+        AppUser customer = appUserRepository.findByEmail(credentials.getUsername());
         if (customer == null) {
             throw new IllegalArgumentException("Invalid username or password");
         }
+        System.out.println("User found: " + customer.getUsername());
+        System.out.println("Active: " + customer.isAccountNonExpired());
+        System.out.println("Blocked: " + customer.isAccountNonLocked());
+        System.out.println("Enabeld: " + customer.isEnabled());
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
@@ -126,14 +132,21 @@ public class AuthService {
                             credentials.getPassword()
                     )
             );
+            System.out.println("Auth passed");
+            System.out.println("Authentication successful for user: " + credentials.getUsername());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             AppUser user = (AppUser) authentication.getPrincipal();
+
             String jwt = tokenUtils.generateToken(user);
             int expiresIn = tokenUtils.getExpiredIn();
             return new UserTokenDTO(jwt, expiresIn);
-        }
-        catch (Exception e) {
-            throw new IllegalArgumentException("Invalid username or password " + e.getMessage());
+        } catch (org.springframework.security.core.AuthenticationException e) {
+            System.out.println("Authentication failed: " + e.getMessage());
+            throw new IllegalArgumentException("Invalid username or password");
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new Exception("Invalid username or password " + e.getMessage());
         }
     }
 }

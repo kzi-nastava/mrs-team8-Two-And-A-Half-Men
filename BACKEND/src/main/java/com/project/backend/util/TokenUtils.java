@@ -2,11 +2,15 @@ package com.project.backend.util;
 
 import com.project.backend.models.AppUser;
 import io.jsonwebtoken.*;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
@@ -14,7 +18,7 @@ public class TokenUtils {
 
     @Value("${spring.application.name}")
     private String APP_NAME ;
-    @Value("${APP_SOMESECRET_KEY}")
+    @Value("${jwt.secret}")
     private String SECRET ;
     @Value("1800000")
     private int EXPIRES_IN ;
@@ -22,12 +26,18 @@ public class TokenUtils {
     private String AUTH_HEADER ;
     private static String AUDIENCE_WEB = "web";
     private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
-
+    @PostConstruct
+    public void checkJwtKey() {
+        System.out.println("JWT key length (chars): " + SECRET.length());
+        System.out.println("JWT key bytes: " +
+                SECRET.getBytes(StandardCharsets.UTF_8).length);
+    }
     public String generateToken(AppUser user) {
+        System.out.println(SECRET);
         return Jwts.builder().setIssuer(APP_NAME).setSubject(user.getEmail())
                 .setAudience(generateAudience()).setIssuedAt(new Date())
                 .claim("roles", user.getClass().getSimpleName() ).setExpiration(generateExpirationDate())
-                .signWith(SIGNATURE_ALGORITHM,SECRET).compact();
+                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SIGNATURE_ALGORITHM).compact();
     }
 
     private Date generateExpirationDate() {
@@ -91,7 +101,7 @@ public class TokenUtils {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(SECRET)
+                    .setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes()))
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException ex) {

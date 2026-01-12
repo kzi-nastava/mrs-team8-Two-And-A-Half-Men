@@ -29,7 +29,7 @@ public class AuthController {
                     .body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(500)
-                    .body(Map.of("error", "Internal server error"));
+                    .body(Map.of("error", "Internal server error" + e.getMessage()));
         }
     }
 

@@ -71,8 +71,38 @@ public class AppUser implements UserDetails{
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !this.isBLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.isActive;
     }
 
     public void setPassword(String password) {
@@ -150,4 +180,7 @@ public class AppUser implements UserDetails{
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
+
+
+
 }

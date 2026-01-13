@@ -5,10 +5,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @DiscriminatorValue("CUSTOMER")
 public class Customer extends AppUser{
     @ManyToMany
-    HashSet<Route> favoriteRoutes;
+    Set<Route> favoriteRoutes;
+
+    public Set<Route> getFavoriteRoutes() {
+        return favoriteRoutes;
+    }
+
+    public void setFavoriteRoutes(Set<Route> favoriteRoutes) {
+        this.favoriteRoutes = favoriteRoutes;
+    }
 }
+

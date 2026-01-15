@@ -32,7 +32,6 @@
 
 - Planned Story Points: 27
 - Completed Story Points: 27
-- Team Velocity: 
 
 ## Challenges & Observations
 

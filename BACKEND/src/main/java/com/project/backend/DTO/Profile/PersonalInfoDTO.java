@@ -15,6 +15,7 @@ public class PersonalInfoDTO {
     private String phoneNumber;
     private String address;
     private String email;
+    private String imgSrc;
     private String role;
 
     public PersonalInfoDTO(AppUser user) {
@@ -24,6 +25,7 @@ public class PersonalInfoDTO {
         this.phoneNumber = user.getPhoneNumber();
         this.address = user.getAddress();
         this.email = user.getEmail();
+        this.imgSrc = user.getImgSrc();
         this.role = user.getRole().name();
     }
 }

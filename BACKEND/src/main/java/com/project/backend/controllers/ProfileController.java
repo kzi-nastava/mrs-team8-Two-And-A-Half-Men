@@ -1,5 +1,6 @@
 package com.project.backend.controllers;
 
+import com.project.backend.DTO.Profile.UpdateProfileRequestDTO;
 import com.project.backend.models.AppUser;
 import com.project.backend.service.ProfileService;
 import com.project.backend.util.AuthUtils;
@@ -33,8 +34,14 @@ public class ProfileController {
     }
 
     @PatchMapping
-    public ResponseEntity<?> updateProfile(@RequestBody Map<String, Object> profileData) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+    public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileRequestDTO body) {
+        AppUser user = authUtils.getCurrentUser();
+        if(user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("ok", false, "error", "Unauthorized"));
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(profileService.updateProfile(user.getId(), user.getRole(), body));
     }
 }

@@ -6,7 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,13 +15,13 @@ import java.util.HashSet;
 @Entity
 public class UpdateRequest {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
 
     private String firstName;
     private String lastName;
     private String email;
-    private String password;
     private String address;
     private String phoneNumber;
     private String imgSrc;
@@ -30,7 +31,7 @@ public class UpdateRequest {
     @ManyToOne
     private VehicleType vehicleType;
     @ManyToMany
-    private HashSet<AdditionalService> additionalServices;
+    private Set<AdditionalService> additionalServices;
     @OneToOne
     private Driver driver;
 }

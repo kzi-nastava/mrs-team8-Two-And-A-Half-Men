@@ -1,4 +1,4 @@
-package com.project.backend.DTO.Profile;
+package com.project.backend.DTO.Vehicle;
 
 import com.project.backend.models.VehicleType;
 import lombok.AllArgsConstructor;

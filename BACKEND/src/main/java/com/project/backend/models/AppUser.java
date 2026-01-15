@@ -1,20 +1,27 @@
 package com.project.backend.models;
+
+import com.project.backend.models.enums.UserRole;
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Entity
 @DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AppUser implements UserDetails{
 
     @Id
@@ -32,44 +39,11 @@ public class AppUser implements UserDetails{
     private String token;
     private LocalDateTime tokenExpiration;
     private Boolean isActive;
-    private Boolean isBLocked;
+    private Boolean isBlocked;
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     Set<Notification> notifications;
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     List<Message> messages;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -77,6 +51,7 @@ public class AppUser implements UserDetails{
         return List.of(new SimpleGrantedAuthority("ROLE_" + className.toUpperCase()));
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -93,7 +68,7 @@ public class AppUser implements UserDetails{
 
     @Override
     public boolean isAccountNonLocked() {
-        return !this.isBLocked;
+        return !this.isBlocked;
     }
 
     @Override
@@ -106,82 +81,7 @@ public class AppUser implements UserDetails{
         return this.isActive;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public UserRole getRole() {
+        return null;
     }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getImgSrc() {
-        return imgSrc;
-    }
-
-    public void setImgSrc(String imgSrc) {
-        this.imgSrc = imgSrc;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public LocalDateTime getTokenExpiration() {
-        return tokenExpiration;
-    }
-
-    public void setTokenExpiration(LocalDateTime tokenExpiration) {
-        this.tokenExpiration = tokenExpiration;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
-    public Boolean getBLocked() {
-        return isBLocked;
-    }
-
-    public void setBLocked(Boolean BLocked) {
-        isBLocked = BLocked;
-    }
-
-    public Set<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Set<Notification> notifications) {
-        this.notifications =  notifications;
-    }
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-
-
 }

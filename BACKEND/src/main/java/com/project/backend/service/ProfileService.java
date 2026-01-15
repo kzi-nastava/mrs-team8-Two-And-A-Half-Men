@@ -4,10 +4,7 @@ import com.project.backend.DTO.Profile.*;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.enums.UserRole;
-import com.project.backend.repositories.AdditionalServiceRepository;
-import com.project.backend.repositories.AppUserRepository;
-import com.project.backend.repositories.VehicleRepository;
-import com.project.backend.repositories.VehicleTypeRepository;
+import com.project.backend.repositories.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,12 +13,14 @@ public class ProfileService {
     private final VehicleRepository vehicleRepository;
     private final VehicleTypeRepository vehicleTypeRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
+    private final UpdateRequestRepository updateRequestRepository;
 
-    public ProfileService(AppUserRepository userRepository, VehicleRepository vehicleRepository, VehicleTypeRepository vehicleTypeRepository, AdditionalServiceRepository additionalServiceRepository) {
+    public ProfileService(AppUserRepository userRepository, VehicleRepository vehicleRepository, VehicleTypeRepository vehicleTypeRepository, AdditionalServiceRepository additionalServiceRepository, UpdateRequestRepository updateRequestRepository) {
         this.userRepository = userRepository;
         this.vehicleRepository = vehicleRepository;
         this.vehicleTypeRepository = vehicleTypeRepository;
         this.additionalServiceRepository = additionalServiceRepository;
+        this.updateRequestRepository = updateRequestRepository;
     }
 
     public GetProfileDTO getProfile(Long userId, UserRole role) {
@@ -41,6 +40,9 @@ public class ProfileService {
             resultBuilder.additionalServices(additionalServiceRepository.findAll().stream()
                     .map(AdditionalServiceDTO::new)
                     .toList());
+            updateRequestRepository.findByDriverId(userId).ifPresent(request -> {
+                resultBuilder.pendingChangeRequest(new ChangeRequestDTO(request));
+            });
         }
         return resultBuilder.build();
     }

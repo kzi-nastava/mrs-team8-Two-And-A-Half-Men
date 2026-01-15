@@ -15,6 +15,7 @@ public class PersonalInfoDTO {
     private String phoneNumber;
     private String address;
     private String email;
+    private String role;
 
     public PersonalInfoDTO(AppUser user) {
         this.id = user.getId();
@@ -23,5 +24,6 @@ public class PersonalInfoDTO {
         this.phoneNumber = user.getPhoneNumber();
         this.address = user.getAddress();
         this.email = user.getEmail();
+        this.role = user.getRole().name();
     }
 }

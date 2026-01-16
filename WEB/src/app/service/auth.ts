@@ -1,82 +1,79 @@
 import { inject, Injectable } from '@angular/core';
 import { User } from '../auth/models/user.model';
 import { signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { AuthResponse } from '../auth/models/authmodel';
+import { Login } from '../auth/models/loginmodel';
+import { HttpHeaders } from '@angular/common/http';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
   private readonly http = inject(HttpClient);
-  private _users = signal<User[]>([{
-    id: "1",
-    email: "user@example.com",
-    role: "user",
-    firstName: "John",
-    lastName: "Doe",
-    password: "password",
-    address: "123 Main St",
-    phone: "555-555-5555",
-    imgUrl: "",
-    isBlocked: false,
-    isActive: true
-  },
-  {
-    id: "2",
-    email: "admin@example.com",
-    role: "admin",
-    firstName: "Jane",
-    lastName: "Smith",
-    password: "adminpass",
-    address: "456 Elm St",
-    phone: "555-555-1234",
-    imgUrl: "",
-    isBlocked: false,
-    isActive: true
-  }
-]);
-private _nextId = 3;
+
   constructor() {}
-public login(email: string, password: string, rememberMe: boolean): User | null {
-    const users = this._users();
-    const user = users.find(u => u.email === email && u.password === password);
-    if (user) {
-      // Handle remember me functionality here
-      return user;
-    }
-    return null;
+public login(logindata: Login): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>('http://localhost:8080/api/v1/login', logindata);
   }
 public forgotPassword(email: string): boolean {
-    const users = this._users();
-    const user = users.find(u => u.email === email);
-    return !!user;
+    
+    return true;
   }
 public Registar(user : User): string  {
   // check if a user with the same email already exists
-  const emailExists = this._users().some(u => u.email === user.email);
-  if (emailExists) {
-    return "You already have an account";
-  }
+
 
   // assign a new id and default fields, then add the user immutably
   const newUser: User = {
     ...user,
-    id: String(this._nextId++),
+    id: String(Date.now()),
     role: user.role ?? 'user',
     imgUrl: user.imgUrl ?? '',
     isBlocked: user.isBlocked ?? false,
     isActive: user.isActive ?? true
   };
 
-  this._users.set([...this._users(), newUser]);
+
 
   return "";
 }
+  private headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    skip: 'true',
+  });
+
+
+  user = signal<String | null>(null);
+   getRole(): any {
+    if (this.isLoggedInSessionStorage()) {
+      const accessToken: any = sessionStorage.getItem('authTokenUser');
+      const helper = new JwtHelperService();
+      return helper.decodeToken(accessToken).role;
+    } else if (this.isLoggedInLocalStorage()) {
+      const accessToken: any = localStorage.getItem('authTokenUser');
+      const helper = new JwtHelperService();
+      return helper.decodeToken(accessToken).role;
+    }
+
+    return null;
+  }
+  isLoggedInLocalStorage(): boolean {
+    return localStorage.getItem('authTokenUser') != null;
+  }
+  isLoggedInSessionStorage(): boolean {
+    return sessionStorage.getItem('authTokenUser') != null;
+  }
+
 
 public activateAccount(token: string): Observable<{ message: string }> {
   // Create the service method for link to backend
   return  this.http.post<{ message: string }>('http://localhost:8080/api/v1/activate', { token });
+}
+public setUser(): void {
+  this.user.set(this.getRole());
 }
 
 }

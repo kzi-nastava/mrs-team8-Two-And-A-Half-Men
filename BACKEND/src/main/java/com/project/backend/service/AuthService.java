@@ -2,8 +2,6 @@ package com.project.backend.service;
 
 import com.project.backend.DTO.ActivateRequestDTO;
 import com.project.backend.DTO.RegistretionDTO;
-import com.project.backend.models.AppUser;
-import com.project.backend.DTO.UserLoginDTO;
 import com.project.backend.DTO.UserLoginRequestDTO;
 import com.project.backend.DTO.UserTokenDTO;
 import com.project.backend.models.AppUser;
@@ -18,8 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class AuthService {
@@ -46,9 +42,9 @@ public class AuthService {
         customer.setFirstName(userData.getFirstName());
         customer.setLastName(userData.getLastName());
         customer.setAddress(userData.getAddress());
-        customer.setPhoneNumber(userData.getPhone());
-        customer.setActive(false);
-        customer.setBLocked(false);
+        customer.setPhoneNumber(userData.getPhoneNumber());
+        customer.setIsActive(false);
+        customer.setIsBlocked(false);
         customer.setTokenExpiration(LocalDateTime.now().plusDays(3));
         String token = java.util.UUID.randomUUID().toString();
         customer.setToken(token);
@@ -66,13 +62,13 @@ public class AuthService {
 
         AppUser user = appUserRepository.findByToken(token).orElseThrow(() -> new IllegalArgumentException("Token do not exist"));
         System.out.println(user.getEmail());
-        if (user.getActive()) {
+        if (user.getIsActive()) {
             return "Account is active";
         }
         if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Token date experied");
         }
-        user.setActive(true);
+        user.setIsActive(true);
         user.setToken(null);
         user.setTokenExpiration(null);
         appUserRepository.save(user);

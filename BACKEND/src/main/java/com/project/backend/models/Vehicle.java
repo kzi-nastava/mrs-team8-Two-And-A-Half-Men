@@ -1,10 +1,18 @@
 package com.project.backend.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -17,5 +25,5 @@ public class Vehicle {
     @ManyToOne
     private VehicleType vehicleType;
     @ManyToMany
-    private HashSet<AdditionalService> additionalServices;
+    private Set<AdditionalService> additionalServices;
 }

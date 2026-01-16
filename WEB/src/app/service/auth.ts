@@ -33,7 +33,7 @@ public Registar(user : User): Observable<{ message : string }> {
   });
 
 
-  user = signal<String | null>(null);
+  user = signal<User | null>(null);
    getRole(): any {
     if (this.isLoggedInSessionStorage()) {
       const accessToken: any = sessionStorage.getItem('authTokenUser');
@@ -59,8 +59,9 @@ public activateAccount(token: string): Observable<{ message: string }> {
   // Create the service method for link to backend
   return  this.http.post<{ message: string }>('http://localhost:8080/api/v1/activate', { token });
 }
-public setUser(): void {
-  this.user.set(this.getRole());
-}
+public setUser(email: string, imgSrc: string, firstName: string, lastName: string): void {
 
+  var role = this.getRole();
+  this.user.set({ email: email, imgUrl: imgSrc, firstName: firstName, lastName: lastName, role: role });
+}
 }

@@ -34,16 +34,12 @@ export class Login {
       this.authService.login(logindata).subscribe({
         next: (response) => {
           if(rememberMe) {
-            console.log('Remember me is checked');
-            console.log('Response token:', response.accessToken);
             localStorage.setItem('authTokenUser', response.accessToken);
-            this.authService.setUser();
-            console.log('Login successful, token stored in localStorage');
+            this.authService.setUser(response.email, response.imgUrl, response.firstName, response.lastName);
             this.router.navigate(['']);
-          } else{ 
+          } else {
             sessionStorage.setItem('authTokenUser', response.accessToken);
-            this.authService.setUser();
-            console.log('Login successful, token stored in sessionStorage');
+            this.authService.setUser(response.email, response.imgUrl, response.firstName, response.lastName);
             this.router.navigate(['']);
           }
         },

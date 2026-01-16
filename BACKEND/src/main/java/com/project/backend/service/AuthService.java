@@ -42,7 +42,7 @@ public class AuthService {
         customer.setFirstName(userData.getFirstName());
         customer.setLastName(userData.getLastName());
         customer.setAddress(userData.getAddress());
-        customer.setPhoneNumber(userData.getPhoneNumber());
+        customer.setPhoneNumber(userData.getPhone());
         customer.setIsActive(false);
         customer.setIsBlocked(false);
         customer.setTokenExpiration(LocalDateTime.now().plusDays(3));
@@ -135,7 +135,11 @@ public class AuthService {
 
             String jwt = tokenUtils.generateToken(user);
             int expiresIn = tokenUtils.getExpiredIn();
-            return new UserTokenDTO(jwt, expiresIn);
+            return new UserTokenDTO(jwt, expiresIn,
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getImgSrc());
         } catch (org.springframework.security.core.AuthenticationException e) {
             System.out.println("Authentication failed: " + e.getMessage());
             throw new IllegalArgumentException("Invalid username or password");

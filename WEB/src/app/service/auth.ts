@@ -22,23 +22,10 @@ public forgotPassword(email: string): boolean {
     
     return true;
   }
-public Registar(user : User): string  {
-  // check if a user with the same email already exists
+public Registar(user : User): Observable<{ message : string }> { 
 
+  return this.http.post<{ message : string }>('http://localhost:8080/api/v1/users/register', user);
 
-  // assign a new id and default fields, then add the user immutably
-  const newUser: User = {
-    ...user,
-    id: String(Date.now()),
-    role: user.role ?? 'user',
-    imgUrl: user.imgUrl ?? '',
-    isBlocked: user.isBlocked ?? false,
-    isActive: user.isActive ?? true
-  };
-
-
-
-  return "";
 }
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',

@@ -2,8 +2,6 @@ package com.project.backend.service;
 
 import com.project.backend.DTO.ActivateRequestDTO;
 import com.project.backend.DTO.RegistretionDTO;
-import com.project.backend.models.AppUser;
-import com.project.backend.DTO.UserLoginDTO;
 import com.project.backend.DTO.UserLoginRequestDTO;
 import com.project.backend.DTO.UserTokenDTO;
 import com.project.backend.models.AppUser;
@@ -18,8 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class AuthService {
@@ -42,13 +38,13 @@ public class AuthService {
         // Create new customer
         Customer customer = new Customer();
         customer.setPassword(passwordEncoder.encode(userData.getPassword()));
-        customer.setEmail(userData.getUsername());
+        customer.setEmail(userData.getEmail());
         customer.setFirstName(userData.getFirstName());
         customer.setLastName(userData.getLastName());
         customer.setAddress(userData.getAddress());
         customer.setPhoneNumber(userData.getPhoneNumber());
-        customer.setActive(false);
-        customer.setBLocked(false);
+        customer.setIsActive(false);
+        customer.setIsBlocked(false);
         customer.setTokenExpiration(LocalDateTime.now().plusDays(3));
         String token = java.util.UUID.randomUUID().toString();
         customer.setToken(token);
@@ -66,13 +62,13 @@ public class AuthService {
 
         AppUser user = appUserRepository.findByToken(token).orElseThrow(() -> new IllegalArgumentException("Token do not exist"));
         System.out.println(user.getEmail());
-        if (user.getActive()) {
+        if (user.getIsActive()) {
             return "Account is active";
         }
         if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Token date experied");
         }
-        user.setActive(true);
+        user.setIsActive(true);
         user.setToken(null);
         user.setTokenExpiration(null);
         appUserRepository.save(user);
@@ -81,13 +77,13 @@ public class AuthService {
     }
 
     private void isValid(RegistretionDTO userData) {
-        if (userData.getUsername() == null || userData.getUsername().isEmpty()) {
+        if (userData.getEmail() == null || userData.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Invalid username");
         }
         if (userData.getPassword() == null || userData.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Invalid password");
         }
-        if (appUserRepository.existsByEmail(userData.getUsername())) {
+        if (appUserRepository.existsByEmail(userData.getEmail())) {
             throw new IllegalArgumentException("Email already in use");
         }
         if (userData.getFirstName() == null || userData.getFirstName().isEmpty()) {
@@ -99,16 +95,16 @@ public class AuthService {
         if (userData.getAddress() == null || userData.getAddress().isEmpty()) {
             throw new IllegalArgumentException("Invalid address");
         }
-        if (userData.getPhoneNumber() == null || userData.getPhoneNumber().isEmpty()) {
+        if (userData.getPhone() == null || userData.getPhone().isEmpty()) {
             throw new IllegalArgumentException("Invalid phone number");
         }
-        if (!userData.getUsername().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (!userData.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new IllegalArgumentException("Invalid email format");
         }
         if (userData.getPassword().length() < 6) {
             throw new IllegalArgumentException("Password must be at least 6 characters long");
         }
-        if (!userData.getPhoneNumber().matches("^[0-9]{10,15}$")) {
+        if (!userData.getPhone().matches("^[0-9]{10,15}$")) {
             throw new IllegalArgumentException("Invalid phone number format");
         }
 

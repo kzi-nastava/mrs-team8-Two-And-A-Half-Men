@@ -2,9 +2,12 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 import { Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/core';
+import { signal } from '@angular/core';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 import { Auth } from '../../service/auth';
 
@@ -16,7 +19,7 @@ import { Auth } from '../../service/auth';
   styleUrls: ['./register.css'],
 })
 export class Register {
-  constructor(@Inject(DOCUMENT) private document: Document, private authService: Auth) {}
+  constructor(@Inject(DOCUMENT) private document: Document, private authService: Auth, private router: Router) {}
   step = 1;
   registerForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
@@ -39,6 +42,7 @@ export class Register {
       const password = this.registerForm.get('password')?.value ?? '';
       const confirmPassword = this.registerForm.get('confirmPassword')?.value ?? '';
       const errorEl = document.getElementById('error-register');
+      const btn = this.document.getElementById('submit-btn');
        if (errorEl) {
           errorEl.innerHTML = "";
         }
@@ -57,12 +61,29 @@ export class Register {
         password,
       };
       const result = this.authService.Registar(user);
-      if(result != "") { 
-        if (errorEl) {
-          errorEl.innerHTML = result;
+      btn?.setAttribute('disabled', 'true');
+      result.subscribe({
+        next: (response) => {
+             Swal.fire({
+                icon: 'success',
+                  title: 'Registered!',
+                    text: 'Please check your email to activate your account.',
+                  showConfirmButton: true,
+                  
+            }).then(() => {
+              this.router.navigate(['/login']);
+            } );
+
+        
+        },
+        error: (err) => {
+          if (errorEl) {
+            const errorMessage = err.error?.error || 'An error occurred during registration';
+            errorEl.innerHTML = errorMessage;
+          }
         }
-        return;
-      }
+
+      });
     } else {
       console.log('Form is invalid');
       alert('Please fill in the form correctly.');

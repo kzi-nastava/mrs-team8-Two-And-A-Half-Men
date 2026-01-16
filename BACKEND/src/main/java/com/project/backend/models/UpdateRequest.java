@@ -27,7 +27,7 @@ public class UpdateRequest {
     private String imgSrc;
     private String model;
     private String licensePlate;
-    private int numberOfSeats;
+    private Integer numberOfSeats;
     @ManyToOne
     private VehicleType vehicleType;
     @ManyToMany

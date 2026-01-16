@@ -1,5 +1,6 @@
 package com.project.backend.controllers;
 
+import com.project.backend.DTO.Profile.ChangePasswordDTO;
 import com.project.backend.DTO.Profile.UpdateProfileRequestDTO;
 import com.project.backend.models.AppUser;
 import com.project.backend.service.ProfileService;
@@ -43,5 +44,15 @@ public class ProfileController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(profileService.updateProfile(user.getId(), user.getRole(), body));
+    }
+
+    @PatchMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO body) {
+        AppUser user = authUtils.getCurrentUser();
+        if(user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("ok", false, "error", "Unauthorized"));
+        }
+        return ResponseEntity.ok(profileService.changePassword(user.getId(), body));
     }
 }

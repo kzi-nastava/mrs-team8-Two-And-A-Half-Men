@@ -1,6 +1,7 @@
 package com.project.backend.service;
 
 import com.project.backend.DTO.Profile.*;
+import com.project.backend.DTO.UserTokenDTO;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.AppUser;
@@ -9,6 +10,7 @@ import com.project.backend.models.UpdateRequest;
 import com.project.backend.models.enums.UserRole;
 import com.project.backend.repositories.*;
 import com.project.backend.util.TokenUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -21,6 +23,7 @@ public class ProfileService {
     private final VehicleTypeRepository vehicleTypeRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
     private final UpdateRequestRepository updateRequestRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public ProfileService(
             TokenUtils tokenUtils,
@@ -28,13 +31,15 @@ public class ProfileService {
             VehicleRepository vehicleRepository,
             VehicleTypeRepository vehicleTypeRepository,
             AdditionalServiceRepository additionalServiceRepository,
-            UpdateRequestRepository updateRequestRepository) {
+            UpdateRequestRepository updateRequestRepository,
+            PasswordEncoder passwordEncoder) {
         this.tokenUtils = tokenUtils;
         this.userRepository = userRepository;
         this.vehicleRepository = vehicleRepository;
         this.vehicleTypeRepository = vehicleTypeRepository;
         this.additionalServiceRepository = additionalServiceRepository;
         this.updateRequestRepository = updateRequestRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public ProfileDTO getProfile(Long userId, UserRole role) {
@@ -68,7 +73,6 @@ public class ProfileService {
         if (role == UserRole.DRIVER) {
             return updateDriverProfile((Driver) user, body);
         }
-
         if (body.getFirstName() != null) {
             user.setFirstName(body.getFirstName());
         }
@@ -148,5 +152,24 @@ public class ProfileService {
             accessToken = tokenUtils.generateToken(user);
         }
         return new UpdateProfileResponseDTO(accessToken, profileDTO);
+    }
+
+    public UserTokenDTO changePassword(Long id, ChangePasswordDTO body) {
+
+        String password = body.getPassword();
+        if (password == null || password.isEmpty()) {
+            throw new BadRequestException("Password cannot be empty");
+        }
+
+        AppUser user = userRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        user.setPassword(passwordEncoder.encode(password));
+
+        userRepository.save(user);
+
+        String accessToken = tokenUtils.generateToken(user);
+        return new UserTokenDTO(accessToken, tokenUtils.getExpiredIn());
     }
 }

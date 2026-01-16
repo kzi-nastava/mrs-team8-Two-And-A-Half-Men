@@ -35,7 +35,7 @@ public class TokenUtils {
     public String generateToken(AppUser user) {
         return Jwts.builder().setIssuer(APP_NAME).setSubject(user.getEmail())
                 .setAudience(generateAudience()).setIssuedAt(new Date())
-                .claim("roles", user.getClass().getSimpleName() ).setExpiration(generateExpirationDate())
+                .claim("role",  "ROLE_" + user.getClass().getSimpleName().toUpperCase()).setExpiration(generateExpirationDate())
                 .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SIGNATURE_ALGORITHM).compact();
     }
 

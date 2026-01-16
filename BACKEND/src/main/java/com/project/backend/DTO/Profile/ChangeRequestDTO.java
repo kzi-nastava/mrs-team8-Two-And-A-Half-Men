@@ -23,7 +23,7 @@ public class ChangeRequestDTO {
     private String imgSrc;
     private String model;
     private String licensePlate;
-    private int numberOfSeats;
+    private Integer numberOfSeats;
     private String vehicleType;
     private List<String> additionalServices;
 

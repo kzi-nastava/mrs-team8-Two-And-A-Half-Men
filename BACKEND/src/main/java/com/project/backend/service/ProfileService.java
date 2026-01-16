@@ -12,6 +12,7 @@ import com.project.backend.repositories.*;
 import com.project.backend.util.TokenUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 
@@ -60,6 +61,7 @@ public class ProfileService {
         return resultBuilder.build();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public UpdateProfileResponseDTO updateProfile(Long userId, UserRole role, UpdateProfileRequestDTO body) {
         String validateMessage = body.validate();
         if (validateMessage != null) {
@@ -91,6 +93,7 @@ public class ProfileService {
         if (body.getEmail() != null) {
             user.setEmail(body.getEmail());
         }
+        user = userRepository.save(user);
         return createUpdateProfileResponse(user, body.getEmail() != null);
     }
 

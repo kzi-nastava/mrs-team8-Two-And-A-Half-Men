@@ -4,6 +4,8 @@ import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms'
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Auth } from '../../service/auth';
+import { Router } from '@angular/router';
+
 
 
 @Component({
@@ -21,24 +23,31 @@ export class Login {
     rememberMe: new FormControl(false)
   });
 
-  constructor(private authService: Auth) {}
-
+  constructor(private authService: Auth, private router: Router) {}
 
   onSubmit() {
     if (this.loginForm.valid) {
       const username = this.loginForm.get('username')?.value ?? '';
       const password = this.loginForm.get('password')?.value ?? '';
       const rememberMe = !!this.loginForm.get('rememberMe')?.value;
-      const user = this.authService.login(username, password, rememberMe);
-      if (user) {
-        console.log('Login successful', user);
-        alert(`Welcome, ${user.firstName} ${user.lastName}!`);
-        // Handle remember me functionality here
-      } else {
-        console.log('Login failed');
-        this.loginFailed = true;
-      }
-
+      const logindata = { username, password };
+      this.authService.login(logindata).subscribe({
+        next: (response) => {
+          if(rememberMe) {
+            localStorage.setItem('authTokenUser', response.accessToken);
+            this.authService.setUser(response.email, response.imgUrl, response.firstName, response.lastName);
+            this.router.navigate(['']);
+          } else {
+            sessionStorage.setItem('authTokenUser', response.accessToken);
+            this.authService.setUser(response.email, response.imgUrl, response.firstName, response.lastName);
+            this.router.navigate(['']);
+          }
+        },
+        error: (error) => {
+          console.log('Login failed', error);
+          this.loginFailed = true;
+        }
+      });
     } else {
       console.log('Form is invalid');
       alert('Please fill in the form correctly.');

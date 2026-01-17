@@ -17,5 +17,6 @@ export const routes: Routes = [
     { path: 'profile', component: ProfileComponent},
     { path: 'navbar', component: NavbarComponent},
     { path: 'activation', component: ActivationComponent },
-    { path: '', component: App }
+    { path: '', component: App },
+    { path: '**', redirectTo: '' }
 ];

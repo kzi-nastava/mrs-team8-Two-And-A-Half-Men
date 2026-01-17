@@ -11,7 +11,10 @@ export class CancelationService {
 
   createCancellationRequest(reason: string, cancelledBy: string, id: string | number): Observable<{ message: string | null }> {
 
-    return this.http.post<{ message: string | null }>(`${environment.apiUrl}/v1/rides/${id}/cancel`, { reason, cancelledBy });
+    return this.http.patch<{ message: string | null }>(`${environment.apiUrl}/v1/rides/${id}/cancel`, { reason, cancelledBy });
   }
-  
+  createCustomerCancellationRequest( id: string | number): Observable<{ message: string | null }> {
+
+    return this.http.patch<{ message: string | null }>(`${environment.apiUrl}/v1/rides/${id}/cancel` , {});
+  }
 }

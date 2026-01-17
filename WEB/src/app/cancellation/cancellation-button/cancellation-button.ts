@@ -88,10 +88,17 @@ export class CancellationButton {
         cancelButtonColor: '#6c757d',
       }).then((result) => {
         if (result.isConfirmed) {
-          // Add your cancellation logic here
-          Swal.fire('Cancelled!', 'Your ride has been cancelled.', 'success');
+        const message = this.cancelationService.createCustomerCancellationRequest(this.itemId!);
+         message.subscribe({
+      next: () => {
+        Swal.fire('Cancelled!', 'The ride has been cancelled.', 'success');
+      },
+      error: (error) => {
+        Swal.fire('Error!', 'There was an error cancelling the ride. ' + error.message, 'error');
         }
     });
         }
+    });
     }
+  }
 }

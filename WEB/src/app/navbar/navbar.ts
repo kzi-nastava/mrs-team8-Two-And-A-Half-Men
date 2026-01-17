@@ -2,11 +2,12 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { CancellationButton } from "../cancellation/cancellation-button/cancellation-button";
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CancellationButton],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })

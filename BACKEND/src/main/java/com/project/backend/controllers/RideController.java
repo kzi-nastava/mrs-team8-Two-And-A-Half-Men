@@ -2,9 +2,16 @@ package com.project.backend.controllers;
 
 import com.project.backend.DTO.CostTimeDTO;
 import com.project.backend.DTO.*;
+import com.project.backend.DTO.Ride.RideCancelationDTO;
+import com.project.backend.exceptions.UnauthorizedException;
+import com.project.backend.models.AppUser;
+import com.project.backend.models.enums.UserRole;
+import com.project.backend.service.impl.CancellationService;
 import com.project.backend.service.impl.RatingService;
+import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +25,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RideController {
     private final RatingService ratingService;
-
+    @Autowired
+    private AuthUtils authUtils;
+    @Autowired
+    private CancellationService cancellationService;
     @PostMapping("/estimates")
     public ResponseEntity<?> estimateRide(@RequestBody RidesInfoRequestDTO rideData) {
 
@@ -168,12 +178,26 @@ public class RideController {
     }
 
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<?> cancelRide(@PathVariable String id, @RequestBody String reason) {
-        if(id.equals("11")){
-            return ResponseEntity.ok(Map.of("message", "Ride cancelled successfully"));
+    public ResponseEntity<?> cancelRide(@PathVariable Long id, @RequestBody RideCancelationDTO reason) {
+        try {
+            AppUser user = authUtils.getCurrentUser();
+            if(user == null) {
+                return ResponseEntity.status(401)
+                        .body(Map.of("error", "Unauthorized"));
+            }
+            cancellationService.cancelRide(id, reason, user);
+        } catch (UnauthorizedException e) {
+
+            return ResponseEntity.status(401)
+                    .body(Map.of("error", "Unauthorized"));
         }
-        return  ResponseEntity.status(404)
-                .body(Map.of("error", "Ride not found"));
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(500)
+                    .body(Map.of("error", "Internal server error"));
+        }
+        return ResponseEntity.status(501)
+                .body(Map.of("error", "Not implemented"));
     }
 
     @PostMapping("/{id}/rating")

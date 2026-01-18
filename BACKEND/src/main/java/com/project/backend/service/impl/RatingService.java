@@ -1,7 +1,7 @@
 package com.project.backend.service.impl;
 
-import com.project.backend.DTO.RatingRequestDTO;
-import com.project.backend.DTO.RatingResponseDTO;
+import com.project.backend.DTO.Ride.RatingRequestDTO;
+import com.project.backend.DTO.Ride.RatingResponseDTO;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.Passenger;

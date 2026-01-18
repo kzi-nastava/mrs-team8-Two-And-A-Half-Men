@@ -1,4 +1,4 @@
-package com.project.backend.DTO;
+package com.project.backend.DTO.Ride;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

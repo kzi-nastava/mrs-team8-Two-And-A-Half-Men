@@ -2,18 +2,20 @@ package com.project.backend.controllers;
 
 import com.project.backend.DTO.CostTimeDTO;
 import com.project.backend.DTO.*;
+import com.project.backend.DTO.Ride.*;
+import com.project.backend.models.AppUser;
+import com.project.backend.models.Driver;
 import com.project.backend.service.IHistoryService;
 import com.project.backend.service.IRatingService;
+import com.project.backend.service.IRideService;
+import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Map;
 
 @RestController
@@ -22,10 +24,12 @@ import java.util.Map;
 public class RideController {
     private final IRatingService ratingService;
     private final IHistoryService historyService;
+    private final IRideService rideService;
+    private final AuthUtils authUtils;
 
 
     @PostMapping("/estimates")
-    public ResponseEntity<?> estimateRide(@RequestBody RidesInfoRequestDTO rideData) {
+    public ResponseEntity<?> estimateRide(@RequestBody RideRequestDTO rideData) {
 
 
 
@@ -48,44 +52,11 @@ public class RideController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getRide(@PathVariable String id) {
-        Long rideId;
-        try {
-            rideId = Long.parseLong(id);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Invalid ride ID format"));
-        }
-
-        // Check if ride exists
-        if (rideId > 100) {
-            return ResponseEntity.status(404)
-                    .body(Map.of("error", "Ride not found"));
-        }
-
-        // Create dummy ride data
-        RidesInfoDTO ride = createDummyRideInfo(rideId);
-
-        return ResponseEntity.ok(ride);
-    }
-
-    private RidesInfoDTO createDummyRideInfo(Long rideId) {
-        ArrayList<String> services = new ArrayList<>();
-        services.add("pet-friendly");
-        services.add("child-seat");
-        services.add("wifi");
-
-        ArrayList<String> addresses = new ArrayList<>();
-        addresses.add("Trg Republike, Beograd");
-        addresses.add("Knez Mihailova 45, Beograd");
-        addresses.add("Aerodrom Nikola Tesla, Beograd");
-
-        return new RidesInfoDTO(
-                "SEDAN",
-                services,
-                addresses,
-                LocalDateTime.now().plusHours(1)
-        );
+    public ResponseEntity<RideResponseDTO> getRide(
+            @PathVariable Long id
+    ) {
+        RideResponseDTO ride = rideService.getRideById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 
     @GetMapping("/{id}/location")
@@ -96,40 +67,10 @@ public class RideController {
 
     @PostMapping("/{id}/notes")
     public ResponseEntity<?> addRideNote(
-            @PathVariable String id,
+            @PathVariable Long id,
             @RequestBody NoteRequestDTO noteRequest) {
-        Long rideId;
-        try {
-            rideId = Long.parseLong(id);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Invalid ride ID format"));
-        }
-
-        // Dummy validation if ride exists
-        if (rideId > 100) {
-            return ResponseEntity.status(404)
-                    .body(Map.of("error", "Ride not found"));
-        }
-
-        // Text validation
-        if (noteRequest.getNoteText() == null || noteRequest.getNoteText().trim().isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Note text is required"));
-        }
-
-        // Check if ride is active
-        if (rideId == 99) {
-            return ResponseEntity.status(400)
-                    .body(Map.of("error", "Cannot add note to completed or cancelled ride"));
-        }
-
-        // Dummy send to service
-        NoteDTO createdNote = new NoteDTO(
-                noteRequest.getNoteText()
-        );
-
-        return ResponseEntity.status(201).body(createdNote);
+        // TODO: correct controller logic and make service
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @PatchMapping("/{id}/start")
@@ -137,11 +78,7 @@ public class RideController {
         return ResponseEntity.status(501)
                 .body(Map.of("error", "Not implemented"));
     }
-    /*
-    Here we save data of ride in our system evry 30 seconds we send locations to server(use it for updating ride and at finish we just send id of ride)
-    (futer me need it)
-    it returs calculated price for ride
-     */
+    
     @PatchMapping("/{id}/finish")
     public ResponseEntity<?> finishRide(@PathVariable String id) {
         Long rideId;
@@ -191,20 +128,20 @@ public class RideController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<?> getRideHistory(@RequestParam(required = false) Map<String, String> filters) {
-        ArrayList<HistoryResponseDTO> history = new ArrayList<>();
-        history.add( new HistoryResponseDTO() );
-        history.add(new HistoryResponseDTO());
-        return ResponseEntity.ok(Map.of("history", history));
-    }
-
-    @GetMapping("/driver/{id}/history")
-    public ResponseEntity<PagedResponse<HistoryResponseDTO>> getDriverRideHistory(
-            @PathVariable Long id,
+    public ResponseEntity<PagedResponse<RideResponseDTO>> getDriverRideHistory(
             Pageable pageable,
             @Valid @RequestBody HistoryRequestDTO historyRequestDTO
     ) {
-        PagedResponse<HistoryResponseDTO> history = historyService.getDriverRideHistory(id, pageable, historyRequestDTO);
+        AppUser user = authUtils.getCurrentUser();
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        PagedResponse<RideResponseDTO> history = null;
+
+        if (user instanceof Driver) {
+            history = historyService.getDriverRideHistory(user.getId(), pageable, historyRequestDTO);
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(history);
     }
 }

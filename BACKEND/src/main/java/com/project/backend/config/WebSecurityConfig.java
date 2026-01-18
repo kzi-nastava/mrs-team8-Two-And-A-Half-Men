@@ -75,6 +75,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/v1/rides/estimates").permitAll()
                     .requestMatchers("/api/v1/activate").permitAll()
                     .requestMatchers("/api/v1/forgot-password/**").permitAll()
+                    .requestMatchers("/socket/**").permitAll()
                     .anyRequest().authenticated();
         });
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

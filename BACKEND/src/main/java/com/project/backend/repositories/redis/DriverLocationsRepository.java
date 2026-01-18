@@ -46,28 +46,7 @@ public class DriverLocationsRepository {
         return redisTemplate.opsForGeo().position(GEO_KEY, driverID.toString()).get(0);
     }
     public List<RedisLocationsDTO> getAllLocations() {
-        GeoResults<RedisGeoCommands.GeoLocation<String>> results =
-                redisTemplate.opsForGeo().radius(
-                        GEO_KEY,
-                        new Circle(
-                                new Point(0, 0),
-                                new org.springframework.data.geo.Distance(20015, org.springframework.data.geo.Metrics.KILOMETERS)
-                        ),
-                        RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().includeCoordinates()
-                );
-
-        if (results == null) {
-            return new ArrayList<>();
-        }
-
-        return results.getContent()
-                .stream()
-                .map(result -> new RedisLocationsDTO(
-                        Long.parseLong(result.getContent().getName()),
-                        result.getContent().getPoint().getY(),
-                        result.getContent().getPoint().getX()
-                ))
-                .toList();
+        return getLocationsWithinRadius(0, 0, 20015); // Approximate radius of the Earth in kilometers
     }
     public List<RedisLocationsDTO> getLocationsWithinRadius(double longitude, double latitude, double radiusInKm) {
         GeoResults<RedisGeoCommands.GeoLocation<String>> results =

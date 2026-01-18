@@ -23,7 +23,7 @@ public class RatingService implements IRatingService {
     private static final int RATING_DEADLINE_DAYS = 3;
 
     @Transactional
-    public RatingResponseDTO rateRide(RatingRequestDTO request) throws ResourceNotFoundException, BadRequestException {
+    public RatingResponseDTO rateRide(RatingRequestDTO request) {
         Passenger passenger = passengerRepository
                         .findById(request.getPassengerId())
                         .orElseThrow(() -> new ResourceNotFoundException(

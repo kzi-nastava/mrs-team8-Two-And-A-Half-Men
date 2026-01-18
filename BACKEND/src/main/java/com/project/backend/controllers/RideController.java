@@ -2,12 +2,15 @@ package com.project.backend.controllers;
 
 import com.project.backend.DTO.CostTimeDTO;
 import com.project.backend.DTO.*;
-import com.project.backend.service.impl.RatingService;
+import com.project.backend.service.IHistoryService;
+import com.project.backend.service.IRatingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,7 +20,9 @@ import java.util.Map;
 @RequestMapping("/api/v1/rides")
 @RequiredArgsConstructor
 public class RideController {
-    private final RatingService ratingService;
+    private final IRatingService ratingService;
+    private final IHistoryService historyService;
+
 
     @PostMapping("/estimates")
     public ResponseEntity<?> estimateRide(@RequestBody RidesInfoRequestDTO rideData) {
@@ -187,9 +192,19 @@ public class RideController {
 
     @GetMapping("/history")
     public ResponseEntity<?> getRideHistory(@RequestParam(required = false) Map<String, String> filters) {
-        ArrayList<HistoryDTO> history = new ArrayList<>();
-        history.add( new HistoryDTO() );
-        history.add(new HistoryDTO());
+        ArrayList<HistoryResponseDTO> history = new ArrayList<>();
+        history.add( new HistoryResponseDTO() );
+        history.add(new HistoryResponseDTO());
         return ResponseEntity.ok(Map.of("history", history));
+    }
+
+    @GetMapping("/driver/{id}/history")
+    public ResponseEntity<PagedResponse<HistoryResponseDTO>> getDriverRideHistory(
+            @PathVariable Long id,
+            Pageable pageable,
+            @Valid @RequestBody HistoryRequestDTO historyRequestDTO
+    ) {
+        PagedResponse<HistoryResponseDTO> history = historyService.getDriverRideHistory(id, pageable, historyRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(history);
     }
 }

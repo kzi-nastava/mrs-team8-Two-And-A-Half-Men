@@ -1,14 +1,21 @@
 package com.project.backend.service;
 
-import com.project.backend.DTO.Auth.ActivateRequestDTO;
-import com.project.backend.DTO.Auth.RegistretionDTO;
-import com.project.backend.DTO.Auth.UserLoginRequestDTO;
-import com.project.backend.DTO.Auth.UserTokenDTO;
+import com.project.backend.DTO.Auth.*;
+import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
+import com.project.backend.models.Driver;
+import com.project.backend.models.Vehicle;
+import com.project.backend.models.enums.DriverStatus;
+import com.project.backend.models.enums.UserRole;
+import com.project.backend.repositories.AdditionalServiceRepository;
 import com.project.backend.repositories.AppUserRepository;
+import com.project.backend.repositories.VehicleRepository;
+import com.project.backend.repositories.VehicleTypeRepository;
 import com.project.backend.util.TokenUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,21 +23,48 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class AuthService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private AppUserRepository appUserRepository;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private TokenUtils tokenUtils;
+    private final AppUserRepository appUserRepository;
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenUtils tokenUtils;
+    private final VehicleRepository vehicleRepository;
+    private final VehicleTypeRepository vehicleTypeRepository;
+    private final AdditionalServiceRepository additionalServiceRepository;
+    private final EmailBodyGeneratorService emailBodyGeneratorService;
+
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
+    public AuthService(
+            AuthenticationManager authenticationManager,
+            AppUserRepository appUserRepository,
+            EmailService emailService,
+            PasswordEncoder passwordEncoder,
+            TokenUtils tokenUtils,
+            VehicleRepository vehicleRepository,
+            VehicleTypeRepository vehicleTypeRepository,
+            AdditionalServiceRepository additionalServiceRepository,
+            EmailBodyGeneratorService emailBodyGeneratorService
+    ) {
+        this.authenticationManager = authenticationManager;
+        this.appUserRepository = appUserRepository;
+        this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenUtils = tokenUtils;
+        this.vehicleRepository = vehicleRepository;
+        this.vehicleTypeRepository = vehicleTypeRepository;
+        this.additionalServiceRepository = additionalServiceRepository;
+        this.emailBodyGeneratorService = emailBodyGeneratorService;
+    }
 
     public void registerCustomer(RegistretionDTO userData) throws Exception {
         // Validate user data
@@ -111,7 +145,6 @@ public class AuthService {
 
     }
 
-
     public UserTokenDTO login(UserLoginRequestDTO credentials) throws Exception {
         AppUser customer = appUserRepository.findByEmail(credentials.getUsername());
         if (customer == null) {
@@ -148,5 +181,107 @@ public class AuthService {
         } catch (Exception e) {
             throw new Exception("Invalid username or password " + e.getMessage());
         }
+    }
+
+    @Transactional
+    public Map<String, Object> registerDriver(RegisterDriverDTO body) throws Exception {
+
+        Pair<Driver, Vehicle> driverAndVehicle = getInitializedDriverAndVehicle(body.getPersonalInfo().getEmail());
+        Driver driver = driverAndVehicle.getFirst();
+        Vehicle vehicle = driverAndVehicle.getSecond();
+
+        this.initializeDriverPersonalInfo(driver, body.getPersonalInfo());
+        this.initializeVehicleInfo(vehicle, body.getVehicleInfo(), driver);
+
+        appUserRepository.save(driver);
+        vehicleRepository.save(vehicle);
+        appUserRepository.flush();
+        vehicleRepository.flush();
+
+        emailService.sendEmail(
+                driver.getEmail(),
+                "Driver Registration Received",
+                emailBodyGeneratorService.generateDriverActivationEmailBody(
+                        driver.getFirstName(),
+                        this.frontendUrl + "/driver-activation?token=" + driver.getToken()
+                )
+        );
+
+        return Map.of(
+                "ok", true,
+                "message", "Driver registered successfully",
+                "driverId", driver.getId(),
+                "vehicleId", vehicle.getId()
+        );
+    }
+
+    private Pair<Driver, Vehicle> getInitializedDriverAndVehicle(String email) {
+        Driver driver = new Driver();
+        Vehicle vehicle = new Vehicle();
+
+        // Check if user with the same email already exists
+        var existingUser = appUserRepository.findByEmail(email);
+        if (existingUser != null) {
+            // If the existing user is not a driver, throw an error - email is taken
+            if (existingUser.getRole() != UserRole.DRIVER) {
+                throw new BadRequestException("Email is already in use");
+            }
+
+            // If the existing user is a driver, check their status
+            var existingDriver = (Driver) existingUser;
+            // If the driver is not in WAITING_ACTIVATION status, throw an error - driver already exists
+            if (existingDriver.getDriverStatus() != DriverStatus.WAITING_ACTIVATION) {
+                throw new BadRequestException("Driver with this email already exists");
+            }
+
+            // If the driver has a valid token expiration, throw an error - registration in process
+            if (
+                    existingDriver.getTokenExpiration() != null &&
+                            existingDriver.getTokenExpiration().isAfter(LocalDateTime.now())
+            ) {
+                throw new BadRequestException(
+                        "Driver registration is already in process. Please check your email for activation link."
+                );
+            }
+
+            // Reuse the existing driver object for updating
+            driver = existingDriver;
+            vehicle = vehicleRepository.findByDriverId(driver.getId()).orElse(new Vehicle());
+        }
+
+        return Pair.of(driver, vehicle);
+    }
+
+    private void initializeDriverPersonalInfo(Driver driver, RegisterDriverPersonalInfoDTO personalInfo) {
+        driver.setFirstName(personalInfo.getFirstName());
+        driver.setLastName(personalInfo.getLastName());
+        driver.setEmail(personalInfo.getEmail());
+        driver.setAddress(personalInfo.getAddress());
+        driver.setPhoneNumber(personalInfo.getPhoneNumber());
+        driver.setIsActive(false);
+        driver.setIsBlocked(false);
+        driver.setPassword("");
+        driver.setToken(UUID.randomUUID().toString());
+        driver.setTokenExpiration(LocalDateTime.now().plusDays(1));
+        driver.setDriverStatus(DriverStatus.WAITING_ACTIVATION);
+    }
+
+    private void initializeVehicleInfo(Vehicle vehicle, RegisterDriverVehicleInfoDTO vehicleInfo, Driver driver) {
+        vehicle.setDriver(driver);
+        vehicle.setModel(vehicleInfo.getModel());
+        vehicle.setLicensePlate(vehicleInfo.getLicensePlate());
+        vehicle.setNumberOfSeats(vehicleInfo.getNumberOfSeats());
+
+        vehicle.setVehicleType(
+                vehicleTypeRepository
+                        .findById(vehicleInfo.getTypeId())
+                        .orElseThrow(() -> new BadRequestException("Vehicle type not found"))
+                );
+
+        vehicle.setAdditionalServices(
+                new HashSet<>(
+                        additionalServiceRepository
+                                .findAllById(vehicleInfo.getAdditionalServicesIds().stream().toList())
+                ));
     }
 }

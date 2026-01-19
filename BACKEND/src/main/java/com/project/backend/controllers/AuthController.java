@@ -1,13 +1,15 @@
 package com.project.backend.controllers;
 
-import com.project.backend.DTO.Auth.ActivateRequestDTO;
-import com.project.backend.DTO.Auth.RegistretionDTO;
-import com.project.backend.DTO.Auth.UserLoginRequestDTO;
-import com.project.backend.DTO.Auth.UserTokenDTO;
+import com.project.backend.DTO.Auth.*;
 import com.project.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
@@ -48,9 +50,9 @@ public class AuthController {
     }
 
     @PostMapping("/drivers/register")
-    public ResponseEntity<?> registerDriver(@RequestBody Map<String, Object> driverData) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> registerDriver(@RequestBody RegisterDriverDTO body) throws Exception {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerDriver(body));
     }
 
     @PostMapping("/forgot-password")

@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { trigger, transition, style, animate, query, group } from '@angular/animations';
 import { NavbarComponent } from './navbar/navbar';
 import { EstimateForm } from './estimate-form/estimate-form';
+import { MapComponent } from './map/map';
 
 @Component({
   selector: 'app-root',

@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +32,8 @@ public class Ride {
 
     private String cancellationReason;
 
+    private Double price;
+
     private Double totalCost;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -50,4 +51,6 @@ public class Ride {
     @OneToMany(fetch = FetchType.LAZY)
     List<Passenger> passengers;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Route route;
 }

@@ -2,12 +2,14 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { trigger, transition, style, animate, query, group } from '@angular/animations';
 import { NavbarComponent } from './navbar/navbar';
+import { EstimateForm } from './estimate-form/estimate-form';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent],
+  imports: [RouterOutlet, NavbarComponent, EstimateForm],
   template: `
     <app-navbar></app-navbar>
+    <app-estimate-form></app-estimate-form>
     <div [@routeAnimations]="prepareRoute(outlet)">
       <router-outlet #outlet="outlet"></router-outlet>
     </div>

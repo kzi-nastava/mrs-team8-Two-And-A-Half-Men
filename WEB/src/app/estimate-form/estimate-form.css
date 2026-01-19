@@ -1,0 +1,229 @@
+.window { 
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #322D2B;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px;
+    border: 0.1rem solid #1C6331;
+    width: 40%;
+    }
+
+
+.estimate-form {
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 80%;
+  background-color: #322D2B;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.estimate-form .estimate-form-container {
+  flex: 1;
+}
+
+.estimate-form h2 {
+  text-align: center;
+  border-bottom: #fff 0.1rem solid;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 5rem;
+}
+
+.estimate-form .form-group {
+  margin-left: 10%;
+  width: 80%;
+  margin-bottom: 1rem;
+  position: relative;
+  height: 4rem;
+}
+
+.estimate-form .form-group label {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.5rem;
+  color: #aaa;
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+}
+
+.estimate-form .form-group input {
+  width: 100%;
+  border: none;
+  border-radius: 3px;
+  padding: 0.3rem;
+  border-radius: 10px;
+  border: #1C6331 0.1rem solid;
+  height: 2rem;
+  font-size: 1.5rem;
+}
+
+.estimate-form .form-group input:focus {
+  outline: none;
+  border: #1C6331 0.2rem solid;
+}
+
+.estimate-form .form-group input:focus + label,
+.estimate-form .form-group input:not(:placeholder-shown) + label {
+  top: -0.9rem;
+  font-size: 0.75rem;
+  color: #fff;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #322D2B;
+  border: 0.1rem solid #1C6331;
+  border-radius: 5px;
+  margin-top: 5px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.autocomplete-item {
+  padding: 10px 15px;
+  color: #fff;
+  cursor: pointer;
+  border-bottom: 1px solid #444;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-item:hover {
+  background-color: #1C6331;
+}
+
+/* Custom scrollbar for dropdown */
+.autocomplete-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-track {
+  background: #222121;
+  border-radius: 5px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb {
+  background: #1C6331;
+  border-radius: 5px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #145224;
+}
+
+.estimate-form .button-container {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.estimate-form .submit-btn {
+  width: 80%;
+  background-color: #1C6331;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 2rem;  
+  cursor: pointer;
+  padding: 0.5rem;
+  
+}
+.estimate-form .reset-btn {
+  width: 80%;
+  background-color: #d8d514;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-top: 1rem;
+}
+
+.estimate-form .submit-btn:hover {
+  background-color: #145224;
+}
+
+small {
+  color: #ff4d4d;
+  font-size: 12px;
+  display: block;
+  margin-top: 5px;
+}
+
+.main {
+  height: 100vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  background-color: #222121;
+}
+
+@media (max-width: 768px) {
+  .estimate-form {
+    width: 80%;
+  }
+  
+  .main {
+    align-items: center;
+  }
+  
+  .estimate-form {
+    justify-content: center;
+    font-size: 1rem;
+  }
+  
+  .estimate-form h2 {
+    margin-bottom: 3rem;
+  }
+  
+  .estimate-form .form-group input {
+    font-size: 1rem;
+    height: 1rem;
+  }
+  
+  .estimate-form .form-group {
+    height: 3.2rem;
+  }
+  
+  .autocomplete-item {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+  
+  .autocomplete-dropdown {
+    max-height: 200px;
+  }
+
+}
+
+.result-container {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #fff;
+}
+.result-container h3 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  background-color: #d8d514;
+  padding: 0.5rem;
+  border-radius: 5px;
+}

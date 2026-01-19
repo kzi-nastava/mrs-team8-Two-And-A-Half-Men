@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
+import { Auth } from './auth';
 
 
 
@@ -13,11 +14,13 @@ export class WebSocket {
     private stompClient: any;
     private isLogedIn: boolean = false;
 
-  constructor() {}
+  constructor(private auth: Auth) {}
   connect() {
        
-      const ws = new SockJS('http://localhost:8080/socket');
-      
+      const ws = new SockJS('http://localhost:8080/socket', null,
+      {
+      });
+
       this.stompClient = Stomp.over(ws);
       this.stompClient.debug = (str : any) => {
         console.log(str);
@@ -35,7 +38,8 @@ export class WebSocket {
 
 
   private subscribeToPanic() {
-    if(this.isLogedIn){ 
+    console.log('this.auth.getRole()', this.auth.getRole());
+    if(this.isLogedIn && this.auth.getRole() == 'ROLE_ADMIN') { 
         this.stompClient.subscribe('/topic/panic', (message: any) => {
           console.log('Panic alert received:', message.body);
           if (message.body) {
@@ -48,7 +52,8 @@ export class WebSocket {
   private showNottification(data: any) {
     Swal.fire({
       title: 'Panic Alert',
-      text: `Panic alert received from ride ID: ${data.rideId} by ${data.reportedBy}. Reason: ${data.reason}`,
+      text: `Panic alert received from ride ID: ${data.rideId} driver name: ${data.driverName}. 
+      Triggered by ${data.passengerName} in location ${data.driverLocation}`,
       icon: 'warning',
       confirmButtonText: 'OK'
     });

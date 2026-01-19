@@ -81,4 +81,13 @@ public class GlobalExceptionHandler {
                         "type", ex.getClass().getName()
                 ));
     }
+    @ExceptionHandler(NoActiveRideException.class)
+    public ResponseEntity<ErrorResponse> handelNoActiveRideException(NoActiveRideException ex) {
+        ErrorResponse err = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
 }

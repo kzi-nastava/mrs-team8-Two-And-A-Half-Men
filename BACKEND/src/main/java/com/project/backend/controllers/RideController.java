@@ -154,13 +154,7 @@ public class RideController {
     public ResponseEntity<?> panic(@RequestParam(name = "accessToken", required = false) String accessToken)
     {
         AppUser user = authUtils.getCurrentUser();
-        try {
-            panicService.triggerPanicAlert(user, accessToken);
-            return ResponseEntity.ok(Map.of("message", "Panic alert triggered successfully"));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(500)
-                    .body(Map.of("error", "Internal server error"));
-        }
+        panicService.triggerPanicAlert(user, accessToken);
+        return ResponseEntity.ok(Map.of("message", "Panic alert triggered successfully"));
     }
 }

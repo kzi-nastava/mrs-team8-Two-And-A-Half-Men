@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { Auth } from './auth';
+import { PanicService } from './panic-service';
 
 
 
@@ -14,7 +15,7 @@ export class WebSocket {
     private stompClient: any;
     private isLogedIn: boolean = false;
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth, private panicService: PanicService) {}
   connect() {
        
       const ws = new SockJS('http://localhost:8080/socket', null,
@@ -44,19 +45,10 @@ export class WebSocket {
           console.log('Panic alert received:', message.body);
           if (message.body) {
          let data = JSON.parse(message.body);
-          this.showNottification(data);
+        this.panicService.alertPanic(data);
         }
   });
     }
 }
-  private showNottification(data: any) {
-    Swal.fire({
-      title: 'Panic Alert',
-      text: `Panic alert received from ride ID: ${data.rideId} driver name: ${data.driverName}. 
-      Triggered by ${data.passengerName} in location ${data.driverLocation}`,
-      icon: 'warning',
-      confirmButtonText: 'OK'
-    });
-
-  }
+  
 }

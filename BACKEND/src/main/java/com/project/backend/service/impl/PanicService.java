@@ -1,9 +1,6 @@
 package com.project.backend.service.impl;
 
-import com.project.backend.models.AppUser;
-import com.project.backend.models.Customer;
-import com.project.backend.models.Driver;
-import com.project.backend.models.Passenger;
+import com.project.backend.models.*;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.PassengerRepository;
 import com.project.backend.repositories.RideRepository;
@@ -34,8 +31,24 @@ public class PanicService implements IPanicService {
             passenger = passengerRepository.findByCustomerWithRideStatus((Customer) user,
                     List.of(RideStatus.ACTIVE)).orElse(null);
         } else if(passenger == null && user instanceof Driver) {
-            //Get courent active ride for driver
-            throw new IllegalArgumentException("Driver panic not implemented yet.");
+            Driver driver = (Driver) user;
+            System.out.println("Driver triggering panic");
+            Ride activeRide = rideRepository.findRideOfDriverWithStatus(driver, List.of(RideStatus.ACTIVE))
+                    .orElse(null);
+            if(activeRide == null) {
+                throw new IllegalArgumentException("No active ride found for the driver.");
+            }
+            activeRide.setStatus(RideStatus.PANICED);
+            rideRepository.save(activeRide);
+            String driverLocation = "45.2671° N, 19.8335° E"; // Mock location (Novi Sad coordinates)
+            Map<String, String> panicAlert = Map.of(
+                    "driverName", driver.getEmail(),
+                    "driverLocation", driverLocation,
+                    "rideId", activeRide.getId().toString()
+            );
+            System.out.println("Sending panic alert to admins: " + panicAlert);
+            simpMessagingTemplate.convertAndSend("/topic/panic", panicAlert);
+            return;
         }
         System.out.println(passenger);
         if(passenger == null || passenger.getRide() == null) {

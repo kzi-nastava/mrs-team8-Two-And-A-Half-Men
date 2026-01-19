@@ -30,11 +30,6 @@ public class RideController {
     private final IHistoryService historyService;
     private final IRideService rideService;
     private final AuthUtils authUtils;
-
-
-    @Autowired
-    private AuthUtils authUtils;
-
     @Autowired
     private PanicService panicService;
 

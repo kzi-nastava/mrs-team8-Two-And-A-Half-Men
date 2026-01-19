@@ -1,8 +1,8 @@
 package com.project.backend.controllers;
 
-import com.project.backend.DTO.CostTimeDTO;
-import com.project.backend.DTO.*;
+import com.project.backend.DTO.Ride.CostTimeDTO;
 import com.project.backend.DTO.Ride.*;
+import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
 import com.project.backend.models.AppUser;

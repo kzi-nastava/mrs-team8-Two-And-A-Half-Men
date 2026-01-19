@@ -1,4 +1,4 @@
-package com.project.backend.DTO;
+package com.project.backend.DTO.Ride;
 
 public class CostTimeDTO {
     private double cost;

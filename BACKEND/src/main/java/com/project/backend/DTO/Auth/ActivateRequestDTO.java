@@ -1,4 +1,4 @@
-package com.project.backend.DTO;
+package com.project.backend.DTO.Auth;
 
 public class ActivateRequestDTO {
     private String token;

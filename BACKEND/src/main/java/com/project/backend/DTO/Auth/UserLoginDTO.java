@@ -1,4 +1,4 @@
-package com.project.backend.DTO;
+package com.project.backend.DTO.Auth;
 
 public class UserLoginDTO {
     private Long id;

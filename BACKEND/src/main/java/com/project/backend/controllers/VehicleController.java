@@ -1,6 +1,6 @@
 package com.project.backend.controllers;
 
-import com.project.backend.DTO.ActiveVehicleDTO;
+import com.project.backend.DTO.Vehicle.ActiveVehicleDTO;
 import com.project.backend.service.VehicleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

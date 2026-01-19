@@ -15,8 +15,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String fromAddress;
 
-    //private method u just called it from service do not export logic for mail sending outside of this service
-    private void sendEmail(String toAddress, String subject, String body) throws Exception {
+    public void sendEmail(String toAddress, String subject, String body) throws Exception {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true , "UTF-8");
         helper.setFrom(fromAddress);

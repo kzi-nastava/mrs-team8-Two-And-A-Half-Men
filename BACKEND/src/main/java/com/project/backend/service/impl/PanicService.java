@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
-import java.sql.Driver;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +21,7 @@ public class PanicService implements IPanicService {
     private PassengerRepository passengerRepository;
     @Autowired
     private RideRepository rideRepository;
-    @Autowired    ~  sudo docker run --name redisDB -p 6379:6379 -d redis                                                                                                                     125 ✘ 
-docker: Error response from daemon: Conflict. The container name "/redisDB" is already in use by container "64ddc6a4c02468caa6df1a1d727e61e423684dcb931c85315c2a85b280dedaec". You have to remove (or rename) that container to be able to reuse that name.
-
-Run 'docker run --help' for more information
-
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
     @Autowired
     private DriverLocationsRepository driverLocationsRepository;

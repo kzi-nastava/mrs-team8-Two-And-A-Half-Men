@@ -5,12 +5,16 @@ import com.project.backend.DTO.*;
 import com.project.backend.DTO.Ride.*;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
+import com.project.backend.models.AppUser;
+import com.project.backend.service.impl.PanicService;
 import com.project.backend.service.IHistoryService;
 import com.project.backend.service.IRatingService;
 import com.project.backend.service.IRideService;
 import com.project.backend.util.AuthUtils;
+import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,21 +30,22 @@ public class RideController {
     private final IHistoryService historyService;
     private final IRideService rideService;
     private final AuthUtils authUtils;
+    @Autowired
+    private PanicService panicService;
 
 
     @PostMapping("/estimates")
     public ResponseEntity<?> estimateRide(@RequestBody RideRequestDTO rideData) {
 
 
-
-        if(rideData.getAddressesPoints() == null || rideData.getAddressesPoints().size() < 2) {
+        if (rideData.getAddressesPoints() == null || rideData.getAddressesPoints().size() < 2) {
             return ResponseEntity.status(400)
-                    .body(Map.of("error", "At least one address point is required for estimation") );
+                    .body(Map.of("error", "At least one address point is required for estimation"));
         }
         double estimatedPrice = 25.50;
         int estimatedTimeMinutes = 15;
         return ResponseEntity.ok(Map.of(
-                "estimatedPrice", estimatedPrice * rideData.getAddressesPoints().size() ,
+                "estimatedPrice", estimatedPrice * rideData.getAddressesPoints().size(),
                 "estimatedTimeMinutes", estimatedTimeMinutes
         ));
     }
@@ -106,15 +111,15 @@ public class RideController {
         CostTimeDTO costTime = new CostTimeDTO();
         costTime.setCost(45.75);
         costTime.setTime(32);
-        return ResponseEntity.ok(Map.of("status", "COMPLETED" , "costTime", costTime));
+        return ResponseEntity.ok(Map.of("status", "COMPLETED", "costTime", costTime));
     }
 
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<?> cancelRide(@PathVariable String id, @RequestBody String reason) {
-        if(id.equals("11")){
+        if (id.equals("11")) {
             return ResponseEntity.ok(Map.of("message", "Ride cancelled successfully"));
         }
-        return  ResponseEntity.status(404)
+        return ResponseEntity.status(404)
                 .body(Map.of("error", "Ride not found"));
     }
 
@@ -143,5 +148,13 @@ public class RideController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(history);
+    }
+
+    @PostMapping("/panic")
+    public ResponseEntity<?> panic(@RequestParam(name = "accessToken", required = false) String accessToken)
+    {
+        AppUser user = authUtils.getCurrentUser();
+        panicService.triggerPanicAlert(user, accessToken);
+        return ResponseEntity.ok(Map.of("message", "Panic alert triggered successfully"));
     }
 }

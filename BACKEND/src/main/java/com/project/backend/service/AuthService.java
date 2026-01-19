@@ -1,9 +1,9 @@
 package com.project.backend.service;
 
-import com.project.backend.DTO.ActivateRequestDTO;
-import com.project.backend.DTO.RegistretionDTO;
-import com.project.backend.DTO.UserLoginRequestDTO;
-import com.project.backend.DTO.UserTokenDTO;
+import com.project.backend.DTO.Auth.ActivateRequestDTO;
+import com.project.backend.DTO.Auth.RegistretionDTO;
+import com.project.backend.DTO.Auth.UserLoginRequestDTO;
+import com.project.backend.DTO.Auth.UserTokenDTO;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
 import com.project.backend.repositories.AppUserRepository;

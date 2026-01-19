@@ -1,4 +1,4 @@
-package com.project.backend.DTO;
+package com.project.backend.DTO.Vehicle;
 
 public class ActiveVehicleDTO {
     private Long id;

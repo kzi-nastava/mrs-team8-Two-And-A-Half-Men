@@ -1,7 +1,7 @@
 package com.project.backend.service.impl;
 
 import com.project.backend.DTO.Ride.HistoryRequestDTO;
-import com.project.backend.DTO.PagedResponse;
+import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.DTO.mappers.RideMapper;
 import com.project.backend.exceptions.BadRequestException;

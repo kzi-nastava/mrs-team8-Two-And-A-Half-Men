@@ -19,7 +19,11 @@ export class MapService {
     iconAnchor: [20, 40],
   });
 
-  initMap(containerId: string, center: [number, number], zoom = 13): L.Map {
+  initMap(
+    containerId: string,
+    center: [number, number],
+    zoom = 13
+  ): L.Map {
     this.map = L.map(containerId).setView(center, zoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -30,15 +34,22 @@ export class MapService {
     return this.map;
   }
 
-  getMap(): L.Map | undefined {
+  getMap(): L.Map {
+    if (!this.map) {
+      throw new Error('Map is not initialized');
+    }
     return this.map;
   }
 
-  getAvailableIcon(): L.Icon {
-    return this.availableIcon;
+  getDriverIcon(isOccupied: boolean): L.Icon {
+    return isOccupied ? this.occupiedIcon : this.availableIcon;
   }
 
   getOccupiedIcon(): L.Icon {
     return this.occupiedIcon;
+  }
+
+  getAvailableIcon(): L.Icon {
+    return this.availableIcon;
   }
 }

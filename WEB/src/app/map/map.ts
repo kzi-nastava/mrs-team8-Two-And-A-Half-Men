@@ -35,16 +35,16 @@ export class MapComponent implements AfterViewInit {
     return this.map;
   }
 
-  createMarker(
-    position: L.LatLngExpression,
-    isOccupied: boolean,
-    popupContent: string
-  ): L.Marker {
-    const icon = isOccupied ? this.occupiedDriverIcon : this.availableDriverIcon;
+  // createMarker(
+  //   position: L.LatLngExpression,
+  //   isOccupied: boolean,
+  //   popupContent: string
+  // ): L.Marker {
+  //   const icon = isOccupied ? this.occupiedDriverIcon : this.availableDriverIcon;
     
-    return L.marker(position, { icon })
-      .bindPopup(popupContent);
-  }
+  //   return L.marker(position, { icon })
+  //     .bindPopup(popupContent);
+  // }
 
   private initMap(): void {
     this.map = L.map('map', {

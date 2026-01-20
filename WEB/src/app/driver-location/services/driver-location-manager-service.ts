@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DriverLocation } from '../models/driver-location';
 import { DriverLocationService } from './driver-location-service';
-import { WebSocket } from './../../service/web-socket';
+import { DriverLocationWebsocketService } from './driver-location-websocket-service';
 import { DriverMarkerManagerService } from './driver-marker-manager-service';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class DriverLocationManagerService {
 
   constructor(
     private driverLocationService: DriverLocationService,
-    private webSocket: WebSocket,
+    private driverLocationWebSocket: DriverLocationWebsocketService,
     private markerManager: DriverMarkerManagerService
   ) {}
 
@@ -43,7 +43,7 @@ export class DriverLocationManagerService {
   }
 
   subscribeToUpdates(): void {
-    this.webSocket.driverLocations$.subscribe({
+    this.driverLocationWebSocket.driverLocations$.subscribe({
       next: (locationsMap: Map<number, DriverLocation>) => {
         console.log('WebSocket update received, drivers:', locationsMap.size);
         

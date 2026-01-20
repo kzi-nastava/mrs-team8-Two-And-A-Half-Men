@@ -1,5 +1,6 @@
-import { Component, AfterViewInit, signal } from '@angular/core';
+import { Component, AfterViewInit, signal, effect } from '@angular/core';
 import * as L from 'leaflet';
+import { SheredLocationsService } from '../service/shered-locations-service';
 
 @Component({
   selector: 'app-map',
@@ -8,23 +9,27 @@ import * as L from 'leaflet';
 })
 export class MapComponent implements AfterViewInit {
   private map!: L.Map;
-  markers = signal<L.Marker[]>([]);
+  markers: L.Marker[] = [];
 
-  availableDriverIcon = L.icon({
-    iconUrl: 'assets/icons/car-available.png',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -40]
-  });
-
-  occupiedDriverIcon = L.icon({
-    iconUrl: 'assets/icons/car-occupied.png',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -40]
-  });
-
-  constructor() {}
+  constructor(private sharedLocationsService: SheredLocationsService) {
+     effect(() => {
+        const locations = this.sharedLocationsService.locations();
+        console.log('Locations updated:', locations);
+        for (const marker of this.markers) {
+            console.log('Removing marker:', marker);
+            this.map.removeLayer(marker);
+        }
+        this.markers = [];
+        locations.forEach(location => {
+            const marker = L.marker([parseFloat(location.lat), parseFloat(location.lon)]).addTo(this.map);
+            marker.on('click', () => {
+                this.removeMarker(marker);
+            });
+            this.markers.push(marker);
+        }
+        );
+    });
+  }
 
   getMap(): L.Map | undefined {
     return this.map;
@@ -76,28 +81,27 @@ export class MapComponent implements AfterViewInit {
   registerOnClick(): void {
     this.map.on('click', (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
-
       const marker = L.marker([lat, lng]).addTo(this.map);
+      this.markers.push(marker);
       marker.on('click', () => {
         this.removeMarker(marker);
       });
-
-      this.markers.update(m => [...m, marker]);
+      this.sharedLocationsService.addLocation(marker); 
     });
   }
 
 
   removeLastMarker(): void {
-    const currentMarkers = this.markers();
-
+    const currentMarkers = this.markers;
+    console.log('Current markers count:', currentMarkers.length);
+    console.log(this.sharedLocationsService.locations())
     if (currentMarkers.length === 0) {
       return;
     }
-
+    console.log('Removing last marker');
     const lastMarker = currentMarkers[currentMarkers.length - 1];
     this.map.removeLayer(lastMarker);
-
-    this.markers.set(currentMarkers.slice(0, -1));
+    this.sharedLocationsService.locations.set(this.sharedLocationsService.locations().slice(0, -1));
   }
 
   registerOnRightClick(): void {
@@ -109,30 +113,21 @@ export class MapComponent implements AfterViewInit {
 
   removeMarker(markerToRemove: L.Marker): void {
     this.map.removeLayer(markerToRemove);
-
-    this.markers.update(markers =>
-      markers.filter(marker => marker !== markerToRemove)
-    );
+    this.markers = this.markers.filter(marker => marker !== markerToRemove);
   }
 
   removeMarkerByIndex(index: number): void {
-    const currentMarkers = this.markers();
-
+    const currentMarkers = this.markers;
     if (index < 0 || index >= currentMarkers.length) {
       return;
     }
-
     const marker = currentMarkers[index];
-
     this.map.removeLayer(marker);
-
-    this.markers.set(
-      currentMarkers.filter((_, i) => i !== index)
-    );
+    this.markers = currentMarkers.filter((_, i) => i !== index);
   }
 
   removeMarkerByCoordinates(lat: number, lng: number): void {
-    const marker = this.markers().find(m => {
+    const marker = this.markers.find(m => {
       const pos = m.getLatLng();
       return pos.lat === lat && pos.lng === lng;
     });
@@ -140,7 +135,6 @@ export class MapComponent implements AfterViewInit {
     if (!marker) {
       return;
     }
-
     this.removeMarker(marker);
   }
 

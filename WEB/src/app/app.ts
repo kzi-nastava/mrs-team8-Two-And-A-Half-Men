@@ -2,12 +2,16 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { trigger, transition, style, animate, query, group } from '@angular/animations';
 import { NavbarComponent } from './navbar/navbar';
-import { MapComponent } from './map/map';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent, MapComponent],
-  templateUrl: './app.html',
+  imports: [RouterOutlet, NavbarComponent],
+  template: `
+    <app-navbar></app-navbar>
+    <div [@routeAnimations]="prepareRoute(outlet)">
+      <router-outlet #outlet="outlet"></router-outlet>
+    </div>
+  `,
   styleUrl: './app.css',
   animations: [
     trigger('routeAnimations', [

@@ -4,14 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-
-
-interface NominatimResult {
-  place_id: number;
-  display_name: string;
-  lat: string;
-  lon: string;
-}
+import { SheredLocationsService } from '../service/shered-locations-service';
 
 @Component({
   selector: 'app-estimate-form',
@@ -21,9 +14,6 @@ interface NominatimResult {
 })
 export class EstimateForm {
   estimateForm: FormGroup;
-    
-  
-  
   startQuery = signal('');
   endQuery = signal('');
 
@@ -35,7 +25,8 @@ export class EstimateForm {
   estimatedTime = signal<number | null>(null);
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient
+    private http: HttpClient,
+    private sharedLocationsService: SheredLocationsService
   ) {
     this.estimateForm = this.fb.group({
       startpoint: ['', Validators.required],
@@ -43,11 +34,12 @@ export class EstimateForm {
     });
      effect((onCleanup) => {
       const query = this.startQuery();
-      if (query.length > 3) {
+      if (query.length > 3 ) {
         this.showStartSuggestions.set(false);
         const sub = this.searchLocation(query).subscribe(results => {
           if(results.length === 1 && this.startQuery() === results[0].display_name) {
             this.showStartSuggestions.set(false);
+            return;
           }
           this.startSuggestions.set(results);
           this.showStartSuggestions.set(results.length > 0);
@@ -60,6 +52,7 @@ export class EstimateForm {
     });
     effect((onCleanup) => {
       const query = this.endQuery();
+      console.log('End query changed:', query); 
       if (query.length > 3) {
         this.showEndSuggestions.set(false);
         const sub = this.searchLocation(query).subscribe(results => {
@@ -75,12 +68,25 @@ export class EstimateForm {
         this.showEndSuggestions.set(false);
       }
     });
-    
+    effect(() => {
+      const locations = this.sharedLocationsService.locations();
+      if(locations.length >2 ) {
+        this.sharedLocationsService.locations.set([locations[0],locations[locations.length - 1]]);
+      }
+      else if(locations.length === 2)
+      { 
+        this.startQuery.set(locations[0].display_name)
+        this.endQuery.set(locations[1].display_name)
+      } else if(locations.length === 1)
+      {
+        this.startQuery.set(locations[0].display_name)
+        this.endQuery.set('')
+      }else if(locations.length === 0){ 
+        this.startQuery.set('')
+        this.endQuery.set('')
+      }
+    });
   }
-
-   
-
-
   searchLocation(query: string) {
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`;
     return this.http.get<NominatimResult[]>(url, {
@@ -89,21 +95,27 @@ export class EstimateForm {
       }
     });
   }
-
-
-
   selectStartSuggestion(suggestion: NominatimResult) {
     this.startQuery.set(suggestion.display_name);
     this.showStartSuggestions.set(false);
     this.startSuggestions.set([]);
-    // Set it on a mpap
+    this.sharedLocationsService.locations.update(list =>
+    [suggestion, list[list.length - 1]].filter(Boolean) as NominatimResult[]
+    );
   }
 
   selectEndSuggestion(suggestion: NominatimResult) {
     this.endQuery.set(suggestion.display_name);
     this.showEndSuggestions.set(false);
     this.endSuggestions.set([]);
-    //Set it on a map
+    this.sharedLocationsService.locations.update(list => { 
+      if(list.length === 0) {
+        return [suggestion];
+      }
+      return [list[0], suggestion].filter(Boolean) as NominatimResult[];
+    }
+    
+    );
   }
 
   onSubmit() {
@@ -135,5 +147,6 @@ export class EstimateForm {
     this.endSuggestions.set([]);
     this.showStartSuggestions.set(false);
     this.showEndSuggestions.set(false);
+    this.sharedLocationsService.locations.set([]);
   }
 }

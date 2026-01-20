@@ -10,7 +10,36 @@ export class MapComponent implements AfterViewInit {
   private map!: L.Map;
   markers = signal<L.Marker[]>([]);
 
+  availableDriverIcon = L.icon({
+    iconUrl: 'assets/icons/car-available.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40]
+  });
+
+  occupiedDriverIcon = L.icon({
+    iconUrl: 'assets/icons/car-occupied.png',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40]
+  });
+
   constructor() {}
+
+  getMap(): L.Map | undefined {
+    return this.map;
+  }
+
+  createMarker(
+    position: L.LatLngExpression,
+    isOccupied: boolean,
+    popupContent: string
+  ): L.Marker {
+    const icon = isOccupied ? this.occupiedDriverIcon : this.availableDriverIcon;
+    
+    return L.marker(position, { icon })
+      .bindPopup(popupContent);
+  }
 
   private initMap(): void {
     this.map = L.map('map', {

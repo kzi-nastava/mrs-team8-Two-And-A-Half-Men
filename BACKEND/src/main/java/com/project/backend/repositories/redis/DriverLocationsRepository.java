@@ -1,14 +1,10 @@
 package com.project.backend.repositories.redis;
 
 import com.project.backend.DTO.redis.RedisLocationsDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
-import org.springframework.data.redis.connection.StringRedisConnection;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -40,10 +36,13 @@ public class DriverLocationsRepository {
         ));
     }
     public void deactivateLocation(Long driverID) {
-        redisTemplate.delete(GEO_KEY + driverID);
+        redisTemplate.opsForGeo().remove(GEO_KEY, driverID.toString());
     }
-    public Point getLcation(Long driverID) {
-        return redisTemplate.opsForGeo().position(GEO_KEY, driverID.toString()).get(0);
+    public Point getLocation(Long driverID) {
+        List<Point> points = redisTemplate.opsForGeo()
+                .position(GEO_KEY, driverID.toString());
+
+        return (points == null || points.isEmpty()) ? null : points.get(0);
     }
     public List<RedisLocationsDTO> getAllLocations() {
         return getLocationsWithinRadius(0, 0, 20015); // Approximate radius of the Earth in kilometers

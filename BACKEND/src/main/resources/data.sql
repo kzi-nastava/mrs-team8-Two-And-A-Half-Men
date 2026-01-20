@@ -92,3 +92,10 @@ SELECT
     id
 FROM additional_service
 WHERE name IN ('WiFi', 'Pet friendly', 'Baby seat');
+
+INSERT INTO route (id, geo_hash)
+VALUES
+    (nextval('route_seq'), 'u2n177jbv'),
+    (nextval('route_seq'), 'u2n17szet'),
+    (nextval('route_seq'), 'u2n17w6ts'),
+    (nextval('route_seq'), 'u2n16t6mn');

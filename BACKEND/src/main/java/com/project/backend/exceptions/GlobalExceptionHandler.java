@@ -60,6 +60,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errs);
     }
 
+    @ExceptionHandler(UnauthenticatedException.class)
+    public ResponseEntity<Map<String, String>> handleForbiddenException(UnauthenticatedException ex) {
+        Map<String, String> errs = new HashMap<>();
+
+        errs.put("error", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errs);
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex) {
         Map<String, String> errs = new HashMap<>();

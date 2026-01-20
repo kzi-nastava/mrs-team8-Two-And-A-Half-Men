@@ -5,9 +5,8 @@
     background-color: #322D2B;
     border-radius: 5px;
     padding: 20px;
-    margin: 20px;
     border: 0.1rem solid #1C6331;
-    width: 40%;
+    width: 100%;
     }
 
 
@@ -22,11 +21,9 @@
   font-size: 1.5rem;
   color: #fff;
 }
-
 .estimate-form .estimate-form-container {
   flex: 1;
 }
-
 .estimate-form h2 {
   text-align: center;
   border-bottom: #fff 0.1rem solid;

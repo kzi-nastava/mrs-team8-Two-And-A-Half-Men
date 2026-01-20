@@ -75,6 +75,7 @@ export class EstimateForm {
         this.showEndSuggestions.set(false);
       }
     });
+    
   }
 
    

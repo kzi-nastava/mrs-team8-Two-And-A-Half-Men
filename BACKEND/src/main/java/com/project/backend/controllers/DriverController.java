@@ -31,7 +31,7 @@ public class DriverController {
                     101L,
                     "abc",
                     "abc@gmail.com",
-                    45.240052D,
+                    45.740052D,
                     19.838116D,
                     false,
                     true,
@@ -56,6 +56,20 @@ public class DriverController {
     @GetMapping("/locations/{driverId}")
     public ResponseEntity<DriverLocationDTO> getDriverLocation(@PathVariable Long driverId) {
         try {
+            DriverLocationDTO driverLocation = new DriverLocationDTO(
+                    101L,
+                    "abc",
+                    "abc@gmail.com",
+                    45.240052D,
+                    19.838116D,
+                    false,
+                    true,
+                    null,
+                    "car",
+                    123L
+            );
+            driverLocationService.updateDriverLocation(101L, driverLocation);
+
             DriverLocationDTO location = driverLocationService.getDriverLocation(driverId);
             if (location != null) {
                 return ResponseEntity.ok(location);

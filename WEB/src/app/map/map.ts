@@ -1,6 +1,8 @@
 import { Component, AfterViewInit, signal, effect } from '@angular/core';
 import * as L from 'leaflet';
 import { SheredLocationsService } from '../service/shered-locations-service';
+import { MapService } from './services/map-service'; 
+import { DriverLocationManagerService } from '../driver-location/services/driver-location-manager-service';
 
 @Component({
   selector: 'app-map',
@@ -11,7 +13,10 @@ export class MapComponent implements AfterViewInit {
   private map!: L.Map;
   markers: L.Marker[] = [];
 
-  constructor(private sharedLocationsService: SheredLocationsService) {
+  constructor(
+    private sharedLocationsService: SheredLocationsService, 
+    private driverLocationManager: DriverLocationManagerService,
+    private mapService: MapService) {
      effect(() => {
         const locations = this.sharedLocationsService.locations();
         console.log('Locations updated:', locations);
@@ -47,10 +52,8 @@ export class MapComponent implements AfterViewInit {
   // }
 
   private initMap(): void {
-    this.map = L.map('map', {
-      center: [45.2396, 19.8227],
-      zoom: 13,
-    });
+    this.map = this.mapService.initMap('map', [45.2396, 19.8227], 13);
+    this.driverLocationManager.initialize();
 
     const tiles = L.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',

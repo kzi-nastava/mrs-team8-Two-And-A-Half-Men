@@ -4,22 +4,22 @@ import com.project.backend.models.enums.UserRole;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
 @Entity
 @DiscriminatorValue("CUSTOMER")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer extends AppUser{
     @ManyToMany
     Set<Route> favoriteRoutes;
-
-    public Set<Route> getFavoriteRoutes() {
-        return favoriteRoutes;
-    }
-
-    public void setFavoriteRoutes(Set<Route> favoriteRoutes) {
-        this.favoriteRoutes = favoriteRoutes;
-    }
 
     @Override
     public UserRole getRole() {

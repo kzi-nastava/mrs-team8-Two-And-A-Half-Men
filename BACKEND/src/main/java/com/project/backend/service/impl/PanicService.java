@@ -44,7 +44,7 @@ public class PanicService implements IPanicService {
             activeRide.setStatus(RideStatus.PANICED);
             rideRepository.save(activeRide);
             driverLocationsRepository.setLocations(driver.getId(), 10 , 10) ; // Mock location
-            Point driverPoint = driverLocationsRepository.getLcation(driver.getId());
+            Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
             String driverLocation = driverPoint.getX() + "," + driverPoint.getY();
             Map<String, String> panicAlert = Map.of(
                     "driverName", driver.getEmail(),
@@ -63,7 +63,7 @@ public class PanicService implements IPanicService {
         rideRepository.save(passenger.getRide());
         Driver driver = passenger.getRide().getDriver();
         driverLocationsRepository.setLocations(driver.getId(), 10 , 10) ; // Mock location
-        Point driverPoint = driverLocationsRepository.getLcation(driver.getId());
+        Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
         String driverLocation = driverPoint.getX() + "," + driverPoint.getY();
         Map<String, String> panicAlert = Map.of(
                 "passengerName", passenger.getUser().getEmail(),

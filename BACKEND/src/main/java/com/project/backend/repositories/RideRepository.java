@@ -58,4 +58,7 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     @Query("SELECT r FROM Ride r WHERE r.driver = :driver " +
             "AND r.status IN :statuses")
     Optional<Ride> findRideOfDriverWithStatus(@Param("driver") Driver driver, @Param("statuses") List<RideStatus> status);
+
+
+    Optional<Ride> findFirstByDriverAndStatusIn(Driver driver, List<RideStatus> statuses);
 }

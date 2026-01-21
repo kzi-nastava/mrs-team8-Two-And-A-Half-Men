@@ -1,0 +1,64 @@
+ <div class="window"> 
+  <form class="estimate-form" [formGroup]="estimateForm" (ngSubmit)="onSubmit()">
+    <div class="estimate-form-container">
+      <h2>Estimate Time for Route</h2>
+      
+      <div class="form-group">
+        <input 
+          type="text" 
+          id="start" 
+          formControlName="startpoint"
+        [(ngModel)]="startQuery"
+          (blur)="onBlur('start')"
+          required 
+          placeholder=" "
+          autocomplete="off"
+        >
+        <label for="start">Start Point</label>
+        
+        <div class="autocomplete-dropdown" *ngIf="showStartSuggestions()">
+          <div 
+            class="autocomplete-item" 
+            *ngFor="let suggestion of startSuggestions()"
+            (mousedown)="selectStartSuggestion(suggestion)"
+          >
+            {{ suggestion.display_name }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <input 
+          type="text" 
+          id="end" 
+          formControlName="endpoint"
+        [(ngModel)]="endQuery"
+          (blur)="onBlur('end')"
+          required 
+          placeholder=" "
+          autocomplete="off"
+        >
+        <label for="end">End Point</label>
+        
+        <div class="autocomplete-dropdown" *ngIf="showEndSuggestions()">
+  @for (suggestion of endSuggestions(); track suggestion.place_id) {
+  <div 
+    class="autocomplete-item" 
+    (mousedown)="selectEndSuggestion(suggestion)"
+  >
+    {{ suggestion.display_name }}
+  </div>
+}
+        </div>
+      </div>
+      
+      <div class="button-container">
+        <button type="submit" class="submit-btn">Get Estimate</button>
+        <button type="button" class="reset-btn" (click)="onReset()">Reset</button>
+    </div>
+    <div class ="result-container" *ngIf="estimatedTime() !== null">
+      <h3>Estimated Time: {{ estimatedTime() }}</h3>
+    </div>
+    </div>
+  </form>
+  </div>

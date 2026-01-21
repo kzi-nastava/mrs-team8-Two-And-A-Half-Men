@@ -4,6 +4,7 @@ import com.project.backend.geolocation.coordinates.Coordinates;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LocationTransformerPolyline extends LocationTransformer {
     private int nextIndex = 0;
@@ -29,7 +30,7 @@ public class LocationTransformerPolyline extends LocationTransformer {
 
 
     @Override
-    public String transformLocation(ArrayList<Coordinates> locations) {
+    public String transformLocation(List<Coordinates> locations) {
         long lastLat = 0;
         long lastLon = 0;
         StringBuilder encoded = new StringBuilder();
@@ -47,8 +48,8 @@ public class LocationTransformerPolyline extends LocationTransformer {
     }
 
     @Override
-    public ArrayList<Coordinates> transformToCoordinates(String hash) {
-        ArrayList<Coordinates> locations = new ArrayList<>();
+    public List<Coordinates> transformToCoordinates(String hash) {
+        List<Coordinates> locations = new ArrayList<>();
         long lat = 0;
         long lon = 0;
         int index = 0;

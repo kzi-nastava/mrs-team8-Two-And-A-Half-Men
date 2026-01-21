@@ -93,9 +93,18 @@ SELECT
 FROM additional_service
 WHERE name IN ('WiFi', 'Pet friendly', 'Baby seat');
 
-INSERT INTO route (id, geo_hash)
-VALUES
-    (nextval('route_seq'), 'u2n177jbv'),
-    (nextval('route_seq'), 'u2n17szet'),
-    (nextval('route_seq'), 'u2n17w6ts'),
-    (nextval('route_seq'), 'u2n16t6mn');
+INSERT INTO location (id, geo_hash, latitude, longitude, address) VALUES
+(nextval('location_seq'), 'u2n177jf9j1j', 45.236663, 19.838263, 'B dom'),
+(nextval('location_seq'), 'u2n17szensm0', 45.246357, 19.851894, 'FTN'),
+(nextval('location_seq'), 'u2n17w2ssdzj', 45.254847, 19.842198, 'Pozorište'),
+(nextval('location_seq'), 'u2n17nfzd2vb', 45.258097, 19.823217, 'Sajam'),
+(nextval('location_seq'), 'u2n1e0r3rvf6', 45.265291, 19.829628, 'Železnička'),
+(nextval('location_seq'), 'u2n16kt0p5v2', 45.244466, 19.793551, 'JGSP'),
+(nextval('location_seq'), 'u2n17jgr834m', 45.252606, 19.823813, 'Medicinski'),
+(nextval('location_seq'), 'u2n17x4vb11m', 45.259172, 19.845087, 'Matica Srpska');
+
+INSERT INTO route (id, geo_hash) VALUES
+(nextval('route_seq'), 'u2n177jf9j1ju2n17szensm0'),
+(nextval('route_seq'), 'u2n1e0r3rvf6u2n17jgr834mu2n17nfzd2vb'),
+(nextval('route_seq'), 'u2n17w2ssdzju2n16kt0p5v2u2n17x4vb11mu2n17nfzd2vbu2n17szensm0'),
+(nextval('route_seq'), 'u2n16kt0p5v2u2n17nfzd2vbu2n177jf9j1ju2n17w2ssdzj');

@@ -5,6 +5,7 @@ import com.project.backend.geolocation.coordinates.Coordinates;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LocationTransformerGeoHashCompressed  extends LocationTransformer{
 
@@ -16,7 +17,7 @@ public class LocationTransformerGeoHashCompressed  extends LocationTransformer{
 
 
     @Override
-    public String transformLocation(ArrayList<Coordinates> locations) {
+    public String transformLocation(List<Coordinates> locations) {
         StringBuilder hashBuilder = new StringBuilder();
         String startingHash = null;
         boolean isFirst = true;
@@ -48,8 +49,8 @@ public class LocationTransformerGeoHashCompressed  extends LocationTransformer{
     }
 
     @Override
-    public ArrayList<Coordinates> transformToCoordinates(String hash) {
-        ArrayList<Coordinates> coordinates = new ArrayList<>();
+    public List<Coordinates> transformToCoordinates(String hash) {
+        List<Coordinates> coordinates = new ArrayList<>();
         int index = 0;
         String startingHash = hash.substring(0, this.length);
         try { //Find a way how this could work faster

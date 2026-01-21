@@ -5,6 +5,7 @@ import com.project.backend.geolocation.coordinates.Coordinates;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LocationTransformerGeoHash extends LocationTransformer {
 
@@ -15,7 +16,7 @@ public class LocationTransformerGeoHash extends LocationTransformer {
     }
 
     @Override
-    public String transformLocation(ArrayList<Coordinates> locations) {
+    public String transformLocation(List<Coordinates> locations) {
         StringBuilder hashBuilder = new StringBuilder();
         for (Coordinates location : locations) {
             System.out.println(location.getLatitude());
@@ -27,8 +28,8 @@ public class LocationTransformerGeoHash extends LocationTransformer {
     }
 
     @Override
-    public ArrayList<Coordinates> transformToCoordinates(String hash) {
-        ArrayList<Coordinates> coordinates = new ArrayList<>();
+    public List<Coordinates> transformToCoordinates(String hash) {
+        List<Coordinates> coordinates = new ArrayList<>();
         for (int i = 0; i < hash.length(); i += this.length) {
             String base = hash.substring(i, i + this.length);
             System.out.println(base);

@@ -6,5 +6,6 @@ public enum RideStatus {
     ACTIVE,
     FINISHED,
     INTERRUPTED,
-    CANCELLED
+    CANCELLED,
+    PANICED
 }

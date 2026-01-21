@@ -60,6 +60,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errs);
     }
 
+    @ExceptionHandler(UnauthenticatedException.class)
+    public ResponseEntity<Map<String, String>> handleForbiddenException(UnauthenticatedException ex) {
+        Map<String, String> errs = new HashMap<>();
+
+        errs.put("error", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errs);
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException ex) {
         Map<String, String> errs = new HashMap<>();
@@ -80,5 +89,14 @@ public class GlobalExceptionHandler {
                         "exception", ex.getMessage(),
                         "type", ex.getClass().getName()
                 ));
+    }
+    @ExceptionHandler(NoActiveRideException.class)
+    public ResponseEntity<ErrorResponse> handelNoActiveRideException(NoActiveRideException ex) {
+        ErrorResponse err = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }
 }

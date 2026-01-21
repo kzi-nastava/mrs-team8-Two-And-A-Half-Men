@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-@RestController
-
 public class BackendApplication {
 
 	public static void main(String[] args) {
@@ -20,5 +18,6 @@ public class BackendApplication {
 	@RequestMapping(value = "/**/{path:[^\\.]*}", produces = MediaType.TEXT_HTML_VALUE)
 	public String notFound() {
 		return "<h1>404 Not found</h1> <a href='/'>Back home</a>";
+
 	}
 }

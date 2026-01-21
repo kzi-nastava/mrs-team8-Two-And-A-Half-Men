@@ -1,7 +1,7 @@
 package com.project.backend.service;
 
 import com.project.backend.DTO.Profile.*;
-import com.project.backend.DTO.UserTokenDTO;
+import com.project.backend.DTO.Auth.UserTokenDTO;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.AppUser;

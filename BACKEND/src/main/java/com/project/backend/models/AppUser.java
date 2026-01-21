@@ -84,4 +84,8 @@ public class AppUser implements UserDetails{
     public UserRole getRole() {
         return null;
     }
+
+    public String firstNameAndLastName() {
+        return this.firstName + " " + this.lastName;
+    }
 }

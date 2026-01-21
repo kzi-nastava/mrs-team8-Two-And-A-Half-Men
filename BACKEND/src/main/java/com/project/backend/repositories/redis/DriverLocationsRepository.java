@@ -1,22 +1,24 @@
 package com.project.backend.repositories.redis;
 
 import com.project.backend.DTO.redis.RedisLocationsDTO;
+import com.project.backend.geolocation.locations.LocationTransformer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.GeoResults;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class DriverLocationsRepository {
     private static final String GEO_KEY = "driver_locations";
-
+    private static final String  ACTIVE_DRIVE_ROUTES = "active_driver_routes";
     private final StringRedisTemplate redisTemplate;
-
+    @Autowired
+    private LocationTransformer transformer;
     public DriverLocationsRepository(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
@@ -71,5 +73,18 @@ public class DriverLocationsRepository {
                 ))
                 .toList();
     }
-
+    public String getActiveDriveRoute(Long driverID) {
+        return redisTemplate.opsForValue().get(ACTIVE_DRIVE_ROUTES + ":" + driverID);
+    }
+    public void setActiveDriveRoute(Long driverID, Point routeInfo) {
+        String route = getActiveDriveRoute(driverID); // Get existing route
+        if (route == null) {
+            route = "";
+        }
+        route = transformer.addPointToHash(route, routeInfo);
+        redisTemplate.opsForValue().set(ACTIVE_DRIVE_ROUTES + ":" + driverID, route);
+    }
+    public void clearActiveDriveRoute(Long driverID) {
+        redisTemplate.delete(ACTIVE_DRIVE_ROUTES + ":" + driverID);
+    }
 }

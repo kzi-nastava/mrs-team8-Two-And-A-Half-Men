@@ -4,6 +4,7 @@ import com.project.backend.geolocation.coordinates.Coordinates;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
 import com.project.backend.geolocation.metrics.MetricsDistance;
 import com.project.backend.geolocation.metrics.MetricsTime;
+import org.springframework.data.geo.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,5 +182,25 @@ public abstract class LocationTransformer {
     public double[] calculateRouteMap(List<String> hashCodes, MetricsDistance distanceMetric, MetricsTime timeMetric) {
         double[] route = calculateRouteMap(hashCodes);
         return new double[] { distanceMetric.fromMeters(route[0]), timeMetric.fromSeconds(route[1]) };
+    }
+    public String addCoordinateToHash(String hash, Coordinates coordinate) {
+        List<Coordinates> cords = transformToCoordinates(hash);
+        cords.add(coordinate);
+        return transformLocation(cords);
+    }
+    public String addAddressToHash(String hash, String address) {
+        List<Coordinates> cords = transformToCoordinates(hash);
+        cords.add(factory.getCoordinate(address));
+        return transformLocation(cords);
+    }
+    public String addPointToHash(String hash, double longitude, double latitude) {
+        List<Coordinates> cords = transformToCoordinates(hash);
+        cords.add(factory.getCoordinate(latitude, longitude));
+        return transformLocation(cords);
+    }
+    public String addPointToHash(String hash, Point point) {
+        List<Coordinates> cords = transformToCoordinates(hash);
+        cords.add(factory.getCoordinate(point.getY(), point.getX()));
+        return transformLocation(cords);
     }
 }

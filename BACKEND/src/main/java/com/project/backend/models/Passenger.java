@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Passenger {
 
     @Id

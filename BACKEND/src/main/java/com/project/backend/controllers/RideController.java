@@ -1,24 +1,21 @@
 package com.project.backend.controllers;
 
-import com.project.backend.DTO.Ride.CostTimeDTO;
 import com.project.backend.DTO.Ride.*;
 import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
-import com.project.backend.models.AppUser;
-import com.project.backend.service.impl.PanicService;
 import com.project.backend.service.IHistoryService;
 import com.project.backend.service.IRatingService;
 import com.project.backend.service.IRideService;
-import com.project.backend.util.AuthUtils;
+import com.project.backend.service.impl.PanicService;
 import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Map;
 
@@ -51,9 +48,15 @@ public class RideController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createRide(@RequestBody Map<String, Object> rideData) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+    public ResponseEntity<?> createRide(@RequestBody RideBookingParametersDTO body) {
+        AppUser user = authUtils.getCurrentUser();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Unauthorized"));
+        }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(rideService.createRide(user.getId(), body));
     }
 
     @GetMapping("/{id}")

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
     List<Location> findAllByGeoHashIn(List<String> hashes);
+
+    boolean existsByGeoHash(String geohash);
 }

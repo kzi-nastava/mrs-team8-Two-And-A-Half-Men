@@ -2,19 +2,18 @@ package com.project.backend.repositories;
 
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
+import com.project.backend.models.enums.RideStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.project.backend.models.enums.RideStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-import java.time.LocalDateTime;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 
 @Repository
 public interface RideRepository extends JpaRepository<Ride, Long> {
@@ -61,4 +60,6 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 
 
     Optional<Ride> findFirstByDriverAndStatusIn(Driver driver, List<RideStatus> statuses);
+
+    List<Ride> findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(Collection<Long> driversIds);
 }

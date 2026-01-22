@@ -81,7 +81,7 @@ public class DriverLocationService implements IDriverLocationService {
     @Override
     public DriverLocationDTO getDriverLocation(Long driverId) {
         try {
-            Point location = locationsRepository.getLcation(driverId);
+            Point location = locationsRepository.getLocation(driverId);
 
             Optional<Driver> driverOpt = driverRepository.findById(driverId);
             if (driverOpt.isPresent() && location != null) {

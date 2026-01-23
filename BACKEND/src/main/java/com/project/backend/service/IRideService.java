@@ -4,11 +4,14 @@ import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.models.Driver;
 import lombok.Lombok;
+import com.project.backend.models.Driver;
+import lombok.Lombok;
 
 import java.util.Map;
 
 public interface IRideService {
     RideResponseDTO getRideById(Long id);
+    void endRideById(Long id, Driver driver);
 
     Object createRide(Long id, RideBookingParametersDTO body);
 

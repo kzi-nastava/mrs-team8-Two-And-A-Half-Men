@@ -41,7 +41,7 @@ public class PanicService implements IPanicService {
             if(activeRide == null) {
                 throw new IllegalArgumentException("No active ride found for the driver.");
             }
-            activeRide.setStatus(RideStatus.PANICED);
+            activeRide.setStatus(RideStatus.PANICKED);
             rideRepository.save(activeRide);
             driverLocationsRepository.setLocations(driver.getId(), 10 , 10) ; // Mock location
             Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
@@ -59,7 +59,7 @@ public class PanicService implements IPanicService {
         if(passenger == null || passenger.getRide() == null) {
                 throw new IllegalArgumentException("No active ride found for the passenger.");
         }
-        passenger.getRide().setStatus(RideStatus.PANICED);
+        passenger.getRide().setStatus(RideStatus.PANICKED);
         rideRepository.save(passenger.getRide());
         Driver driver = passenger.getRide().getDriver();
         driverLocationsRepository.setLocations(driver.getId(), 10 , 10) ; // Mock location

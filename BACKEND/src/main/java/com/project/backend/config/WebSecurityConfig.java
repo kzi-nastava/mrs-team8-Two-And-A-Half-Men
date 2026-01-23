@@ -67,7 +67,8 @@ public class WebSecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(restAuthenticationEntryPoint));
         http.authorizeHttpRequests(request -> {
-            request.requestMatchers( "/api/v1/login").permitAll()
+            request.requestMatchers("/files/**").permitAll()
+                    .requestMatchers( "/api/v1/login").permitAll()
                     .requestMatchers("/api/v1/users/register").permitAll()
                     .requestMatchers("/api/v1/rides/estimates").permitAll()
                     .requestMatchers("/api/v1/activate").permitAll()

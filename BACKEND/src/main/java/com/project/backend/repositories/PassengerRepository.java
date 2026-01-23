@@ -16,4 +16,6 @@ public interface PassengerRepository extends JpaRepository<Passenger, Long> {
             "AND p.ride.status IN :statuses")
     Optional<Passenger> findByCustomerWithRideStatus(@Param("customer") Customer customer ,
                                                              @Param("statuses") Iterable<RideStatus> statuses);
+
+    Optional<Passenger> findByUserId(Long id);
 }

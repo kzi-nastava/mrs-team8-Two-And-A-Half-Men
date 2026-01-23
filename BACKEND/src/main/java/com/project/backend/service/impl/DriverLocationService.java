@@ -30,6 +30,7 @@ public class DriverLocationService implements IDriverLocationService {
     private final VehicleRepository vehicleRepository;
     private final RideRepository rideRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final RideTracingService rideTracingService;
 
     @Override
     public void updateDriverLocation(Long driverId, DriverLocationDTO locationDTO) {
@@ -38,7 +39,7 @@ public class DriverLocationService implements IDriverLocationService {
                 locationDTO.getLongitude(),
                 locationDTO.getLatitude()
         );
-
+        rideTracingService.setRideLocation(driverId, locationDTO.getLongitude(), locationDTO.getLatitude(), locationDTO.getIsActive());
         Optional<Driver> driverOpt = driverRepository.findById(driverId);
         if (driverOpt.isPresent()) {
             Driver driver = driverOpt.get();
@@ -81,7 +82,7 @@ public class DriverLocationService implements IDriverLocationService {
     @Override
     public DriverLocationDTO getDriverLocation(Long driverId) {
         try {
-            Point location = locationsRepository.getLcation(driverId);
+            Point location = locationsRepository.getLocation(driverId);
 
             Optional<Driver> driverOpt = driverRepository.findById(driverId);
             if (driverOpt.isPresent() && location != null) {

@@ -8,10 +8,12 @@ import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
 import com.project.backend.DTO.redis.RedisLocationsDTO;
 import com.project.backend.exceptions.BadRequestException;
+import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
 import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.models.*;
+import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.*;
 import com.project.backend.repositories.redis.DriverLocationsRepository;
@@ -129,6 +131,34 @@ public class RideService implements IRideService {
         }
 
         return new NewRideDTO(ride.getId(), ride.getStatus().toString(), estimatedDistance);
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> startARide(String rideId, Long userId) {
+        var driver = driverRepository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Driver with id " + userId + " not found"));
+        var ride = rideRepository.findById(Long.parseLong(rideId))
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Ride with id " + rideId + " not found"));
+        if (!ride.getDriver().getId().equals(driver.getId())) {
+            throw new ForbiddenException("You are not assigned to this ride");
+        }
+        if (ride.getStatus() != RideStatus.ACCEPTED) {
+            throw new BadRequestException("Ride is not in ACCEPTED status");
+        }
+        ride.setStatus(RideStatus.ACTIVE);
+        ride.setStartTime(LocalDateTime.now());
+        driver.setDriverStatus(DriverStatus.BUSY);
+        rideRepository.save(ride);
+        driverRepository.save(driver);
+        return Map.of(
+                "message", "Ride started successfully",
+                "ok", true,
+                "rideStatus", ride.getStatus().toString(),
+                "driverStatus", driver.getDriverStatus().toString()
+                );
     }
 
     private Customer handleOwner(Long userId) {

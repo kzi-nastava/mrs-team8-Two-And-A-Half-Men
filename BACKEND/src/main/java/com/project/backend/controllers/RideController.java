@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -82,9 +83,14 @@ public class RideController {
     }
 
     @PatchMapping("/{id}/start")
+    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<?> startRide(@PathVariable String id) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+        var user = authUtils.getCurrentUser();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Unauthorized"));
+        }
+        return ResponseEntity.ok(rideService.startARide(id,user.getId()));
     }
     
     @PatchMapping("/{id}/finish")

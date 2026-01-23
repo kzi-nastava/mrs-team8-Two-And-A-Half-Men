@@ -15,10 +15,9 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-@Repository
 import java.util.Optional;
 
+@Repository
 public interface RideRepository extends JpaRepository<Ride, Long> {
 
     Page<Ride> findByDriver(Driver driver, Pageable pageable);

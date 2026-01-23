@@ -40,7 +40,9 @@ public class DriverController {
                     123L
             );
             driverLocationService.updateDriverLocation(101L, driverLocation);
-
+            driverLocation.setLongitude(21.838323D);
+            driverLocation.setDriverId(151L);
+            driverLocationService.updateDriverLocation(151L, driverLocation);
             List<DriverLocationDTO> locations = driverLocationService.getAllDriverLocations();
             return ResponseEntity.ok(locations);
         } catch (Exception e) {

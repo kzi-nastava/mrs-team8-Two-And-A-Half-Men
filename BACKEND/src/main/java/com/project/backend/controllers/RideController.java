@@ -1,7 +1,7 @@
 package com.project.backend.controllers;
 
 import com.project.backend.DTO.Ride.*;
-import com.project.backend.exceptions.UnauthorizedException;
+import com.project.backend.exceptions.UnauthenticatedException;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.enums.UserRole;
 import com.project.backend.service.impl.CancellationService;
@@ -17,6 +17,7 @@ import com.project.backend.service.impl.PanicService;
 import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -138,7 +139,8 @@ public class RideController {
                         .body(Map.of("error", "Unauthorized"));
             }
             cancellationService.cancelRide(id, reason, user);
-        } catch (UnauthorizedException e) {
+            return ResponseEntity.ok(Map.of("message", "Ride cancelled successfully"));
+        } catch (UnauthenticatedException e) {
 
             return ResponseEntity.status(401)
                     .body(Map.of("error", "Unauthorized"));
@@ -148,8 +150,6 @@ public class RideController {
             return ResponseEntity.status(500)
                     .body(Map.of("error", "Internal server error"));
         }
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
     }
 
     @PostMapping("/{id}/rating")

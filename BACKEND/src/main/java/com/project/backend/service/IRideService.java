@@ -11,7 +11,6 @@ import java.util.Map;
 
 public interface IRideService {
     RideResponseDTO getRideById(Long id);
-    void endRideById(Long id, Driver driver);
 
     Object createRide(Long id, RideBookingParametersDTO body);
 

@@ -92,7 +92,19 @@ public class RideController {
         }
         return ResponseEntity.ok(rideService.startARide(id,user.getId()));
     }
-    
+
+
+    @PatchMapping("/{id}/end")
+    public ResponseEntity<?> endRide()
+    {
+        Driver driver = authUtils.getCurrentDriver();
+        if(driver == null) {
+            return ResponseEntity.status(401).body(Map.of());
+        }
+        return ResponseEntity.status(500).body(Map.of());
+    }
+
+
     @PatchMapping("/{id}/finish")
     public ResponseEntity<?> finishRide(@PathVariable String id) {
         Long rideId;

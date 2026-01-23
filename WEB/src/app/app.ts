@@ -3,10 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { trigger, transition, style, animate, query, group } from '@angular/animations';
 import { NavbarComponent } from './navbar/navbar';
 import { RideTrackingComponent } from "./ride-tracking/ride-tracking";
+import { EstimateForm } from './estimate-form/estimate-form';
+import { MapComponent } from './map/map';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent, RideTrackingComponent],
+  imports: [RouterOutlet, NavbarComponent, RideTrackingComponent, EstimateForm, MapComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
   animations: [

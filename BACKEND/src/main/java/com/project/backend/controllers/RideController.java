@@ -30,8 +30,7 @@ public class RideController {
     private final IHistoryService historyService;
     private final IRideService rideService;
     private final AuthUtils authUtils;
-    @Autowired
-    private PanicService panicService;
+    private final PanicService panicService;
 
 
     @PostMapping("/estimates")
@@ -73,8 +72,9 @@ public class RideController {
     @PostMapping("/{id}/notes")
     public ResponseEntity<?> addRideNote(
             @PathVariable Long id,
-            @RequestBody NoteRequestDTO noteRequest) {
-        // TODO: correct controller logic and make service
+            @RequestBody NoteRequestDTO noteRequest
+    ) {
+
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 

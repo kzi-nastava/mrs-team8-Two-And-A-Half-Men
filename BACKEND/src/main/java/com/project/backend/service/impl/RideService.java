@@ -7,6 +7,7 @@ import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
 import com.project.backend.DTO.redis.RedisLocationsDTO;
+import com.project.backend.events.RideCreatedEvent;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
@@ -15,12 +16,11 @@ import com.project.backend.models.*;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.*;
 import com.project.backend.repositories.redis.DriverLocationsRepository;
-import com.project.backend.service.EmailBodyGeneratorService;
-import com.project.backend.service.EmailService;
 import com.project.backend.service.IRideService;
 import jakarta.transaction.Transactional;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,13 +32,10 @@ public class RideService implements IRideService {
 
     private final DriverLocationsRepository driverLocationsRepository;
     private final CoordinatesFactory coordinatesFactory;
-    private final EmailService emailService;
-    private final EmailBodyGeneratorService emailBodyGeneratorService;
+    private final ApplicationEventPublisher applicationEventPublisher;
     @Value("${ride-booking.max-hours}")
     private int MAX_HOURS;
 
-    @Value("${frontend.url}")
-    private String frontendUrl;
     private final List<Integer> KM_RANGE = List.of(30, 50, 70, 100, -1);
 
     private final RideRepository rideRepository;
@@ -108,25 +105,7 @@ public class RideService implements IRideService {
         rideRepository.save(ride);
 
         // Send emails to passengers
-        var ownerName = ride.getRideOwner().getFirstName() + " " + ride.getRideOwner().getLastName();
-        var url = frontendUrl + "/ride/" + ride.getId() + "/track?accessToken=";
-        for (var passenger : ride.getPassengers()) {
-            try {
-                emailService.sendEmail(
-                        passenger.getEmail() != null ?
-                                passenger.getEmail() :
-                                passenger.getUser().getEmail(),
-                        "New ride",
-                        emailBodyGeneratorService.generatePassengerAddedEmail(
-                                ownerName,
-                                url + passenger.getAccessToken()
-                        )
-                );
-            }
-            catch (Exception e) {
-                //throw new RuntimeException(e);
-            }
-        }
+        applicationEventPublisher.publishEvent(new RideCreatedEvent(ride));
 
         return new NewRideDTO(ride.getId(), ride.getStatus().toString(), estimatedDistance);
     }

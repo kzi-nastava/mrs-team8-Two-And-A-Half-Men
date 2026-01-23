@@ -71,7 +71,6 @@ public class ProfileService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (body.getImgSrc() != null) {
             // Publish an event to delete the old profile picture after the transaction is committed
-            System.out.println("Publishing profile picture updated event.");
             eventPublisher.publishEvent(new ProfilePictureUpdatedEvent(
                     Paths.get(System.getProperty("user.dir"), "public", user.getImgSrc()).toString()
             ));
@@ -196,7 +195,8 @@ public class ProfileService {
         // Setting up the path of the file
         Path filePath = Paths.get(
                 System.getProperty("user.dir"),
-         "public",
+                "public",
+                "files",
                 PROFILE_PICTURE_DIR,
                 userId + "_" + UUID.randomUUID().toString() + extension
         );
@@ -224,7 +224,7 @@ public class ProfileService {
 
         return Map.of(
                 "ok", true,
-                "filePath", Paths.get(PROFILE_PICTURE_DIR, filePath.getFileName().toString()).toString()
+                "filePath", Paths.get("files", PROFILE_PICTURE_DIR, filePath.getFileName().toString()).toString()
         );
     }
 }

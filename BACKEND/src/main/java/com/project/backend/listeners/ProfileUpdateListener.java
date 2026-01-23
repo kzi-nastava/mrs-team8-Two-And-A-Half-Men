@@ -13,7 +13,6 @@ public class ProfileUpdateListener {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onProfilePictureUpdated(ProfilePictureUpdatedEvent event) {
-        System.out.println("Profile picture updated event received.");
         try {
             if (event.getPicturePath() == null) {
                 return;

@@ -1,5 +1,6 @@
 package com.project.backend.service.impl;
 
+import com.project.backend.DTO.Ride.CostTimeDTO;
 import com.project.backend.DTO.Ride.NewRideDTO;
 import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
@@ -13,6 +14,7 @@ import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
 import com.project.backend.geolocation.locations.LocationTransformer;
+import com.project.backend.geolocation.metrics.MetricsDistance;
 import com.project.backend.models.*;
 import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.enums.RideStatus;
@@ -401,6 +403,34 @@ public class RideService implements IRideService {
                     .containsAll(filter.getAdditionalServicesIds());
         }
         return true;
+    }
+
+    @Override
+    public CostTimeDTO estimateRide(RideBookingParametersDTO rideData) {
+        FindDriverDTO driver = findBestSuitableDriver(
+                FindDriverFilter.builder()
+                        .additionalServicesIds(rideData.getAdditionalServicesIds())
+                        .vehicleTypeId(rideData.getVehicleTypeId())
+                        .latitude(rideData.getRoute().get(0).getLatitude())
+                        .longitude(rideData.getRoute().get(0).getLongitude())
+                        .build()
+        ).orElseThrow(() -> new ResourceNotFoundException("No suitable driver found for the given parameters"));
+        double distance = driver.getEstimatedDistance();
+        System.out.println("Distance to driver: " + distance);
+        var cordinates = coordinatesFactory.getCoordinate(
+                rideData.getRoute().get(0).getLatitude(),
+                rideData.getRoute().get(0).getLongitude()
+        );
+        var destCordinates = coordinatesFactory.getCoordinate(
+                rideData.getRoute().get(rideData.getRoute().size() - 1).getLatitude(),
+                rideData.getRoute().get(rideData.getRoute().size() - 1).getLongitude()
+        );
+        double rideDistance = cordinates.distanceAirLine(destCordinates);
+        double estimatedTime = MetricsDistance.KILOMETERS.fromMeters(rideDistance + distance) / 50 * 60;
+        return new CostTimeDTO(
+                0,
+                estimatedTime
+        );
     }
 
     @Data

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { SheredLocationsService } from '../service/shered-locations-service';
+import { EstimateService } from './service/estimate-service';
 
 @Component({
   selector: 'app-estimate-form',
@@ -26,7 +27,8 @@ export class EstimateForm {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private sharedLocationsService: SheredLocationsService
+    private sharedLocationsService: SheredLocationsService,
+    private estimateService: EstimateService
   ) {
     this.estimateForm = this.fb.group({
       startpoint: ['', Validators.required],
@@ -122,9 +124,19 @@ export class EstimateForm {
     if (this.estimateForm.valid) {
       const startpoint = this.estimateForm.get('startpoint')?.value ?? '';
       const endpoint = this.estimateForm.get('endpoint')?.value ?? '';
+      if (!startpoint || !endpoint) {
+        console.log('Startpoint or endpoint is missing');
+        return;
+      }
+      const startEnd = this.sharedLocationsService.locations();
+      const startpointLocation = startEnd[0];
+      const endpointLocation = startEnd[1];
       console.log('Estimate Form Submitted', { startpoint, endpoint });
-            alert(`Route from:\n${startpoint}\n\nTo:\n${endpoint}`);
-            this.estimatedTime.set(42); 
+
+            this.estimateService.estimateTime(startpointLocation, endpointLocation).subscribe(estimatedTime => {
+              let timeInMinutes = Math.round(estimatedTime * 100) / 100;
+              this.estimatedTime.set(timeInMinutes);
+            });
     } else {
       console.log('Form is invalid');
     }

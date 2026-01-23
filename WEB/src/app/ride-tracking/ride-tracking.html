@@ -1,0 +1,30 @@
+<div class="ride-tracking-container">
+  <!-- <div class="map-section">
+    <app-map></app-map>
+  </div> -->
+  
+  <div class="info-section">
+    @switch (currentUserRole) {
+      @case (UserRole.PASSENGER) {
+        <app-ride-info-panel 
+          [stops]="rideData.stops"
+          [remainingDistance]="rideData.remainingDistance"
+          [remainingTime]="rideData.remainingTime"
+          (saveNote)="onSaveNote($event)"
+          (panic)="onPanic()">
+        </app-ride-info-panel>
+      }
+      
+      @case (UserRole.DRIVER) {
+        <app-driver-panel
+          [currentRide]="rideData"
+          (endRide)="onEndRide()">
+        </app-driver-panel>
+      }
+      
+      @default {
+        <p>Nepoznata uloga korisnika</p>
+      }
+    }
+  </div>
+</div>

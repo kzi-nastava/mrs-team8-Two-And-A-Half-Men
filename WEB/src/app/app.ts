@@ -2,16 +2,12 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { trigger, transition, style, animate, query, group } from '@angular/animations';
 import { NavbarComponent } from './navbar/navbar';
+import { RideTrackingComponent } from "./ride-tracking/ride-tracking";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavbarComponent],
-  template: `
-    <app-navbar></app-navbar>
-    <div [@routeAnimations]="prepareRoute(outlet)">
-      <router-outlet #outlet="outlet"></router-outlet>
-    </div>
-  `,
+  imports: [RouterOutlet, NavbarComponent, RideTrackingComponent],
+  templateUrl: './app.html',
   styleUrl: './app.css',
   animations: [
     trigger('routeAnimations', [

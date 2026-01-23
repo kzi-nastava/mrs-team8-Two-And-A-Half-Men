@@ -6,7 +6,7 @@ import { Auth } from './auth';
 import { PanicService } from './panic-service';
 import { DriverLocation } from '../driver-location/models/driver-location';
 import { DriverLocationWebsocketService } from '../driver-location/services/driver-location-websocket-service';
-
+import { RideService } from './ride-service';
 
 
 @Injectable({
@@ -17,7 +17,12 @@ export class WebSocket {
     private stompClient: any;
     private isLogedIn: boolean = false;
 
-  constructor(private auth: Auth, private panicService: PanicService, private driverLocationService: DriverLocationWebsocketService) {}
+  constructor(
+    private auth: Auth, 
+    private panicService: PanicService, 
+    private driverLocationService: DriverLocationWebsocketService,
+    private rideService: RideService
+  ) {}
   connect() {
        
       const ws = new SockJS('http://localhost:8080/socket', null,
@@ -34,6 +39,7 @@ export class WebSocket {
         that.isLogedIn = true;
         that.subscribeToPanic();
         that.subscribeToDriverLocations();
+        that.subscribeToRideUpdates();
       });
 
       
@@ -63,6 +69,18 @@ export class WebSocket {
       });
     }
   }
+
+  private subscribeToRideUpdates() {
+  if (this.isLogedIn) {
+    this.stompClient.subscribe('/topic/ride-updates', (message: any) => {
+      if (message.body) {
+        const rideUpdate = JSON.parse(message.body);
+        console.log('Ride update received:', rideUpdate);
+        this.rideService.setCurrentRide(rideUpdate);
+      }
+    });
+  }
+}
 
   sendDriverLocation(location: { latitude: number; longitude: number }) {
     if (this.isLogedIn && this.stompClient) {

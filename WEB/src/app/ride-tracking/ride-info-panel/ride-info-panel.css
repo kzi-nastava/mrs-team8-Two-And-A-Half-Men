@@ -1,0 +1,212 @@
+.ride-info-panel {
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  padding: 16px;
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  overflow: hidden;
+
+  .panel-header {
+    margin-bottom: 12px;
+    flex-shrink: 0;
+    
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+
+  .route-stops {
+    flex-shrink: 0;
+    margin-bottom: 20px;
+    
+    h3 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .stops-list {
+      max-height: 250px;
+      overflow-y: auto;
+      margin-bottom: 0;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #1a1a1a;
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #4a4a4a;
+        border-radius: 3px;
+      }
+
+      .stop-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        background-color: #1a1a1a;
+        transition: all 0.3s;
+
+        &:hover {
+          background-color: #333;
+        }
+
+        .stop-icon {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background-color: #4a4a4a;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          flex-shrink: 0;
+        }
+
+        .stop-name {
+          flex: 1;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .ride-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+
+    .stat-item {
+      flex: 1;
+      padding: 16px;
+      border-radius: 6px;
+
+      &.distance {
+        background-color: #1a4d1a;
+      }
+
+      &.time {
+        background-color: #d4a574;
+        color: #1a1a1a;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .note-section {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+
+    .leave-note-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #1a4d1a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      font-size: 14px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #2d5a2d;
+      }
+    }
+
+    .note-input-group {
+      display: flex;
+      gap: 8px;
+      animation: slideDown 0.3s ease-out;
+
+      .note-input {
+        flex: 1;
+        padding: 10px;
+        background-color: #1a1a1a;
+        border: 1px solid #4a4a4a;
+        border-radius: 6px;
+        color: white;
+        font-size: 14px;
+
+        &::placeholder {
+          color: #888;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #2d5a2d;
+        }
+      }
+
+      .save-btn {
+        padding: 10px 20px;
+        background-color: #2d5a2d;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #3d6a3d;
+        }
+      }
+    }
+  }
+
+  .panic-btn {
+    width: 100%;
+    padding: 20px;
+    background-color: #c93636;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: #a82828;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

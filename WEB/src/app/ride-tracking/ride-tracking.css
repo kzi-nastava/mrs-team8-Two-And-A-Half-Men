@@ -1,0 +1,30 @@
+.ride-tracking-container {
+  display: flex;
+  gap: 20px;
+  height: 30%;
+  padding: 20px;
+  background-color: #1a1a1a;
+  box-sizing: border-box;
+
+  .map-section {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .info-section {
+    width: 400px;
+    flex-shrink: 0;
+    height: 100%;
+  }
+
+  @media (max-width: 968px) {
+    flex-direction: column;
+    
+    .info-section {
+      width: 100%;
+      height: auto;
+      max-height: 60vh;
+    }
+  }
+}

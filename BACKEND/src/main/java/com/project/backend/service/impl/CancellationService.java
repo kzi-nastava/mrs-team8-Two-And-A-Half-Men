@@ -65,7 +65,7 @@ public class CancellationService implements ICancellationService {
     }
     private void DriverCancelRide(Long rideId, AppUser user, RideCancelationDTO reason) {
         Driver driver = (Driver) user;
-        Ride ride = rideRepository.findById(rideId).orElseThrow(() -> new ResourceNotFoundException("Ride not found"));
+        Ride ride = rideRepository.findById(rideId).orElseThrow(() -> new BadRequestException("Ride not found"));
         if(!ride.getDriver().getId().equals(driver.getId())) {
             throw new ForbiddenException("You are not authorized to cancel this ride");
         }

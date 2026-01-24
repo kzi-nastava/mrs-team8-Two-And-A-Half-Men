@@ -5,11 +5,11 @@ import { Router } from '@angular/router';
 import { CancellationButton } from "../cancellation/cancellation-button/cancellation-button";
 import { PanicButton } from "../panic/panic-button/panic-button";
 import { WebSocket } from '../service/web-socket';
-
+import { EndRideBtn } from '../end-ride/end-ride-btn/end-ride-btn';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, PanicButton, CancellationButton],
+  imports: [CommonModule, PanicButton, CancellationButton, EndRideBtn],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })

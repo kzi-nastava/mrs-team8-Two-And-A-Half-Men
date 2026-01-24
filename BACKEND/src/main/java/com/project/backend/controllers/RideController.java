@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.channels.ScatteringByteChannel;
 import java.util.Map;
 
 @RestController
@@ -94,7 +95,21 @@ public class RideController {
         }
         return ResponseEntity.ok(rideService.startARide(id,user.getId()));
     }
-    
+
+
+    @PatchMapping("/{id}/end")
+    @PreAuthorize("hasRole('DRIVER')")
+    public ResponseEntity<?> endRide(@PathVariable Long id) {
+            Driver driver = authUtils.getCurrentDriver();
+            if (driver == null) {
+                return ResponseEntity.status(401).body(Map.of());
+            }
+            CostTimeDTO costTimeDTO = rideService.endRideById(id, driver);
+            System.out.println(costTimeDTO.getCost() + " " + costTimeDTO.getTime());
+            return ResponseEntity.ok(costTimeDTO);
+    }
+
+
     @PatchMapping("/{id}/finish")
     public ResponseEntity<?> finishRide(@PathVariable String id) {
         Long rideId;

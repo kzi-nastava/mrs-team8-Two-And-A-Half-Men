@@ -1,0 +1,18 @@
+.home-page {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    height: calc(100vh - 60px); /* Adjust height considering navbar height */
+    }
+
+app-estimate-form {
+    flex: 1;
+    margin-right: 10px;
+}
+app-map {
+    flex: 2;
+    margin-left: 10px;
+}
+

@@ -25,7 +25,6 @@
 
 - Planned Story Points:
 - Completed Story Points:
-- Team Velocity:
 
 ## Challenges & Observations
 

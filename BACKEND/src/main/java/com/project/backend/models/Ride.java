@@ -13,6 +13,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Ride {
 
     @Id
@@ -24,6 +25,8 @@ public class Ride {
     private LocalDateTime endTime;
 
     private LocalDateTime scheduledTime;
+
+    private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
     private RideStatus status;

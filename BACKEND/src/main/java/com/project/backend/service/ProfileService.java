@@ -1,7 +1,8 @@
 package com.project.backend.service;
 
+import com.project.backend.DTO.Auth.UserTokenDTO;
 import com.project.backend.DTO.Profile.*;
-import com.project.backend.DTO.UserTokenDTO;
+import com.project.backend.events.ProfilePictureUpdatedEvent;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.AppUser;
@@ -10,13 +11,24 @@ import com.project.backend.models.UpdateRequest;
 import com.project.backend.models.enums.UserRole;
 import com.project.backend.repositories.*;
 import com.project.backend.util.TokenUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ProfileService {
     private final TokenUtils tokenUtils;
     private final AppUserRepository userRepository;
@@ -25,23 +37,9 @@ public class ProfileService {
     private final AdditionalServiceRepository additionalServiceRepository;
     private final UpdateRequestRepository updateRequestRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
+    private final static String PROFILE_PICTURE_DIR = "profiles";
 
-    public ProfileService(
-            TokenUtils tokenUtils,
-            AppUserRepository userRepository,
-            VehicleRepository vehicleRepository,
-            VehicleTypeRepository vehicleTypeRepository,
-            AdditionalServiceRepository additionalServiceRepository,
-            UpdateRequestRepository updateRequestRepository,
-            PasswordEncoder passwordEncoder) {
-        this.tokenUtils = tokenUtils;
-        this.userRepository = userRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.vehicleTypeRepository = vehicleTypeRepository;
-        this.additionalServiceRepository = additionalServiceRepository;
-        this.updateRequestRepository = updateRequestRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public ProfileDTO getProfile(Long userId, UserRole role) {
         ProfileDTO.ProfileDTOBuilder resultBuilder = ProfileDTO.builder();
@@ -71,7 +69,12 @@ public class ProfileService {
         AppUser user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
+        if (body.getImgSrc() != null) {
+            // Publish an event to delete the old profile picture after the transaction is committed
+            eventPublisher.publishEvent(new ProfilePictureUpdatedEvent(
+                    Paths.get(System.getProperty("user.dir"), "public", user.getImgSrc()).toString()
+            ));
+        }
         if (role == UserRole.DRIVER) {
             return updateDriverProfile((Driver) user, body);
         }
@@ -94,6 +97,7 @@ public class ProfileService {
             user.setEmail(body.getEmail());
         }
         user = userRepository.save(user);
+
         return createUpdateProfileResponse(user, body.getEmail() != null);
     }
 
@@ -174,5 +178,53 @@ public class ProfileService {
 
         String accessToken = tokenUtils.generateToken(user);
         return new UserTokenDTO(accessToken, tokenUtils.getExpiredIn());
+    }
+
+    public Map<String, Object> uploadProfilePicture(Long userId, MultipartFile file) throws Exception {
+        if (file == null || file.isEmpty()) {
+            throw new BadRequestException("File is missing");
+        }
+        if (file.getContentType() != null && !file.getContentType().startsWith("image/")) {
+            throw new BadRequestException("Invalid file type, only image files are allowed");
+        }
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) {
+            throw new BadRequestException("File must have an original filename");
+        }
+        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        // Setting up the path of the file
+        Path filePath = Paths.get(
+                System.getProperty("user.dir"),
+                "public",
+                "files",
+                PROFILE_PICTURE_DIR,
+                userId + "_" + UUID.randomUUID().toString() + extension
+        );
+
+        try {
+            // Get the parent directory path
+            Path parentDir = filePath.getParent();
+
+            // Create all nonexistent parent directories
+            if (parentDir != null) {
+                Files.createDirectories(parentDir);
+            }
+            // Creating the file
+            Files.createFile(filePath);
+
+            // Creating an object of FileOutputStream class
+            FileOutputStream out = new FileOutputStream(filePath.toString());
+            out.write(file.getBytes());
+
+            // Closing the connection
+            out.close();
+        } catch (FileNotFoundException e) {
+            throw new ResourceNotFoundException("File not found");
+        }
+
+        return Map.of(
+                "ok", true,
+                "filePath", Paths.get("files", PROFILE_PICTURE_DIR, filePath.getFileName().toString()).toString()
+        );
     }
 }

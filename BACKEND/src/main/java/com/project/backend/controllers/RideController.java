@@ -33,19 +33,14 @@ public class RideController {
 
 
     @PostMapping("/estimates")
-    public ResponseEntity<?> estimateRide(@RequestBody RideRequestDTO rideData) {
-
-
-        if (rideData.getAddressesPoints() == null || rideData.getAddressesPoints().size() < 2) {
-            return ResponseEntity.status(400)
-                    .body(Map.of("error", "At least one address point is required for estimation"));
+    public ResponseEntity<?> estimateRide(@RequestBody RideBookingParametersDTO rideData) {
+        try {
+            CostTimeDTO estimate = rideService.estimateRide(rideData);
+            return ResponseEntity.status(HttpStatus.OK).body(estimate);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
         }
-        double estimatedPrice = 25.50;
-        int estimatedTimeMinutes = 15;
-        return ResponseEntity.ok(Map.of(
-                "estimatedPrice", estimatedPrice * rideData.getAddressesPoints().size(),
-                "estimatedTimeMinutes", estimatedTimeMinutes
-        ));
     }
 
     @PostMapping

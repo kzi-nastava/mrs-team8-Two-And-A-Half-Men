@@ -132,7 +132,6 @@ public class RideController {
 
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<?> cancelRide(@PathVariable Long id, @RequestBody RideCancelationDTO reason) {
-        try {
             AppUser user = authUtils.getCurrentUser();
             if(user == null) {
                 return ResponseEntity.status(401)
@@ -140,16 +139,6 @@ public class RideController {
             }
             cancellationService.cancelRide(id, reason, user);
             return ResponseEntity.ok(Map.of("message", "Ride cancelled successfully"));
-        } catch (UnauthenticatedException e) {
-
-            return ResponseEntity.status(401)
-                    .body(Map.of("error", "Unauthorized"));
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(500)
-                    .body(Map.of("error", "Internal server error"));
-        }
     }
 
     @PostMapping("/{id}/rating")

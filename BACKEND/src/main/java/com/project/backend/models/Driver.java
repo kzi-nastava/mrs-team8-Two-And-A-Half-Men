@@ -1,16 +1,13 @@
 package com.project.backend.models;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.project.backend.models.enums.DriverStatus;
+import com.project.backend.models.enums.UserRole;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @DiscriminatorValue("DRIVER")
 @Getter
@@ -18,9 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Driver extends AppUser {
-
-    private String driverState;
-
-    @OneToMany(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    private DriverStatus driverStatus;
+    @OneToMany
     private List<DriverActivity> driverActivities;
+
+    @Override
+    public UserRole getRole() {
+        return UserRole.DRIVER;
+    }
 }

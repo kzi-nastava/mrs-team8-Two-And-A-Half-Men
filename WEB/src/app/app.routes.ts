@@ -6,6 +6,8 @@ import {ProfileComponent} from './profile/profile.component';
 import { DriversHistoryComponent } from './drivers-history/drivers-history';
 import { App } from './app';
 import { NavbarComponent } from './navbar/navbar';
+import { ActivationComponent } from './auth/activation/activation';
+import { HomePage } from './home-page/home-page';
 
 
 export const routes: Routes = [
@@ -15,5 +17,7 @@ export const routes: Routes = [
     { path: 'drivers-history', component: DriversHistoryComponent },
     { path: 'profile', component: ProfileComponent},
     { path: 'navbar', component: NavbarComponent},
-    { path: '', component: App }
+    { path: 'activation', component: ActivationComponent },
+    { path: 'home', component: HomePage },
+    { path: '**', redirectTo: 'home' }
 ];

@@ -1,6 +1,7 @@
 package com.project.backend.controllers;
 
-import com.project.backend.DTO.ActiveVehicleDTO;
+import com.project.backend.DTO.Vehicle.ActiveVehicleDTO;
+import com.project.backend.service.VehicleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +11,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/vehicles")
 public class VehicleController {
+
+    private final VehicleService vehicleService;
+
+    public VehicleController(VehicleService vehicleService) {
+        this.vehicleService = vehicleService;
+    }
 
     @GetMapping("/active")
     public ResponseEntity<List<ActiveVehicleDTO>> getActiveVehicles() {
@@ -57,5 +64,10 @@ public class VehicleController {
         ));
 
         return ResponseEntity.ok(vehicles);
+    }
+
+    @GetMapping("/options")
+    public ResponseEntity<?> getVehicleOptions() {
+        return ResponseEntity.ok(vehicleService.getVehicleOptions());
     }
 }

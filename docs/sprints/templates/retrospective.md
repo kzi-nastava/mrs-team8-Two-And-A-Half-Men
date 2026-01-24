@@ -26,11 +26,6 @@
 -
 -
 
-## Action Items for Next Sprint
-
-| Action Item | Responsible | Deadline |
-|-------------|------------|----------|
-|  |  |  |
 
 ## Lessons Learned
 

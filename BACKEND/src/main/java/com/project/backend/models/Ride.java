@@ -13,6 +13,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Ride {
 
     @Id
@@ -25,12 +26,16 @@ public class Ride {
 
     private LocalDateTime scheduledTime;
 
+    private LocalDateTime createdAt;
+
     @Enumerated(EnumType.STRING)
     private RideStatus status;
 
     private String path;
 
     private String cancellationReason;
+
+    private Double price;
 
     private Double totalCost;
 
@@ -49,4 +54,6 @@ public class Ride {
     @OneToMany(fetch = FetchType.LAZY)
     List<Passenger> passengers;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Route route;
 }

@@ -34,10 +34,8 @@ public class RideController {
     private final IHistoryService historyService;
     private final IRideService rideService;
     private final AuthUtils authUtils;
-    @Autowired
-    private PanicService panicService;
-    @Autowired
-    private CancellationService cancellationService;
+    private final PanicService panicService;
+    private final CancellationService cancellationService;
 
     @PostMapping("/estimates")
     public ResponseEntity<?> estimateRide(@RequestBody RideBookingParametersDTO rideData) {
@@ -79,9 +77,11 @@ public class RideController {
     @PostMapping("/{id}/notes")
     public ResponseEntity<?> addRideNote(
             @PathVariable Long id,
+            @RequestParam(name = "accessToken", required = false) String accessToken,
             @RequestBody NoteRequestDTO noteRequest
     ) {
-
+        AppUser user = authUtils.getCurrentUser();
+        NoteResponseDTO note = rideService.saveRideNote(id, user, accessToken, noteRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 

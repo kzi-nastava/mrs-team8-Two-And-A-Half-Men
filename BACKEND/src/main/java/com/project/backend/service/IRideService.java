@@ -6,6 +6,7 @@ import com.project.backend.DTO.Ride.NoteRequestDTO;
 import com.project.backend.DTO.Ride.NoteResponseDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.DTO.Ride.RideTrackingDTO;
+import com.project.backend.models.AppUser;
 import com.project.backend.models.Ride;
 
 import java.util.Map;
@@ -23,7 +24,7 @@ public interface IRideService {
 
     RideResponseDTO getActiveRideByCustomerId(Long id);
 
-    NoteResponseDTO saveRideNote(Long rideId, Long passengerId, NoteRequestDTO noteRequest);
+    NoteResponseDTO saveRideNote(Long rideId, AppUser user, String accessToken, NoteRequestDTO noteRequest);
 
     RideTrackingDTO getRideTrackingInfo(Long rideId);
 

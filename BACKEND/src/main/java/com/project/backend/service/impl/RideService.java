@@ -13,9 +13,9 @@ import com.project.backend.DTO.mappers.RideMapper;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.DTO.redis.RedisLocationsDTO;
 import com.project.backend.events.RideCreatedEvent;
-import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
+import com.project.backend.exceptions.UnauthorizedException;
 import com.project.backend.models.Customer;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Passenger;
@@ -63,11 +63,9 @@ public class RideService implements IRideService {
     private final RouteRepository routeRepository;
     private final LocationTransformer locationTransformer;
     private final LocationRepository locationRepository;
-    private final CustomerRepository customerRepository;
     private final VehicleRepository vehicleRepository;
     private final VehicleTypeRepository vehicleTypeRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
-    private final PassengerRepository passengerRepository;
 
     private final SimpMessagingTemplate messagingTemplate;
 
@@ -81,8 +79,6 @@ public class RideService implements IRideService {
         return RideMapper.convertToHistoryResponseDTO(ride);
     }
 
-    public RideResponseDTO getActiveRideByDriverId(Long id) {
-        Driver driver = driverRepository.findById(id)
     @Transactional
     @Override
     public NewRideDTO createRide(Long userId, RideBookingParametersDTO body) {
@@ -266,8 +262,8 @@ public class RideService implements IRideService {
                 );
     }
 
-    public RideResponseDTO getActiveRideByDriverId(Long driverId) {
-        Driver driver = driverRepository.findById(driverId)
+    public RideResponseDTO getActiveRideByDriverId(Long id) {
+        Driver driver = driverRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Driver with id " + id + " not found"));
 
@@ -296,10 +292,16 @@ public class RideService implements IRideService {
         return RideMapper.convertToHistoryResponseDTO(activeRide);
     }
 
-    public NoteResponseDTO saveRideNote(Long rideId, Long passengerId, NoteRequestDTO noteRequest) {
-        Passenger passenger = passengerRepository.findById(passengerId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Passenger with id " + passengerId + " not found"));
+    public NoteResponseDTO saveRideNote(
+            Long rideId,
+            AppUser user,
+            String accessToken,
+            NoteRequestDTO noteRequest
+    ) {
+        Passenger passenger = passengerRepository.findByAccessToken(accessToken).orElse(null);
+        if(passenger == null && user instanceof Customer)
+            passenger = passengerRepository.findByCustomerWithRideStatus((Customer) user,
+                    List.of(RideStatus.ACTIVE)).orElse(null);
 
         String noteText = noteRequest.getNoteText();
         if (noteText.isEmpty() || noteText.isBlank() || noteText.length() > 500)
@@ -308,6 +310,8 @@ public class RideService implements IRideService {
         Ride activeRide = rideRepository.findById(rideId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Active ride with id " + rideId + " not found"));
+
+        if(passenger == null) throw new UnauthorizedException("Only passengers can leave inconsistency note");
 
         passenger.setInconsistencyNote(noteText);
         passengerRepository.save(passenger);

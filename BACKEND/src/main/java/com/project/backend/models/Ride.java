@@ -39,10 +39,10 @@ public class Ride {
 
     private Double totalCost;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Driver driver;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Customer rideOwner;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -70,6 +70,7 @@ public class WebSecurityConfig {
             request.requestMatchers("/files/**").permitAll()
                     .requestMatchers( "/api/v1/login").permitAll()
                     .requestMatchers("/api/v1/users/register").permitAll()
+                    .requestMatchers("/api/v1/reset-password").permitAll()
                     .requestMatchers("/api/v1/rides/estimates").permitAll()
                     .requestMatchers("/api/v1/activate").permitAll()
                     .requestMatchers("/api/v1/forgot-password/**").permitAll()

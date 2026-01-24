@@ -8,6 +8,7 @@ import { App } from './app';
 import { NavbarComponent } from './navbar/navbar';
 import { ActivationComponent } from './auth/activation/activation';
 import { HomePage } from './home-page/home-page';
+import { RestartPassword } from './auth/restart-password/restart-password';
 
 
 export const routes: Routes = [
@@ -19,5 +20,6 @@ export const routes: Routes = [
     { path: 'navbar', component: NavbarComponent},
     { path: 'activation', component: ActivationComponent },
     { path: 'home', component: HomePage },
+    { path: 'reset-password', component: RestartPassword },
     { path: '**', redirectTo: 'home' }
 ];

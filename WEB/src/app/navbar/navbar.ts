@@ -9,7 +9,7 @@ import { WebSocket } from '../service/web-socket';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, PanicButton],
+  imports: [CommonModule, PanicButton, CancellationButton],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })

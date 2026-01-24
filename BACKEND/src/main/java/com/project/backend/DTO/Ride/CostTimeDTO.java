@@ -19,4 +19,11 @@ public class CostTimeDTO {
     public void setTime(double time) {
         this.time = time;
     }
+    public CostTimeDTO() {
+    }
+
+    public CostTimeDTO(double cost, double time) {
+        this.cost = cost;
+        this.time = time;
+    }
 }

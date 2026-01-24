@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -54,5 +55,18 @@ public class ProfileController {
                     .body(Map.of("ok", false, "error", "Unauthorized"));
         }
         return ResponseEntity.ok(profileService.changePassword(user.getId(), body));
+    }
+
+    // Uploading a file
+    @PutMapping(value = "/picture")
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
+        var user = authUtils.getCurrentUser();
+        if(user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("ok", false, "error", "Unauthorized"));
+        }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(profileService.uploadProfilePicture(user.getId(), file));
     }
 }

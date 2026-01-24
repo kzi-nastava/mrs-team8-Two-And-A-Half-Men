@@ -1,24 +1,28 @@
 package com.project.backend.controllers;
 
-import com.project.backend.DTO.Ride.CostTimeDTO;
 import com.project.backend.DTO.Ride.*;
+import com.project.backend.exceptions.UnauthenticatedException;
+import com.project.backend.models.AppUser;
+import com.project.backend.models.enums.UserRole;
+import com.project.backend.service.impl.CancellationService;
 import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
-import com.project.backend.models.AppUser;
 import com.project.backend.service.impl.PanicService;
+import com.project.backend.service.impl.RatingService;
 import com.project.backend.service.IHistoryService;
 import com.project.backend.service.IRatingService;
 import com.project.backend.service.IRideService;
-import com.project.backend.util.AuthUtils;
+import com.project.backend.service.impl.PanicService;
 import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Pageable;
 
 import java.util.Map;
 
@@ -30,29 +34,32 @@ public class RideController {
     private final IHistoryService historyService;
     private final IRideService rideService;
     private final AuthUtils authUtils;
-    private final PanicService panicService;
-
+    @Autowired
+    private PanicService panicService;
+    @Autowired
+    private CancellationService cancellationService;
 
     @PostMapping("/estimates")
-    public ResponseEntity<?> estimateRide(@RequestBody RideRequestDTO rideData) {
-
-
-        if (rideData.getAddressesPoints() == null || rideData.getAddressesPoints().size() < 2) {
-            return ResponseEntity.status(400)
-                    .body(Map.of("error", "At least one address point is required for estimation"));
+    public ResponseEntity<?> estimateRide(@RequestBody RideBookingParametersDTO rideData) {
+        try {
+            CostTimeDTO estimate = rideService.estimateRide(rideData);
+            return ResponseEntity.status(HttpStatus.OK).body(estimate);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
         }
-        double estimatedPrice = 25.50;
-        int estimatedTimeMinutes = 15;
-        return ResponseEntity.ok(Map.of(
-                "estimatedPrice", estimatedPrice * rideData.getAddressesPoints().size(),
-                "estimatedTimeMinutes", estimatedTimeMinutes
-        ));
     }
 
     @PostMapping
-    public ResponseEntity<?> createRide(@RequestBody Map<String, Object> rideData) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+    public ResponseEntity<?> createRide(@RequestBody RideBookingParametersDTO body) {
+        AppUser user = authUtils.getCurrentUser();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Unauthorized"));
+        }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(rideService.createRide(user.getId(), body));
     }
 
     @GetMapping("/{id}")
@@ -79,9 +86,14 @@ public class RideController {
     }
 
     @PatchMapping("/{id}/start")
+    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<?> startRide(@PathVariable String id) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+        var user = authUtils.getCurrentUser();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Unauthorized"));
+        }
+        return ResponseEntity.ok(rideService.startARide(id,user.getId()));
     }
     
     @PatchMapping("/{id}/finish")
@@ -115,12 +127,14 @@ public class RideController {
     }
 
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<?> cancelRide(@PathVariable String id, @RequestBody String reason) {
-        if (id.equals("11")) {
+    public ResponseEntity<?> cancelRide(@PathVariable Long id, @RequestBody RideCancelationDTO reason) {
+            AppUser user = authUtils.getCurrentUser();
+            if(user == null) {
+                return ResponseEntity.status(401)
+                        .body(Map.of("error", "Unauthorized"));
+            }
+            cancellationService.cancelRide(id, reason, user);
             return ResponseEntity.ok(Map.of("message", "Ride cancelled successfully"));
-        }
-        return ResponseEntity.status(404)
-                .body(Map.of("error", "Ride not found"));
     }
 
     @PostMapping("/{id}/rating")

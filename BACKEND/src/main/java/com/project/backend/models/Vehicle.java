@@ -22,8 +22,8 @@ public class Vehicle {
     private int numberOfSeats;
     @OneToOne
     private Driver driver;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private VehicleType vehicleType;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<AdditionalService> additionalServices;
 }

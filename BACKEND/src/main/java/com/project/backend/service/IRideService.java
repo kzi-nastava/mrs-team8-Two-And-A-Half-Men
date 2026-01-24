@@ -18,5 +18,5 @@ public interface IRideService {
     Map<String, Object> startARide(String id, Long id1);
 
     CostTimeDTO estimateRide(RideBookingParametersDTO rideData);
-    void endRideById(Long id, Driver driver);
+    CostTimeDTO endRideById(Long id, Driver driver);
 }

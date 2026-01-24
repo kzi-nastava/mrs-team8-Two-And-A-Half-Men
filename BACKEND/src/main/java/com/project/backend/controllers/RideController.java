@@ -1,9 +1,15 @@
 package com.project.backend.controllers;
 
 import com.project.backend.DTO.Ride.*;
+import com.project.backend.exceptions.UnauthenticatedException;
+import com.project.backend.models.AppUser;
+import com.project.backend.models.enums.UserRole;
+import com.project.backend.service.impl.CancellationService;
 import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
+import com.project.backend.service.impl.PanicService;
+import com.project.backend.service.impl.RatingService;
 import com.project.backend.service.IHistoryService;
 import com.project.backend.service.IRatingService;
 import com.project.backend.service.IRideService;
@@ -30,7 +36,8 @@ public class RideController {
     private final AuthUtils authUtils;
     @Autowired
     private PanicService panicService;
-
+    @Autowired
+    private CancellationService cancellationService;
 
     @PostMapping("/estimates")
     public ResponseEntity<?> estimateRide(@RequestBody RideBookingParametersDTO rideData) {
@@ -119,12 +126,14 @@ public class RideController {
     }
 
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<?> cancelRide(@PathVariable String id, @RequestBody String reason) {
-        if (id.equals("11")) {
+    public ResponseEntity<?> cancelRide(@PathVariable Long id, @RequestBody RideCancelationDTO reason) {
+            AppUser user = authUtils.getCurrentUser();
+            if(user == null) {
+                return ResponseEntity.status(401)
+                        .body(Map.of("error", "Unauthorized"));
+            }
+            cancellationService.cancelRide(id, reason, user);
             return ResponseEntity.ok(Map.of("message", "Ride cancelled successfully"));
-        }
-        return ResponseEntity.status(404)
-                .body(Map.of("error", "Ride not found"));
     }
 
     @PostMapping("/{id}/rating")

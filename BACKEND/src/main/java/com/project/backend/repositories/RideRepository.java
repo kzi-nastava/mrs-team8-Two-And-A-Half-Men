@@ -1,6 +1,7 @@
 package com.project.backend.repositories;
 
 import com.project.backend.models.Driver;
+import com.project.backend.models.Customer;
 import com.project.backend.models.Ride;
 import com.project.backend.models.enums.RideStatus;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Optional;
 
 @Repository
@@ -62,4 +64,5 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     Optional<Ride> findFirstByDriverAndStatusIn(Driver driver, List<RideStatus> statuses);
 
     List<Ride> findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(Collection<Long> driversIds);
+    Optional<Ride> findById(Long rideId);
 }

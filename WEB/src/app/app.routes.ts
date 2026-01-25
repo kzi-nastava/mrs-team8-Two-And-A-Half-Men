@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Login } from './auth/login/login';
 import { ForgotPassword } from './auth/forgot-password/forgot-password';
 import { Register } from './auth/register/register';
-import {ProfileComponent} from './profile/profile.component';
+import {ProfileComponent} from '@features/profile/profile.component';
 import { DriversHistoryComponent } from './drivers-history/drivers-history';
 import { App } from './app';
 import { NavbarComponent } from './navbar/navbar';

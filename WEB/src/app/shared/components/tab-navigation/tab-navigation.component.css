@@ -1,0 +1,48 @@
+.tab-navigation {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 2rem;
+	border-bottom: 2px solid #3a3a3a;
+}
+
+.tab-button {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1rem 1.5rem;
+	background: transparent;
+	border: none;
+	color: #9ca3af;
+	font-size: 1rem;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+	transition: all 0.3s ease;
+}
+
+.tab-button > svg,
+.tab-icon > svg {
+	width: 20px;
+	height: 20px;
+}
+
+.tab-button:hover {
+	color: #d4af37;
+}
+
+.tab-button.active {
+	color: #d4af37;
+	border-bottom-color: #d4af37;
+}
+
+@media (max-width: 640px) {
+	.tab-button {
+		padding: 0.75rem 1rem;
+		font-size: 0.875rem;
+	}
+
+	.tab-button > svg,
+	.tab-icon > svg {
+		width: 16px;
+		height: 16px;
+	}
+}

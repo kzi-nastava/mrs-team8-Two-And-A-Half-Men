@@ -5,20 +5,40 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from './services/profile.service';
 import { UserProfile, VehicleInfo, PasswordChange } from './models/user-profile.model';
+import {TabItem, TabNavigationComponent} from '@shared/components/tab-navigation/tab-navigation.component';
+import {TabContentComponent} from '@shared/components/tab-content/tab-content.component';
 
 @Component({
 	selector: 'app-profile',
 	standalone: true,
-	imports: [CommonModule, FormsModule],
+	imports: [CommonModule, FormsModule, TabNavigationComponent, TabContentComponent],
 	templateUrl: './profile.component.html',
 	styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
 	private profileService = inject(ProfileService);
 
-	// Tab state
-	activeTab = signal<'personal' | 'vehicle'>('personal');
+	// Active tab state
+	activeTab = signal<string>('personal');
 
+	// Define tabs with icons
+	tabs: TabItem[] = [
+		{
+			id: 'personal',
+			label: 'Personal data',
+			icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2"/></svg>'
+		},
+		{
+			id: 'vehicle',
+			label: 'Vehicle data',
+			icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 17h14M5 17a2 2 0 1 1 0-4M5 17a2 2 0 1 0 0-4m14 4a2 2 0 1 0 0-4m0 4a2 2 0 1 1 0-4M3 11l2-7h14l2 7M5 13h14" stroke="currentColor" stroke-width="2"/></svg>'
+		}
+	];
+
+	// Handle tab change
+	onTabChange(tabId: string): void {
+		this.activeTab.set(tabId);
+	}
 	// Form state signals
 	userForm = signal<UserProfile>({ ...this.profileService.userProfile() });
 	vehicleForm = signal<VehicleInfo>({ ...this.profileService.vehicleInfo() });
@@ -42,11 +62,6 @@ export class ProfileComponent {
 		// Initialize forms with current data
 		this.resetUserForm();
 		this.resetVehicleForm();
-	}
-
-	// Tab navigation
-	setActiveTab(tab: 'personal' | 'vehicle'): void {
-		this.activeTab.set(tab);
 	}
 
 	// Reset forms to current profile data

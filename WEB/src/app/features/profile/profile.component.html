@@ -1,0 +1,80 @@
+<!-- src/app/components/profile/profile.component.html -->
+
+<div class="profile-container">
+	<div class="profile-content">
+
+		<!-- Pending Review Alert -->
+		<div class="pending-review-alert">
+			<!-- ... alert content ... -->
+		</div>
+
+		<!-- Tab Navigation - Using reusable component -->
+		<app-tab-navigation
+			[tabs]="tabs"
+			[activeTab]="activeTab()"
+			(tabChange)="onTabChange($event)">
+		</app-tab-navigation>
+
+		<!-- Save Message -->
+		@if (saveMessage()) {
+			<div class="save-message">{{ saveMessage() }}</div>
+		}
+
+		<!-- Personal Data Tab - Using reusable component -->
+		<app-tab-content
+			[tabId]="'personal'"
+			[activeTab]="activeTab()">
+			<div class="form-section">
+				<div class="form-grid">
+					<div class="form-column">
+						<div class="form-group">
+							<label for="firstName">First name</label>
+							<input
+								type="text"
+								id="firstName"
+								[(ngModel)]="userForm().firstName"
+								class="form-input">
+						</div>
+						<!-- ... more form fields ... -->
+					</div>
+					<!-- ... photo column ... -->
+				</div>
+
+				<div class="form-actions">
+					<button class="save-button" (click)="saveUserProfile()">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+						Save changes
+					</button>
+				</div>
+			</div>
+
+			<!-- Password Section -->
+			<div class="form-section password-section">
+				<!-- ... password fields ... -->
+			</div>
+		</app-tab-content>
+
+		<!-- Vehicle Data Tab - Using reusable component -->
+		<app-tab-content
+			[tabId]="'vehicle'"
+			[activeTab]="activeTab()">
+			<div class="form-section">
+				<div class="vehicle-grid">
+					<!-- ... vehicle form fields ... -->
+				</div>
+
+				<div class="form-actions">
+					<button class="save-button" (click)="saveVehicleInfo()">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+						Save changes
+					</button>
+				</div>
+			</div>
+		</app-tab-content>
+
+	</div>
+</div>

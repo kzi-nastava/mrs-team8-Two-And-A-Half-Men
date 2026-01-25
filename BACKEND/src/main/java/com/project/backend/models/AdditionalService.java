@@ -15,9 +15,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AdditionalService {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+
     private Long id;
+
     private String name;
+
     private String description;
 }

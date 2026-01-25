@@ -33,12 +33,20 @@ public class DriverController {
                     "abc@gmail.com",
                     45.740052D,
                     19.838116D,
-                    false,
+                    true,
                     true,
                     null,
                     "car",
                     123L
             );
+            driverLocationService.updateDriverLocation(101L, driverLocation);
+            driverLocation.setLatitude(45.240052D);
+            driverLocationService.updateDriverLocation(101L, driverLocation);
+            driverLocation.setLatitude(46.240052D);
+            driverLocationService.updateDriverLocation(101L, driverLocation);
+            driverLocation.setLongitude(18.838116D);
+            driverLocationService.updateDriverLocation(101L, driverLocation);
+            driverLocation.setLongitude(17.838116D);
             driverLocationService.updateDriverLocation(101L, driverLocation);
             driverLocation.setLongitude(21.838323D);
             driverLocation.setDriverId(151L);

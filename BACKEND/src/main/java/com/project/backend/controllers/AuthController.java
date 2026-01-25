@@ -57,10 +57,15 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody Map<String, Object> emailData) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+        String email = (String) emailData.get("email");
+        authService.forgetPassword(email);
+        return ResponseEntity.ok(Map.of("message", "Successfully sent password reset instructions to your email."));
     }
-
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO resetPasswordData) {
+         authService.resetPassword(resetPasswordData);
+        return ResponseEntity.ok(Map.of("message", "Password has been successfully reset."));
+    }
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody Map<String, Object> passwordData) {
         return ResponseEntity.status(501)

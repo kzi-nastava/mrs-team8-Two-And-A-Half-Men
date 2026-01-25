@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { User } from '../auth/models/user.model';
 import { signal } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AuthResponse } from '../auth/models/authmodel';
 import { Login } from '../auth/models/loginmodel';
@@ -15,13 +15,31 @@ export class Auth {
   private readonly http = inject(HttpClient);
 
   constructor() {}
-public login(logindata: Login): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('http://localhost:8080/api/v1/login', logindata);
+public login(logindata: Login, rememberMe: boolean): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>('http://localhost:8080/api/v1/login', logindata).pipe(
+      tap((response) => {
+        if (rememberMe) {
+          localStorage.setItem('authTokenUser', response.accessToken);
+        }
+        else {
+          sessionStorage.setItem('authTokenUser', response.accessToken);
+        }
+      })
+    );
   }
-public forgotPassword(email: string): boolean {
-    
-    return true;
+public forgotPassword(email: string): Observable<{ message: string }> {
+  return this.http.post<{ message: string }>('http://localhost:8080/api/v1/forgot-password', { email });
   }
+public logOut(): void {
+  if (this.isLoggedInLocalStorage()) {
+    localStorage.removeItem('authTokenUser');
+  }
+  if (this.isLoggedInSessionStorage()) {
+    sessionStorage.removeItem('authTokenUser');
+  }
+  this.user.set(null);
+  this.role.set("");
+}
 public Registar(user : User): Observable<{ message : string }> { 
 
   return this.http.post<{ message : string }>('http://localhost:8080/api/v1/users/register', user);
@@ -34,19 +52,23 @@ public Registar(user : User): Observable<{ message : string }> {
 
 
   user = signal<User | null>(null);
-   getRole(): any {
+  role = signal<string>("");
+  getRole(): any {
     if (this.isLoggedInSessionStorage()) {
       const accessToken: any = sessionStorage.getItem('authTokenUser');
       const helper = new JwtHelperService();
+      this.role.set(helper.decodeToken(accessToken).role);
       return helper.decodeToken(accessToken).role;
     } else if (this.isLoggedInLocalStorage()) {
       const accessToken: any = localStorage.getItem('authTokenUser');
       const helper = new JwtHelperService();
+      this.role.set(helper.decodeToken(accessToken).role);
       return helper.decodeToken(accessToken).role;
     }
-
-    return null;
+    this.role.set("");
+    return "";
   }
+  
   isLoggedInLocalStorage(): boolean {
     return localStorage.getItem('authTokenUser') != null;
   }
@@ -63,5 +85,8 @@ public setUser(email: string, imgSrc: string, firstName: string, lastName: strin
 
   var role = this.getRole();
   this.user.set({ email: email, imgUrl: imgSrc, firstName: firstName, lastName: lastName, role: role });
+}
+public restartPassword(token: string, newPassword: string): Observable<{ message: string }> {
+  return this.http.post<{ message: string }>('http://localhost:8080/api/v1/reset-password', { token, newPassword });
 }
 }

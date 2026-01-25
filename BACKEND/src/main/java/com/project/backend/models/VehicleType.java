@@ -15,10 +15,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class VehicleType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     private String typeName;
+
     private String description;
-    private double price;
+
+    private Double price;
 }

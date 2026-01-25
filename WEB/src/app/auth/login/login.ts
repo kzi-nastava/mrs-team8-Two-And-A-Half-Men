@@ -31,17 +31,11 @@ export class Login {
       const password = this.loginForm.get('password')?.value ?? '';
       const rememberMe = !!this.loginForm.get('rememberMe')?.value;
       const logindata = { username, password };
-      this.authService.login(logindata).subscribe({
+      this.authService.login(logindata, rememberMe).subscribe({
         next: (response) => {
-          if(rememberMe) {
-            localStorage.setItem('authTokenUser', response.accessToken);
             this.authService.setUser(response.email, response.imgUrl, response.firstName, response.lastName);
+            this.authService.getRole();
             this.router.navigate(['']);
-          } else {
-            sessionStorage.setItem('authTokenUser', response.accessToken);
-            this.authService.setUser(response.email, response.imgUrl, response.firstName, response.lastName);
-            this.router.navigate(['']);
-          }
         },
         error: (error) => {
           console.log('Login failed', error);

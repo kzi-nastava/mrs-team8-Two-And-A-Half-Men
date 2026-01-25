@@ -9,24 +9,38 @@ import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
 import com.project.backend.DTO.redis.RedisLocationsDTO;
 import com.project.backend.events.RideCreatedEvent;
-import com.project.backend.exceptions.BadRequestException;
-import com.project.backend.exceptions.ForbiddenException;
-import com.project.backend.exceptions.ResourceNotFoundException;
+import com.project.backend.exceptions.*;
+import com.project.backend.geolocation.coordinates.Coordinates;
+import com.project.backend.geolocation.locations.LocationTransformer;
+import com.project.backend.exceptions.UnauthenticatedException;
+import com.project.backend.geolocation.coordinates.Coordinates;
+import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
 import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.geolocation.metrics.MetricsDistance;
 import com.project.backend.models.*;
 import com.project.backend.models.enums.DriverStatus;
+import com.project.backend.models.Route;
+import com.project.backend.models.Route;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.*;
 import com.project.backend.repositories.redis.DriverLocationsRepository;
+import com.project.backend.repositories.RouteRepository;
+import com.project.backend.repositories.RouteRepository;
 import com.project.backend.service.IRideService;
 import jakarta.transaction.Transactional;
 import lombok.*;
+import org.hibernate.dialect.sql.ast.SybaseSqlAstTranslator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.CoderResult;
+import java.util.ArrayList;
+import java.nio.charset.CoderResult;
+import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -44,8 +58,9 @@ public class RideService implements IRideService {
 
     private final RideRepository rideRepository;
     private final DriverRepository driverRepository;
-    private final RouteRepository routeRepository;
+    private final RideTracingService rideTracingService;
     private final LocationTransformer locationTransformer;
+    private final RouteRepository routeRepository;
     private final LocationRepository locationRepository;
     private final CustomerRepository customerRepository;
     private final VehicleRepository vehicleRepository;
@@ -263,6 +278,90 @@ public class RideService implements IRideService {
         }
 
         return RideMapper.convertToHistoryResponseDTO(activeRide);
+    }
+
+    @Override
+    public CostTimeDTO endRideById(Long id, Driver driver) {
+        System.out.println("Ride end requested for ride id: " + id + " by driver id: " + driver.getId());
+        Ride ride = rideRepository.findById(id).orElse(null);
+
+        if(ride == null) {
+            throw new BadRequestException("Ride with id " + id + " not found");
+        }
+        System.out.println("Ending ride for driver id: " + driver.getId() + ", ride id: " + ride.getId());
+        if(!ride.getDriver().getId().equals(driver.getId())) {
+            throw new ForbiddenException("Driver not authorized to end this ride");
+        }
+        System.out.println("Ride status: " + ride.getStatus());
+        if(ride.getStatus() != RideStatus.ACTIVE) {
+            throw new NoActiveRideException("Ride is not active");
+        }
+        String path = rideTracingService.finishRoute(driver.getId());
+        System.out.println(path);
+        ride.setPath(path);
+        if(ride.getPrice() == null) {
+            ride.setPrice(0.0);
+        }
+        ride.setTotalCost(ride.getPrice() + 120 * locationTransformer.calculateDistanceAir(path));
+        List<Coordinates>pathCords = locationTransformer.transformToCoordinates(path);
+        System.out.println("Route s" + ride.getRoute().getGeoHash());
+        List<Coordinates> route = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
+        System.out.println(pathCords.size());
+        System.out.println(route.size());
+        List<Coordinates> newCords = getNewRideCords(pathCords, route, 50);
+        System.out.println(newCords);
+        String newPath = locationTransformer.transformLocation(newCords);
+        Route newRoute = routeRepository.findByGeoHash(newPath).orElse(null);
+        System.out.println("New route geohash: " + newPath);
+        if(newRoute == null) {
+            newRoute = new Route();
+            newRoute.setGeoHash(newPath);
+            routeRepository.save(newRoute);
+        }
+        ride.setRoute(newRoute);
+        ride.setEndTime(LocalDateTime.now());
+        rideRepository.save(ride);
+        CostTimeDTO costTimeDTO = new CostTimeDTO();
+        costTimeDTO.setCost(ride.getTotalCost());
+        LocalDateTime startTime = ride.getStartTime();
+        LocalDateTime endTime = ride.getEndTime();
+        if(startTime != null && endTime != null) {
+            long minutes = java.time.Duration.between(startTime, endTime).toMinutes();
+            costTimeDTO.setTime((double) minutes);
+        } else {
+            costTimeDTO.setTime(0);
+        }
+        return costTimeDTO;
+    }
+    private List<Coordinates> getNewRideCords(List<Coordinates> accualRide, List<Coordinates> plannedRoute , double thresholdMeters) {
+            if (accualRide.isEmpty() || plannedRoute.isEmpty()) {
+                return null;
+            }
+
+            ArrayList<Coordinates> newCords = new ArrayList<>();
+            for (int i = 0; i < plannedRoute.size(); i++) {
+                boolean isViewed = false;
+                if(i == 0)
+                {
+                    newCords.add(plannedRoute.get(i));
+                    continue;
+                }
+                Coordinates plannedCords = plannedRoute.get(i);
+                for (Coordinates actualCords: accualRide) {
+                    double distance =  plannedCords.distanceAirLine(actualCords);
+                    if (distance <= thresholdMeters) {
+                        isViewed = true;
+                        break;
+                    }
+                }
+                if (isViewed) {
+                    newCords.add(plannedCords);
+                } else if(i == plannedRoute.size() -1) {
+                    newCords.add(accualRide.get(accualRide.size() -1)); // add last actual cord
+                }
+            }
+
+            return newCords;
     }
 
     public Optional<FindDriverDTO> findBestSuitableDriver(FindDriverFilter filter) {

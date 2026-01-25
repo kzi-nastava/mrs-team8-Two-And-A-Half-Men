@@ -39,7 +39,7 @@ public class DriverLocationService implements IDriverLocationService {
                 locationDTO.getLongitude(),
                 locationDTO.getLatitude()
         );
-        rideTracingService.setRideLocation(driverId, locationDTO.getLongitude(), locationDTO.getLatitude(), locationDTO.getIsActive());
+        rideTracingService.setRideLocation(driverId, locationDTO.getLongitude(), locationDTO.getLatitude(), locationDTO.getIsOccupied());
         Optional<Driver> driverOpt = driverRepository.findById(driverId);
         if (driverOpt.isPresent()) {
             Driver driver = driverOpt.get();

@@ -17,10 +17,14 @@ public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     private String model;
+
     private String licensePlate;
-    private int numberOfSeats;
-    @OneToOne
+
+    private Integer numberOfSeats;
+
+    @OneToOne(fetch = FetchType.LAZY)
     private Driver driver;
     @ManyToOne(fetch = FetchType.EAGER)
     private VehicleType vehicleType;

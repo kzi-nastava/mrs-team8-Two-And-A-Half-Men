@@ -1,36 +1,14 @@
-// src/app/models/user-profile.model.ts
+import {PersonalInfo} from '@shared/models/personal-info.model';
+import {VehicleInfo} from '@shared/models/vehicles.model';
+import {PendingChangeRequest} from '@shared/models/profile-change-request.model';
 
 export interface UserProfile {
-	id: string;
-	firstName: string;
-	lastName: string;
-	phoneNumber: string;
-	address: string;
-	email: string;
-	photoUrl?: string;
+	personalInfo: PersonalInfo;
+	vehicleInfo?: VehicleInfo;
+	pendingChangeRequest?: PendingChangeRequest;
 }
-
-export interface VehicleInfo {
-	type: string;
-	numberOfSeats: number;
-	model: string;
-	plateNumber: string;
-	additionalServices: string[];
-}
-
-export interface VehicleType {
-	id: string;
-	name: string;
-	description?: string;
-}
-
-export interface AdditionalService {
-	id: string;
-	name: string;
-	enabled: boolean;
-}
-
 export interface PasswordChange {
+	oldPassword: string;
 	newPassword: string;
 	confirmPassword: string;
 }

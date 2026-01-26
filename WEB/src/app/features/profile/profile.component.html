@@ -3,35 +3,11 @@
 <div class="profile-container">
 	<div class="profile-content">
 
-		<!-- Pending Review Alert -->
-		<div class="pending-review-alert">
-			<div class="alert-icon">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-					<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-					<path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-				</svg>
-			</div>
-			<div class="alert-content">
-				<h4 class="alert-title">Pending Review</h4>
-				<p class="alert-message">Your profile changes are currently under review by the administrator. You will be notified once they are approved.</p>
-				<div class="pending-changes-list">
-					<div class="pending-item">
-						<span class="change-field">Phone number:</span>
-						<span class="change-value">+381641234567 → +381641234999</span>
-					</div>
-					<div class="pending-item">
-						<span class="change-field">Vehicle model:</span>
-						<span class="change-value">Fiat Punto → Toyota Corolla</span>
-					</div>
-				</div>
-			</div>
-			<button class="cancel-button">
-				<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-					<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-				</svg>
-				Cancel Request
-			</button>
-		</div>
+		<app-request-change-preview
+			[request]="changeRequest()"
+			[personalInfo]="personalInfo()"
+			[vehicleInfo]="vehicleInfo()"
+		/>
 
 		<!-- Tab Navigation - Using reusable component -->
 		<app-tab-navigation
@@ -65,147 +41,22 @@
 
 		<div appBox style="margin-bottom: 2rem;">
 
-			<!-- Personal Data Tab - Using reusable component -->
-			<app-tab-content
-				[tabId]="'personal'"
-				[activeTab]="activeTab()">
-
-				<div class="form-grid">
-					<div class="form-column">
-						<div class="form-group">
-							<label for="firstName">First name</label>
-							<input
-								type="text"
-								id="firstName"
-								[(ngModel)]="userForm().firstName"
-								class="form-input">
-						</div>
-
-						<div class="form-group">
-							<label for="lastName">Last Name</label>
-							<input
-								type="text"
-								id="lastName"
-								[(ngModel)]="userForm().lastName"
-								class="form-input">
-						</div>
-
-						<div class="form-group">
-							<label for="phone">Phone number</label>
-							<input
-								type="tel"
-								id="phone"
-								[(ngModel)]="userForm().phoneNumber"
-								class="form-input">
-						</div>
-
-						<div class="form-group">
-							<label for="address">Address</label>
-							<input
-								type="text"
-								id="address"
-								[(ngModel)]="userForm().address"
-								class="form-input">
-						</div>
-
-						<div class="form-group">
-							<label for="email">Email</label>
-							<input
-								type="email"
-								id="email"
-								[(ngModel)]="userForm().email"
-								class="form-input">
-						</div>
-					</div>
-
-					<div class="photo-column">
-						<div class="photo-container">
-							<img [src]="userForm().photoUrl || 'assets/default-avatar.jpg'" alt="Profile Photo">
-							<button class="upload-button" (click)="fileInput.click()">
-								<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-									<path d="M12 5v14m7-7H5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-								</svg>
-							</button>
-							<input
-								#fileInput
-								type="file"
-								accept="image/*"
-								(change)="onPhotoUpload($event)"
-								style="display: none;">
-						</div>
-					</div>
-				</div>
-
+			<!-- Personal Data Tab -->
+			<app-tab-content [tabId]="'personal'" [activeTab]="activeTab()">
+				<app-personal-info-form
+					[(personalInfo)]="personalInfo"
+					[showPhotoUpload]="true"
+					(photoChange)="onPhotoChange($event)">
+				</app-personal-info-form>
 			</app-tab-content>
 
-			<!-- Vehicle Data Tab - Using reusable component -->
-			<app-tab-content
-				[tabId]="'vehicle'"
-				[activeTab]="activeTab()">
-				<div class="form-section">
-					<div class="vehicle-grid">
-						<div class="vehicle-info">
-							<div class="form-group">
-								<label for="vehicleType">Type</label>
-								<select
-									id="vehicleType"
-									[(ngModel)]="vehicleForm().type"
-									class="form-input">
-									@for (type of vehicleTypes(); track type.id) {
-										<option [value]="type.id">{{ type.name }}</option>
-									}
-								</select>
-							</div>
-
-							<div class="form-group">
-								<label for="seats">Number of seats</label>
-								<input
-									type="number"
-									id="seats"
-									[(ngModel)]="vehicleForm().numberOfSeats"
-									class="form-input"
-									min="1"
-									max="20">
-							</div>
-
-							<div class="form-group">
-								<label for="model">Model</label>
-								<input
-									type="text"
-									id="model"
-									[(ngModel)]="vehicleForm().model"
-									class="form-input">
-							</div>
-
-							<div class="form-group">
-								<label for="plate">Plate number</label>
-								<input
-									type="text"
-									id="plate"
-									[(ngModel)]="vehicleForm().plateNumber"
-									class="form-input">
-							</div>
-						</div>
-
-						<div class="additional-services">
-							<h3 class="services-title">Additional services</h3>
-							<div class="services-list">
-								@for (service of availableServices(); track service.id) {
-									<label class="service-item">
-										<input
-											type="checkbox"
-											[checked]="isServiceEnabled(service.id)"
-											(change)="toggleService(service.id)">
-										<svg class="checkmark" width="20" height="20" viewBox="0 0 24 24" fill="none">
-											<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-										</svg>
-										<span>{{ service.name }}</span>
-									</label>
-								}
-							</div>
-						</div>
-					</div>
-				</div>
+			<!-- Vehicle Data Tab -->
+			<app-tab-content [tabId]="'vehicle'" [activeTab]="activeTab()">
+				<app-vehicle-info-form
+					[(vehicleInfo)]="vehicleInfo"
+					[vehicleTypes]="vehicleTypes()"
+					[availableServices]="availableServices()">
+				</app-vehicle-info-form>
 			</app-tab-content>
 
 
@@ -231,6 +82,15 @@
 				</svg>
 				Change password
 			</h3>
+
+			<div class="form-group">
+				<label for="oldPassword">Old Password</label>
+				<input
+					type="password"
+					id="oldPassword"
+					[(ngModel)]="passwordForm().oldPassword"
+					class="form-input">
+			</div>
 
 			<div class="form-group">
 				<label for="newPassword">New Password</label>

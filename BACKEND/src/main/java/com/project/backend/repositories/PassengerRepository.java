@@ -2,6 +2,7 @@ package com.project.backend.repositories;
 
 import com.project.backend.models.Customer;
 import com.project.backend.models.Passenger;
+import com.project.backend.models.Ride;
 import com.project.backend.models.enums.RideStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,6 @@ public interface PassengerRepository extends JpaRepository<Passenger, Long> {
                                                              @Param("statuses") Iterable<RideStatus> statuses);
 
     Optional<Passenger> findByUserId(Long id);
+
+    Optional<Passenger> findByUserAndRide(Customer user, Ride ride);
 }

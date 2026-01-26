@@ -24,6 +24,4 @@ public class RatingRequestDTO {
 
     @Size(max = 500, message = "Comment cannot exceed 500 characters")
     private String comment;
-
-    private Long passengerId;
 }

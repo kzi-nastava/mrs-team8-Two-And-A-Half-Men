@@ -1,4 +1,3 @@
-/* Main container */
 :host {
   display: block;
   background-color: #2d2d2d;
@@ -7,243 +6,61 @@
   color: #ffffff;
 }
 
-/* Header */
 h2 {
   text-align: center;
   font-size: 32px;
-  font-weight: 400;
   margin: 40px 0;
-  color: #ffffff;
 }
 
-/* Filter section */
 .filter-section {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+  max-width: 900px;
   margin: 0 auto 30px auto;
-  gap: 15px;
-  flex-wrap: wrap;
-  max-width: 900px;
-}
-
-.sort-controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.sort-label {
-  font-size: 16px;
-  color: #ffffff;
-}
-
-.sort-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.sort-btn {
-  background: none;
-  border: 1px solid #666;
-  color: #ffffff;
-  padding: 2px 8px;
-  cursor: pointer;
-  font-size: 12px;
-  border-radius: 3px;
-}
-
-.sort-btn:hover {
-  border-color: #4caf50;
-}
-
-.date-inputs {
-  display: flex;
-  gap: 20px;
   align-items: center;
 }
 
-.date-input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+.sort-controls { display: flex; gap: 10px; align-items: center; }
+.sort-btn { background: none; border: 1px solid #666; color: #fff; padding: 2px 8px; cursor: pointer; }
+.sort-btn:hover { border-color: #4caf50; }
 
-.date-label {
-  font-size: 14px;
-  color: #ffffff;
-  font-weight: 500;
-}
+.date-inputs { display: flex; gap: 20px; }
+.date-input-group { display: flex; flex-direction: column; }
+.date-input { background: #3d3d3d; border: 1px solid #555; color: #fff; padding: 8px 12px; border-radius: 4px; }
 
-.date-input {
-  background-color: #3d3d3d;
-  border: 1px solid #555;
-  color: #ffffff;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-}
+.filter-btn { background-color: #4caf50; color: #fff; border: none; padding: 10px 40px; border-radius: 4px; cursor: pointer; }
 
-.date-input::placeholder {
-  color: #999;
-}
+.ride-list { list-style: none; padding: 0; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; max-width: 900px; }
 
-.filter-btn {
-  background-color: #4caf50;
-  color: #ffffff;
-  border: none;
-  padding: 10px 40px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.3s;
-}
+.ride-list li { background-color: #2e5d3e; border: 2px solid #4caf50; border-radius: 8px; padding: 20px 25px; cursor: pointer; transition: all 0.3s ease; }
+.ride-list li:hover { background-color: #355d42; border-color: #66bb6a; }
+.ride-list li.selected { background-color: #3a6d4a; border-color: #81c784; box-shadow: 0 0 10px rgba(76, 175, 80, 0.3); }
 
-.filter-btn:hover {
-  background-color: #45a049;
-}
+.ride-content { display: grid; grid-template-columns: 1fr auto; gap: 20px; }
+.route-info { display: flex; flex-direction: column; gap: 12px; }
+.location { display: flex; align-items: center; gap: 10px; font-size: 16px; }
+.location:before { content: "📍"; font-size: 18px; }
+.info-item { font-size: 16px; }
 
-.filter-icon {
-  float: right;
-  color: #ffffff;
-  font-size: 24px;
-  cursor: pointer;
-  margin-top: -30px;
-}
+.time-info { display: flex; flex-direction: column; align-items: flex-end; gap: 15px; }
+.time-label { font-size: 15px; color: #b0b0b0; margin-bottom: 3px; }
+.time-value { font-size: 16px; font-weight: 500; }
 
-/* Ride list */
-.ride-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 900px;
-}
+.ride-details { margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 20px; flex-wrap: wrap; }
+.ride-details > div { font-size: 16px; }
+.ride-details strong { color: #b0b0b0; font-weight: 500; }
 
-.ride-list li {
-  background-color: #2e5d3e;
-  border: 2px solid #4caf50;
-  border-radius: 8px;
-  padding: 20px 25px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
+.pagination { display: flex; gap: 12px; margin-top: 16px; justify-content: center; }
 
-.ride-list li:hover {
-  background-color: #355d42;
-  border-color: #66bb6a;
-}
+.empty-state { max-width: 900px; margin: 60px auto; padding: 40px 20px; text-align: center; border: 2px dashed #4caf50; border-radius: 10px; color: #e0e0e0; background-color: rgba(76, 175, 80, 0.05); }
+.empty-icon { font-size: 48px; margin-bottom: 15px; }
+.empty-title { font-size: 22px; font-weight: 500; margin-bottom: 8px; }
+.empty-subtitle { font-size: 16px; color: #b0b0b0; }
 
-.ride-list li.selected {
-  background-color: #3a6d4a;
-  border-color: #81c784;
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
-}
-
-/* Ride content layout */
-.ride-content {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 20px;
-  align-items: start;
-}
-
-/* Route information */
-.route-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.location {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  color: #e0e0e0;
-  padding-left: 5px;
-}
-
-.location:before {
-  content: "📍";
-  font-size: 18px;
-}
-
-.info-item {
-  font-size: 16px;
-  color: #e0e0e0;
-  padding-left: 5px;
-}
-
-/* Time information */
-.time-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 15px;
-}
-
-.time-label {
-  font-size: 15px;
-  color: #b0b0b0;
-  margin-bottom: 3px;
-}
-
-.time-value {
-  font-size: 16px;
-  color: #ffffff;
-  font-weight: 500;
-}
-
-/* Additional ride details */
-.ride-details {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.ride-details > div {
-  font-size: 16px;
-}
-
-.ride-details strong {
-  color: #b0b0b0;
-  font-weight: 500;
-}
-
-/* Responsive design */
 @media (max-width: 768px) {
-  .filter-section {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .date-inputs {
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .date-input {
-    width: 100%;
-  }
-  
-  .filter-btn {
-    width: 100%;
-  }
-  
-  .ride-content {
-    grid-template-columns: 1fr;
-  }
-  
-  .time-info {
-    align-items: flex-start;
-  }
+  .filter-section, .date-inputs { flex-direction: column; width: 100%; }
+  .date-input, .filter-btn { width: 100%; }
+  .ride-content { grid-template-columns: 1fr; }
+  .time-info { align-items: flex-start; }
 }

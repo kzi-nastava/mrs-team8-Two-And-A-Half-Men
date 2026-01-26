@@ -4,59 +4,88 @@
   <div class="sort-controls">
     <span class="sort-label">Date</span>
     <div class="sort-buttons">
-      <button class="sort-btn">ASC</button>
-      <button class="sort-btn">DSC</button>
+      <button class="sort-btn" (click)="rideService.setSort('ASC')">ASC</button>
+      <button class="sort-btn" (click)="rideService.setSort('DESC')">DSC</button>
     </div>
   </div>
-  
+
   <div class="date-inputs">
     <div class="date-input-group">
       <label class="date-label">Start Date:</label>
-      <input type="date" class="date-input">
+      <input type="datetime-local" class="date-input"
+             (change)="startDate.set($any($event.target).value)">
     </div>
+
     <div class="date-input-group">
       <label class="date-label">End Date:</label>
-      <input type="date" class="date-input">
+      <input type="datetime-local" class="date-input"
+             (change)="endDate.set($any($event.target).value)">
     </div>
   </div>
-  
-  <button class="filter-btn">Filter</button>
+
+  <button class="filter-btn" (click)="onFilter()">Filter</button>
 </div>
 
 <ul class="ride-list">
-  <li *ngFor="let ride of rides"
+  <li *ngFor="let ride of rideService.rides()"
       (click)="selectRide(ride)"
-      [class.selected]="ride === selectedRide">
-    
+      [class.selected]="ride === selectedRide()">
+
     <div class="ride-content">
       <div class="route-info">
-        <div class="location" *ngIf="ride.path">{{ ride.path }}</div>
-        <div class="info-item" *ngIf="ride.userEmail">
-          <strong>User:</strong> {{ ride.userEmail }}
+        <div class="location">{{ ride.path }}</div>
+
+        <div class="info-item">
+          <strong>User:</strong> {{ ride.rideOwnerName }}
+        </div>
+
+        <div class="info-item">
+          <strong>Driver:</strong> {{ ride.driverName }}
         </div>
       </div>
-      
+
       <div class="time-info">
-        <div *ngIf="ride.scheduledAt">
+        <div>
           <div class="time-label">Scheduled:</div>
-          <div class="time-value">{{ ride.scheduledAt | date:'dd.MM.yyyy HH:mm' }}</div>
+          <div class="time-value">{{ ride.scheduledTime | date:'dd.MM.yyyy HH:mm' }}</div>
         </div>
-        <div *ngIf="ride.startedAt">
+
+        <div *ngIf="ride.startTime">
           <div class="time-label">Started:</div>
-          <div class="time-value">{{ ride.startedAt | date:'dd.MM.yyyy HH:mm' }}</div>
+          <div class="time-value">{{ ride.startTime | date:'dd.MM.yyyy HH:mm' }}</div>
         </div>
-        <div *ngIf="ride.endedAt">
+
+        <div *ngIf="ride.endTime">
           <div class="time-label">Ended:</div>
-          <div class="time-value">{{ ride.endedAt | date:'dd.MM.yyyy HH:mm' }}</div>
+          <div class="time-value">{{ ride.endTime | date:'dd.MM.yyyy HH:mm' }}</div>
         </div>
       </div>
     </div>
-    
+
     <div class="ride-details">
-      <div *ngIf="ride.status"><strong>Status:</strong> {{ ride.status }}</div>
-      <div *ngIf="ride.cost"><strong>Price:</strong> {{ ride.cost }} RSD</div>
-      <div *ngIf="ride.passangersNumber"><strong>Passengers:</strong> {{ ride.passangersNumber }}</div>
-      <div *ngIf="ride.cancelationReason"><strong>Cancellation:</strong> {{ ride.cancelationReason }}</div>
+      <div><strong>Status:</strong> {{ ride.status }}</div>
+      <div><strong>Price:</strong> {{ ride.price }} RSD</div>
+      <div><strong>Total:</strong> {{ ride.totalCost }} RSD</div>
+      <div><strong>Passengers:</strong> {{ ride.passengersMails.length }}</div>
+
+      <div *ngIf="ride.cancellationReason">
+        <strong>Cancellation:</strong> {{ ride.cancellationReason }}
+      </div>
     </div>
   </li>
 </ul>
+
+<!-- PAGINATION -->
+<div class="pagination">
+  <button (click)="rideService.prev()" [disabled]="rideService.page() === 0">
+    Prev
+  </button>
+
+  <span>Page {{ rideService.page() + 1 }}</span>
+
+  <button
+    (click)="rideService.next()"
+    [disabled]="(rideService.page() + 1) * rideService.size() >= rideService.totalElements()">
+    Next
+  </button>
+</div>

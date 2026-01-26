@@ -1,34 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+// drivers-history.component.ts
+import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RideService } from './services/ride.service';
 import { Ride } from './models/ride.model';
 
 @Component({
   selector: 'app-drivers-history',
   standalone: true,
-  imports: [CommonModule],  
+  imports: [CommonModule],
   templateUrl: './drivers-history.html',
-  styleUrls: ['./drivers-history.css'],
-  providers: [DatePipe]     
+  styleUrls: ['./drivers-history.css']
 })
 export class DriversHistoryComponent implements OnInit {
 
-  rides: Ride[] = [];
-  selectedRide?: Ride;
+  selectedRide = signal<Ride | null>(null);
+  startDate = signal<string | null>(null);
+  endDate = signal<string | null>(null);
 
-  constructor(private rideService: RideService) {}
+  constructor(public rideService: RideService) {}
 
   ngOnInit(): void {
-    this.loadRides();
-  }
-
-  loadRides(): void {
-    this.rideService.getDriverRideHistory().subscribe(rides => {
-      this.rides = rides;
-    });
+    this.rideService.load();
   }
 
   selectRide(ride: Ride): void {
-    this.selectedRide = ride;
+    this.selectedRide.set(ride);
+  }
+
+  onFilter(): void {
+    this.rideService.setDateRange(this.startDate(), this.endDate());
+    this.rideService.filter();
   }
 }

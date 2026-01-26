@@ -1,36 +1,74 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+// services/ride.service.ts
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, signal } from '@angular/core';
 import { Ride } from '../models/ride.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class RideService {
+  private apiUrl = 'http://localhost:8080/api/v1/rides/history';
 
-  private rides: Ride[] = [
-    {
-      id: '1',
-      scheduledAt: new Date('2024-01-10T14:20'),
-      startedAt: new Date('2024-01-10T14:30'),
-      endedAt: new Date('2024-01-10T15:15'),
-      status: 'COMPLETED',
-      cost: 2500,
-      userEmail: 'user1@gmail.com',
-      passangersNumber: 1
-    },
-    {
-      id: '2',
-      scheduledAt: new Date('2024-01-12T08:50'),
-      startedAt: new Date('2024-01-12T09:00'),
-      endedAt: new Date('2024-01-12T10:45'),
-      status: 'COMPLETED',
-      cost: 4200,
-      userEmail: 'user2@gmail.com',
-      passangersNumber: 2
+  rides = signal<Ride[]>([]);
+  page = signal(0);
+  size = signal(5);
+  totalElements = signal(0);
+
+  sortDirection = signal<'ASC' | 'DESC'>('DESC');
+  startDate = signal<string | null>(null);
+  endDate = signal<string | null>(null);
+
+  hasEverLoaded = signal(false);
+
+  constructor(private http: HttpClient) {}
+
+  load(): void {
+    let params = new HttpParams()
+      .set('page', this.page())
+      .set('size', this.size())
+      .set('sort', `scheduledTime,${this.sortDirection()}`);
+
+    if (this.startDate()) {
+      params = params.set('startDate', this.startDate()!);
     }
-  ];
 
-  getDriverRideHistory(): Observable<Ride[]> {
-    return of(this.rides);
+    if (this.endDate()) {
+      params = params.set('endDate', this.endDate()!);
+    }
+
+    this.http.get<any>(this.apiUrl, { params }).subscribe(res => {
+      this.rides.set(res.content);
+      this.totalElements.set(res.totalElements);
+      
+      this.hasEverLoaded.set(true);
+    });
+  }
+
+  setSort(direction: 'ASC' | 'DESC'): void {
+    this.sortDirection.set(direction);
+    this.page.set(0);
+    this.load();
+  }
+
+  setDateRange(start: string | null, end: string | null): void {
+    this.startDate.set(start);
+    this.endDate.set(end);
+  }
+
+  filter(): void {
+    this.page.set(0);
+    this.load();
+  }
+
+  next(): void {
+    if ((this.page() + 1) * this.size() < this.totalElements()) {
+      this.page.update(p => p + 1);
+      this.load();
+    }
+  }
+
+  prev(): void {
+    if (this.page() > 0) {
+      this.page.update(p => p - 1);
+      this.load();
+    }
   }
 }

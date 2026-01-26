@@ -1,8 +1,45 @@
+/* src/app/components/shared/tab-navigation/tab-navigation.component.css */
+
 .tab-navigation {
 	display: flex;
 	gap: 0.5rem;
 	margin-bottom: 2rem;
 	border-bottom: 2px solid #3a3a3a;
+}
+
+/* Alignment variants */
+.align-left {
+	justify-content: flex-start;
+}
+
+.align-right {
+	justify-content: flex-end;
+}
+
+.align-center {
+	justify-content: center;
+}
+
+.align-space-between {
+	justify-content: space-between;
+}
+
+/* Split layout */
+.align-split {
+	justify-content: space-between;
+}
+
+.tab-group {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.tab-group-left {
+	justify-content: flex-start;
+}
+
+.tab-group-right {
+	justify-content: flex-end;
 }
 
 .tab-button {
@@ -17,10 +54,17 @@
 	cursor: pointer;
 	border-bottom: 3px solid transparent;
 	transition: all 0.3s ease;
+	white-space: nowrap;
 }
 
-.tab-button > svg,
-.tab-icon > svg {
+.tab-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.tab-button svg,
+.tab-icon svg {
 	width: 20px;
 	height: 20px;
 }
@@ -35,13 +79,32 @@
 }
 
 @media (max-width: 640px) {
+	.tab-navigation {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	/* Stack split tabs on mobile */
+	.align-split {
+		flex-direction: column;
+		gap: 0;
+	}
+
+	.tab-group {
+		border-bottom: 2px solid #3a3a3a;
+	}
+
+	.tab-group:last-child {
+		border-bottom: none;
+	}
+
 	.tab-button {
 		padding: 0.75rem 1rem;
 		font-size: 0.875rem;
 	}
 
-	.tab-button > svg,
-	.tab-icon > svg {
+	.tab-button svg,
+	.tab-icon svg {
 		width: 16px;
 		height: 16px;
 	}

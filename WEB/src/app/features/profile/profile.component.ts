@@ -7,11 +7,20 @@ import { ProfileService } from './services/profile.service';
 import { UserProfile, VehicleInfo, PasswordChange } from './models/user-profile.model';
 import {TabItem, TabNavigationComponent} from '@shared/components/tab-navigation/tab-navigation.component';
 import {TabContentComponent} from '@shared/components/tab-content/tab-content.component';
+import { TabIconDirective } from '@shared/directives/tab-icon/tab-icon.directive';
+import { BoxDirective} from '@shared/directives/box/box.directive';
 
 @Component({
 	selector: 'app-profile',
 	standalone: true,
-	imports: [CommonModule, FormsModule, TabNavigationComponent, TabContentComponent],
+	imports: [
+		CommonModule,
+		FormsModule,
+		TabNavigationComponent,
+		TabContentComponent,
+		TabIconDirective,
+		BoxDirective
+	],
 	templateUrl: './profile.component.html',
 	styleUrls: ['./profile.component.css']
 })
@@ -21,18 +30,10 @@ export class ProfileComponent {
 	// Active tab state
 	activeTab = signal<string>('personal');
 
-	// Define tabs with icons
+	// Define tabs (no icons here!)
 	tabs: TabItem[] = [
-		{
-			id: 'personal',
-			label: 'Personal data',
-			icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2"/></svg>'
-		},
-		{
-			id: 'vehicle',
-			label: 'Vehicle data',
-			icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 17h14M5 17a2 2 0 1 1 0-4M5 17a2 2 0 1 0 0-4m14 4a2 2 0 1 0 0-4m0 4a2 2 0 1 1 0-4M3 11l2-7h14l2 7M5 13h14" stroke="currentColor" stroke-width="2"/></svg>'
-		}
+		{ id: 'personal', label: 'Personal data' },
+		{ id: 'vehicle', label: 'Vehicle data' }
 	];
 
 	// Handle tab change
@@ -74,7 +75,7 @@ export class ProfileComponent {
 	}
 
 	// Save user profile
-	async saveUserProfile(): Promise<void> {
+	async saveProfile(): Promise<void> {
 		this.isSaving.set(true);
 
 		// Simulate API call
@@ -83,18 +84,6 @@ export class ProfileComponent {
 		this.profileService.updateUserProfile(this.userForm());
 		this.isSaving.set(false);
 		this.showSaveMessage('Personal data saved successfully');
-	}
-
-	// Save vehicle info
-	async saveVehicleInfo(): Promise<void> {
-		this.isSaving.set(true);
-
-		// Simulate API call
-		await new Promise(resolve => setTimeout(resolve, 500));
-
-		this.profileService.updateVehicleInfo(this.vehicleForm());
-		this.isSaving.set(false);
-		this.showSaveMessage('Vehicle data saved successfully');
 	}
 
 	// Change password

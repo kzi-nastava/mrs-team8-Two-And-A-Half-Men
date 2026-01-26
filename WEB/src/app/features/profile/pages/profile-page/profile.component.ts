@@ -8,7 +8,7 @@ import { PersonalInfoFormComponent } from '@shared/components/forms/personal-inf
 import { VehicleInfoFormComponent } from '@shared/components/forms/vehicle-info-form/vehicle-info-form.component';
 import { VehicleInfo, VehicleType, AdditionalService } from '@shared/models/vehicles.model';
 import { PersonalInfo } from '@shared/models/personal-info.model';
-import {PasswordChange, UserProfile} from './models/user-profile.model';
+import {PasswordChange, UserProfile} from '../../models/user-profile.model';
 import { BoxDirective} from '@shared/directives/box/box.directive';
 import {
 	RequestChangePreviewComponent

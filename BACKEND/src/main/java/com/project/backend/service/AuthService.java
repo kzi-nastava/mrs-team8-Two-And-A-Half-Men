@@ -173,7 +173,8 @@ public class AuthService {
                     user.getEmail(),
                     user.getFirstName(),
                     user.getLastName(),
-                    user.getImgSrc());
+                    user.getImgSrc(),
+                    user.getRole().name());
         } catch (org.springframework.security.core.AuthenticationException e) {
             System.out.println("Authentication failed: " + e.getMessage());
             throw new IllegalArgumentException("Invalid username or password");

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
 	HttpRequest,
 	HttpHandler,
@@ -6,6 +6,7 @@ import {
 	HttpInterceptor,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {AuthService} from '@core/services/auth-service.service';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
@@ -13,7 +14,8 @@ export class ApiInterceptor implements HttpInterceptor {
 		req: HttpRequest<any>,
 		next: HttpHandler
 	): Observable<HttpEvent<any>> {
-		const accessToken: any = sessionStorage.getItem('authTokenUser') || localStorage.getItem('authTokenUser');
+		const authService = inject(AuthService)
+		const accessToken = authService.getToken()
 		if (req.headers.get('skip')) return next.handle(req);
 
 		if (accessToken) {

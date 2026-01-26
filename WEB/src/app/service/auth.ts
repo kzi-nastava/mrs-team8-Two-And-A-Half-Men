@@ -7,23 +7,29 @@ import { AuthResponse } from '../auth/models/authmodel';
 import { Login } from '../auth/models/loginmodel';
 import { HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import {AuthService} from '@core/services/auth-service.service';
+import { LoggedInUser } from '@core/models/loggedInUser.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
   private readonly http = inject(HttpClient);
-
+  private readonly authService = inject(AuthService);
   constructor() {}
 public login(logindata: Login, rememberMe: boolean): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('http://localhost:8080/api/v1/login', logindata).pipe(
       tap((response) => {
-        if (rememberMe) {
-          localStorage.setItem('authTokenUser', response.accessToken);
-        }
-        else {
-          sessionStorage.setItem('authTokenUser', response.accessToken);
-        }
+        this.authService.saveLogin(
+			response.accessToken,
+			{
+				role: response.role,
+				firstName: response.firstName,
+				lastName: response.lastName,
+				email: response.email,
+				imgSrc: response.imgUrl
+			},
+			rememberMe);
       })
     );
   }
@@ -40,7 +46,7 @@ public logOut(): void {
   this.user.set(null);
   this.role.set("");
 }
-public Registar(user : User): Observable<{ message : string }> { 
+public Registar(user : User): Observable<{ message : string }> {
 
   return this.http.post<{ message : string }>('http://localhost:8080/api/v1/users/register', user);
 
@@ -68,7 +74,7 @@ public Registar(user : User): Observable<{ message : string }> {
     this.role.set("");
     return "";
   }
-  
+
   isLoggedInLocalStorage(): boolean {
     return localStorage.getItem('authTokenUser') != null;
   }

@@ -7,6 +7,7 @@ public class UserTokenDTO {
     private String firstName = null;
     private String lastName = null;
     private String imgUrl = null;
+    private String role = null;
 
     public UserTokenDTO() {
         this.accessToken = null;
@@ -18,13 +19,14 @@ public class UserTokenDTO {
         this.expiresIn = expiresIn;
     }
 
-    public UserTokenDTO(String accessToken, long expiresIn, String email, String firstName, String lastName, String imgUrl) {
+    public UserTokenDTO(String accessToken, long expiresIn, String email, String firstName, String lastName, String imgUrl, String role) {
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.imgUrl = imgUrl;
+        this.role = role;
     }
 
     public String getAccessToken() {

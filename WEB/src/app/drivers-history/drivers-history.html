@@ -12,13 +12,13 @@
   <div class="date-inputs">
     <div class="date-input-group">
       <label class="date-label">Start Date:</label>
-      <input type="date" class="date-input"
+      <input type="datetime-local" class="date-input"
              (change)="startDate.set($any($event.target).value)">
     </div>
 
     <div class="date-input-group">
       <label class="date-label">End Date:</label>
-      <input type="date" class="date-input"
+      <input type="datetime-local" class="date-input"
              (change)="endDate.set($any($event.target).value)">
     </div>
   </div>

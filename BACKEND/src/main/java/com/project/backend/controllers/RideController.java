@@ -18,11 +18,13 @@ import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -173,7 +175,10 @@ public class RideController {
     @GetMapping("/history")
     public ResponseEntity<PagedResponse<RideResponseDTO>> getDriverRideHistory(
             Pageable pageable,
-            @Valid @RequestBody HistoryRequestDTO historyRequestDTO
+            @RequestParam(name = "startDate", required = false)
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(name = "endDate", required = false)
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate
     ) {
         AppUser user = authUtils.getCurrentUser();
         if (user == null)
@@ -182,7 +187,7 @@ public class RideController {
         PagedResponse<RideResponseDTO> history = null;
 
         if (user instanceof Driver) {
-            history = historyService.getDriverRideHistory(user.getId(), pageable, historyRequestDTO);
+            history = historyService.getDriverRideHistory(user.getId(), pageable, startDate, endDate);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(history);

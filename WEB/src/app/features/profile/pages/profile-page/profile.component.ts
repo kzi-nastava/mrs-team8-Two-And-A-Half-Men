@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import {Component, signal, OnInit, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TabNavigationComponent, TabItem } from '@shared/components/tabs/tab-navigation/tab-navigation.component';
@@ -14,6 +14,9 @@ import {
 	RequestChangePreviewComponent
 } from '@features/profile/components/request-change-preview/request-change-preview.component';
 import {PendingChangeRequest} from '@shared/models/profile-change-request.model';
+import {ProfileService} from '@features/profile/services/profile.service';
+import { AuthService } from '@core/services/auth-service.service';
+import { UpdateProfileRequest } from '@features/profile/models/update-profile.model';
 
 @Component({
 	selector: 'app-profile',
@@ -33,6 +36,8 @@ import {PendingChangeRequest} from '@shared/models/profile-change-request.model'
 	styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+
+	private profileService = inject(ProfileService);
 	// Active tab
 	activeTab = signal<string>('personal');
 
@@ -45,14 +50,10 @@ export class ProfileComponent implements OnInit {
 		email: '',
 		imgSrc: null
 	});
+	originalPersonalInfo = signal<PersonalInfo | null>(null);
+	originalVehicleInfo = signal<VehicleInfo | null>(null);
 
-	vehicleInfo = signal<VehicleInfo>({
-		type: '',
-		model: '',
-		licensePlate: '',
-		numberOfSeats: 4,
-		additionalServices: []
-	});
+	vehicleInfo = signal<VehicleInfo | null>(null);
 	passwordForm = signal<PasswordChange>({
 		oldPassword: '',
 		newPassword: '',
@@ -62,79 +63,62 @@ export class ProfileComponent implements OnInit {
 	// Options from backend
 	vehicleTypes = signal<VehicleType[]>([]);
 	availableServices = signal<AdditionalService[]>([]);
-	changeRequest = signal<PendingChangeRequest | null>({
-		id: 1,
-		firstName: 'hello',
-		lastName: 'world',
-		phoneNumber: '+38160000010',
-		address: 'Some other street 5',
-		additionalServices: ['aaaa', 'bbbb', 'ccccccc'],
-		imgSrc: 'https://media.istockphoto.com/id/814423752/photo/eye-of-model-with-colorful-art-make-up-close-up.jpg?s=612x612&w=0&k=20&c=l15OdMWjgCKycMMShP8UK94ELVlEGvt7GmB_esHWPYE='
-	});
+	changeRequest = signal<PendingChangeRequest | null>(null);
+
+	private selectedFile: File | null = null;
 
 	// UI state
 	saveMessage = signal<string>('');
 	isSaving = signal<boolean>(false);
 
-	// Tab configuration
-	tabs: TabItem[] = [
-		{ id: 'personal', label: 'Personal data', position: 'left' },
-		{ id: 'vehicle', label: 'Vehicle data', position: 'left' }
-	];
+	private personalTab: TabItem = { id: 'personal', label: 'Personal data', position: 'left' };
+	private vehicleTab: TabItem = { id: 'vehicle', label: 'Vehicle data', position: 'left' }
+	private authService = inject(AuthService);
+	get tabs(): TabItem[] {
+		const tabs: TabItem[] = [this.personalTab];
+		if (this.vehicleInfo()) {
+			tabs.push(this.vehicleTab);
+		}
+		return tabs;
+	}
 
 	ngOnInit() {
 		this.loadProfileData();
-		this.loadVehicleOptions();
+	}
+
+	private updateProfileDate(profile: UserProfile) {
+		this.personalInfo.set(profile.personalInfo);
+		this.originalPersonalInfo.set(JSON.parse(JSON.stringify(profile.personalInfo)));
+
+		if (profile.vehicleInfo) {
+			this.vehicleInfo.set(profile.vehicleInfo ?? null);
+			this.originalVehicleInfo.set(JSON.parse(JSON.stringify(profile.vehicleInfo)));
+			this.loadVehicleOptions();
+		}
+		if (profile.pendingChangeRequest) {
+			this.changeRequest.set(profile?.pendingChangeRequest ?? null);
+		}
 	}
 
 	loadProfileData() {
-		// Simulate API call - replace with actual service
-		const mockData: UserProfile = {
-			personalInfo: {
-				id: 101,
-				firstName: 'Mike',
-				lastName: 'Driver',
-				phoneNumber: '+38160000003',
-				address: 'Driver Street 10',
-				email: 'driver@test.com',
-				imgSrc: null,
-				role: 'DRIVER'
-			},
-			vehicleInfo: {
-				id: 1,
-				type: 'Standard',
-				model: 'Toyota Prius',
-				licensePlate: 'NS-123-AB',
-				numberOfSeats: 4,
-				additionalServices: ['Baby seat', 'WiFi', 'Pet friendly']
+		this.profileService.getUserProfile().subscribe({
+			next: profile => this.updateProfileDate(profile),
+			error: err => {
+				console.error('Failed to load profile', err);
 			}
-		};
-
-		this.personalInfo.set(mockData.personalInfo);
-		this.vehicleInfo.set(mockData.vehicleInfo!);
+		});
 	}
 
 	loadVehicleOptions() {
-		// Simulate API call - replace with actual service
-		const mockOptions = {
-			vehicleTypes: [
-				{ id: 1, typeName: 'Standard', description: 'Standard passenger vehicle for everyday rides.', price: 1 },
-				{ id: 51, typeName: 'Comfort', description: 'More spacious and comfortable vehicle with extra legroom.', price: 1.3 },
-				{ id: 101, typeName: 'Premium', description: 'High-end vehicle with luxury interior and superior comfort.', price: 1.7 },
-				{ id: 151, typeName: 'Van', description: 'Larger vehicle suitable for groups or extra luggage.', price: 1.5 },
-				{ id: 201, typeName: 'Electric', description: 'Eco-friendly electric vehicle with zero emissions.', price: 1.4 }
-			],
-			additionalServices: [
-				{ id: 1, name: 'Pet friendly', description: 'Pets are allowed during the ride as long as they are properly secured.' },
-				{ id: 51, name: 'Baby seat', description: 'Vehicle is equipped with a certified child safety seat.' },
-				{ id: 101, name: 'Smoking allowed', description: 'Smoking is permitted inside the vehicle during the ride.' },
-				{ id: 151, name: 'Wheelchair accessible', description: 'Vehicle supports wheelchair access with ramp or lift.' },
-				{ id: 201, name: 'WiFi', description: 'Free onboard WiFi available for passengers.' }
-			]
-		};
-
-		this.vehicleTypes.set(mockOptions.vehicleTypes);
-		this.availableServices.set(mockOptions.additionalServices);
+		this.profileService.getVehicleOptions().subscribe({
+			next: options => {
+				this.vehicleTypes.set(options.vehicleTypes);
+				this.availableServices.set(options.additionalServices);
+			},
+			error: err => {
+				console.error('Failed to load vehicle options', err);
+			}
+		})
 	}
 
 	onTabChange(tabId: string): void {
@@ -142,6 +126,8 @@ export class ProfileComponent implements OnInit {
 	}
 
 	onPhotoChange(file: File): void {
+		this.selectedFile = file;
+
 		const reader = new FileReader();
 
 		reader.onload = (e) => {
@@ -155,17 +141,81 @@ export class ProfileComponent implements OnInit {
 	saveProfile(): void {
 		this.isSaving.set(true);
 
-		// Simulate API call
-		setTimeout(() => {
-			console.log('Saving personal info:', this.personalInfo());
-			this.saveMessage.set('Personal information saved successfully!');
-			this.isSaving.set(false);
+		const personalInfo = this.personalInfo();
+		const vehicleInfo = this.vehicleInfo();
+		const types = this.vehicleTypes();
+		const services = this.availableServices();
 
-			// Clear message after 3 seconds
-			setTimeout(() => this.saveMessage.set(''), 3000);
-		}, 1000);
+		const updateRequest: UpdateProfileRequest = {
+			firstName: personalInfo.firstName,
+			lastName: personalInfo.lastName,
+			email: personalInfo.email,
+			address: personalInfo.address,
+			phoneNumber: personalInfo.phoneNumber,
+			imgSrc: personalInfo.imgSrc,
+
+			// Vehicle info
+			model: vehicleInfo?.model ?? null,
+			licensePlate: vehicleInfo?.licensePlate ?? null,
+			numberOfSeats: vehicleInfo?.numberOfSeats ?? null,
+			vehicleTypeId: types?.find(type => type.typeName === vehicleInfo?.type)?.id ?? null,
+			additionalServiceIds: vehicleInfo?.additionalServices.map(serviceName => {
+				const service = services.find(s => s.name === serviceName);
+				return service ? service.id : null;
+			}).filter(id => id !== null) as number[] | null,
+		}
+
+		if (this.selectedFile !== null) {
+			this.profileService.uploadPhoto(this.selectedFile).subscribe({
+				next: (response) => {
+					if (!response.ok) {
+						this.isSaving.set(false);
+						this.saveMessage.set('Failed to upload profile picture');
+
+						setTimeout(() => this.saveMessage.set(''), 3000);
+						return;
+					}
+					updateRequest.imgSrc = response.filePath;
+					console.log(response, updateRequest);
+					this.updateProfile(updateRequest);
+				},
+				error: (err) => {
+					console.error('Failed to upload profile picture', err);
+					this.isSaving.set(false);
+					this.saveMessage.set('Failed to upload profile picture');
+
+					setTimeout(() => this.saveMessage.set(''), 3000);
+				}
+			});
+			return
+		}
+		this.updateProfile(updateRequest);
 	}
 
+	private updateProfile(updateRequest: UpdateProfileRequest): void {
+		this.profileService.updateUserProfile(updateRequest).subscribe({
+			next: (response) => {
+				if (response.accessToken) {
+					this.authService.updateToken(response.accessToken);
+				}
+				this.updateProfileDate(response.profile);
+
+				this.saveMessage.set('Profile information saved successfully!');
+				this.isSaving.set(false);
+
+				// Clear message after 3 seconds
+				setTimeout(() => this.saveMessage.set(''), 3000);
+			},
+			error: (err) => {
+				console.error('Failed to update profile', err);
+				this.saveMessage.set('Failed to save profile information');
+				this.isSaving.set(false);
+
+				// Clear message after 3 seconds
+				setTimeout(() => this.saveMessage.set(''), 3000);
+			},
+		});
+	}
 
 	// Show save message
 	private showSaveMessage(message: string, isError: boolean = false): void {
@@ -188,14 +238,27 @@ export class ProfileComponent implements OnInit {
 		}
 
 		this.isSaving.set(true);
-		const success = true; //await this.profileService.changePassword(newPassword, confirmPassword);
-		this.isSaving.set(false);
-
-		if (success) {
-			this.showSaveMessage('Password changed successfully');
-			this.passwordForm.set({ oldPassword: '', newPassword: '', confirmPassword: '' });
-		} else {
-			this.showSaveMessage('Failed to change password', true);
-		}
+		this.profileService.changePassword({
+			oldPassword: this.passwordForm().oldPassword,
+			newPassword: this.passwordForm().newPassword,
+			confirmNewPassword: this.passwordForm().confirmPassword
+		}).subscribe({
+			next: (response) => {
+				if (response.accessToken) {
+					this.authService.updateToken(response.accessToken);
+				}
+				this.showSaveMessage('Password changed successfully');
+				this.passwordForm.set({ oldPassword: '', newPassword: '', confirmPassword: '' });
+				this.isSaving.set(false);
+				setTimeout(() => this.saveMessage.set(''), 3000);
+			},
+			error: (err) => {
+				console.error('Failed to change password', err);
+				this.passwordForm.set({ oldPassword: '', newPassword: '', confirmPassword: '' });
+				this.showSaveMessage('Failed to change password', true);
+				this.isSaving.set(false);
+				setTimeout(() => this.saveMessage.set(''), 3000);
+			}
+		})
 	}
 }

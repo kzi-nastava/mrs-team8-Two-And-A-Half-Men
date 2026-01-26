@@ -1,11 +1,13 @@
 import {inject, Injectable} from '@angular/core';
 import {
-	HttpRequest,
-	HttpHandler,
+	HttpErrorResponse,
 	HttpEvent,
+	HttpHandler,
 	HttpInterceptor,
+	HttpRequest,
+	HttpStatusCode,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import {AuthService} from '@core/services/auth-service.service';
 
 @Injectable()
@@ -18,13 +20,22 @@ export class ApiInterceptor implements HttpInterceptor {
 		const accessToken = authService.getToken()
 		if (req.headers.get('skip')) return next.handle(req);
 
-		if (accessToken) {
-			const cloned = req.clone({
-				headers: req.headers.set('Authorization', "Bearer " + accessToken)
-			});
-			return next.handle(cloned);
-		} else {
-			return next.handle(req);
-		}
+		const authReq = accessToken
+			? req.clone({
+				headers: req.headers.set(
+					'Authorization',
+					`Bearer ${accessToken}`
+				)
+			})
+			: req;
+
+		return next.handle(authReq).pipe(
+			catchError((error: HttpErrorResponse) => {
+				if (error.status === HttpStatusCode.Unauthorized) {
+					authService.handleUnauthorized(error);
+				}
+				return throwError(() => error);
+			})
+		);
 	}
 }

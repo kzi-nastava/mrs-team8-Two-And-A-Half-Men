@@ -1,9 +1,10 @@
 // core/services/auth.service.ts
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { tap } from 'rxjs/operators';
 import {LoggedInUser} from '@core/models/loggedInUser.model';
+import {Router} from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,7 +26,7 @@ export class AuthService {
 		const token = sessionStorage.getItem(this.JWT_KEY) || localStorage.getItem(this.JWT_KEY);
 		if (token) {
 			this._jwt = token;
-			this.fetchUserInfo().subscribe({ error: () => this.logout() });
+			// this.fetchUserInfo().subscribe({ error: () => this.logout() });
 		}
 	}
 
@@ -57,10 +58,7 @@ export class AuthService {
 
 	// --- Fetch user info from API ---
 	fetchUserInfo() {
-		if (!this._jwt) throw new Error('No JWT available');
-
-		const headers = new HttpHeaders({ Authorization: `Bearer ${this._jwt}` });
-		return this.http.get<LoggedInUser>(`${environment.apiUrl}/me`, { headers })
+		return this.http.get<LoggedInUser>(`/api/${environment.apiVersion}/me`)
 			.pipe(
 				tap(user => this._user.set(user))
 			);
@@ -72,6 +70,7 @@ export class AuthService {
 	}
 
 	// --- Update user info locally and optionally call API ---
+	private router = inject(Router);
 	updateUserInfo(user: Partial<LoggedInUser>) {
 		const current = this._user();
 		if (!current) return;
@@ -86,6 +85,13 @@ export class AuthService {
 			sessionStorage.setItem(this.JWT_KEY, token);
 		} else if (localStorage.getItem(this.JWT_KEY)) {
 			localStorage.setItem(this.JWT_KEY, token);
+		}
+	}
+
+	handleUnauthorized(error: HttpErrorResponse) {
+		this.logout();
+		if (!error.url?.includes(`/${environment.apiVersion}/me`)) {
+			this.router.navigate(['login']).then(() => {});
 		}
 	}
 }

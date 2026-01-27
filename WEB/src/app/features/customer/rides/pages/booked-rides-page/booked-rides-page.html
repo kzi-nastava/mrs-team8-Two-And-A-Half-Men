@@ -1,0 +1,32 @@
+<h2>Scheduled and Active Rides</h2>
+<ul class="ride-list">
+  <li *ngFor="let ride of bookedRides()" 
+      class="ride-item" 
+      [class.clickable]="canTrackRide(ride)"
+      (click)="canTrackRide(ride) && RideClicked(ride)">
+    <div class="ride-content">
+      <div class="route-info">
+        <div class="location">{{ ride.route }}</div>
+        <div class="info-item" *ngIf="ride.driverName">
+          <strong>Driver:</strong> {{ ride.driverName }}
+        </div>
+        <div class="info-item" *ngIf="ride.status">
+          <strong>Status:</strong> {{ ride.status }}
+        </div>
+      </div>
+      <div class="time-info">
+        <div *ngIf="ride.scheduleTime">
+          <div class="time-label">Scheduled:</div>
+          <div class="time-value">{{ isValidDate(ride.scheduleTime) ? (ride.scheduleTime | date:'dd.MM.yyyy HH:mm') : ride.scheduleTime }}</div>
+        </div>
+        <div *ngIf="ride.startTime">
+          <div class="time-label">Started:</div>
+          <div class="time-value">{{ isValidDate(ride.startTime) ? (ride.startTime | date:'dd.MM.yyyy HH:mm') : ride.startTime }}</div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="canCancelRide(ride)" class="cancel-button-wrapper" (click)="$event.stopPropagation()">
+      <app-cancel-ride-button [rideId]="ride.id" (cancelled)="loadRides()"></app-cancel-ride-button>
+    </div>
+  </li>
+</ul>

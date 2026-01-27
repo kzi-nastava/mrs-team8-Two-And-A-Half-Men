@@ -1,13 +1,16 @@
 package com.project.backend.service;
 
 import com.project.backend.DTO.Ride.CostTimeDTO;
+import com.project.backend.DTO.Ride.RideBookedDTO;
 import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
+import com.project.backend.models.Customer;
 import com.project.backend.models.Driver;
 import lombok.Lombok;
 import com.project.backend.models.Driver;
 import lombok.Lombok;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IRideService {
@@ -19,4 +22,5 @@ public interface IRideService {
 
     CostTimeDTO estimateRide(RideBookingParametersDTO rideData);
     CostTimeDTO endRideById(Long id, Driver driver);
+    List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer);
 }

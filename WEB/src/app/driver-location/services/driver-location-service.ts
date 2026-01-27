@@ -7,7 +7,7 @@ import { DriverLocation } from '../models/driver-location';
   providedIn: 'root',
 })
 export class DriverLocationService {
-  private apiUrl = 'http://localhost:8080/api/v1/drivers';
+  private apiUrl = '/api/v1/drivers';
 
   constructor(private http: HttpClient) {}
 

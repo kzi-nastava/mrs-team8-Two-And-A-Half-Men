@@ -12,6 +12,6 @@ export class EndRideService {
 
   public endRide(id : number): Observable<CostTimeDTO> {
 
-    return this.http.patch<CostTimeDTO>(`${environment.apiUrl}/v1/rides/${id}/end`, {});
+    return this.http.patch<CostTimeDTO>(`/api/v1/rides/${id}/end`, {});
   }
 }

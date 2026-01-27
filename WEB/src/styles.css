@@ -61,3 +61,29 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.app-box {
+	display: block;
+	background: #3a3a3a;
+	border: 2px solid #1a5c3a;
+	border-radius: 12px;
+	padding: 2rem;
+}
+
+.app-button {
+	padding: 0.5rem 1.25rem;
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-radius: 6px;
+	background: #1a5c3a;
+	color: white;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	display: inline-block;
+}
+
+/* Hover via class */
+.app-button--hover {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.5);
+	transform: translateY(-1px);
+}

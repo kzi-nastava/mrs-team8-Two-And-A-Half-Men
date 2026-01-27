@@ -37,17 +37,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequestDTO credentials) {
-
-        try {
-            UserTokenDTO loginResponse = authService.login(credentials);
-            return ResponseEntity.ok(loginResponse);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(401)
-                    .body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(500)
-                    .body(Map.of("error", "Internal server error" + e.getMessage()));
-        }
+        UserTokenDTO loginResponse = authService.login(credentials);
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/users/register")

@@ -3,7 +3,7 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { PanicService } from '@shared/services/panic.service';
 import { DriverLocation } from '@shared/models/driver-location';
-import { DriverLocationWebsocketService } from '@shared/services/driver-location/driver-location-websocket-service';
+import { DriverLocationWebsocketService } from '@shared/services/driver-location/driver-location-websocket.service';
 import { AuthService } from '@core/services/auth.service';
 import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 

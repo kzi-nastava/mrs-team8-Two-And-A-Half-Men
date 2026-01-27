@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { CostTime } from '@shared/models/cost-time.model';
 import { Observable } from 'rxjs';
+import { StartRideResponse } from '@features/driver/rides/models/api-responses.model';
 
 @Injectable()
 export class DriverRideService {
@@ -21,5 +22,12 @@ export class DriverRideService {
 
 	endRide(rideId: number): Observable<CostTime> {
 		return this.http.patch<CostTime>(`/api/${environment.apiVersion}/rides/${rideId}/end`, {});
+	}
+
+	startRide(rideId: number): Observable<StartRideResponse> {
+		return this.http.patch<StartRideResponse>(
+			`/api/${environment.apiVersion}/rides/${rideId}/start`,
+			{},
+		);
 	}
 }

@@ -6,12 +6,7 @@ import { NavbarComponent } from './navbar/navbar';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, NavbarComponent],
-  template: `
-    <app-navbar></app-navbar>
-    <div [@routeAnimations]="prepareRoute(outlet)">
-      <router-outlet #outlet="outlet"></router-outlet>
-    </div>
-  `,
+  templateUrl:'./app.html',
   styleUrl: './app.css',
   animations: [
     trigger('routeAnimations', [

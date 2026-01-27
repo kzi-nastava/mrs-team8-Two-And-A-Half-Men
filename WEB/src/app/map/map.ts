@@ -23,7 +23,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     private driverLocationManager: DriverLocationManagerService,
     private sheredLocationsService: SheredLocationsService
   ) {
-  
+    effect(() => {
+      const locations = this.sheredLocationsService.locations();
+      console.log('Locations changed, updating route. Count:', locations.length);
+      
+      // Ako ima bar 2 lokacije, iscrtaj rutu
+      if (locations.length >= 2 && this.mapInitialized) {
+        this.updateRouteFromLocations(locations);
+      } else {
+        // Ukloni rutu ako ima manje od 2 tačke
+        this.clearCurrentRoute();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -48,7 +59,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     console.log('Map component fully initialized');
   }
 
-  // Postavlja handler za klik na mapu
   private setupMapClickHandler(): void {
     const map = this.mapService.getMap();
     
@@ -57,7 +67,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       
       console.log('Map clicked at:', lat, lng);
       
-      // Dodaj lokaciju u SheredLocationsService (to će triggerovati effect)
       this.sheredLocationsService.addLocationFromCoordinates(lat, lng).subscribe({
         next: (nominatimResult) => {
           console.log('Location added from map click:', nominatimResult.display_name);
@@ -70,7 +79,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  // Postavlja handler za desni klik (remove last)
   private setupMapRightClickHandler(): void {
     const map = this.mapService.getMap();
     
@@ -152,6 +160,31 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.locationPinService.enableRightClickToRemoveLast();
     } else {
       this.locationPinService.disableRightClickToRemoveLast();
+    }
+  }
+
+  private updateRouteFromLocations(locations: any[]): void {
+    this.clearCurrentRoute();
+
+    const waypoints: [number, number][] = locations.map(loc => [
+      parseFloat(loc.lat),
+      parseFloat(loc.lon)
+    ]);
+
+    this.currentRouteId = this.routeService.createRoute(waypoints, {
+      color: '#3388ff',
+      weight: 6,
+      opacity: 0.7,
+    });
+
+    console.log(`Route created with ${waypoints.length} waypoints`);
+  }
+
+  private clearCurrentRoute(): void {
+    if (this.currentRouteId) {
+      this.routeService.removeRoute(this.currentRouteId);
+      this.currentRouteId = undefined;
+      console.log('Current route cleared');
     }
   }
 }

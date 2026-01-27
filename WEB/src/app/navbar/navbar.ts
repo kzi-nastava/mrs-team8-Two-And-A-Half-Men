@@ -2,15 +2,12 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { CancellationButton } from '@features/driver/rides/components/cancellation-button/cancellation-button';
-import { PanicButton } from '../panic/panic-button/panic-button';
 import { WebSocket } from '../service/web-socket';
-import { EndRideBtn } from '../end-ride/end-ride-btn/end-ride-btn';
 
 @Component({
 	selector: 'app-navbar',
 	standalone: true,
-	imports: [CommonModule, PanicButton, CancellationButton, EndRideBtn],
+	imports: [CommonModule],
 	templateUrl: './navbar.html',
 	styleUrls: ['./navbar.css'],
 })

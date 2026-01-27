@@ -10,7 +10,7 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
 		const user = auth.user(); // returns { id, roles: string[] }
 		if (!user) {
 			// not logged in, redirect to login page
-			return router.createUrlTree(['/register']);
+			return router.createUrlTree(['/login']);
 		}
 
 		const hasRole = allowedRoles.includes(user.role);

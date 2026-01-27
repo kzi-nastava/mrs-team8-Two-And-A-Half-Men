@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EndRideBtn } from './end-ride-btn';
+import { EndRideButtonComponent } from './end-ride-button.component';
 
-describe('EndRideBtn', () => {
-  let component: EndRideBtn;
-  let fixture: ComponentFixture<EndRideBtn>;
+describe('EndRideButtonComponent', () => {
+  let component: EndRideButtonComponent;
+  let fixture: ComponentFixture<EndRideButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EndRideBtn]
+      imports: [EndRideButtonComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EndRideBtn);
+    fixture = TestBed.createComponent(EndRideButtonComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

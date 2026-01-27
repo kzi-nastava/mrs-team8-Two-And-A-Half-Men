@@ -2,41 +2,57 @@ import { Injectable, Signal, signal } from '@angular/core';
 import * as L from 'leaflet';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { NominatimService } from './nominatim-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SheredLocationsService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private nominatimService: NominatimService) {}
 
     public locations = signal<NominatimResult[]>([]);
     setLocation(location: NominatimResult) {
         this.locations.update(list => [...list, location]);
     }
-    addLocation(location: L.Marker) {
-        this.markerToNominatim(location).subscribe((nominatimResult) => {
-           this.locations.update(list => [...list, nominatimResult]);
+ 
+addLocationFromCoordinates(lat: number, lon: number): Observable<NominatimResult> {
+    return this.nominatimService.reverse(lat, lon).pipe(
+      map(res => {
+        const nominatimResult: NominatimResult = {
+          place_id: res.place_id,
+          display_name: res.display_name,
+          lat: res.lat,
+          lon: res.lon,
+        };
+
+        this.locations.update(list => {
+          return [...list, nominatimResult];
         });
-        console.log('Location added:', this.locations());
-    }
-    reverseGeocode(lat: number, lon: number) {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
-    return this.http.get<any>(url);
+
+        console.log('Location added from coordinates:', this.locations());
+        return nominatimResult;
+      })
+    );
   }
-  markerToNominatim(marker: L.Marker) {
-  const { lat, lng } = marker.getLatLng();
+  removeLastLocation(): void {
+    this.locations.update(list => list.slice(0, -1));
+    console.log('Last location removed:', this.locations());
+  }
+  clearLocations(): void {
+    this.locations.set([]);
+    console.log('All locations cleared');
+  }
+  getStartLocation(): NominatimResult | null {
+    const locs = this.locations();
+    return locs.length > 0 ? locs[0] : null;
+  }
 
-  return this.reverseGeocode(lat, lng).pipe(
-    map(res => ({
-      place_id: res.place_id,
-      display_name: res.display_name,
-      lat: res.lat,
-      lon: res.lon,
-    }))
-  );
-}
-
+  getEndLocation(): NominatimResult | null {
+    const locs = this.locations();
+    return locs.length > 1 ? locs[1] : null;
+  }
       
 
 }

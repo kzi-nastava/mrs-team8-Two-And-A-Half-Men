@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MapService } from './map-service';
+import { LocationPinService } from '../services/location-pin-service';
 
-describe('MapService', () => {
-  let service: MapService;
+describe('LocationPinService', () => {
+  let service: LocationPinService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(MapService);
+    service = TestBed.inject(LocationPinService);
   });
 
   it('should be created', () => {

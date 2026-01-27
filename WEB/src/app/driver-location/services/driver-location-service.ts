@@ -7,17 +7,16 @@ import { DriverLocation } from '../models/driver-location';
   providedIn: 'root',
 })
 export class DriverLocationService {
-  private apiUrl = '/api/v1/drivers';
 
   constructor(private http: HttpClient) {}
 
   getAllDriverLocations(): Observable<DriverLocation[]> {
-    return this.http.get<DriverLocation[]>(`${this.apiUrl}/locations`);
+    return this.http.get<DriverLocation[]>(`/api/v1/drivers/locations`);
   }
 
   getDriverLocation(driverId: number): Observable<DriverLocation> {
     return this.http.get<DriverLocation>(
-      `${this.apiUrl}/locations/${driverId}`
+      `/api/v1/drivers/locations/${driverId}`
     );
   }
 
@@ -27,7 +26,7 @@ export class DriverLocationService {
     radiusKm: number = 5
   ): Observable<DriverLocation[]> {
     return this.http.get<DriverLocation[]>(
-      `${this.apiUrl}/locations/nearby`,
+      `/api/v1/drivers/locations/nearby`,
       {
         params: {
           longitude: longitude.toString(),

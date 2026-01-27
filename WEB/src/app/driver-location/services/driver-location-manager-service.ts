@@ -1,85 +1,98 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, OnDestroy, effect } from '@angular/core';
 import { DriverLocation } from '../models/driver-location';
 import { DriverLocationService } from './driver-location-service';
 import { DriverLocationWebsocketService } from './driver-location-websocket-service';
-import { DriverMarkerManagerService } from './driver-marker-manager-service';
+import { DriverMarkerService } from '../../map/services/driver-marker-service';
+import { WebSocket } from '../../service/web-socket';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class DriverLocationManagerService {
-  private locationsSubject = new BehaviorSubject<Map<number, DriverLocation>>(new Map());
-  public locations$: Observable<Map<number, DriverLocation>> = this.locationsSubject.asObservable();
+export class DriverLocationManagerService implements OnDestroy {
+  private isInitialized = false;
 
   constructor(
     private driverLocationService: DriverLocationService,
     private driverLocationWebSocket: DriverLocationWebsocketService,
-    private markerManager: DriverMarkerManagerService
-  ) {}
+    private driverMarkerService: DriverMarkerService,
+    private webSocket: WebSocket // koristi postojeći WS
+  ) {
+    // update map markers whenever driverLocations Signal changes
+    effect(() => {
+      const locations = this.driverLocationWebSocket.driverLocations();
+      this.updateMarkers(locations);
+    });
+  }
 
   initialize(): void {
+    if (this.isInitialized) {
+      console.warn('DriverLocationManager already initialized');
+      return;
+    }
+
+    console.log('Initializing DriverLocationManager...');
+
     this.loadInitialLocations();
-    this.subscribeToUpdates();
+    this.webSocket.connect(); // start STOMP connection
+
+
+    this.isInitialized = true;
   }
 
-  loadInitialLocations(): void {
+  private loadInitialLocations(): void {
     this.driverLocationService.getAllDriverLocations().subscribe({
       next: (locations: DriverLocation[]) => {
-        console.log('Initial locations loaded:', locations.length);
-        const locationsMap = new Map<number, DriverLocation>();
-        locations.forEach(location => {
-          if (location.latitude && location.longitude) {
-            locationsMap.set(location.driverId, location);
-            this.markerManager.addOrUpdateMarker(location);
-          }
-        });
-        this.locationsSubject.next(locationsMap);
+        locations.forEach((loc) =>
+          this.driverLocationWebSocket.updateDriverLocation(loc)
+        );
       },
-      error: (error) => {
-        console.error('Error loading driver locations:', error);
+      error: (error) => console.error('Error loading initial driver locations:', error),
+    });
+  }
+
+  private updateMarkers(locationsMap: Map<number, DriverLocation>): void {
+    locationsMap.forEach((location) => {
+      if (location.latitude != null && location.longitude != null) {
+        this.driverMarkerService.addOrUpdateMarker(location);
+      }
+    });
+
+    // remove markers for drivers no longer present
+    const currentMarkers = this.driverMarkerService.getAllMarkers();
+    currentMarkers.forEach((_, driverId) => {
+      if (!locationsMap.has(driverId)) {
+        this.driverMarkerService.removeMarker(driverId);
       }
     });
   }
 
-  subscribeToUpdates(): void {
-    this.driverLocationWebSocket.driverLocations$.subscribe({
-      next: (locationsMap: Map<number, DriverLocation>) => {
-        console.log('WebSocket update received, drivers:', locationsMap.size);
-        
-        // Update or add markers for all received locations
-        locationsMap.forEach((location, driverId) => {
-          if (location.latitude && location.longitude) {
-            this.markerManager.addOrUpdateMarker(location);
-          }
-        });
-
-        // Remove markers for drivers that are no longer available
-        const currentLocations = this.locationsSubject.value;
-        currentLocations.forEach((_, driverId) => {
-          if (!locationsMap.has(driverId)) {
-            this.markerManager.removeMarker(driverId);
-          }
-        });
-
-        this.locationsSubject.next(new Map(locationsMap));
-      },
-      error: (error) => {
-        console.error('WebSocket subscription error:', error);
-      }
-    });
+  highlightDriver(driverId: number): void {
+    this.driverMarkerService.highlightMarker(driverId);
   }
 
-  getLocation(driverId: number): DriverLocation | undefined {
-    return this.locationsSubject.value.get(driverId);
+  getAllDriverLocations(): DriverLocation[] {
+    return Array.from(this.driverLocationWebSocket.driverLocations().values());
   }
 
-  getAllLocations(): DriverLocation[] {
-    return Array.from(this.locationsSubject.value.values());
+  isWebSocketConnected(): boolean {
+    return this.driverLocationWebSocket.connected();
+  }
+
+  reconnectWebSocket(): void {
+    this.driverLocationWebSocket.clearAll();
+    this.webSocket.disconnect();
+    this.webSocket.connect();
   }
 
   cleanup(): void {
-    this.markerManager.clearAllMarkers();
-    this.locationsSubject.next(new Map());
+    console.log('Cleaning up DriverLocationManager...');
+    this.driverLocationWebSocket.clearAll();
+    this.webSocket.disconnect();
+    this.driverMarkerService.clearAllMarkers();
+    this.isInitialized = false;
+  }
+
+  ngOnDestroy(): void {
+    this.cleanup();
   }
 }

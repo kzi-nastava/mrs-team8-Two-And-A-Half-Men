@@ -9,5 +9,4 @@ export class BoxDirective {
 	@HostBinding('class.app-box')
 	baseClass = true;
 
-	constructor() {}
 }

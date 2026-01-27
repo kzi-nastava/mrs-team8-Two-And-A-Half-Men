@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ActivationComponent } from './activation';
+import { ActivationComponent } from './activation-page.component';
 
 describe('ActivationComponent', () => {
   let component: ActivationComponent;

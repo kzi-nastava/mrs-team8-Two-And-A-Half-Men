@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { EstimateForm } from "../estimate-form/estimate-form";
-import { MapComponent } from "../map/map";
+import { EstimateForm } from "../../../../estimate-form/estimate-form";
+import { MapComponent } from "../../../../map/map";
 
 
 @Component({

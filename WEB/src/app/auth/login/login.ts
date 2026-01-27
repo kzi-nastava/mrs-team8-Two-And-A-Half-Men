@@ -33,7 +33,7 @@ export class Login {
       const logindata = { username, password };
       this.authService.login(logindata, rememberMe).subscribe({
         next: (response) => {
-            this.authService.setUser(response.email, response.imgUrl, response.firstName, response.lastName);
+            this.authService.setUser(response.email, response.imgUrl!, response.firstName, response.lastName);
             this.authService.getRole();
             this.router.navigate(['']);
         },

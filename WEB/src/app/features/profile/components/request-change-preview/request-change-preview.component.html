@@ -1,0 +1,56 @@
+@if (request()) {
+	<!-- Pending Review Alert -->
+	<div class="pending-review-alert">
+		<div class="alert-icon">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+				<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+				<path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+			</svg>
+		</div>
+		<div class="alert-content">
+			<h4 class="alert-title">Pending Review</h4>
+			<p class="alert-message">Your profile changes are currently under review by the administrator. You will be notified once they are approved.</p>
+			<div class="pending-changes-list">
+				@for (change of pendingChanges; track change.label) {
+					<div class="pending-item">
+						<span class="change-field">{{ change.label }}</span>
+						<span class="change-value">
+							<span>{{ change.oldValue }}</span>
+							<svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" class="bi bi-arrow-right-short">
+							  <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+							</svg>
+							<span>{{ change.newValue }}</span>
+						</span>
+					</div>
+				}
+				@if (imgChange) {
+					<div class="pending-item">
+						<span class="change-field">Profile image: </span>
+						<span class="change-value">
+							@if (imgChange.oldValue) {
+								<img [src]="imgChange.oldValue" alt="Old Profile Image" class="preview-image"/>
+							}
+							@else {
+								<span>No Image</span>
+							}
+							<svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" class="bi bi-arrow-right-short">
+							  <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+							</svg>
+							@if (imgChange.newValue) {
+								<img [src]="imgChange.newValue" alt="New Profile Image" class="preview-image"/>
+							}
+							@else {
+								<span>No Image</span>
+							}</span>
+					</div>
+				}
+			</div>
+		</div>
+		<button class="cancel-button" (click)="cancelRequest()">
+			<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+				<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+			</svg>
+			Cancel Request
+		</button>
+	</div>
+}

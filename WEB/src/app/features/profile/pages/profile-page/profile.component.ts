@@ -15,7 +15,7 @@ import {
 } from '@features/profile/components/request-change-preview/request-change-preview.component';
 import {PendingChangeRequest} from '@shared/models/profile-change-request.model';
 import {ProfileService} from '@features/profile/services/profile.service';
-import { AuthService } from '@core/services/auth-service.service';
+import { AuthService } from '@core/services/auth.service';
 import { UpdateProfileRequest } from '@features/profile/models/update-profile.model';
 
 @Component({

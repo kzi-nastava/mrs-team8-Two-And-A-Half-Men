@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '@core/services/auth-service.service';
+import { AuthService } from '@core/services/auth.service';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, Login, User } from '@features/unregistered/models/auth.model';
 import { environment } from '@environments/environment';

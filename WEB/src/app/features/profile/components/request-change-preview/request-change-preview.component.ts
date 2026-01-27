@@ -70,7 +70,7 @@ export class RequestChangePreviewComponent {
 		addChange('License plate', this.vehicleInfo()!.licensePlate, this.request()?.licensePlate);
 		addChange('Number of seats', this.vehicleInfo()!.numberOfSeats, this.request()?.numberOfSeats);
 		addChange(
-			'Additional services',
+			'Additional driver-location',
 			this.vehicleInfo()!.additionalServices,
 			this.request()?.additionalServices
 		);

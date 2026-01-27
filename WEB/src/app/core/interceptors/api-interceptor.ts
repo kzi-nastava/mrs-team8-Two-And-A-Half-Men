@@ -8,12 +8,12 @@ import {
 	HttpStatusCode
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { TokenService } from '@core/services/token.service';
+import { AuthTokenService } from '@core/services/auth-token.service';
 import { Router } from '@angular/router';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-	tokenService = inject(TokenService);
+	tokenService = inject(AuthTokenService);
 	router = inject(Router);
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

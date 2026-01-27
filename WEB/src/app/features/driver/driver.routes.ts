@@ -11,4 +11,12 @@ export const DRIVER_ROUTES: Routes = [
 				(m) => m.RideDetailsPageComponent,
 			),
 	},
+	{
+		path: 'history',
+		canActivate: [authGuard, roleGuard(['DRIVER'])],
+		loadComponent: () =>
+			import('./history/pages/history-page/history-page.component').then(
+				(m) => m.DriversHistoryComponent,
+			),
+	}
 ];

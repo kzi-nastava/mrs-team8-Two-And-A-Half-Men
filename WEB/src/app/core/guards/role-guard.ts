@@ -1,6 +1,6 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { AuthService } from '@core/services/auth-service.service';
+import { AuthService } from '@core/services/auth.service';
 
 // Factory function to create a guard for specific roles
 export const roleGuard = (allowedRoles: string[]): CanActivateFn => {

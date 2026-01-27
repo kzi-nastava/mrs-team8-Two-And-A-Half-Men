@@ -2,10 +2,11 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CancelRideButtonComponent } from '@features/driver/rides/components/cancel-ride-button/cancel-ride-button.component';
 import { EndRideButtonComponent } from '@features/driver/rides/components/end-ride-button/end-ride-button.component';
+import { PanicButtonComponent } from '@shared/components/panic-button/panic-button.component';
 
 @Component({
 	selector: 'app-rides-details-page',
-	imports: [CancelRideButtonComponent, EndRideButtonComponent],
+	imports: [CancelRideButtonComponent, EndRideButtonComponent, PanicButtonComponent],
 	templateUrl: './ride-details-page.component.html',
 	styleUrl: './ride-details-page.component.css',
 })

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import Swal from 'sweetalert2';
-import { CancelationService } from '../../service/cancelation';
-import { Auth } from '../../service/auth';
+import { CancelationService } from '../../../../../service/cancelation';
+import { Auth } from '../../../../../service/auth';
 @Component({
   selector: 'app-cancellation-button',
   imports: [],
@@ -29,14 +29,14 @@ export class CancellationButton {
             <option value="CUSTOMER">Customer issues</option>
             <option value="DRIVER">Driver issues</option>
           </select>
-          
+
           <label style="display: block; margin-bottom: 10px; font-weight: bold;">
             Reason:
           </label>
-          <textarea 
-            id="cancellationReason" 
-            class="swal2-textarea" 
-            placeholder="Enter your reason here..." 
+          <textarea
+            id="cancellationReason"
+            class="swal2-textarea"
+            placeholder="Enter your reason here..."
             style="width: 90%; height: 300px; resize: none;"
             aria-label="Enter your cancellation reason"></textarea>
         </div>
@@ -76,8 +76,8 @@ export class CancellationButton {
         }
       });
     }else if(this.auth.getRole() == 'ROLE_CUSTOMER'){
-    Swal.fire({ 
-    
+    Swal.fire({
+
         title: 'Cancelation',
         text: 'Are you sure you want to cancel the ride?',
         icon: 'warning',

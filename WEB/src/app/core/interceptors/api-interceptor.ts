@@ -1,41 +1,38 @@
-import {inject, Injectable} from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
 	HttpErrorResponse,
 	HttpEvent,
 	HttpHandler,
 	HttpInterceptor,
 	HttpRequest,
-	HttpStatusCode,
+	HttpStatusCode
 } from '@angular/common/http';
-import {catchError, Observable, throwError} from 'rxjs';
-import {AuthService} from '@core/services/auth-service.service';
+import { catchError, Observable, throwError } from 'rxjs';
+import { TokenService } from '@core/services/token.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-	intercept(
-		req: HttpRequest<any>,
-		next: HttpHandler
-	): Observable<HttpEvent<any>> {
-		const authService = inject(AuthService)
-		const accessToken = authService.getToken()
+	tokenService = inject(TokenService);
+	router = inject(Router);
+
+	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+		const accessToken = this.tokenService.getToken();
 		if (req.headers.get('skip')) return next.handle(req);
 
 		const authReq = accessToken
 			? req.clone({
-				headers: req.headers.set(
-					'Authorization',
-					`Bearer ${accessToken}`
-				)
-			})
+					headers: req.headers.set('Authorization', `Bearer ${accessToken}`),
+				})
 			: req;
 
 		return next.handle(authReq).pipe(
 			catchError((error: HttpErrorResponse) => {
 				if (error.status === HttpStatusCode.Unauthorized) {
-					authService.handleUnauthorized(error);
+					this.router.navigate(['error', 'unauthorized'], { queryParams: { msg: 'Your session has expired. Please log in again.' } }).then();
 				}
 				return throwError(() => error);
-			})
+			}),
 		);
 	}
 }

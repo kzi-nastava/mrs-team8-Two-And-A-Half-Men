@@ -1,14 +1,15 @@
 // core/services/auth.service.ts
-import { Injectable, signal, computed, inject } from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '@environments/environment';
-import { tap } from 'rxjs/operators';
-import {LoggedInUser} from '@core/models/loggedInUser.model';
-import {Router} from '@angular/router';
+import { LoggedInUser } from '@core/models/loggedInUser.model';
+import { Router } from '@angular/router';
+import { TokenService } from '@core/services/token.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 	private http = inject(HttpClient);
+	private tokenService = inject(TokenService);
 
 	// --- Reactive state ---
 	private _user = signal<LoggedInUser | null>(null);
@@ -16,57 +17,38 @@ export class AuthService {
 
 	readonly fullName = computed(() => this._user()?.firstName + ' ' + this._user()?.lastName);
 
-	private _jwt: string | null = null; // in-memory JWT (cached)
-
-	// --- Storage key ---
-	private readonly JWT_KEY = 'jwt_token';
-
 	constructor() {
 		// On service init, load JWT from storage and fetch user
-		const token = sessionStorage.getItem(this.JWT_KEY) || localStorage.getItem(this.JWT_KEY);
+		const token = this.tokenService.getToken();
 		if (token) {
-			this._jwt = token;
-			// this.fetchUserInfo().subscribe({ error: () => this.logout() });
+			this.fetchUserInfo();
 		}
 	}
 
 	// --- Save login result (called by login page) ---
 	saveLogin(token: string, user: LoggedInUser, rememberMe = false) {
-		this._jwt = token;
 		this._user.set(user);
-
-		if (rememberMe) {
-			localStorage.setItem(this.JWT_KEY, token);
-			sessionStorage.removeItem(this.JWT_KEY);
-		} else {
-			sessionStorage.setItem(this.JWT_KEY, token);
-			localStorage.removeItem(this.JWT_KEY);
-		}
+		this.tokenService.setToken(token, !rememberMe);
 	}
 	// --- Logout ---
 	logout() {
-		this._jwt = null;
 		this._user.set(null);
-		sessionStorage.removeItem(this.JWT_KEY);
-		localStorage.removeItem(this.JWT_KEY);
+		this.tokenService.removeToken();
 	}
 
 	// --- Check if user is logged in ---
 	isLoggedIn(): boolean {
-		return !!this._jwt;
+		return this.tokenService.getToken() !== null;
 	}
 
 	// --- Fetch user info from API ---
 	fetchUserInfo() {
-		return this.http.get<LoggedInUser>(`/api/${environment.apiVersion}/me`)
-			.pipe(
-				tap(user => this._user.set(user))
-			);
-	}
-
-	// --- Optional: helper to get JWT (for HTTP interceptors) ---
-	getToken() {
-		return this._jwt;
+		return this.http.get<LoggedInUser>(`/api/${environment.apiVersion}/me`).subscribe({
+			next: (value) => this._user.set(value),
+			error: () => {
+				this.logout();
+			},
+		});
 	}
 
 	// --- Update user info locally and optionally call API ---
@@ -79,13 +61,12 @@ export class AuthService {
 		this._user.set(updatedUser);
 	}
 
+	getToken(): string | null {
+		return this.tokenService.getToken();
+	}
+
 	updateToken(token: string) {
-		this._jwt = token;
-		if (sessionStorage.getItem(this.JWT_KEY)) {
-			sessionStorage.setItem(this.JWT_KEY, token);
-		} else if (localStorage.getItem(this.JWT_KEY)) {
-			localStorage.setItem(this.JWT_KEY, token);
-		}
+		this.tokenService.setToken(token);
 	}
 
 	handleUnauthorized(error: HttpErrorResponse) {

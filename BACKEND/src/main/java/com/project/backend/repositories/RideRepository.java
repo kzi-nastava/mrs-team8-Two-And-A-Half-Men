@@ -1,5 +1,6 @@
 package com.project.backend.repositories;
 
+import com.project.backend.models.Customer;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
 import com.project.backend.models.enums.RideStatus;
@@ -63,4 +64,6 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 
     List<Ride> findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(Collection<Long> driversIds);
     Optional<Ride> findById(Long rideId);
+
+    List<Ride> findByRideOwner(Customer customer);
 }

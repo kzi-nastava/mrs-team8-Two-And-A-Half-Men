@@ -1,9 +1,6 @@
 package com.project.backend.service.impl;
 
-import com.project.backend.DTO.Ride.CostTimeDTO;
-import com.project.backend.DTO.Ride.NewRideDTO;
-import com.project.backend.DTO.Ride.RideBookingParametersDTO;
-import com.project.backend.DTO.Ride.RideResponseDTO;
+import com.project.backend.DTO.Ride.*;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
@@ -55,6 +52,7 @@ public class RideService implements IRideService {
     private final VehicleTypeRepository vehicleTypeRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
     private final PassengerRepository passengerRepository;
+    private final LocationRepository locatioRepository;
 
     public RideResponseDTO getRideById(Long id) {
         Ride ride = rideRepository.findById(id)
@@ -516,6 +514,39 @@ public class RideService implements IRideService {
                 0,
                 estimatedTime
         );
+    }
+
+    @Override
+    public List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer) {
+        List<RideBookedDTO> bookedRides = new ArrayList<>();
+        List<Ride> rides = rideRepository.findByRideOwner(customer);
+        for(Ride ride : rides) {
+            boolean isSheculedforNextTenMinutes = ride.getScheduledTime() != null &&
+                    ride.getScheduledTime().isAfter(LocalDateTime.now().plusMinutes(10));
+            if ((ride.getStatus() == RideStatus.ACCEPTED  || ride.getStatus() == RideStatus.ACTIVE || isSheculedforNextTenMinutes) && ride.getStatus() != RideStatus.CANCELLED ) {
+                List<Coordinates> coordinates = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
+                List<String> hashes = coordinates
+                        .stream().map(
+                                c -> locationTransformer
+                                        .transformFromPoints(List.of(new double[] {c.getLatitude(), c.getLongitude()}))
+                        ).toList();
+                StringBuilder address = new StringBuilder();
+                var locations = locationRepository.findAllByGeoHashIn(hashes);
+                for(Location location : locations) {
+                    address.append(location.getAddress()).append(" ");
+                }
+                String SheduleTime = ride.getScheduledTime() != null ? ride.getScheduledTime().toString() : "Immediate";
+                RideBookedDTO rideBookedDTO = RideBookedDTO.builder()
+                        .id(ride.getId())
+                        .status(ride.getStatus().toString())
+                        .scheduleTime(SheduleTime)
+                        .driverName(ride.getDriver().firstNameAndLastName())
+                        .route(address.toString().trim())
+                        .build();
+                bookedRides.add(rideBookedDTO);
+            }
+        }
+        return bookedRides;
     }
 
     @Data

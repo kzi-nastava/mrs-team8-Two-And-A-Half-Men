@@ -25,6 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -199,5 +200,14 @@ public class RideController {
         AppUser user = authUtils.getCurrentUser();
         panicService.triggerPanicAlert(user, accessToken);
         return ResponseEntity.ok(Map.of("message", "Panic alert triggered successfully"));
+    }
+    @GetMapping("/booked")
+    public ResponseEntity<List<RideBookedDTO>> getBookedRides() {
+        Customer user = authUtils.getCurrentCustomer();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        List<RideBookedDTO> bookedRides = rideService.getAllBookedRidesByCustomer(user);
+        return ResponseEntity.ok(bookedRides);
     }
 }

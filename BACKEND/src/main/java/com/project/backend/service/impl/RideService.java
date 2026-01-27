@@ -291,22 +291,20 @@ public class RideService implements IRideService {
             ride.setPrice(0.0);
         }
         ride.setTotalCost(ride.getPrice() + 120 * locationTransformer.calculateDistanceAir(path));
+        /*
         List<Coordinates>pathCords = locationTransformer.transformToCoordinates(path);
-        System.out.println("Route s" + ride.getRoute().getGeoHash());
         List<Coordinates> route = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
-        System.out.println(pathCords.size());
-        System.out.println(route.size());
         List<Coordinates> newCords = getNewRideCords(pathCords, route, 50);
-        System.out.println(newCords);
         String newPath = locationTransformer.transformLocation(newCords);
         Route newRoute = routeRepository.findByGeoHash(newPath).orElse(null);
-        System.out.println("New route geohash: " + newPath);
         if(newRoute == null) {
             newRoute = new Route();
             newRoute.setGeoHash(newPath);
             routeRepository.save(newRoute);
         }
         ride.setRoute(newRoute);
+        */
+
         ride.setEndTime(LocalDateTime.now());
         rideRepository.save(ride);
         CostTimeDTO costTimeDTO = new CostTimeDTO();

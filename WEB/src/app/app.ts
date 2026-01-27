@@ -7,12 +7,7 @@ import { routeAnimations } from './animations/route-animation';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, NavbarComponent],
-  template: `
-    <app-navbar></app-navbar>
-    <div [@routeAnimations]="prepareRoute(outlet)">
-      <router-outlet #outlet="outlet"></router-outlet>
-    </div>
-  `,
+  templateUrl:'./app.html',
   styleUrl: './app.css',
   animations: [routeAnimations]
 })

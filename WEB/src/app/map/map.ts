@@ -1,144 +1,190 @@
-import { Component, AfterViewInit, signal, effect } from '@angular/core';
-import * as L from 'leaflet';
-import { SheredLocationsService } from '../service/shered-locations-service';
-import { MapService } from './services/map-service'; 
+import { Component, AfterViewInit, OnDestroy, effect } from '@angular/core';
+import { MapService } from './services/map-service';
+import { LocationPinService } from './services/location-pin-service';
+import { DriverMarkerService } from './services/driver-marker-service';
+import { RouteService } from './services/route-service';
 import { DriverLocationManagerService } from '../driver-location/services/driver-location-manager-service';
+import { SheredLocationsService } from '../service/shered-locations-service';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.html',
   styleUrls: ['./map.css'],
 })
-export class MapComponent implements AfterViewInit {
-  private map!: L.Map;
-  markers: L.Marker[] = [];
+export class MapComponent implements AfterViewInit, OnDestroy {
+  private currentRouteId?: string;
+  private mapInitialized = false;
 
   constructor(
-    private sharedLocationsService: SheredLocationsService, 
+    private mapService: MapService,
+    private locationPinService: LocationPinService,
+    private driverMarkerService: DriverMarkerService,
+    private routeService: RouteService,
     private driverLocationManager: DriverLocationManagerService,
-    private mapService: MapService) {
-     effect(() => {
-        const locations = this.sharedLocationsService.locations();
-        console.log('Locations updated:', locations);
-        for (const marker of this.markers) {
-            console.log('Removing marker:', marker);
-            this.map.removeLayer(marker);
-        }
-        this.markers = [];
-        locations.forEach(location => {
-            const marker = L.marker([parseFloat(location.lat), parseFloat(location.lon)]).addTo(this.map);
-            marker.on('click', () => {
-                this.removeMarker(marker);
-            });
-            this.markers.push(marker);
-        }
-        );
-    });
-  }
-
-  getMap(): L.Map | undefined {
-    return this.map;
-  }
-
-  // createMarker(
-  //   position: L.LatLngExpression,
-  //   isOccupied: boolean,
-  //   popupContent: string
-  // ): L.Marker {
-  //   const icon = isOccupied ? this.occupiedDriverIcon : this.availableDriverIcon;
-    
-  //   return L.marker(position, { icon })
-  //     .bindPopup(popupContent);
-  // }
-
-  private initMap(): void {
-    this.map = this.mapService.initMap('map', [45.2396, 19.8227], 13);
-    this.driverLocationManager.initialize();
-
-    const tiles = L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      {
-        maxZoom: 18,
-        minZoom: 3,
-        attribution:
-          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    private sheredLocationsService: SheredLocationsService
+  ) {
+    effect(() => {
+      const locations = this.sheredLocationsService.locations();
+      console.log('Locations changed, updating route. Count:', locations.length);
+      
+      // Ako ima bar 2 lokacije, iscrtaj rutu
+      if (locations.length >= 2 && this.mapInitialized) {
+        this.updateRouteFromLocations(locations);
+      } else {
+        // Ukloni rutu ako ima manje od 2 tačke
+        this.clearCurrentRoute();
       }
-    );
-    tiles.addTo(this.map);
+    });
   }
 
   ngAfterViewInit(): void {
-    const DefaultIcon = L.icon({
-      iconUrl: 'https://unpkg.com/leaflet@1.6.0/dist/images/marker-icon.png',
-      iconSize: [25, 41], 
-      iconAnchor: [12, 41],
-    });
+    console.log('Initializing map...');
+    
+    // Initialize the map
+    this.mapService.initMap('map', [45.2396, 19.8227], 13);
+    this.mapInitialized = true;
 
-    L.Marker.prototype.options.icon = DefaultIcon;
+    // Initialize all services
+    this.locationPinService.initialize();
+    this.driverMarkerService.initialize();
+    this.routeService.initialize();
 
-    this.initMap();
-    this.registerOnClick();
-    this.registerOnRightClick();
+    // VAŽNO: Povezujemo klik na mapu sa SheredLocationsService
+    this.setupMapClickHandler();
+    this.setupMapRightClickHandler();
+
+    // Initialize driver location tracking
+    this.driverLocationManager.initialize();
+
+    console.log('Map component fully initialized');
   }
 
-  registerOnClick(): void {
-    this.map.on('click', (e: L.LeafletMouseEvent) => {
+  private setupMapClickHandler(): void {
+    const map = this.mapService.getMap();
+    
+    map.on('click', (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
-      const marker = L.marker([lat, lng]).addTo(this.map);
-      this.markers.push(marker);
-      marker.on('click', () => {
-        this.removeMarker(marker);
+      
+      console.log('Map clicked at:', lat, lng);
+      
+      this.sheredLocationsService.addLocationFromCoordinates(lat, lng).subscribe({
+        next: (nominatimResult) => {
+          console.log('Location added from map click:', nominatimResult.display_name);
+        },
+        error: (error) => {
+          console.error('Error getting location:', error);
+          alert('Greška pri dobavljanju adrese. Pokušajte ponovo.');
+        }
       });
-      this.sharedLocationsService.addLocation(marker); 
     });
   }
 
-
-  removeLastMarker(): void {
-    const currentMarkers = this.markers;
-    console.log('Current markers count:', currentMarkers.length);
-    console.log(this.sharedLocationsService.locations())
-    if (currentMarkers.length === 0) {
-      return;
-    }
-    console.log('Removing last marker');
-    const lastMarker = currentMarkers[currentMarkers.length - 1];
-    this.map.removeLayer(lastMarker);
-    this.sharedLocationsService.locations.set(this.sharedLocationsService.locations().slice(0, -1));
-  }
-
-  registerOnRightClick(): void {
-    this.map.on('contextmenu', (e: L.LeafletMouseEvent) => {
-      e.originalEvent.preventDefault();
-      this.removeLastMarker();
+  private setupMapRightClickHandler(): void {
+    const map = this.mapService.getMap();
+    
+    map.on('contextmenu', (e: L.LeafletMouseEvent) => {
+      e.originalEvent.preventDefault();      
+      console.log('Right click - removing last location');
+      this.sheredLocationsService.removeLastLocation();
     });
   }
 
-  removeMarker(markerToRemove: L.Marker): void {
-    this.map.removeLayer(markerToRemove);
-    this.markers = this.markers.filter(marker => marker !== markerToRemove);
+  ngOnDestroy(): void {
+    console.log('Destroying map component...');
+    
+    // Cleanup all services
+    this.locationPinService.cleanup();
+    this.driverMarkerService.cleanup();
+    this.routeService.cleanup();
+    this.driverLocationManager.cleanup();
+    this.mapService.destroyMap();
+    
+    this.mapInitialized = false;
   }
 
-  removeMarkerByIndex(index: number): void {
-    const currentMarkers = this.markers;
-    if (index < 0 || index >= currentMarkers.length) {
-      return;
+
+  // ===== Public API Methods =====
+
+  addLocationPin(lat: number, lng: number): string {
+    return this.locationPinService.addPin(lat, lng);
+  }
+
+  removeLocationPin(id: string): void {
+    this.locationPinService.removePin(id);
+  }
+
+  clearAllLocationPins(): void {
+    this.locationPinService.clearAllPins();
+    this.sheredLocationsService.clearLocations();
+  }
+
+  getLocationPins() {
+    return this.locationPinService.getAllPins();
+  }
+
+  highlightDriver(driverId: number): void {
+    this.driverMarkerService.highlightMarker(driverId);
+  }
+
+  createRoute(waypoints: [number, number][], options?: any): string {
+    return this.routeService.createRoute(waypoints, options);
+  }
+
+  createSimpleRoute(start: [number, number], end: [number, number]): string {
+    return this.routeService.createSimpleRoute(start, end);
+  }
+
+  removeRoute(routeId: string): void {
+    this.routeService.removeRoute(routeId);
+  }
+
+  clearAllRoutes(): void {
+    this.routeService.clearAllRoutes();
+    this.currentRouteId = undefined;
+  }
+
+  fitRouteInView(routeId: string): void {
+    this.routeService.fitRouteInView(routeId);
+  }
+
+  toggleLocationPinClick(enable: boolean): void {
+    if (enable) {
+      this.locationPinService.enableClickToAdd();
+    } else {
+      this.locationPinService.disableClickToAdd();
     }
-    const marker = currentMarkers[index];
-    this.map.removeLayer(marker);
-    this.markers = currentMarkers.filter((_, i) => i !== index);
   }
 
-  removeMarkerByCoordinates(lat: number, lng: number): void {
-    const marker = this.markers.find(m => {
-      const pos = m.getLatLng();
-      return pos.lat === lat && pos.lng === lng;
+  toggleLocationPinRightClick(enable: boolean): void {
+    if (enable) {
+      this.locationPinService.enableRightClickToRemoveLast();
+    } else {
+      this.locationPinService.disableRightClickToRemoveLast();
+    }
+  }
+
+  private updateRouteFromLocations(locations: any[]): void {
+    this.clearCurrentRoute();
+
+    const waypoints: [number, number][] = locations.map(loc => [
+      parseFloat(loc.lat),
+      parseFloat(loc.lon)
+    ]);
+
+    this.currentRouteId = this.routeService.createRoute(waypoints, {
+      color: '#3388ff',
+      weight: 6,
+      opacity: 0.7,
     });
 
-    if (!marker) {
-      return;
-    }
-    this.removeMarker(marker);
+    console.log(`Route created with ${waypoints.length} waypoints`);
   }
 
+  private clearCurrentRoute(): void {
+    if (this.currentRouteId) {
+      this.routeService.removeRoute(this.currentRouteId);
+      this.currentRouteId = undefined;
+      console.log('Current route cleared');
+    }
+  }
 }

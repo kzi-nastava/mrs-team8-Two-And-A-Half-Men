@@ -69,14 +69,15 @@ public class ProfileService {
         AppUser user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        if (body.getImgSrc() != null) {
+
+        if (role == UserRole.DRIVER) {
+            return updateDriverProfile((Driver) user, body);
+        }
+        if (body.getImgSrc() != null && !body.getImgSrc().startsWith("http") && user.getImgSrc() != null) {
             // Publish an event to delete the old profile picture after the transaction is committed
             eventPublisher.publishEvent(new ProfilePictureUpdatedEvent(
                     Paths.get(System.getProperty("user.dir"), "public", user.getImgSrc()).toString()
             ));
-        }
-        if (role == UserRole.DRIVER) {
-            return updateDriverProfile((Driver) user, body);
         }
         if (body.getFirstName() != null) {
             user.setFirstName(body.getFirstName());
@@ -163,16 +164,32 @@ public class ProfileService {
 
     public UserTokenDTO changePassword(Long id, ChangePasswordDTO body) {
 
-        String password = body.getPassword();
-        if (password == null || password.isEmpty()) {
-            throw new BadRequestException("Password cannot be empty");
+        String oldPassword = body.getOldPassword();
+        if (oldPassword == null || oldPassword.isEmpty()) {
+            throw new BadRequestException("Old password cannot be empty");
+        }
+        String newPassword = body.getNewPassword();
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new BadRequestException("New password cannot be empty");
+        }
+        String confirmNewPassword = body.getConfirmNewPassword();
+        if (confirmNewPassword == null || confirmNewPassword.isEmpty()) {
+            throw new BadRequestException("Confirmed new password cannot be empty");
+        }
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            throw new BadRequestException("New password and confirmed new password do not match");
         }
 
         AppUser user = userRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        user.setPassword(passwordEncoder.encode(password));
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new BadRequestException("Old password is incorrect");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
 
         userRepository.save(user);
 

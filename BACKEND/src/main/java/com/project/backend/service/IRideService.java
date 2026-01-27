@@ -5,9 +5,6 @@ import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.DTO.Ride.NoteRequestDTO;
 import com.project.backend.DTO.Ride.NoteResponseDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
-import com.project.backend.DTO.Ride.RideTrackingDTO;
-import com.project.backend.models.AppUser;
-import com.project.backend.models.Ride;
 
 import java.util.Map;
 
@@ -29,4 +26,5 @@ public interface IRideService {
     RideTrackingDTO getRideTrackingInfo(Long rideId);
 
     public void sendRideUpdate(Ride ride);
+    CostTimeDTO endRideById(Long id, Driver driver);
 }

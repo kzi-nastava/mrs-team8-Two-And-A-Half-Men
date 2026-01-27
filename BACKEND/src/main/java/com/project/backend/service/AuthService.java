@@ -2,6 +2,7 @@ package com.project.backend.service;
 
 import com.project.backend.DTO.Auth.*;
 import com.project.backend.exceptions.BadRequestException;
+import com.project.backend.exceptions.ServerExeption;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
 import com.project.backend.models.Driver;
@@ -145,10 +146,10 @@ public class AuthService {
 
     }
 
-    public UserTokenDTO login(UserLoginRequestDTO credentials) throws Exception {
+    public UserTokenDTO login(UserLoginRequestDTO credentials) {
         AppUser customer = appUserRepository.findByEmail(credentials.getUsername());
         if (customer == null) {
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new BadRequestException("Invalid username or password");
         }
         System.out.println("User found: " + customer.getUsername());
         System.out.println("Active: " + customer.isAccountNonExpired());
@@ -168,18 +169,17 @@ public class AuthService {
 
             String jwt = tokenUtils.generateToken(user);
             int expiresIn = tokenUtils.getExpiredIn();
-            return new UserTokenDTO(jwt, expiresIn,
-                    user.getEmail(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getImgSrc());
+            return UserTokenDTO.builder()
+                    .accessToken(jwt)
+                    .expiresIn((long) expiresIn)
+                    .email(user.getEmail())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .imgUrl(user.getImgSrc())
+                    .role(user.getRole().name())
+                    .build();
         } catch (org.springframework.security.core.AuthenticationException e) {
-            System.out.println("Authentication failed: " + e.getMessage());
-            throw new IllegalArgumentException("Invalid username or password");
-        } catch (IllegalArgumentException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new Exception("Invalid username or password " + e.getMessage());
+            throw new BadRequestException("Invalid username or password");
         }
     }
 
@@ -283,5 +283,40 @@ public class AuthService {
                         additionalServiceRepository
                                 .findAllById(vehicleInfo.getAdditionalServicesIds().stream().toList())
                 ));
+    }
+    public void forgetPassword(String email) {
+        AppUser user = appUserRepository.findByEmail(email);
+        if (user == null) {
+            throw new BadRequestException("Email do not exist");
+        }
+        String token = UUID.randomUUID().toString();
+        user.setToken(token);
+        user.setTokenExpiration(LocalDateTime.now().plusHours(2));
+        appUserRepository.save(user);
+        String body =               emailBodyGeneratorService.generatePasswordResetEmailBody(
+                user.getFirstName(),
+                this.frontendUrl + "/reset-password?token=" + token
+        );
+        try {
+            emailService.sendEmail(user.getEmail(), "Password Reset Request", body);
+        } catch (Exception e) {
+            throw new ServerExeption("Failed to send password reset email");
+        }
+    }
+    public void resetPassword(ResetPasswordDTO resetPasswordData) {
+        AppUser user = appUserRepository.findByToken(resetPasswordData.getToken())
+                .orElseThrow(() -> new BadRequestException("Invalid or expired token"));
+
+        if(user.getIsActive() == false){
+            throw new BadRequestException("User account is not active");
+        }
+        if (user.getTokenExpiration() == null || user.getTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException("Token has expired");
+        }
+
+        user.setPassword(passwordEncoder.encode(resetPasswordData.getNewPassword()));
+        user.setToken(null);
+        user.setTokenExpiration(null);
+        appUserRepository.save(user);
     }
 }

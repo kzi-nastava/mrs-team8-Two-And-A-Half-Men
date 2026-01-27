@@ -1,6 +1,5 @@
 package com.project.backend.service.impl;
 
-import com.project.backend.DTO.Ride.HistoryRequestDTO;
 import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.DTO.mappers.RideMapper;
@@ -28,7 +27,7 @@ public class HistoryService implements IHistoryService {
     public PagedResponse<RideResponseDTO> getDriverRideHistory(
             Long driverId,
             Pageable pageable,
-            HistoryRequestDTO historyRequestDTO
+            LocalDateTime startDate, LocalDateTime endDate
     ) {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -36,8 +35,6 @@ public class HistoryService implements IHistoryService {
                 ));
 
         Page<Ride> ridePage;
-        LocalDateTime startDate = historyRequestDTO.getStartDate();
-        LocalDateTime endDate = historyRequestDTO.getEndDate();
 
         if (startDate != null && endDate != null) {
             if (startDate.isAfter(endDate))

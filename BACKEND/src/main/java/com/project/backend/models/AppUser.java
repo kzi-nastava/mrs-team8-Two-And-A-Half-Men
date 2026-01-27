@@ -28,13 +28,18 @@ public class AppUser implements UserDetails{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-
     private String firstName;
+
     private String lastName;
+
     private String email;
+
     private String password;
+
     private String address;
+
     private String phoneNumber;
+
     private String imgSrc;
     private String token;
     private LocalDateTime tokenExpiration;

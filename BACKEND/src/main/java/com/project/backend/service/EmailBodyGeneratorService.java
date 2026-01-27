@@ -80,4 +80,23 @@ public class EmailBodyGeneratorService {
             "</table>";
 
     }
+    public String generatePasswordResetEmailBody(String userName, String resetLink) {
+        return "<html>" +
+                "<body>" +
+                "<h2>Password Reset Request</h2>" +
+                "<p>Hi " + userName + ",</p>" +
+                "<p>We received a request to reset your password. Click the link below to set a new password:</p>" +
+                "<a style=\"padding: 10px 20px; color: white; background-color: red; text-decoration: underline;\" " +
+                " href=\"" + resetLink + "\">Reset My Password</a>" +
+                "<p>If you did not request a password reset, please ignore this email.</p>" +
+                "<br>" +
+                "<p>Best regards,<br>The Team</p>" +
+                "<br><br>" +
+                "<p>If the button doesn't work follow this link: " + resetLink + "</p>" +
+                "<footer style=\"font-size: small; color: gray;\">" +
+                "This is an automated message, please do not reply." +
+                "</footer>" +
+                "</body>" +
+                "</html>";
+    }
 }

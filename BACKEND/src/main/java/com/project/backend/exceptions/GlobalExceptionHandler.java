@@ -99,4 +99,14 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }
+    @ExceptionHandler(ServerExeption.class)
+    public ResponseEntity<ErrorResponse> handleServerException(ServerExeption ex) {
+        ErrorResponse err = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
+    }
 }

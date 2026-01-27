@@ -1,29 +1,30 @@
 package com.project.backend.controllers;
 
 import com.project.backend.DTO.Ride.*;
-import com.project.backend.exceptions.UnauthenticatedException;
+import com.project.backend.exceptions.UnauthorizedException;
 import com.project.backend.models.AppUser;
-import com.project.backend.models.enums.UserRole;
+import com.project.backend.models.Customer;
 import com.project.backend.service.impl.CancellationService;
 import com.project.backend.DTO.Utils.PagedResponse;
-import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
 import com.project.backend.service.impl.PanicService;
-import com.project.backend.service.impl.RatingService;
 import com.project.backend.service.IHistoryService;
 import com.project.backend.service.IRatingService;
 import com.project.backend.service.IRideService;
-import com.project.backend.service.impl.PanicService;
+import com.project.backend.service.rating.AccessTokenRatingActor;
+import com.project.backend.service.rating.JwtRatingActor;
+import com.project.backend.service.rating.RatingActor;
 import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -95,7 +96,21 @@ public class RideController {
         }
         return ResponseEntity.ok(rideService.startARide(id,user.getId()));
     }
-    
+
+
+    @PatchMapping("/{id}/end")
+    @PreAuthorize("hasRole('DRIVER')")
+    public ResponseEntity<?> endRide(@PathVariable Long id) {
+            Driver driver = authUtils.getCurrentDriver();
+            if (driver == null) {
+                return ResponseEntity.status(401).body(Map.of());
+            }
+            CostTimeDTO costTimeDTO = rideService.endRideById(id, driver);
+            System.out.println(costTimeDTO.getCost() + " " + costTimeDTO.getTime());
+            return ResponseEntity.ok(costTimeDTO);
+    }
+
+
     @PatchMapping("/{id}/finish")
     public ResponseEntity<?> finishRide(@PathVariable String id) {
         Long rideId;
@@ -139,17 +154,34 @@ public class RideController {
 
     @PostMapping("/{id}/rating")
     public ResponseEntity<?> rateRide(
-            @PathVariable String id,
-            @Valid @RequestBody RatingRequestDTO ratingRequest) {
+            @PathVariable Long id,
+            @RequestParam(name = "accessToken", required = false) String accessToken,
+            @Valid @RequestBody RatingRequestDTO ratingRequest
+    ) {
+        RatingActor actor;
 
-        RatingResponseDTO response = ratingService.rateRide(ratingRequest);
+        AppUser user = authUtils.getCurrentUser();
+
+        if (user != null) {
+            actor = new JwtRatingActor((Customer) user);
+        } else if (accessToken != null) {
+            actor = new AccessTokenRatingActor(accessToken);
+        } else {
+            throw new UnauthorizedException("Authentication required");
+        }
+
+        RatingResponseDTO response = ratingService.rateRide(id, actor, ratingRequest);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/history")
     public ResponseEntity<PagedResponse<RideResponseDTO>> getDriverRideHistory(
             Pageable pageable,
-            @Valid @RequestBody HistoryRequestDTO historyRequestDTO
+            @RequestParam(name = "startDate", required = false)
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(name = "endDate", required = false)
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate
     ) {
         AppUser user = authUtils.getCurrentUser();
         if (user == null)
@@ -158,7 +190,7 @@ public class RideController {
         PagedResponse<RideResponseDTO> history = null;
 
         if (user instanceof Driver) {
-            history = historyService.getDriverRideHistory(user.getId(), pageable, historyRequestDTO);
+            history = historyService.getDriverRideHistory(user.getId(), pageable, startDate, endDate);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(history);

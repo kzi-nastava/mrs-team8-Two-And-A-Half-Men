@@ -2,14 +2,12 @@ package com.project.backend.controllers;
 
 import com.project.backend.DTO.Auth.*;
 import com.project.backend.service.AuthService;
+import com.project.backend.util.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -18,20 +16,29 @@ import java.util.Map;
 public class AuthController {
     @Autowired
     private AuthService authService;
+    @Autowired
+    private AuthUtils authUtils;
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser() {
+        var currentUser = authUtils.getCurrentUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("error", "Unauthorized"));
+        }
+        return ResponseEntity.ok(Map.of(
+                "id", currentUser.getId(),
+                "email", currentUser.getEmail(),
+                "firstName", currentUser.getFirstName(),
+                "lastName", currentUser.getLastName(),
+                "role", currentUser.getRole()
+        ));
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequestDTO credentials) {
-
-        try {
-            UserTokenDTO loginResponse = authService.login(credentials);
-            return ResponseEntity.ok(loginResponse);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(401)
-                    .body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            return ResponseEntity.status(500)
-                    .body(Map.of("error", "Internal server error" + e.getMessage()));
-        }
+        UserTokenDTO loginResponse = authService.login(credentials);
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/users/register")
@@ -57,10 +64,15 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody Map<String, Object> emailData) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
+        String email = (String) emailData.get("email");
+        authService.forgetPassword(email);
+        return ResponseEntity.ok(Map.of("message", "Successfully sent password reset instructions to your email."));
     }
-
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO resetPasswordData) {
+         authService.resetPassword(resetPasswordData);
+        return ResponseEntity.ok(Map.of("message", "Password has been successfully reset."));
+    }
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody Map<String, Object> passwordData) {
         return ResponseEntity.status(501)

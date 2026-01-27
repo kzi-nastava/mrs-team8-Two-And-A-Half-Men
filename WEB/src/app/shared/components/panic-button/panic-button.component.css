@@ -1,0 +1,13 @@
+#panic-button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+	aspect-ratio: 1;
+    font-size: 16px;
+    cursor: pointer;
+}
+#panic-button:hover {
+    background-color: darkred;
+    transform: scale(1.1);
+}

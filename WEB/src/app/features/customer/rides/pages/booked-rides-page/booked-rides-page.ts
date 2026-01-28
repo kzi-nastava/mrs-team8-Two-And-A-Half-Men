@@ -4,6 +4,9 @@ import { BookedRide } from '../../models/BookedRide';
 import { signal } from '@angular/core';
 import { CustomerRideService } from '../../services/customer-ride-service';
 import { CancelRideButton } from '../../components/cancel-ride-button/cancel-ride-button';
+import { Router } from '@angular/router';
+
+
 @Component({
   selector: 'app-booked-rides',
   imports: [CommonModule, CancelRideButton],
@@ -14,6 +17,7 @@ export class BookedRides implements OnInit{
 
   public bookedRides = signal<BookedRide[]>([]);
   public BookedRidesService = inject(CustomerRideService);
+  public router = inject(Router);
   
   ngOnInit(): void {
     this.loadRides();
@@ -25,7 +29,9 @@ export class BookedRides implements OnInit{
       });
   }
   RideClicked(ride: BookedRide): void {
-    console.log('Ride clicked: ' + ride.id);
+    if(this.canTrackRide(ride)){
+      this.router.navigate(['/customer/rides/active'], { queryParams: { rideId: ride.id } }).then();
+    }
   }
   canCancelRide(ride: BookedRide): boolean {
      if(!ride.scheduleTime) return false;

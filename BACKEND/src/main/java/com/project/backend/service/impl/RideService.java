@@ -11,6 +11,7 @@ import com.project.backend.DTO.Ride.*;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
+import com.project.backend.events.RideFinishedEvent;
 import com.project.backend.exceptions.*;
 import com.project.backend.DTO.redis.RedisLocationsDTO;
 import com.project.backend.events.RideCreatedEvent;
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -639,6 +641,38 @@ public class RideService implements IRideService {
             }
         }
         return bookedRides;
+    }
+
+    public RideTrackingDTO getDriversActiveRide(Driver driver) {
+        Ride ride = rideRepository.findFirstByDriverAndStatusIn(
+                driver, List.of(RideStatus.ACTIVE)
+        ).orElseThrow(() ->
+                new ResourceNotFoundException("Drivers active ride is not found")
+        );
+
+        return RideTrackingDTO.builder()
+                .id(ride.getId())
+                .driverId(driver.getId())
+                .passengerId(null)
+                .stops(null)
+                .startTime(ride.getStartTime())
+                .build();
+    }
+
+    @Transactional
+    public void finishRide(Long id, FinishRideDTO finishRideDTO) {
+        Ride ride = rideRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Ride with id " + id + " not found")
+                );
+
+        ride.setStatus(finishRideDTO.isInterrupted() ? RideStatus.INTERRUPTED : RideStatus.FINISHED);
+        ride.getDriver().setDriverStatus(DriverStatus.ACTIVE);
+        // TODO: redirect driver to new ride
+
+        applicationEventPublisher.publishEvent(new RideFinishedEvent(ride));
+
+        rideRepository.save(ride);
     }
 
     @Data

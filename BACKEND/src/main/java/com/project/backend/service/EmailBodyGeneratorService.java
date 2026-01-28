@@ -99,4 +99,62 @@ public class EmailBodyGeneratorService {
                 "</body>" +
                 "</html>";
     }
+
+    public String generateRideRatingEmailBody(String rideOwnerName, String driverName, String rideDate, String ratingLink) {
+        return "<table align='center' width='100%' cellpadding='0' cellspacing='0' style='padding:20px; background-color:#f4f6f8; font-family:Arial, Helvetica, sans-serif;'>" +
+                "  <tr>" +
+                "    <td align='center'>" +
+
+                "      <table width='600' cellpadding='0' cellspacing='0' style='background-color:#ffffff; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.08); overflow:hidden;'>" +
+
+                "        <tr>" +
+                "          <td style='background-color:#10b981; padding:20px; text-align:center;'>" +
+                "            <h2 style='margin:0; color:#ffffff; font-size:22px;'>⭐ Rate Your Ride</h2>" +
+                "          </td>" +
+                "        </tr>" +
+
+                "        <tr>" +
+                "          <td style='padding:30px; color:#333333; font-size:15px; line-height:1.6;'>" +
+                "            <p style='margin-top:0;'>Ride owner: <strong>" + rideOwnerName + "</strong></p>" +
+
+                "            <p>" +
+                "              Thank you for completing your ride with <strong>" + driverName + "</strong> on " + rideDate + "." +
+                "            </p>" +
+
+                "            <p>" +
+                "              We'd love to hear about your experience! Please take a moment to rate your ride and help us improve our service." +
+                "            </p>" +
+
+                "            <div style='text-align:center; margin:30px 0;'>" +
+                "              <a href='" + ratingLink + "' " +
+                "                 style='background-color:#10b981; color:#ffffff; text-decoration:none; padding:14px 28px; " +
+                "                        border-radius:6px; font-weight:bold; display:inline-block;'>" +
+                "                Rate My Ride" +
+                "              </a>" +
+                "            </div>" +
+
+                "            <p style='margin-bottom:0; font-size:13px; color:#777777;'>" +
+                "              Your feedback helps us maintain quality service for all users." +
+                "            </p>" +
+                "          </td>" +
+                "        </tr>" +
+
+                "        <tr>" +
+                "          <td style='background-color:#f1f5f9; padding:15px; text-align:center; font-size:12px; color:#777777;'>" +
+                "            This is an automated message. Please do not reply." +
+                "          </td>" +
+                "        </tr>" +
+
+                "        <tr>" +
+                "          <td style='background-color:#f1f5f9; padding:15px; text-align:center; font-size:12px; color:#777777;'>" +
+                "            If the button doesn't work, follow this link: " + ratingLink +
+                "          </td>" +
+                "        </tr>" +
+
+                "      </table>" +
+
+                "    </td>" +
+                "  </tr>" +
+                "</table>";
+    }
 }

@@ -1,13 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { trigger, transition, style, animate, query, group } from '@angular/animations';
-import { NavbarComponent } from './layout/navbar/navbar';
 import { routeAnimations } from '@core/animations/route-animation';
-import { RatingFormComponent } from '@shared/components/forms/rating-form/rating-form.component';
+import { NavbarConfig } from "./layout/navbar/navbar-config/navbar-config";
 
 @Component({
 	selector: 'app-root',
-	imports: [RouterOutlet, NavbarComponent],
+	imports: [RouterOutlet, NavbarConfig],
 	templateUrl: './app.html',
 	styleUrl: './app.css',
 	animations: [routeAnimations],

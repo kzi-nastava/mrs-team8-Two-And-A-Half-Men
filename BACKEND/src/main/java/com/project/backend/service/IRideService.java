@@ -1,10 +1,10 @@
 package com.project.backend.service;
 
-import com.project.backend.DTO.Ride.CostTimeDTO;
-import com.project.backend.DTO.Ride.RideBookingParametersDTO;
-import com.project.backend.DTO.Ride.NoteRequestDTO;
-import com.project.backend.DTO.Ride.NoteResponseDTO;
-import com.project.backend.DTO.Ride.RideResponseDTO;
+import com.project.backend.DTO.Ride.*;
+import com.project.backend.models.AppUser;
+import com.project.backend.models.Driver;
+import com.project.backend.models.Ride;
+import com.project.backend.models.actor.PassengerActor;
 
 import java.util.Map;
 
@@ -21,9 +21,9 @@ public interface IRideService {
 
     RideResponseDTO getActiveRideByCustomerId(Long id);
 
-    NoteResponseDTO saveRideNote(Long rideId, AppUser user, String accessToken, NoteRequestDTO noteRequest);
+    NoteResponseDTO saveRideNote(Long rideId, PassengerActor actor, NoteRequestDTO noteRequest);
 
-    RideTrackingDTO getRideTrackingInfo(Long rideId);
+    RideTrackingDTO getRideTrackingInfo(PassengerActor actor);
 
     public void sendRideUpdate(Ride ride);
     CostTimeDTO endRideById(Long id, Driver driver);

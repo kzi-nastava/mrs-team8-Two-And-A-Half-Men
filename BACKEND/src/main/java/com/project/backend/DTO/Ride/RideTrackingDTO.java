@@ -1,5 +1,6 @@
 package com.project.backend.DTO.Ride;
 
+import com.project.backend.models.Location;
 import com.project.backend.models.enums.RideStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +16,9 @@ import java.time.LocalDateTime;
 @Builder
 public class RideTrackingDTO {
     private Long id;
-    private RideStatus status;
-    private Double estimatedDistance;
-    private Integer estimatedDuration;
+    private Long driverId;
+    private Long passengerId;
+    private List<Location> stops;
     private LocalDateTime startTime;
-    private List<String> stops;
+    private RideStatus status;
 }

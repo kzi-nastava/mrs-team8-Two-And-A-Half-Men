@@ -11,9 +11,9 @@ import com.project.backend.service.impl.PanicService;
 import com.project.backend.service.IHistoryService;
 import com.project.backend.service.IRatingService;
 import com.project.backend.service.IRideService;
-import com.project.backend.service.rating.AccessTokenRatingActor;
-import com.project.backend.service.rating.JwtRatingActor;
-import com.project.backend.service.rating.RatingActor;
+import com.project.backend.models.actor.AccessTokenPassengerActor;
+import com.project.backend.models.actor.JwtPassengerActor;
+import com.project.backend.models.actor.PassengerActor;
 import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -69,21 +69,17 @@ public class RideController {
         return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 
-    @GetMapping("/{id}/location")
-    public ResponseEntity<?> getRideLocation(@PathVariable String id) {
-        return ResponseEntity.status(501)
-                .body(Map.of("error", "Not implemented"));
-    }
-
     @PostMapping("/{id}/notes")
-    public ResponseEntity<?> addRideNote(
+    public ResponseEntity<NoteResponseDTO> addRideNote(
             @PathVariable Long id,
             @RequestParam(name = "accessToken", required = false) String accessToken,
             @RequestBody NoteRequestDTO noteRequest
     ) {
-        AppUser user = authUtils.getCurrentUser();
-        NoteResponseDTO note = rideService.saveRideNote(id, user, accessToken, noteRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+        PassengerActor actor = getPassengerActor(accessToken);
+
+        NoteResponseDTO note = rideService.saveRideNote(id, actor, noteRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(note);
     }
 
     @PatchMapping("/{id}/start")
@@ -112,33 +108,10 @@ public class RideController {
 
 
     @PatchMapping("/{id}/finish")
-    public ResponseEntity<?> finishRide(@PathVariable String id) {
-        Long rideId;
-        try {
-            rideId = Long.parseLong(id);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Invalid ride ID format"));
-        }
-
-        // Does ride exists
-        if (rideId > 100) {
-            return ResponseEntity.status(404)
-                    .body(Map.of("error", "Ride not found"));
-        }
-
-        // Is ride in active status
-        if (rideId == 99) {
-
-            return ResponseEntity.status(400)
-                    .body(Map.of("error", "Ride is not active or already finished"));
-        }
-
-        // Logic for ride finish
-        CostTimeDTO costTime = new CostTimeDTO();
-        costTime.setCost(45.75);
-        costTime.setTime(32);
-        return ResponseEntity.ok(Map.of("status", "COMPLETED", "costTime", costTime));
+    public ResponseEntity<?> finishRide(
+            @PathVariable Long id
+    ) {
+        return null;
     }
 
     @PatchMapping("/{id}/cancel")
@@ -158,17 +131,7 @@ public class RideController {
             @RequestParam(name = "accessToken", required = false) String accessToken,
             @Valid @RequestBody RatingRequestDTO ratingRequest
     ) {
-        RatingActor actor;
-
-        AppUser user = authUtils.getCurrentUser();
-
-        if (user != null) {
-            actor = new JwtRatingActor((Customer) user);
-        } else if (accessToken != null) {
-            actor = new AccessTokenRatingActor(accessToken);
-        } else {
-            throw new UnauthorizedException("Authentication required");
-        }
+        PassengerActor actor = getPassengerActor(accessToken);
 
         RatingResponseDTO response = ratingService.rateRide(id, actor, ratingRequest);
 
@@ -202,5 +165,31 @@ public class RideController {
         AppUser user = authUtils.getCurrentUser();
         panicService.triggerPanicAlert(user, accessToken);
         return ResponseEntity.ok(Map.of("message", "Panic alert triggered successfully"));
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<RideTrackingDTO> getActiveRide(
+            @RequestParam(name = "accessToken", required = false) String accessToken
+    ) {
+        PassengerActor actor = getPassengerActor(accessToken);
+
+        RideTrackingDTO ride = rideService.getRideTrackingInfo(actor);
+        return ResponseEntity.status(HttpStatus.OK).body(ride);
+    }
+
+    private PassengerActor getPassengerActor(String accessToken) {
+        PassengerActor actor;
+
+        AppUser user = authUtils.getCurrentUser();
+
+        if (user != null) {
+            actor = new JwtPassengerActor((Customer) user);
+        } else if (accessToken != null) {
+            actor = new AccessTokenPassengerActor(accessToken);
+        } else {
+            throw new UnauthorizedException("Authentication required");
+        }
+
+        return actor;
     }
 }

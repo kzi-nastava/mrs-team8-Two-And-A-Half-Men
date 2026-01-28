@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { RideInfoPanelComponent } from '@features/customer/ride-tracking/ride-info-panel/ride-info-panel.component';
+import { MapComponent } from '@shared/components/map/map.component';
 
 @Component({
 	selector: 'app-customer-ride-tracking',
 	standalone: true,
-	imports: [],
-	templateUrl: './customer-ride-tracking.component.html',
-	styleUrls: ['./customer-ride-tracking.component.css']
+	imports: [RideInfoPanelComponent, MapComponent],
+	templateUrl: './ride-tracking.component.html',
+	styleUrls: ['./ride-tracking.component.css'],
 })
-export class RideTrackingComponent {
-}
+export class RideTrackingComponent {}

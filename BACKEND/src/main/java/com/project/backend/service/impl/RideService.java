@@ -10,15 +10,16 @@ import com.project.backend.DTO.Ride.RideTrackingDTO;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
-import com.project.backend.exceptions.BadRequestException;
+import com.project.backend.exceptions.*;
 import com.project.backend.DTO.redis.RedisLocationsDTO;
 import com.project.backend.events.RideCreatedEvent;
 import com.project.backend.exceptions.BadRequestException;
-import com.project.backend.exceptions.ForbiddenException;
-import com.project.backend.exceptions.ResourceNotFoundException;
+import com.project.backend.geolocation.coordinates.Coordinates;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
+import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.geolocation.metrics.MetricsDistance;
 import com.project.backend.models.*;
+import com.project.backend.models.actor.PassengerActor;
 import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.Route;
 import com.project.backend.models.enums.RideStatus;
@@ -67,6 +68,8 @@ public class RideService implements IRideService {
     private final AdditionalServiceRepository additionalServiceRepository;
 
     private final SimpMessagingTemplate messagingTemplate;
+
+    private final ResolvePassengerService resolvePassengerService;
 
     public RideResponseDTO getRideById(Long id) {
         Ride ride = rideRepository.findById(id)
@@ -293,24 +296,18 @@ public class RideService implements IRideService {
 
     public NoteResponseDTO saveRideNote(
             Long rideId,
-            AppUser user,
-            String accessToken,
+            PassengerActor actor,
             NoteRequestDTO noteRequest
     ) {
-        Passenger passenger = passengerRepository.findByAccessToken(accessToken).orElse(null);
-        if(passenger == null && user instanceof Customer)
-            passenger = passengerRepository.findByCustomerWithRideStatus((Customer) user,
-                    List.of(RideStatus.ACTIVE)).orElse(null);
+        Ride ride = rideRepository.findById(rideId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Active ride with id " + rideId + " not found"));
+
+        Passenger passenger = resolvePassengerService.resolveActor(actor, ride);
 
         String noteText = noteRequest.getNoteText();
         if (noteText.isEmpty() || noteText.isBlank() || noteText.length() > 500)
             throw new BadRequestException("Note text length must be between 1 and 500 characters");
-
-        Ride activeRide = rideRepository.findById(rideId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Active ride with id " + rideId + " not found"));
-
-        if(passenger == null) throw new UnauthorizedException("Only passengers can leave inconsistency note");
 
         passenger.setInconsistencyNote(noteText);
         passengerRepository.save(passenger);
@@ -318,20 +315,30 @@ public class RideService implements IRideService {
         return NoteResponseDTO.builder()
                 .noteText(noteRequest.getNoteText())
                 .passengerMail(passenger.getEmail())
-                .rideId(activeRide.getId())
+                .rideId(ride.getId())
                 .build();
     }
 
-    public RideTrackingDTO getRideTrackingInfo(Long rideId) {
+    public RideTrackingDTO getRideTrackingInfo(PassengerActor actor) {
+        Passenger passenger = resolvePassengerService.resolveActorOnActiveRide(actor);
+
+        Long rideId = passenger.getRide().getId();
         Ride ride = rideRepository.findById(rideId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Ride with id " + rideId + " not found"));
 
+        List<Coordinates> coordinates = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
+        List<String> hashes = coordinates
+                .stream().map(
+                        c -> locationTransformer
+                                .transformFromPoints(List.of(new double[] {c.getLatitude(), c.getLongitude()}))
+                ).toList();
+        var locations = locationRepository.findAllByGeoHashIn(hashes);
+
         return RideTrackingDTO.builder()
                 .id(ride.getId())
-                .stops(List.of("a")) // TODO: PETAR API
-                .estimatedDistance(123D) // TODO: PETAR ESTIMATE
-                .estimatedDuration(123)
+                .driverId(ride.getDriver().getId())
+                .stops(locations)
                 .status(ride.getStatus())
                 .startTime(ride.getStartTime())
                 .build();
@@ -340,9 +347,6 @@ public class RideService implements IRideService {
     public void sendRideUpdate(Ride ride) {
         RideTrackingDTO rideTrackingDTO = RideTrackingDTO.builder()
                 .id(ride.getId())
-                .stops(List.of("a")) // TODO: PETAR API
-                .estimatedDistance(123D) // TODO: PETAR ESTIMATE
-                .estimatedDuration(123)
                 .status(ride.getStatus())
                 .startTime(ride.getStartTime())
                 .build();
@@ -565,7 +569,7 @@ public class RideService implements IRideService {
         }
         // Check if vehicle has all necessary additional services
         if (filter.getAdditionalServicesIds() != null && !filter.getAdditionalServicesIds().isEmpty()) {
-            return new HashSet<Long>(
+            return new HashSet<>(
                         vehicle
                                 .getAdditionalServices()
                                 .stream()

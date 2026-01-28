@@ -59,6 +59,18 @@ export class WebSocketService {
 		}
 	}
 
+	private subscribeToSpecificDriverLocations(driverId: number) {
+		if (this.isLoggedIn) {
+			this.stompClient.subscribe(`/topic/driver-locations/${driverId}`, (message: any) => {
+				if (message.body) {
+					const location: DriverLocation = JSON.parse(message.body);
+					console.log(location);
+					this.driverLocationService.updateDriverLocation(location);
+				}
+			});
+		}
+	}
+
 	sendDriverLocation(location: { latitude: number; longitude: number }) {
 		if (this.isLoggedIn && this.stompClient) {
 			this.stompClient.send('/app/driver/location', {}, JSON.stringify(location));

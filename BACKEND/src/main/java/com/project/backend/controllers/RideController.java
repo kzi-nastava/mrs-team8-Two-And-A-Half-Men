@@ -110,9 +110,11 @@ public class RideController {
 
     @PatchMapping("/{id}/finish")
     public ResponseEntity<?> finishRide(
-            @PathVariable Long id
+            @PathVariable Long id,
+            @RequestBody FinishRideDTO finishRideDTO
     ) {
-        return null;
+        rideService.finishRide(id, finishRideDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @PatchMapping("/{id}/cancel")

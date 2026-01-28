@@ -33,5 +33,7 @@ public interface IRideService {
 
     public void sendRideUpdate(Ride ride);
     CostTimeDTO endRideById(Long id, Driver driver);
+
+    void finishRide(Long id, FinishRideDTO finishRideDTO);
     List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer);
 }

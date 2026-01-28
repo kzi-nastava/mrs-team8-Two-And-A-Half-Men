@@ -17,6 +17,7 @@ import {PendingChangeRequest} from '@shared/models/profile-change-request.model'
 import {ProfileService} from '@features/profile/services/profile.service';
 import { AuthService } from '@core/services/auth.service';
 import { UpdateProfileRequest } from '@features/profile/models/update-profile.model';
+import { VehiclesService } from '@shared/services/vehicles/vehicles.service';
 
 @Component({
 	selector: 'app-profile',
@@ -30,14 +31,16 @@ import { UpdateProfileRequest } from '@features/profile/models/update-profile.mo
 		PersonalInfoFormComponent,
 		VehicleInfoFormComponent,
 		BoxDirective,
-		RequestChangePreviewComponent
+		RequestChangePreviewComponent,
 	],
 	templateUrl: './profile.component.html',
-	styleUrls: ['./profile.component.css']
+	styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-
 	private profileService = inject(ProfileService);
+	private authService = inject(AuthService);
+	private vehicleService = inject(VehiclesService);
+
 	// Active tab
 	activeTab = signal<string>('personal');
 
@@ -48,7 +51,7 @@ export class ProfileComponent implements OnInit {
 		phoneNumber: '',
 		address: '',
 		email: '',
-		imgSrc: null
+		imgSrc: null,
 	});
 	originalPersonalInfo = signal<PersonalInfo | null>(null);
 	originalVehicleInfo = signal<VehicleInfo | null>(null);
@@ -57,7 +60,7 @@ export class ProfileComponent implements OnInit {
 	passwordForm = signal<PasswordChange>({
 		oldPassword: '',
 		newPassword: '',
-		confirmPassword: ''
+		confirmPassword: '',
 	});
 
 	// Options from backend
@@ -72,8 +75,7 @@ export class ProfileComponent implements OnInit {
 	isSaving = signal<boolean>(false);
 
 	private personalTab: TabItem = { id: 'personal', label: 'Personal data', position: 'left' };
-	private vehicleTab: TabItem = { id: 'vehicle', label: 'Vehicle data', position: 'left' }
-	private authService = inject(AuthService);
+	private vehicleTab: TabItem = { id: 'vehicle', label: 'Vehicle data', position: 'left' };
 	get tabs(): TabItem[] {
 		const tabs: TabItem[] = [this.personalTab];
 		if (this.vehicleInfo()) {
@@ -102,23 +104,23 @@ export class ProfileComponent implements OnInit {
 
 	loadProfileData() {
 		this.profileService.getUserProfile().subscribe({
-			next: profile => this.updateProfileDate(profile),
-			error: err => {
+			next: (profile) => this.updateProfileDate(profile),
+			error: (err) => {
 				console.error('Failed to load profile', err);
-			}
+			},
 		});
 	}
 
 	loadVehicleOptions() {
-		this.profileService.getVehicleOptions().subscribe({
-			next: options => {
+		this.vehicleService.getVehicleOptions().subscribe({
+			next: (options) => {
 				this.vehicleTypes.set(options.vehicleTypes);
 				this.availableServices.set(options.additionalServices);
 			},
-			error: err => {
+			error: (err) => {
 				console.error('Failed to load vehicle options', err);
-			}
-		})
+			},
+		});
 	}
 
 	onTabChange(tabId: string): void {
@@ -132,7 +134,7 @@ export class ProfileComponent implements OnInit {
 
 		reader.onload = (e) => {
 			const photoUrl = e.target?.result as string;
-			this.personalInfo.update(current => ({ ...current, photoUrl }));
+			this.personalInfo.update((current) => ({ ...current, photoUrl }));
 		};
 
 		reader.readAsDataURL(file);
@@ -158,12 +160,14 @@ export class ProfileComponent implements OnInit {
 			model: vehicleInfo?.model ?? null,
 			licensePlate: vehicleInfo?.licensePlate ?? null,
 			numberOfSeats: vehicleInfo?.numberOfSeats ?? null,
-			vehicleTypeId: types?.find(type => type.typeName === vehicleInfo?.type)?.id ?? null,
-			additionalServiceIds: vehicleInfo?.additionalServices.map(serviceName => {
-				const service = services.find(s => s.name === serviceName);
-				return service ? service.id : null;
-			}).filter(id => id !== null) as number[] | null,
-		}
+			vehicleTypeId: types?.find((type) => type.typeName === vehicleInfo?.type)?.id ?? null,
+			additionalServiceIds: vehicleInfo?.additionalServices
+				.map((serviceName) => {
+					const service = services.find((s) => s.name === serviceName);
+					return service ? service.id : null;
+				})
+				.filter((id) => id !== null) as number[] | null,
+		};
 
 		if (this.selectedFile !== null) {
 			this.profileService.uploadPhoto(this.selectedFile).subscribe({
@@ -185,9 +189,9 @@ export class ProfileComponent implements OnInit {
 					this.saveMessage.set('Failed to upload profile picture');
 
 					setTimeout(() => this.saveMessage.set(''), 3000);
-				}
+				},
 			});
-			return
+			return;
 		}
 		this.updateProfile(updateRequest);
 	}
@@ -238,27 +242,37 @@ export class ProfileComponent implements OnInit {
 		}
 
 		this.isSaving.set(true);
-		this.profileService.changePassword({
-			oldPassword: this.passwordForm().oldPassword,
-			newPassword: this.passwordForm().newPassword,
-			confirmNewPassword: this.passwordForm().confirmPassword
-		}).subscribe({
-			next: (response) => {
-				if (response.accessToken) {
-					this.authService.updateToken(response.accessToken);
-				}
-				this.showSaveMessage('Password changed successfully');
-				this.passwordForm.set({ oldPassword: '', newPassword: '', confirmPassword: '' });
-				this.isSaving.set(false);
-				setTimeout(() => this.saveMessage.set(''), 3000);
-			},
-			error: (err) => {
-				console.error('Failed to change password', err);
-				this.passwordForm.set({ oldPassword: '', newPassword: '', confirmPassword: '' });
-				this.showSaveMessage('Failed to change password', true);
-				this.isSaving.set(false);
-				setTimeout(() => this.saveMessage.set(''), 3000);
-			}
-		})
+		this.profileService
+			.changePassword({
+				oldPassword: this.passwordForm().oldPassword,
+				newPassword: this.passwordForm().newPassword,
+				confirmNewPassword: this.passwordForm().confirmPassword,
+			})
+			.subscribe({
+				next: (response) => {
+					if (response.accessToken) {
+						this.authService.updateToken(response.accessToken);
+					}
+					this.showSaveMessage('Password changed successfully');
+					this.passwordForm.set({
+						oldPassword: '',
+						newPassword: '',
+						confirmPassword: '',
+					});
+					this.isSaving.set(false);
+					setTimeout(() => this.saveMessage.set(''), 3000);
+				},
+				error: (err) => {
+					console.error('Failed to change password', err);
+					this.passwordForm.set({
+						oldPassword: '',
+						newPassword: '',
+						confirmPassword: '',
+					});
+					this.showSaveMessage('Failed to change password', true);
+					this.isSaving.set(false);
+					setTimeout(() => this.saveMessage.set(''), 3000);
+				},
+			});
 	}
 }

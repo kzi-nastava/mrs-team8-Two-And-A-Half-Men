@@ -89,7 +89,7 @@ export class NavbarConfig {
         type: 'text',
         label: 'Ride History',
         position: 'right',
-        route: '/rides/history'
+        route: '/driver/history'
       },
       {
         id: 'profile',

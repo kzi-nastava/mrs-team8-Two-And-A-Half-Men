@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RideService } from '@features/customer/ride-tracking/services/ride-tracking.service';
-import { RideTracking } from '@features/customer/ride-tracking/models/ride.model';
+import { RideService } from '@features/customer/rides/services/ride-tracking.service';
+import { RideTracking } from '@features/customer/rides/models/ride.model';
 import { PanicButtonComponent } from '@shared/components/panic-button/panic-button.component';
 
 @Component({

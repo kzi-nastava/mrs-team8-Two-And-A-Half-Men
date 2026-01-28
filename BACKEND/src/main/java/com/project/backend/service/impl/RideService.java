@@ -1,21 +1,16 @@
 package com.project.backend.service.impl;
 
-import com.project.backend.DTO.Ride.NoteRequestDTO;
-import com.project.backend.DTO.Ride.NoteResponseDTO;
-import com.project.backend.DTO.Ride.CostTimeDTO;
-import com.project.backend.DTO.Ride.NewRideDTO;
-import com.project.backend.DTO.Ride.RideBookingParametersDTO;
-import com.project.backend.DTO.Ride.RideResponseDTO;
-import com.project.backend.DTO.Ride.RideTrackingDTO;
 import com.project.backend.DTO.Ride.*;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
-import com.project.backend.events.RideFinishedEvent;
-import com.project.backend.exceptions.*;
 import com.project.backend.DTO.redis.RedisLocationsDTO;
 import com.project.backend.events.RideCreatedEvent;
+import com.project.backend.events.RideFinishedEvent;
 import com.project.backend.exceptions.BadRequestException;
+import com.project.backend.exceptions.ForbiddenException;
+import com.project.backend.exceptions.NoActiveRideException;
+import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.geolocation.coordinates.Coordinates;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
 import com.project.backend.geolocation.locations.LocationTransformer;
@@ -23,26 +18,17 @@ import com.project.backend.geolocation.metrics.MetricsDistance;
 import com.project.backend.models.*;
 import com.project.backend.models.actor.PassengerActor;
 import com.project.backend.models.enums.DriverStatus;
-import com.project.backend.models.Route;
 import com.project.backend.models.enums.RideStatus;
-import com.project.backend.repositories.CustomerRepository;
-import com.project.backend.repositories.DriverRepository;
-import com.project.backend.repositories.PassengerRepository;
-import com.project.backend.repositories.RideRepository;
 import com.project.backend.repositories.*;
 import com.project.backend.repositories.redis.DriverLocationsRepository;
-import com.project.backend.repositories.RouteRepository;
 import com.project.backend.service.IRideService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import jakarta.transaction.Transactional;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -53,6 +39,7 @@ public class RideService implements IRideService {
     private final DriverLocationsRepository driverLocationsRepository;
     private final CoordinatesFactory coordinatesFactory;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final AppUserRepository appUserRepository;
     @Value("${ride-booking.max-hours}")
     private int MAX_HOURS;
 
@@ -87,12 +74,15 @@ public class RideService implements IRideService {
     @Transactional
     @Override
     public NewRideDTO createRide(Long userId, RideBookingParametersDTO body) {
+        var rideOwner = appUserRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
         var ride = Ride.builder()
                         .scheduledTime(body.getScheduledTime()) // Can be null for immediate rides
                         .status(body.getScheduledTime() != null ? RideStatus.PENDING : RideStatus.ACCEPTED)
                         .vehicleType(handleVehicleType(body))
                         .additionalServices(handleAdditionalServices(body))
-                        .passengers(handlePassengers(body))
+                        .passengers(handlePassengers(body, rideOwner))
                         .rideOwner(handleOwner(userId))
                         .createdAt(LocalDateTime.now())
                         .route(handleRoute(body))
@@ -129,10 +119,19 @@ public class RideService implements IRideService {
         }
         rideRepository.save(ride);
 
+        linkRideToPassengers(ride);
+
         // Send emails to passengers
         applicationEventPublisher.publishEvent(new RideCreatedEvent(ride));
 
         return new NewRideDTO(ride.getId(), ride.getStatus().toString(), estimatedDistance);
+    }
+
+    private void linkRideToPassengers(Ride ride) {
+        for (var passenger : ride.getPassengers()) {
+            passenger.setRide(ride);
+        }
+        passengerRepository.saveAll(ride.getPassengers());
     }
 
     @Override
@@ -173,7 +172,7 @@ public class RideService implements IRideService {
                 );
     }
 
-    private List<Passenger> handlePassengers(RideBookingParametersDTO body) {
+    private List<Passenger> handlePassengers(RideBookingParametersDTO body, AppUser rideOwner) {
         if (body.getPassengers() == null || body.getPassengers().isEmpty()) {
             return List.of();
         }
@@ -193,6 +192,12 @@ public class RideService implements IRideService {
             passenger.setAccessToken(UUID.randomUUID().toString());
             passengers.add(passenger);
         }
+        passengers.add(
+                Passenger.builder()
+                        .user((Customer)rideOwner)
+                        .accessToken(UUID.randomUUID().toString())
+                        .build()
+            );
         passengerRepository.saveAll(passengers);
         return passengers;
     }

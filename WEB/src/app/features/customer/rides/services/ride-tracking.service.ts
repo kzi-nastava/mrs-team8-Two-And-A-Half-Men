@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { NoteResponse, RideTracking } from '@features/customer/ride-tracking/models/ride.model';
+import { NoteResponse, RideTracking } from '@features/customer/rides/models/ride.model';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 

@@ -14,6 +14,13 @@ export const CUSTOMER_ROUTES: Routes = [
 	{
 		path: 'rides/active',
 		loadComponent: () =>
-			import('./ride-tracking/ride-tracking.component').then((m) => m.RideTrackingComponent),
+			import('@features/customer/rides/pages/ride-tracking/ride-tracking.component').then(
+				(m) => m.RideTrackingComponent,
+			),
+	},
+	{
+		path: 'rides/:rideId/rating',
+		loadComponent: () =>
+			import('@features/customer/rides/pages/rating-page/rating-page.component').then(m => m.RatingPageComponent),
 	},
 ];

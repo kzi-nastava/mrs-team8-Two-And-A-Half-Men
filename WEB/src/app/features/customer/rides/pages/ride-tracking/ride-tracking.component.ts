@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RideInfoPanelComponent } from '@features/customer/ride-tracking/ride-info-panel/ride-info-panel.component';
+import { RideInfoPanelComponent } from '@features/customer/rides/components/ride-info-panel/ride-info-panel.component';
 import { MapComponent } from '@shared/components/map/map.component';
 
 @Component({

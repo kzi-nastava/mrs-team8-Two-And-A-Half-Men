@@ -43,7 +43,7 @@ export class RouteForm implements OnDestroy {
 		effect(() => {
 			console.log("SHARED SERVICES UPDATED")
 			const locations = this.sharedLocationsService.locations();
-			if (!this.isUpdatingFromService && locations.length > 0) {
+			if (!this.isUpdatingFromService) {
 				this.syncFromSharedService(locations);
 			}
 		});
@@ -54,8 +54,8 @@ export class RouteForm implements OnDestroy {
 	}
 
 	private syncFromSharedService(locations: NominatimResult[]) {
+		console.log("IS UPDATING TO SERVICES", this.isUpdatingFromService);
 		this.isUpdatingFromService = true;
-
 		const maxPointsValue = this.maxPoints();
 		const limitedLocations = maxPointsValue
 			? locations.slice(Math.max(0, maxPointsValue - locations.length))
@@ -72,6 +72,10 @@ export class RouteForm implements OnDestroy {
 			}
 		});
 
+		if (limitedLocations.length < currentLength) {
+			this.sliceToLength(limitedLocations.length);
+		}
+
 		if (this.pointsFormArray.length < 2) {
 			const toInsert = 2 - this.pointsFormArray.length;
 			for (let i = 0; i < toInsert; i++) {
@@ -85,7 +89,7 @@ export class RouteForm implements OnDestroy {
 	private addEmptyPoint() {
 		const index = this.points().length;
 		const pointGroup = new FormGroup({
-			query: new FormControl(['', Validators.required]),
+			query: new FormControl('', Validators.required),
 		});
 
 		const point: RoutePoint = {
@@ -102,7 +106,7 @@ export class RouteForm implements OnDestroy {
 	}
 
 	private updatePointFromLocation(location: NominatimResult, index: number) {
-		this.pointsFormArray.at(index)?.get('query')?.setValue('new value');
+		this.pointsFormArray.at(index)?.get('query')?.setValue('new value', { emitEvent: false });
 		const point = this.points()[index];
 		point.query.set(location.display_name);
 		point.showSuggestions.set(false);
@@ -112,7 +116,7 @@ export class RouteForm implements OnDestroy {
 
 	private addPointFromLocation(location: NominatimResult, index: number) {
 		const pointGroup = new FormGroup({
-			query: new FormControl([location.display_name, Validators.required]),
+			query: new FormControl(location.display_name, Validators.required),
 		});
 
 		const point: RoutePoint = {
@@ -126,6 +130,23 @@ export class RouteForm implements OnDestroy {
 		this.pointsFormArray.push(pointGroup);
 		this.points.update((p) => [...p, point]);
 		this.setupQuerySubject(index);
+	}
+
+	private sliceToLength(newLength: number) {
+		console.log("SLICING TO", newLength);
+		const points = this.points().slice(0, Math.max(2, newLength));
+		const arr = this.pointsFormArray;
+		for (let i = arr.length - 1; i >= newLength; i--) {
+			if (i >= 2) {
+				arr.removeAt(i);
+				this.points.update((p) => p.slice(0, p.length - 1));
+			}
+			else {
+				arr.at(i)?.get('query')?.setValue('', { emitEvent: false });
+				points[i].query.set('')
+			}
+		}
+		// this.points.set(points);
 	}
 
 	addPoint() {
@@ -191,6 +212,7 @@ export class RouteForm implements OnDestroy {
 	}
 
 	onQueryChange(index: number, query: string) {
+		console.log("ON QUERY CHANGE")
 		const currentPoints = this.points();
 		if (index >= currentPoints.length) return;
 
@@ -284,7 +306,7 @@ export class RouteForm implements OnDestroy {
 		currentValues.forEach((value) => {
 			this.pointsFormArray.push(
 				new FormGroup({
-					query: new FormControl([value.query]),
+					query: new FormControl(value.query),
 				}),
 			);
 		});

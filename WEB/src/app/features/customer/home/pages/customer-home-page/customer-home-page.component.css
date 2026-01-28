@@ -1,0 +1,24 @@
+.home-page {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding: 20px;
+	box-sizing: border-box;
+	min-height: 100vh;
+}
+
+.hero {
+	padding-block: 16px;
+	width: 100%;
+	height: 85vh;
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+#map-section, #route-form-section {
+	flex: 1;
+	align-self: stretch;
+	overflow-y: scroll;
+}
+

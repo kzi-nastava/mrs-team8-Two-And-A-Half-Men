@@ -1,30 +1,47 @@
 package com.project.backend.service.impl;
 
+import com.project.backend.DTO.Ride.NoteRequestDTO;
+import com.project.backend.DTO.Ride.NoteResponseDTO;
+import com.project.backend.DTO.Ride.CostTimeDTO;
+import com.project.backend.DTO.Ride.NewRideDTO;
+import com.project.backend.DTO.Ride.RideBookingParametersDTO;
+import com.project.backend.DTO.Ride.RideResponseDTO;
+import com.project.backend.DTO.Ride.RideTrackingDTO;
 import com.project.backend.DTO.Ride.*;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
+import com.project.backend.events.RideFinishedEvent;
+import com.project.backend.exceptions.*;
 import com.project.backend.DTO.redis.RedisLocationsDTO;
 import com.project.backend.events.RideCreatedEvent;
-import com.project.backend.exceptions.*;
+import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.geolocation.coordinates.Coordinates;
-import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
+import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.geolocation.metrics.MetricsDistance;
 import com.project.backend.models.*;
+import com.project.backend.models.actor.PassengerActor;
 import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.Route;
 import com.project.backend.models.enums.RideStatus;
+import com.project.backend.repositories.CustomerRepository;
+import com.project.backend.repositories.DriverRepository;
+import com.project.backend.repositories.PassengerRepository;
+import com.project.backend.repositories.RideRepository;
 import com.project.backend.repositories.*;
 import com.project.backend.repositories.redis.DriverLocationsRepository;
 import com.project.backend.repositories.RouteRepository;
 import com.project.backend.service.IRideService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import jakarta.transaction.Transactional;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -45,14 +62,17 @@ public class RideService implements IRideService {
     private final DriverRepository driverRepository;
     private final RideTracingService rideTracingService;
     private final LocationTransformer locationTransformer;
+    private final CustomerRepository customerRepository;
+    private final PassengerRepository passengerRepository;
     private final RouteRepository routeRepository;
     private final LocationRepository locationRepository;
-    private final CustomerRepository customerRepository;
     private final VehicleRepository vehicleRepository;
     private final VehicleTypeRepository vehicleTypeRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
-    private final PassengerRepository passengerRepository;
-    private final LocationRepository locatioRepository;
+
+    private final SimpMessagingTemplate messagingTemplate;
+
+    private final ResolvePassengerService resolvePassengerService;
 
     public RideResponseDTO getRideById(Long id) {
         Ride ride = rideRepository.findById(id)
@@ -247,23 +267,97 @@ public class RideService implements IRideService {
                 );
     }
 
-    public RideResponseDTO getActiveRideByDriverId(Long driverId) {
-        Driver driver = driverRepository.findById(driverId)
+    public RideResponseDTO getActiveRideByDriverId(Long id) {
+        Driver driver = driverRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Driver with id " + driverId + " not found"));
+                        new ResourceNotFoundException("Driver with id " + id + " not found"));
 
         Ride activeRide = rideRepository
-                .findFirstByDriverAndStatusIn(
-                        driver,
-                        List.of(RideStatus.ACCEPTED, RideStatus.ACTIVE)
-                )
-                .orElse(null);
-
-        if (activeRide == null) {
-            return null;
-        }
+                .findFirstByDriverAndStatusIn(driver, List.of(RideStatus.ACCEPTED, RideStatus.ACTIVE))
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Active ride for driver with id " + id + " not found"
+                        ));
 
         return RideMapper.convertToHistoryResponseDTO(activeRide);
+    }
+
+    public RideResponseDTO getActiveRideByCustomerId(Long id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Customer with id " + id + " not found"));
+
+        Ride activeRide = rideRepository
+                .findFirstByRideOwnerAndStatusIn(customer, List.of(RideStatus.ACTIVE))
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Active ride for customer with id " + id + " not found"
+                        ));
+
+        return RideMapper.convertToHistoryResponseDTO(activeRide);
+    }
+
+    public NoteResponseDTO saveRideNote(
+            Long rideId,
+            PassengerActor actor,
+            NoteRequestDTO noteRequest
+    ) {
+        Ride ride = rideRepository.findById(rideId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Active ride with id " + rideId + " not found"));
+
+        Passenger passenger = resolvePassengerService.resolveActor(actor, ride);
+
+        String noteText = noteRequest.getNoteText();
+        if (noteText.isEmpty() || noteText.isBlank() || noteText.length() > 500)
+            throw new BadRequestException("Note text length must be between 1 and 500 characters");
+
+        passenger.setInconsistencyNote(noteText);
+        passengerRepository.save(passenger);
+
+        return NoteResponseDTO.builder()
+                .noteText(noteRequest.getNoteText())
+                .passengerMail(passenger.getEmail())
+                .rideId(ride.getId())
+                .build();
+    }
+
+    public RideTrackingDTO getRideTrackingInfo(PassengerActor actor) {
+        Passenger passenger = resolvePassengerService.resolveActorOnActiveRide(actor);
+
+        Long rideId = passenger.getRide().getId();
+        Ride ride = rideRepository.findById(rideId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Ride with id " + rideId + " not found"));
+
+        List<Coordinates> coordinates = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
+        List<String> hashes = coordinates
+                .stream().map(
+                        c -> locationTransformer
+                                .transformFromPoints(List.of(new double[] {c.getLatitude(), c.getLongitude()}))
+                ).toList();
+        var locations = locationRepository.findAllByGeoHashIn(hashes);
+
+        return RideTrackingDTO.builder()
+                .id(ride.getId())
+                .driverId(ride.getDriver().getId())
+                .stops(locations)
+                .status(ride.getStatus())
+                .startTime(ride.getStartTime())
+                .build();
+    }
+
+    public void sendRideUpdate(Ride ride) {
+        RideTrackingDTO rideTrackingDTO = RideTrackingDTO.builder()
+                .id(ride.getId())
+                .status(ride.getStatus())
+                .startTime(ride.getStartTime())
+                .build();
+
+        messagingTemplate.convertAndSend(
+                "/topic/rides/" + ride.getId(),
+                rideTrackingDTO
+        );
     }
 
     @Override
@@ -476,7 +570,7 @@ public class RideService implements IRideService {
         }
         // Check if vehicle has all necessary additional services
         if (filter.getAdditionalServicesIds() != null && !filter.getAdditionalServicesIds().isEmpty()) {
-            return new HashSet<Long>(
+            return new HashSet<>(
                         vehicle
                                 .getAdditionalServices()
                                 .stream()
@@ -547,6 +641,38 @@ public class RideService implements IRideService {
             }
         }
         return bookedRides;
+    }
+
+    public RideTrackingDTO getDriversActiveRide(Driver driver) {
+        Ride ride = rideRepository.findFirstByDriverAndStatusIn(
+                driver, List.of(RideStatus.ACTIVE)
+        ).orElseThrow(() ->
+                new ResourceNotFoundException("Drivers active ride is not found")
+        );
+
+        return RideTrackingDTO.builder()
+                .id(ride.getId())
+                .driverId(driver.getId())
+                .passengerId(null)
+                .stops(null)
+                .startTime(ride.getStartTime())
+                .build();
+    }
+
+    @Transactional
+    public void finishRide(Long id, FinishRideDTO finishRideDTO) {
+        Ride ride = rideRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Ride with id " + id + " not found")
+                );
+
+        ride.setStatus(finishRideDTO.isInterrupted() ? RideStatus.INTERRUPTED : RideStatus.FINISHED);
+        ride.getDriver().setDriverStatus(DriverStatus.ACTIVE);
+        // TODO: redirect driver to new ride
+
+        applicationEventPublisher.publishEvent(new RideFinishedEvent(ride));
+
+        rideRepository.save(ride);
     }
 
     @Data

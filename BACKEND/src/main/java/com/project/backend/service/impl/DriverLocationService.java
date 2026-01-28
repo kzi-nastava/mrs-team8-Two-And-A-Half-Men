@@ -39,7 +39,6 @@ public class DriverLocationService implements IDriverLocationService {
                 locationDTO.getLongitude(),
                 locationDTO.getLatitude()
         );
-        rideTracingService.setRideLocation(driverId, locationDTO.getLongitude(), locationDTO.getLatitude(), locationDTO.getIsOccupied());
         Optional<Driver> driverOpt = driverRepository.findById(driverId);
         if (driverOpt.isPresent()) {
             Driver driver = driverOpt.get();
@@ -70,8 +69,9 @@ public class DriverLocationService implements IDriverLocationService {
                     locationDTO.setVehicleTypeName(vehicle.getVehicleType().getTypeName());
                 }
             }
-
+            rideTracingService.setRideLocation(driverId, locationDTO.getLongitude(), locationDTO.getLatitude(), locationDTO.getIsOccupied());
             messagingTemplate.convertAndSend("/topic/driver-locations", locationDTO);
+            messagingTemplate.convertAndSend("/topic/driver-locations/" + driverId, locationDTO);
 
             System.out.println("Location updated for driver: " + driverId +
                     " at [" + locationDTO.getLatitude() + ", " +

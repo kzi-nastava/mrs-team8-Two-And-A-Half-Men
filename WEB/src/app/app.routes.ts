@@ -17,13 +17,12 @@ export const routes: Routes = [
 		loadChildren: () => import('@features/driver/driver.routes').then((m) => m.DRIVER_ROUTES),
 	},
 	{
-		path: 'error',
-		loadChildren: () => import('@features/errors/errors.routes').then((m) => m.ERROR_ROUTES),
+		path: '',
+		loadChildren: () => import('@features/customer/customer.routes').then((m) => m.CUSTOMER_ROUTES),
 	},
 	{
-		path: 'customer',
-		loadChildren: () =>
-			import('@features/customer/customer.routes').then((m) => m.customerRoutes),
+		path: 'error',
+		loadChildren: () => import('@features/errors/errors.routes').then((m) => m.ERROR_ROUTES),
 	},
 	{
 		path: 'admin',

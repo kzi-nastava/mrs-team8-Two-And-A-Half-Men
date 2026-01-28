@@ -13,6 +13,7 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
 			return router.createUrlTree(['/login']);
 		}
 
+		console.log("role guard");
 		const hasRole = allowedRoles.includes(user.role);
 		if (hasRole) return true;
 

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface PassengerRepository extends JpaRepository<Passenger, Long> {
@@ -17,6 +18,8 @@ public interface PassengerRepository extends JpaRepository<Passenger, Long> {
             "AND p.ride.status IN :statuses")
     Optional<Passenger> findByCustomerWithRideStatus(@Param("customer") Customer customer ,
                                                              @Param("statuses") Iterable<RideStatus> statuses);
+
+    Optional<Passenger> findByUserAndRideStatusIn(Customer user, Collection<RideStatus> statuses);
 
     Optional<Passenger> findByUserId(Long id);
 

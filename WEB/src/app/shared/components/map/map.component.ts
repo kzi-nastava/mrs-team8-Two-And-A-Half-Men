@@ -1,9 +1,9 @@
 import { Component, AfterViewInit, OnDestroy, effect } from '@angular/core';
-import { MapService } from './services/map-service';
-import { LocationPinService } from './services/location-pin-service';
-import { DriverMarkerService } from './services/driver-marker-service';
-import { RouteService } from './services/route-service';
-import { DriverLocationManagerService } from '@shared/services/driver-location/driver-location-manager-service';
+import { MapService } from './services/map.service';
+import { LocationPinService } from './services/location-pin.service';
+import { DriverMarkerService } from './services/driver-marker.service';
+import { RouteService } from './services/route.service';
+import { DriverLocationManagerService } from '@shared/services/driver-location/driver-location-manager.service';
 import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
 
 @Component({

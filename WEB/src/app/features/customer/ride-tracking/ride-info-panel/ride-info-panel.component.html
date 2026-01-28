@@ -1,0 +1,34 @@
+<div class="ride-panel-container">
+	<h2 class="title">Current ride</h2>
+	<hr class="divider">
+
+	<div class="section">
+		<label class="label">Route stops:</label>
+		<div class="stops-list">
+			@for (stop of rideData()?.stops; track $index) {
+				<div class="stop-item">{{ stop.address }}</div>
+			}
+		</div>
+	</div>
+
+	<div class="stats-container">
+		<div class="stat-box">
+			<label class="label">Remaining distance:</label>
+			<div class="value-card distance-card">{{ remainingDistance }} km</div>
+		</div>
+		<div class="stat-box">
+			<label class="label">Remaining time:</label>
+			<div class="value-card time-card">{{ remainingTime }} min</div>
+		</div>
+	</div>
+
+	<div class="note-section">
+		<div class="note-header">Leave a note</div>
+		<div class="textarea-container">
+			<textarea [(ngModel)]="note" placeholder="Type text..."></textarea>
+			<button class="save-btn" (click)="saveNote()">Save</button>
+		</div>
+	</div>
+
+	<app-panic-button/>
+</div>

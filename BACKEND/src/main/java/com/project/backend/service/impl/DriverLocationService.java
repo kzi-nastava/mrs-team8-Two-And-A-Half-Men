@@ -71,6 +71,7 @@ public class DriverLocationService implements IDriverLocationService {
             }
             rideTracingService.setRideLocation(driverId, locationDTO.getLongitude(), locationDTO.getLatitude(), locationDTO.getIsOccupied());
             messagingTemplate.convertAndSend("/topic/driver-locations", locationDTO);
+            messagingTemplate.convertAndSend("/topic/driver-locations/" + driverId, locationDTO);
 
             System.out.println("Location updated for driver: " + driverId +
                     " at [" + locationDTO.getLatitude() + ", " +

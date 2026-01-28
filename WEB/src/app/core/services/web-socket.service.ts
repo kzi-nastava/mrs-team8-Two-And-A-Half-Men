@@ -3,7 +3,7 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { PanicService } from '@shared/services/panic.service';
 import { DriverLocation } from '@shared/models/driver-location';
-import { DriverLocationWebsocketService } from '@shared/services/driver-location/driver-location-websocket-service';
+import { DriverLocationWebsocketService } from '@shared/services/driver-location/driver-location-websocket.service';
 import { AuthService } from '@core/services/auth.service';
 import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 
@@ -50,6 +50,18 @@ export class WebSocketService {
 	private subscribeToDriverLocations() {
 		if (this.isLoggedIn) {
 			this.stompClient.subscribe('/topic/driver-locations', (message: any) => {
+				if (message.body) {
+					const location: DriverLocation = JSON.parse(message.body);
+					console.log(location);
+					this.driverLocationService.updateDriverLocation(location);
+				}
+			});
+		}
+	}
+
+	private subscribeToSpecificDriverLocations(driverId: number) {
+		if (this.isLoggedIn) {
+			this.stompClient.subscribe(`/topic/driver-locations/${driverId}`, (message: any) => {
 				if (message.body) {
 					const location: DriverLocation = JSON.parse(message.body);
 					console.log(location);

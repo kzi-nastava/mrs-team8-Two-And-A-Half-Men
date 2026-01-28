@@ -1,1 +1,74 @@
-<p>new-driver-page works!</p>
+
+<div class="new-driver-container">
+	<div class="new-driver-content">
+
+		<!-- Tab Navigation - Using reusable component -->
+		<app-tab-navigation
+			[tabs]="tabs"
+			[activeTab]="activeTab()"
+			[alignment]="'left'"
+			(tabChange)="onTabChange($event)">
+
+			<!-- Icon for 'personal' tab - Using inline SVG -->
+			<ng-template appTabIcon="personal">
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+					<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+						  stroke="currentColor" stroke-width="2"/>
+				</svg>
+			</ng-template>
+
+			@if (vehicleInfo()) {
+				<!-- Icon for 'vehicle' tab - Using inline SVG -->
+				<ng-template appTabIcon="vehicle">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+						<path d="M5 17h14M5 17a2 2 0 1 1 0-4M5 17a2 2 0 1 0 0-4m14 4a2 2 0 1 0 0-4m0 4a2 2 0 1 1 0-4M3 11l2-7h14l2 7M5 13h14"
+							  stroke="currentColor" stroke-width="2"/>
+					</svg>
+				</ng-template>
+			}
+
+		</app-tab-navigation>
+
+		<!-- Save Message -->
+		@if (saveMessage()) {
+			<div class="save-message">{{ saveMessage() }}</div>
+		}
+
+		<div appBox style="margin-bottom: 2rem;">
+
+			<!-- Personal Data Tab -->
+			<app-tab-content [tabId]="'personal'" [activeTab]="activeTab()">
+				<app-personal-info-form
+					[(personalInfo)]="personalInfo"
+					[showPhotoUpload]="false"
+				/>
+			</app-tab-content>
+
+			@if (vehicleInfo()) {
+				<!-- Vehicle Data Tab -->
+				<app-tab-content [tabId]="'vehicle'" [activeTab]="activeTab()">
+					<app-vehicle-info-form
+						[vehicleInfo]="vehicleInfo()!"
+						(vehicleInfoChange)="vehicleInfo.set($event)"
+						[vehicleTypes]="vehicleTypes()"
+						[availableServices]="availableServices()">
+					</app-vehicle-info-form>
+				</app-tab-content>
+			}
+
+
+			<div class="form-actions">
+				<button
+					class="save-button"
+					[disabled]="isSaving()"
+					(click)="saveChanges()">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+						<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					Save driver
+				</button>
+			</div>
+		</div>
+
+	</div>
+</div>

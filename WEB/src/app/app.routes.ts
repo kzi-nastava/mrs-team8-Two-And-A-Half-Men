@@ -24,6 +24,11 @@ export const routes: Routes = [
 		path: 'error',
 		loadChildren: () => import('@features/errors/errors.routes').then((m) => m.ERROR_ROUTES),
 	},
+	{
+		path: 'customer',
+		loadChildren: () =>
+			import('@features/customer/customer.routes').then((m) => m.customerRoutes),
+	},
 	{ path: 'home', component: HomePage },
 	{ path: '**', redirectTo: '/error/not-found' },
 ];

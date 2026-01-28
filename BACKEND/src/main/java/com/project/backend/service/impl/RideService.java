@@ -7,6 +7,7 @@ import com.project.backend.DTO.Ride.NewRideDTO;
 import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.DTO.Ride.RideTrackingDTO;
+import com.project.backend.DTO.Ride.*;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
@@ -380,22 +381,20 @@ public class RideService implements IRideService {
             ride.setPrice(0.0);
         }
         ride.setTotalCost(ride.getPrice() + 120 * locationTransformer.calculateDistanceAir(path));
+        /*
         List<Coordinates>pathCords = locationTransformer.transformToCoordinates(path);
-        System.out.println("Route s" + ride.getRoute().getGeoHash());
         List<Coordinates> route = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
-        System.out.println(pathCords.size());
-        System.out.println(route.size());
         List<Coordinates> newCords = getNewRideCords(pathCords, route, 50);
-        System.out.println(newCords);
         String newPath = locationTransformer.transformLocation(newCords);
         Route newRoute = routeRepository.findByGeoHash(newPath).orElse(null);
-        System.out.println("New route geohash: " + newPath);
         if(newRoute == null) {
             newRoute = new Route();
             newRoute.setGeoHash(newPath);
             routeRepository.save(newRoute);
         }
         ride.setRoute(newRoute);
+        */
+
         ride.setEndTime(LocalDateTime.now());
         rideRepository.save(ride);
         CostTimeDTO costTimeDTO = new CostTimeDTO();
@@ -607,6 +606,39 @@ public class RideService implements IRideService {
                 0,
                 estimatedTime
         );
+    }
+
+    @Override
+    public List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer) {
+        List<RideBookedDTO> bookedRides = new ArrayList<>();
+        List<Ride> rides = rideRepository.findByRideOwner(customer);
+        for(Ride ride : rides) {
+            boolean isSheculedforNextTenMinutes = ride.getScheduledTime() != null &&
+                    ride.getScheduledTime().isAfter(LocalDateTime.now().plusMinutes(10));
+            if ((ride.getStatus() == RideStatus.ACCEPTED  || ride.getStatus() == RideStatus.ACTIVE || isSheculedforNextTenMinutes) && ride.getStatus() != RideStatus.CANCELLED ) {
+                List<Coordinates> coordinates = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
+                List<String> hashes = coordinates
+                        .stream().map(
+                                c -> locationTransformer
+                                        .transformFromPoints(List.of(new double[] {c.getLatitude(), c.getLongitude()}))
+                        ).toList();
+                StringBuilder address = new StringBuilder();
+                var locations = locationRepository.findAllByGeoHashIn(hashes);
+                for(Location location : locations) {
+                    address.append(location.getAddress()).append(" ");
+                }
+                String SheduleTime = ride.getScheduledTime() != null ? ride.getScheduledTime().toString() : "Immediate";
+                RideBookedDTO rideBookedDTO = RideBookedDTO.builder()
+                        .id(ride.getId())
+                        .status(ride.getStatus().toString())
+                        .scheduleTime(SheduleTime)
+                        .driverName(ride.getDriver().firstNameAndLastName())
+                        .route(address.toString().trim())
+                        .build();
+                bookedRides.add(rideBookedDTO);
+            }
+        }
+        return bookedRides;
     }
 
     @Data

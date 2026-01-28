@@ -66,4 +66,6 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 
     List<Ride> findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(Collection<Long> driversIds);
     Optional<Ride> findById(Long rideId);
+
+    List<Ride> findByRideOwner(Customer customer);
 }

@@ -1,11 +1,17 @@
 package com.project.backend.service;
 
+import com.project.backend.DTO.Ride.CostTimeDTO;
+import com.project.backend.DTO.Ride.RideBookedDTO;
+import com.project.backend.DTO.Ride.RideBookingParametersDTO;
+import com.project.backend.DTO.Ride.RideResponseDTO;
+import com.project.backend.models.Customer;
 import com.project.backend.DTO.Ride.*;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
 import com.project.backend.models.actor.PassengerActor;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IRideService {
@@ -27,4 +33,5 @@ public interface IRideService {
 
     public void sendRideUpdate(Ride ride);
     CostTimeDTO endRideById(Long id, Driver driver);
+    List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer);
 }

@@ -1,0 +1,70 @@
+.navbar {
+  background: #1a5c3a;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar-brand
+{
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-logo,
+.navbar-logo-svg svg {
+  width: 32px;
+  height: 32px;
+}
+/* Profile Avatar (image buttons) */
+.btn-image {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+.btn-image {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.navbar-container img{ 
+    width: 42px;
+    height: 42px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 100%;
+}
+.icon-button .btn-icon {
+    border-radius: 100%;
+}
+.navbar-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}

@@ -1,0 +1,6 @@
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  DRIVER = 'DRIVER',
+  CUSTOMER = 'CUSTOMER',
+  PASSENGER = 'PASSENGER'
+}

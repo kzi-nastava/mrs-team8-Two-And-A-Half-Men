@@ -5,10 +5,11 @@ import com.project.backend.DTO.Ride.RideBookedDTO;
 import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.models.Customer;
+import com.project.backend.DTO.Ride.*;
+import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
-import lombok.Lombok;
-import com.project.backend.models.Driver;
-import lombok.Lombok;
+import com.project.backend.models.Ride;
+import com.project.backend.models.actor.PassengerActor;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,16 @@ public interface IRideService {
     Map<String, Object> startARide(String id, Long id1);
 
     CostTimeDTO estimateRide(RideBookingParametersDTO rideData);
+
+    RideResponseDTO getActiveRideByDriverId(Long id);
+
+    RideResponseDTO getActiveRideByCustomerId(Long id);
+
+    NoteResponseDTO saveRideNote(Long rideId, PassengerActor actor, NoteRequestDTO noteRequest);
+
+    RideTrackingDTO getRideTrackingInfo(PassengerActor actor);
+
+    public void sendRideUpdate(Ride ride);
     CostTimeDTO endRideById(Long id, Driver driver);
     List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer);
 }

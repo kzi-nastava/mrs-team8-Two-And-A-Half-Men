@@ -278,11 +278,15 @@ public class AuthService {
                         .orElseThrow(() -> new BadRequestException("Vehicle type not found"))
                 );
 
-        vehicle.setAdditionalServices(
-                new HashSet<>(
-                        additionalServiceRepository
-                                .findAllById(vehicleInfo.getAdditionalServicesIds().stream().toList())
-                ));
+        if (vehicle.getAdditionalServices() != null && !vehicle.getAdditionalServices().isEmpty()) {
+            vehicle.setAdditionalServices(
+                    new HashSet<>(
+                            additionalServiceRepository
+                                    .findAllById(vehicleInfo.getAdditionalServicesIds().stream().toList())
+                    ));
+        } else {
+            vehicle.setAdditionalServices(new HashSet<>());
+        }
     }
     public void forgetPassword(String email) {
         AppUser user = appUserRepository.findByEmail(email);

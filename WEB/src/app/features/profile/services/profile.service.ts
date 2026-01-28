@@ -1,14 +1,14 @@
-import {inject, Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {UserProfile} from '@features/profile/models/user-profile.model';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '@environments/environment';
-import {VehicleOptions} from '@shared/models/vehicles.model';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { UserProfile } from '@features/profile/models/user-profile.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '@environments/environment';
 import {
-	ChangePasswordRequest, ChangePasswordResponse,
+	ChangePasswordRequest,
+	ChangePasswordResponse,
 	UpdateProfileRequest,
 	UpdateProfileResponse,
-	UploadPictureResponse
+	UploadPictureResponse,
 } from '@features/profile/models/update-profile.model';
 
 @Injectable({
@@ -19,10 +19,6 @@ export class ProfileService {
 
 	getUserProfile(): Observable<UserProfile> {
 		return this.http.get<UserProfile>(`/api/${environment.apiVersion}/profile`);
-	}
-
-	getVehicleOptions(): Observable<VehicleOptions> {
-		return this.http.get<VehicleOptions>(`/api/${environment.apiVersion}/vehicles/options`);
 	}
 
 	updateUserProfile(updateRequest: UpdateProfileRequest): Observable<UpdateProfileResponse> {
@@ -39,7 +35,7 @@ export class ProfileService {
 		// PUT request
 		return this.http.put<UploadPictureResponse>(
 			`/api/${environment.apiVersion}/profile/picture`,
-			formData
+			formData,
 		);
 	}
 

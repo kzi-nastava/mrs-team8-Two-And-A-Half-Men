@@ -30,7 +30,7 @@ export class BookedRides implements OnInit{
   }
   RideClicked(ride: BookedRide): void {
     if(this.canTrackRide(ride)){
-      this.router.navigate(['/customer/rides/active'], { queryParams: { rideId: ride.id } }).then();
+      this.router.navigate(['/rides/active'], { queryParams: { rideId: ride.id } }).then();
     }
   }
   canCancelRide(ride: BookedRide): boolean {

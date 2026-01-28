@@ -17,7 +17,7 @@ export const routes: Routes = [
 		loadChildren: () => import('@features/driver/driver.routes').then((m) => m.DRIVER_ROUTES),
 	},
 	{
-		path: 'customer',
+		path: '',
 		loadChildren: () => import('@features/customer/customer.routes').then((m) => m.CUSTOMER_ROUTES),
 	},
 	{

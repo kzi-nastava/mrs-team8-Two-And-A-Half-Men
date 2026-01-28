@@ -13,19 +13,27 @@ export const DRIVER_ROUTES: Routes = [
 			),
 	},
 	{
-		path: 'rides/:rideId',
-		canActivate: [authGuard, roleGuard([LoggedInUserRole.DRIVER])],
-		loadComponent: () =>
-			import('./rides/pages/ride-details-page/ride-details-page.component').then(
-				(m) => m.RideDetailsPageComponent,
-			),
-	},
-	{
 		path: 'history',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.DRIVER])],
 		loadComponent: () =>
 			import('./history/pages/history-page/history-page.component').then(
 				(m) => m.DriversHistoryComponent,
+			),
+	},
+	{
+		path: 'rides/active',
+		canActivate: [authGuard, roleGuard([LoggedInUserRole.DRIVER])],
+		loadComponent: () =>
+			import('./rides/pages/active-ride-page/active-ride-page.component').then(
+				(m) => m.ActiveRidePageComponent,
+			),
+	},
+	{
+		path: 'rides/:rideId',
+		canActivate: [authGuard, roleGuard([LoggedInUserRole.DRIVER])],
+		loadComponent: () =>
+			import('./rides/pages/ride-details-page/ride-details-page.component').then(
+				(m) => m.RideDetailsPageComponent,
 			),
 	},
 ];

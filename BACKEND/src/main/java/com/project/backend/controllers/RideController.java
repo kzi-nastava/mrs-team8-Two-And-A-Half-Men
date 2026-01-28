@@ -174,9 +174,16 @@ public class RideController {
     public ResponseEntity<RideTrackingDTO> getActiveRide(
             @RequestParam(name = "accessToken", required = false) String accessToken
     ) {
-        PassengerActor actor = getPassengerActor(accessToken);
+        RideTrackingDTO ride;
 
-        RideTrackingDTO ride = rideService.getRideTrackingInfo(actor);
+        Driver driver = authUtils.getCurrentDriver();
+        if (driver == null) {
+            PassengerActor actor = getPassengerActor(accessToken);
+            ride = rideService.getRideTrackingInfo(actor);
+        } else {
+            ride = rideService.getDriversActiveRide(driver);
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 

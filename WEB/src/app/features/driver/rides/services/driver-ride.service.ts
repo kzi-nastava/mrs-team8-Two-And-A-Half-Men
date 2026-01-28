@@ -4,10 +4,15 @@ import { environment } from '@environments/environment';
 import { CostTime } from '@shared/models/cost-time.model';
 import { Observable } from 'rxjs';
 import { StartRideResponse } from '@features/driver/rides/models/api-responses.model';
+import { ActiveRide } from '@features/driver/rides/models/active-ride.model';
 
 @Injectable()
 export class DriverRideService {
 	private http = inject(HttpClient);
+
+	getActiveRide() {
+		return this.http.get<ActiveRide>(`api/${environment.apiVersion}/rides/active`);
+	}
 
 	cancelRide(
 		rideId: number,

@@ -31,6 +31,8 @@ public interface IRideService {
 
     RideTrackingDTO getRideTrackingInfo(PassengerActor actor);
 
+    RideTrackingDTO getDriversActiveRide(Driver driver);
+
     public void sendRideUpdate(Ride ride);
     CostTimeDTO endRideById(Long id, Driver driver);
 

@@ -69,6 +69,9 @@ public class CancellationService implements ICancellationService {
         if(!ride.getDriver().getId().equals(driver.getId())) {
             throw new ForbiddenException("You are not authorized to cancel this ride");
         }
+        if(!(ride.getStatus() == RideStatus.ACCEPTED || ride.getStatus() == RideStatus.PENDING)) {
+            throw new BadRequestException("Cannot cancel this ride");
+        }
         if(reason.getCancelledBy().equals("CUSTOMER")) {
             ride.setStatus(RideStatus.CANCELLED);
             ride.setCancellationReason(reason.getReason());

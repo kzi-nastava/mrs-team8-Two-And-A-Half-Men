@@ -643,6 +643,22 @@ public class RideService implements IRideService {
         return bookedRides;
     }
 
+    public RideTrackingDTO getDriversActiveRide(Driver driver) {
+        Ride ride = rideRepository.findFirstByDriverAndStatusIn(
+                driver, List.of(RideStatus.ACTIVE)
+        ).orElseThrow(() ->
+                new ResourceNotFoundException("Drivers active ride is not found")
+        );
+
+        return RideTrackingDTO.builder()
+                .id(ride.getId())
+                .driverId(driver.getId())
+                .passengerId(null)
+                .stops(null)
+                .startTime(ride.getStartTime())
+                .build();
+    }
+
     @Transactional
     public void finishRide(Long id, FinishRideDTO finishRideDTO) {
         Ride ride = rideRepository.findById(id)

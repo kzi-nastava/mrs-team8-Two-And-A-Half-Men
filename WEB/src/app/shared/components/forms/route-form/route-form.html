@@ -1,0 +1,84 @@
+<div class="route-form-container">
+	<form [formGroup]="routeForm">
+		<div>
+			@for (point of points(); track point.id; let i = $index) {
+				<div
+					class="form-group"
+					[class.dragging]="draggedIndex() === i"
+				>
+					<div class="point-input-wrapper">
+						@if (allowReordering()) {
+							<div
+								class="drag-handle"
+								draggable="true"
+								(dragstart)="onDragStart($event, i)"
+								(dragover)="onDragOver($event)"
+								(drop)="onDrop($event, i)"
+								(dragend)="onDragEnd()"
+								title="Drag to reorder"
+							>
+								<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+									<circle cx="6" cy="3" r="1.5"/>
+									<circle cx="10" cy="3" r="1.5"/>
+									<circle cx="6" cy="8" r="1.5"/>
+									<circle cx="10" cy="8" r="1.5"/>
+									<circle cx="6" cy="13" r="1.5"/>
+									<circle cx="10" cy="13" r="1.5"/>
+								</svg>
+							</div>
+						}
+
+						<input
+							type="text"
+							[id]="'point-' + i"
+							[value]="points()[$index].query()"
+							(input)="onQueryChange(i, $any($event.target).value)"
+							(blur)="onBlur(i)"
+							required
+							placeholder=""
+							autocomplete="off"
+							class="point-input"
+							[class.with-drag-handle]="allowReordering()"
+						>
+						<label [for]="'point-' + i" class="point-label">
+							{{ getPointLabel(i) }}
+						</label>
+
+						@if (!isStartPoint(i) && !isEndPoint(i)) {
+							<button
+								type="button"
+								class="remove-point-btn"
+								(click)="removePoint(i)"
+								aria-label="Remove point"
+							>
+								×
+							</button>
+						}
+
+						<div class="autocomplete-dropdown" *ngIf="point.showSuggestions()">
+							@for (suggestion of point.suggestions(); track suggestion.place_id) {
+								<div
+									class="autocomplete-item"
+									(mousedown)="selectSuggestion(i, suggestion)"
+								>
+									{{ suggestion.display_name }}
+								</div>
+							}
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</form>
+
+	@if (!(maxPoints() !== undefined && points().length >= maxPoints()!)) {
+		<button
+			type="button"
+			class="add-point-btn"
+			(click)="addPoint()"
+			[disabled]=""
+		>
+			<span class="add-icon">+</span> Add new point
+		</button>
+	}
+</div>

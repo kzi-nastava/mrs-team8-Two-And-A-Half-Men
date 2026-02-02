@@ -31,6 +31,7 @@ public class Ride {
     @Enumerated(EnumType.STRING)
     private RideStatus status;
 
+    @Lob
     private String path;
 
     private String cancellationReason;

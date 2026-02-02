@@ -1,22 +1,34 @@
 package com.project.backend.models;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Message {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.SEQUENCE)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "app_user_id")
-    private AppUser appUser;
-    private String text;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_id", nullable = false)
+    private SupportChat chat;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", nullable = false)
+    private AppUser sender;
+
+    private String content;
+
     private LocalDateTime timestamp;
-    private boolean IsAdminRead;
-    private boolean IsUserRead;
-    private boolean IsAdmin;
 
+    private boolean adminRead;
 
+    private boolean userRead;
 }

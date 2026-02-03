@@ -7,6 +7,7 @@ import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.*;
 import com.project.backend.models.enums.RideStatus;
+import com.project.backend.repositories.AppUserRepository;
 import com.project.backend.repositories.CustomerRepository;
 import com.project.backend.repositories.DriverRepository;
 import com.project.backend.repositories.RideRepository;
@@ -27,6 +28,7 @@ public class HistoryService implements IHistoryService {
     private final RideRepository rideRepository;
     private final DriverRepository driverRepository;
     private final CustomerRepository customerRepository;
+    private final AppUserRepository appUserRepository;
 
     public PagedResponse<RideResponseDTO> getDriverRideHistory(
             Long driverId,
@@ -66,12 +68,13 @@ public class HistoryService implements IHistoryService {
     }
     //@Transactional //https://stackoverflow.com/questions/55702642/jpa-lazy-loading-is-not-working-in-spring-boot
     public PagedResponse<RideResponseDTO> getCustomerRideHistory (
-            Customer customer,
+            Long customerID,
             Pageable pageable,
             LocalDateTime startDate, LocalDateTime endDate
     )
     {
         Page<Ride> ridePage;
+        Customer customer = customerRepository.findById(customerID).orElseThrow(() -> new ResourceNotFoundException("Customer not found"));// Refresh customer to get favorite routes becouse session ended :D
         if (startDate != null && endDate != null) {
             if (startDate.isAfter(endDate))
                 throw new BadRequestException("Start date must be before end date");
@@ -80,7 +83,6 @@ public class HistoryService implements IHistoryService {
         ridePage = rideRepository.findRidesByPassengerCustomerWithFilters(customer, startDate, endDate, statuses, pageable);
         PagedResponse<RideResponseDTO> pagedResponse = new PagedResponse<RideResponseDTO>();
         pagedResponse.setContent(new ArrayList<>()); // Initialize the list
-        customer = customerRepository.findById(customer.getId()).orElseThrow(() -> new ResourceNotFoundException("Customer disappeared"));// Refresh customer to get favorite routes becouse session ended :D
         for(Ride ride : ridePage.getContent()) {
             RideResponseDTO dto = RideMapper.convertToHistoryResponseDTO(ride);
             if(customer.getFavoriteRoutes().contains(ride.getRoute())) {
@@ -89,5 +91,17 @@ public class HistoryService implements IHistoryService {
             pagedResponse.getContent().add(dto);
         }
         return pagedResponse;
+    }
+
+    @Override
+    public PagedResponse<RideResponseDTO> getRideHistoryForUserID(Long userId, Pageable pageable, LocalDateTime startDate, LocalDateTime endDate) {
+        AppUser user = appUserRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if(user instanceof Driver) {
+            return getDriverRideHistory(userId, pageable, startDate, endDate);
+        } else if(user instanceof Customer) {
+            return getCustomerRideHistory(userId, pageable, startDate, endDate);
+        } else {
+            throw new BadRequestException("User is neither Driver nor Customer");
+        }
     }
 }

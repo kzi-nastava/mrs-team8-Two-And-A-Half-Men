@@ -61,7 +61,7 @@ public class HistoryService implements IHistoryService {
         List<RideResponseDTO> historyDTOs = ridePage
                 .getContent()
                 .stream()
-                .map(RideMapper::convertToHistoryResponseDTO)
+                .map(RideMapper::convertToRideResponseDTO)
                 .toList();
 
         return PagedResponse.fromPage(historyDTOs, ridePage);

@@ -4,12 +4,13 @@ import com.project.backend.DTO.Ride.CostTimeDTO;
 import com.project.backend.DTO.Ride.RideBookedDTO;
 import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
+import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.models.Customer;
 import com.project.backend.DTO.Ride.*;
-import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
 import com.project.backend.models.actor.PassengerActor;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -33,9 +34,13 @@ public interface IRideService {
 
     RideTrackingDTO getDriversActiveRide(Driver driver);
 
-    public void sendRideUpdate(Ride ride);
+    void sendRideUpdate(Ride ride);
+
     CostTimeDTO endRideById(Long id, Driver driver);
 
     void finishRide(Long id, FinishRideDTO finishRideDTO);
+
     List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer);
+
+    PagedResponse<RideResponseDTO> getActiveRides(Pageable pageable, String driverFirstName, String driverLastName);
 }

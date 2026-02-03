@@ -1,6 +1,7 @@
 package com.project.backend.service.impl;
 
 import com.project.backend.DTO.Ride.*;
+import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
@@ -26,6 +27,8 @@ import jakarta.transaction.Transactional;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +71,7 @@ public class RideService implements IRideService {
                                 "Ride with id " + id + " not found"
                         ));
 
-        return RideMapper.convertToHistoryResponseDTO(ride);
+        return RideMapper.convertToRideResponseDTO(ride);
     }
 
     @Transactional
@@ -284,7 +287,7 @@ public class RideService implements IRideService {
                                 "Active ride for driver with id " + id + " not found"
                         ));
 
-        return RideMapper.convertToHistoryResponseDTO(activeRide);
+        return RideMapper.convertToRideResponseDTO(activeRide);
     }
 
     public RideResponseDTO getActiveRideByCustomerId(Long id) {
@@ -299,7 +302,7 @@ public class RideService implements IRideService {
                                 "Active ride for customer with id " + id + " not found"
                         ));
 
-        return RideMapper.convertToHistoryResponseDTO(activeRide);
+        return RideMapper.convertToRideResponseDTO(activeRide);
     }
 
     public NoteResponseDTO saveRideNote(
@@ -679,6 +682,26 @@ public class RideService implements IRideService {
         applicationEventPublisher.publishEvent(new RideFinishedEvent(ride));
 
         rideRepository.save(ride);
+    }
+
+    public PagedResponse<RideResponseDTO> getActiveRides(
+            Pageable pageable,
+            String driverFirstName,
+            String driverLastName
+    ) {
+        Page<Ride> rides = rideRepository.findActiveRides(
+                List.of(RideStatus.ACTIVE),
+                driverFirstName,
+                driverLastName,
+                pageable
+        );
+
+        List<RideResponseDTO> content = rides.getContent()
+                .stream()
+                .map(RideMapper::convertToRideResponseDTO)
+                .toList();
+
+        return PagedResponse.fromPage(content, rides);
     }
 
     @Data

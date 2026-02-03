@@ -51,7 +51,7 @@ public class Ride {
     @ManyToMany(fetch = FetchType.LAZY)
     Set<AdditionalService> additionalServices;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ride")
     List<Passenger> passengers;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -158,6 +158,9 @@ public class RideController {
         if (user instanceof Driver) {
             history = historyService.getDriverRideHistory(user.getId(), pageable, startDate, endDate);
         }
+        if( user instanceof Customer ) {
+            history = historyService.getCustomerRideHistory((Customer) user, pageable, startDate, endDate);
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(history);
     }

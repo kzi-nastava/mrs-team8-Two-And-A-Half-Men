@@ -31,6 +31,7 @@ public class Ride {
     @Enumerated(EnumType.STRING)
     private RideStatus status;
 
+    @Lob
     private String path;
 
     private String cancellationReason;
@@ -51,7 +52,7 @@ public class Ride {
     @ManyToMany(fetch = FetchType.LAZY)
     Set<AdditionalService> additionalServices;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ride")
     List<Passenger> passengers;
 
     @ManyToOne(fetch = FetchType.EAGER)

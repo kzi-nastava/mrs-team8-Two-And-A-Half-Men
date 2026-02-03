@@ -56,7 +56,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/drivers/register")
+    @PostMapping("/register/drivers")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerDriver(@RequestBody RegisterDriverDTO body) throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerDriver(body));
@@ -89,5 +89,10 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("message", e.getMessage()));
         }
+    }
+
+    @PatchMapping("/activate/drivers")
+    public ResponseEntity<Map<String,String>> activateDriver(@RequestBody DriverActivationDTO driverActivationDTO ){
+        return ResponseEntity.ok(authService.activeDriverAccount(driverActivationDTO));
     }
 }

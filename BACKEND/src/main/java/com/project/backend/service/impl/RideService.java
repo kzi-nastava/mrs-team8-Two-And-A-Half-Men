@@ -638,11 +638,12 @@ public class RideService implements IRideService {
                     address.append(location.getAddress()).append(" ");
                 }
                 String SheduleTime = ride.getScheduledTime() != null ? ride.getScheduledTime().toString() : "Immediate";
+                String driverName = ride.getDriver() != null ? ride.getDriver().firstNameAndLastName() : "Not assigned";
                 RideBookedDTO rideBookedDTO = RideBookedDTO.builder()
                         .id(ride.getId())
                         .status(ride.getStatus().toString())
                         .scheduleTime(SheduleTime)
-                        .driverName(ride.getDriver().firstNameAndLastName())
+                        .driverName(driverName)
                         .route(address.toString().trim())
                         .build();
                 bookedRides.add(rideBookedDTO);

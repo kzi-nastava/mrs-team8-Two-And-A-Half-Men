@@ -82,4 +82,21 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
             @Param("lastName") String lastName,
             Pageable pageable
     );
+
+    @Query("""
+    SELECT DISTINCT r
+    FROM Ride r
+    JOIN r.passengers p
+    WHERE p.user = :customer
+      AND r.startTime >= COALESCE(:startTime, r.startTime)
+      AND r.startTime <= COALESCE(:endTime, r.startTime)
+      AND (r.status IN :statuses)
+""")
+    Page<Ride> findRidesByPassengerCustomerWithFilters(
+            @Param("customer") Customer customer,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("statuses") List<RideStatus> statuses,
+            Pageable pageable
+    );
 }

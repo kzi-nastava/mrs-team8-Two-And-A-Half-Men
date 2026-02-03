@@ -12,6 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.project.mobile.DTO.UserLoginRequest;
+import com.project.mobile.viewModels.AuthModel;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,8 +26,10 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView forgotPassword;
     private TextView signUp;
+    private AuthModel authModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.authModel = new ViewModelProvider(this).get(AuthModel.class);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
@@ -63,20 +69,40 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 return;
             }
-            if(username.getText().toString().equals("admin") && password.getText().toString().equals("admin")){
-                Intent intent = new Intent(this, AdminActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-                return;
-            }
-            if(username.getText().toString().equals("driver") && password.getText().toString().equals("driver")){
-            Intent intent = new Intent(this, DriverActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+            UserLoginRequest request = new UserLoginRequest(username.getText().toString(), password.getText().toString());
+            this.authModel.loginUser(request);
 
-            }
+            authModel.loginResultLiveData.observe(this, loginResult -> {
+                if(loginResult.isSuccess()) {
+                    if (loginResult.getRole().equals("ADMIN")) {
+                        Intent intent = new Intent(this, AdminActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    } else if (loginResult.getRole().equals("DRIVER")) {
+                        Intent intent = new Intent(this, DriverActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else if(loginResult.getRole().equals("CUSTOMER")) {
+                        Intent intent = new Intent(this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        finish();
+                    }
+                    }
+                    else {
+                    String errorMessage = loginResult.getErrorMessage() != null ? loginResult.getErrorMessage() : "Login failed. Please try again.";
+                    if(errorMessage.equals("Invalid username or password.")){
+                        password.setError(errorMessage);
+                    } else {
+                        username.setError(errorMessage);
+                    }
+                }
+            });
+
 
         });
         forgotPassword.setOnClickListener(v -> {

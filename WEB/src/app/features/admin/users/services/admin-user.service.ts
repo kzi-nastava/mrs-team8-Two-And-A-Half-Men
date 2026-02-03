@@ -15,7 +15,7 @@ export class AdminUserService {
 		registrationRequest: DriverRegistrationRequest,
 	): Observable<DriverRegistrationResponse> {
 		return this.http.post<DriverRegistrationResponse>(
-			`/api/${environment.apiVersion}/drivers/register`,
+			`/api/${environment.apiVersion}/register/drivers`,
 			registrationRequest,
 		);
 	}

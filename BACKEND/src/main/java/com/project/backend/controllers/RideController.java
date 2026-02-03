@@ -170,7 +170,7 @@ public class RideController {
         return ResponseEntity.ok(Map.of("message", "Panic alert triggered successfully"));
     }
 
-    @GetMapping("/active")
+    @GetMapping("/me/active")
     public ResponseEntity<RideTrackingDTO> getActiveRide(
             @RequestParam(name = "accessToken", required = false) String accessToken
     ) {
@@ -185,6 +185,18 @@ public class RideController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(ride);
+    }
+
+    @GetMapping("/active")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PagedResponse<RideResponseDTO>> getActiveRides(
+            Pageable pageable,
+            @RequestParam String firstName,
+            @RequestParam String lastName
+    ) {
+        PagedResponse<RideResponseDTO> result = rideService.getActiveRides(pageable, firstName, lastName);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     private PassengerActor getPassengerActor(String accessToken) {

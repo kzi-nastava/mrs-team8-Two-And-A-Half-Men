@@ -68,4 +68,18 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     Optional<Ride> findById(Long rideId);
 
     List<Ride> findByRideOwner(Customer customer);
+
+    @Query("""
+        SELECT r FROM Ride r
+        WHERE r.status IN :statuses
+          AND (:firstName IS NULL OR LOWER(r.driver.firstName) LIKE LOWER(CONCAT('%', :firstName, '%')))
+          AND (:lastName IS NULL OR LOWER(r.driver.lastName) LIKE LOWER(CONCAT('%', :lastName, '%')))
+        ORDER BY r.createdAt DESC
+        """)
+    Page<Ride> findActiveRides(
+            @Param("statuses") List<RideStatus> statuses,
+            @Param("firstName") String firstName,
+            @Param("lastName") String lastName,
+            Pageable pageable
+    );
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class RideMapper {
 
-    public static RideResponseDTO convertToHistoryResponseDTO(Ride ride) {
+    public static RideResponseDTO convertToRideResponseDTO(Ride ride) {
 
         List<String> additionalServices = ride.getAdditionalServices()
                 .stream()

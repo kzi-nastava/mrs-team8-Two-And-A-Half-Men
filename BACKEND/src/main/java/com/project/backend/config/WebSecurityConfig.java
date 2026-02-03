@@ -73,6 +73,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/v1/reset-password").permitAll()
                     .requestMatchers("/api/v1/rides/estimates").permitAll()
                     .requestMatchers("/api/v1/activate").permitAll()
+                    .requestMatchers("/api/v1/activate/drivers").permitAll()
                     .requestMatchers("/api/v1/forgot-password/**").permitAll()
                     .requestMatchers("/api/v1/drivers/**").permitAll()
                     .requestMatchers("/api/v1/rides/estimates").permitAll()

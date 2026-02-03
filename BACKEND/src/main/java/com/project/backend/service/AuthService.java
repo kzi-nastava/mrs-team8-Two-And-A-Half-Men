@@ -323,4 +323,43 @@ public class AuthService {
         user.setTokenExpiration(null);
         appUserRepository.save(user);
     }
+
+    public Map<String, String> activeDriverAccount(DriverActivationDTO driverActivationDTO) {
+
+        if (driverActivationDTO.getAccessToken() == null || driverActivationDTO.getAccessToken().isEmpty()) {
+            throw new BadRequestException("Access token is required");
+        }
+
+        if (driverActivationDTO.getPassword() == null || driverActivationDTO.getPassword().isEmpty()) {
+            throw new BadRequestException("Password cannot be empty");
+        }
+
+        if (driverActivationDTO.getPassword().length() < 6) {
+            throw new BadRequestException("Password must be at least 6 characters long");
+        }
+
+        var driver = (Driver) appUserRepository.findByToken(driverActivationDTO.getAccessToken())
+                .orElseThrow(() -> new BadRequestException("Invalid token"));
+
+        if (driver.getTokenExpiration() == null || driver.getTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException("Token has expired");
+        }
+
+        if (driver.getIsActive()) {
+            throw new BadRequestException("Account is already activated");
+        }
+
+
+        driver.setPassword(passwordEncoder.encode(driverActivationDTO.getPassword()));
+        driver.setIsActive(true);
+        driver.setDriverStatus(DriverStatus.INACTIVE);
+
+        driver.setToken(null);
+        driver.setTokenExpiration(null);
+        appUserRepository.save(driver);
+
+        return Map.of(
+                "message", "Account activated successfully, you can now log in."
+        );
+    }
 }

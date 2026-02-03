@@ -2,6 +2,7 @@ package com.project.backend.controllers;
 
 import com.project.backend.DTO.Ride.*;
 import com.project.backend.exceptions.UnauthorizedException;
+import com.project.backend.models.Admin;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
 import com.project.backend.service.impl.CancellationService;
@@ -147,7 +148,8 @@ public class RideController {
             @RequestParam(name = "startDate", required = false)
                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(name = "endDate", required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(name = "userID", required = false) Long userID
     ) {
         AppUser user = authUtils.getCurrentUser();
         if (user == null)
@@ -159,7 +161,10 @@ public class RideController {
             history = historyService.getDriverRideHistory(user.getId(), pageable, startDate, endDate);
         }
         if( user instanceof Customer ) {
-            history = historyService.getCustomerRideHistory((Customer) user, pageable, startDate, endDate);
+            history = historyService.getCustomerRideHistory(user.getId(), pageable, startDate, endDate);
+        }
+        if(user instanceof Admin) {
+            history = historyService.getRideHistoryForUserID(userID, pageable, startDate, endDate);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(history);

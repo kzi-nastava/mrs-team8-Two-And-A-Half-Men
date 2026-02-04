@@ -47,8 +47,8 @@ public class AppUser implements UserDetails{
     private Boolean isBlocked;
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     Set<Notification> notifications;
-    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
-    List<Message> messages;
+    @OneToOne
+    SupportChat supportChat;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

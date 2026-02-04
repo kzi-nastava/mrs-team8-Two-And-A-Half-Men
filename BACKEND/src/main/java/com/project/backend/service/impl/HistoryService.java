@@ -84,7 +84,7 @@ public class HistoryService implements IHistoryService {
         PagedResponse<RideResponseDTO> pagedResponse = new PagedResponse<RideResponseDTO>();
         pagedResponse.setContent(new ArrayList<>()); // Initialize the list
         for(Ride ride : ridePage.getContent()) {
-            RideResponseDTO dto = RideMapper.convertToHistoryResponseDTO(ride);
+            RideResponseDTO dto = RideMapper.convertToRideResponseDTO(ride);
             if(customer.getFavoriteRoutes().contains(ride.getRoute())) {
                 // Mark as favorite route in DTO
             }

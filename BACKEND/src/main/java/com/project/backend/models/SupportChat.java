@@ -25,7 +25,7 @@ public class SupportChat {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "app_user_id", nullable = false, unique = true)
     private AppUser user;
 
     @Enumerated(EnumType.STRING)

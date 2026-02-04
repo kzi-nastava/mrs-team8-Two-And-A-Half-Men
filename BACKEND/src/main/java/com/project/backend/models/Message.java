@@ -21,7 +21,7 @@ public class Message {
     private SupportChat chat;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_id", nullable = false)
+    @JoinColumn(name = "app_user_id", nullable = false)
     private AppUser sender;
 
     private String content;

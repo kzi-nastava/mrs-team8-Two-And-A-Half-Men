@@ -9,19 +9,19 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
+        android:name=".core.Application.MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/ic_taxi"
         android:label="@string/app_name"
-        android:name=".core.Application.MyApp"
+        android:networkSecurityConfig="@xml/networksecurity"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:networkSecurityConfig="@xml/networksecurity"
         android:theme="@style/Theme.MOBILE">
         <activity
             android:name=".activities.SplshScreen"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,28 +32,46 @@
             android:name=".ForgetPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+
+            android:name=".activities.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
-            android:exported="true" />
+            android:name=".activities.LoginActivity"
+            android:exported="false" />
         <activity
             android:name=".AdminActivity"
             android:exported="false" />
         <activity
             android:name=".DriverActivity"
-            android:exported="true"></activity>
+            android:exported="false" />
         <activity
             android:name=".UnregisterActivity"
-            android:exported="true">
-
-        </activity> <!-- Profile Activity -->
+            android:exported="false"></activity> <!-- Profile Activity -->
         <activity
             android:name=".activities.ProfileActivity"
-            android:exported="true"></activity>
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="false" />
+        <activity
+            android:name=".activities.CustomerAccountActivation"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true">
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="localhost"
+                    android:pathPrefix="/activation"
+                    android:port="4200" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

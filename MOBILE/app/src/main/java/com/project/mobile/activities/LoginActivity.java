@@ -1,4 +1,4 @@
-package com.project.mobile;
+package com.project.mobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.project.mobile.AdminActivity;
 import com.project.mobile.DTO.UserLoginRequest;
+import com.project.mobile.DriverActivity;
+import com.project.mobile.ForgetPasswordActivity;
+import com.project.mobile.MainActivity;
+import com.project.mobile.R;
 import com.project.mobile.viewModels.AuthModel;
 
 public class LoginActivity extends AppCompatActivity {

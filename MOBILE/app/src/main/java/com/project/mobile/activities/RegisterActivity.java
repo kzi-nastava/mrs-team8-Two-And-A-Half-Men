@@ -1,15 +1,17 @@
-package com.project.mobile;
+package com.project.mobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.project.mobile.DTO.RegisterDto;
 import com.project.mobile.databinding.ActivityRegisterBinding;
+import com.project.mobile.viewModels.AuthModel;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -17,10 +19,12 @@ public class RegisterActivity extends AppCompatActivity {
     ActivityRegisterBinding binding;
     int currentStep = 1;
     String firstName, lastName, phoneNumber, address, email, password, confirmPassword;
+    private AuthModel authModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.authModel = new ViewModelProvider(this).get(AuthModel.class);
         if (savedInstanceState != null) {
             currentStep = savedInstanceState.getInt("currentStep", 1);
             firstName = savedInstanceState.getString("firstName", "");
@@ -51,8 +55,22 @@ public class RegisterActivity extends AppCompatActivity {
             }});
         binding.registerButton.setOnClickListener(v -> {;
             if(ValidateRegistrationInputs(currentStep)){
-                // Proceed with registration using collected data
-                // firstName, lastName, phoneNumber, address, email, password
+                RegisterDto registerDto = new RegisterDto(firstName, lastName, email, address, phoneNumber, password);
+
+                 authModel.RegisterUser(registerDto).thenAccept(success -> {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, success.getMessage(), Toast.LENGTH_SHORT).show();
+                        if(success.isSuccess()) {
+                            Intent intent = new Intent(this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                    });
+                    }).exceptionally(e -> {
+                        return null;
+                    });
+
             }});
         binding.backButton.setOnClickListener(v -> {
             currentStep--;
@@ -115,8 +133,8 @@ public class RegisterActivity extends AppCompatActivity {
                 binding.phoneNumber.requestFocus();
                 return false;
             }
-            if (!Phone_number.matches("\\d{10}")) {
-                binding.phoneNumber.setError("Please enter a valid 10-digit phone number");
+            if (!Phone_number.matches("^[0-9]{10,15}$")) {
+                binding.phoneNumber.setError("Please enter a valid phone number");
                 binding.phoneNumber.requestFocus();
                 return false;
             }

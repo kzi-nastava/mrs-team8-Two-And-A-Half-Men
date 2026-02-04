@@ -41,7 +41,7 @@ public class CustomerAccountActivation extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Account Activation");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         loginLink = findViewById(R.id.loginLink);
         loginLink.setOnClickListener(v -> {
@@ -50,14 +50,11 @@ public class CustomerAccountActivation extends AppCompatActivity {
             startActivity(loginIntent);
             finish();
         });
-        // Initialize views
         statusTextView = findViewById(R.id.statusTextView);
         progressBar = findViewById(R.id.progressBar);
 
-        // Initialize ViewModel
         authModel = new ViewModelProvider(this).get(AuthModel.class);
 
-        // Handle the deep link
         handleDeepLink(getIntent());
     }
 
@@ -77,8 +74,6 @@ public class CustomerAccountActivation extends AppCompatActivity {
             if (token != null && !token.isEmpty()) {
                 // Show loading state
                 showLoading();
-
-                // Call ViewModel to activate account
                 authModel.activateAccount(token).thenAccept(response -> {
                     runOnUiThread(() -> {
                         hideLoading();

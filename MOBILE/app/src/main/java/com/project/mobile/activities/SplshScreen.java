@@ -23,7 +23,7 @@ import com.project.mobile.viewModels.AuthModel;
 
 public class SplshScreen extends AppCompatActivity {
     private static final int SPLASH_DELAY = 2000;
-    private AuthModel authModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +34,7 @@ public class SplshScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        authModel = new ViewModelProvider(this).get(AuthModel.class);
+        AuthModel authModel = new ViewModelProvider(this).get(AuthModel.class);
 
         // load user info (cached or fetch from API)
         authModel.getMeInfo().thenAccept(meInfo -> {

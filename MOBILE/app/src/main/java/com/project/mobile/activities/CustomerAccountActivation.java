@@ -24,7 +24,6 @@ public class CustomerAccountActivation extends AppCompatActivity {
     private TextView statusTextView;
     private ProgressBar progressBar;
     private TextView loginLink;
-
     private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +93,7 @@ public class CustomerAccountActivation extends AppCompatActivity {
 
     private void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
-        statusTextView.setText("Activating your account...");
+        statusTextView.setText(R.string.activating_your_account);
     }
 
     private void hideLoading() {

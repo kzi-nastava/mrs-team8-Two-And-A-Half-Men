@@ -17,6 +17,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityAdminBinding;
 import com.project.mobile.databinding.ActivityMainBinding;
 import com.project.mobile.databinding.ActivityUnregisterBinding;
+import com.project.mobile.fragments.ProfileFragment;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityAdminBinding binding;
@@ -54,7 +55,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 return true;
             } else if(itemId == R.id.nav_profile)
             {
-                FragmentTransition.to(new LiveChat(), this, false, containerId);
+                FragmentTransition.to(new ProfileFragment(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_active_drive)

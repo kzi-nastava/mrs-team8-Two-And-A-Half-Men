@@ -49,24 +49,24 @@ public class WebSocketManager {
                         case OPENED:
                             Log.d(TAG, "STOMP Connected");
                             isConnected = true;
-                            isConnecting = false;  // ← Reset flag
+                            isConnecting = false;
                             break;
                         case ERROR:
                             Log.e(TAG, "STOMP Error", lifecycleEvent.getException());
                             isConnected = false;
-                            isConnecting = false;  // ← Reset flag
+                            isConnecting = false;
                             scheduleReconnect();
                             break;
                         case CLOSED:
                             Log.d(TAG, "STOMP Closed");
                             isConnected = false;
-                            isConnecting = false;  // ← Reset flag
+                            isConnecting = false;
                             scheduleReconnect();
                             break;
                     }
                 }, throwable -> {
-                    Log.e(TAG, "❌ Lifecycle error", throwable);
-                    isConnecting = false;  // ← Reset flag
+                    Log.e(TAG, "Lifecycle error", throwable);
+                    isConnecting = false;
                 });
     }
 

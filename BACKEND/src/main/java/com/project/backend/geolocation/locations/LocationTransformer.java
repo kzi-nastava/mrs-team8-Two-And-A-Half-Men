@@ -14,7 +14,7 @@ public abstract class LocationTransformer {
         this.factory = factory;
     }
 
-    protected CoordinatesFactory factory;
+    protected final CoordinatesFactory factory;
     public abstract String transformLocation(List<Coordinates> locations);
     public String transformAddress(List<String> addresses) {
         StringBuilder hashBuilder = new StringBuilder();

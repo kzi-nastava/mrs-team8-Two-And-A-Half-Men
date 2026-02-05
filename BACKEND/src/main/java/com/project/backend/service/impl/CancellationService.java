@@ -45,7 +45,6 @@ public class CancellationService implements ICancellationService {
         }
         if(user instanceof Driver) {
             DriverCancelRide(rideId, user, reason);
-            return;
         }
     }
     private void CustomerCancelRide(Long rideId, AppUser user) {

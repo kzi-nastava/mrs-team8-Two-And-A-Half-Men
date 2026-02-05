@@ -215,7 +215,7 @@ public class ProfileService {
                 "public",
                 "files",
                 PROFILE_PICTURE_DIR,
-                userId + "_" + UUID.randomUUID().toString() + extension
+                userId + "_" + UUID.randomUUID() + extension
         );
 
         try {

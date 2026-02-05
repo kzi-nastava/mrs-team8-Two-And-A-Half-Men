@@ -8,5 +8,4 @@ import java.util.Optional;
 
 public interface UpdateRequestRepository extends JpaRepository<UpdateRequest, Long> {
     Optional<UpdateRequest> findByDriverId(Long userId);
-    List<UpdateRequest> findByDriverIdIn(List<Long> driverIds);
 }

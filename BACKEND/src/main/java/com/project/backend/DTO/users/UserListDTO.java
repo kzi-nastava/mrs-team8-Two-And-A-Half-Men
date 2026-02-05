@@ -26,22 +26,6 @@ public class UserListDTO {
     // Flags
     private Boolean hasPendingRequests;
 
-    public UserListDTO(AppUser user, Boolean hasPendingRequests) {
-        this.id = user.getId();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.email = user.getEmail();
-        this.role = user.getRole();
-        this.isBlocked = user.getIsBlocked();
-        if (this.role == UserRole.DRIVER) {
-            this.driverStatus = ((Driver) user).getDriverStatus();
-            this.hasPendingRequests = hasPendingRequests;
-        } else {
-            this.driverStatus = null;
-            this.hasPendingRequests = null;
-        }
-    }
-
     public UserListDTO(AppUser user, UpdateRequest updateRequest) {
         this.id = user.getId();
         this.firstName = user.getFirstName();

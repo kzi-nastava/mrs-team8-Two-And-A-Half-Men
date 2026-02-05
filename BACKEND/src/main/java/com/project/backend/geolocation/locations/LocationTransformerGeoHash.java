@@ -9,7 +9,7 @@ import java.util.List;
 
 public class LocationTransformerGeoHash extends LocationTransformer {
 
-    public int length;
+    public final int length;
     public LocationTransformerGeoHash(CoordinatesFactory factory, int length) {
         super(factory);
         this.length = length;

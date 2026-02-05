@@ -4,7 +4,6 @@ import com.project.backend.DTO.users.UserFilterDTO;
 import com.project.backend.DTO.users.UserListDTO;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.repositories.AppUserRepository;
-import com.project.backend.repositories.UpdateRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final AppUserRepository appUserRepository;
-    private final UpdateRequestRepository updateRequestRepository;
     private final ProfileService profileService;
 
     public Page<UserListDTO> getAllUsers(UserFilterDTO filters, Pageable pageable) {

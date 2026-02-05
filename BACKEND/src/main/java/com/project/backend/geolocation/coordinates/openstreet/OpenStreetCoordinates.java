@@ -29,7 +29,7 @@ public class OpenStreetCoordinates extends Coordinates {
             String urlStr = "https://nominatim.openstreetmap.org/search?format=json&q="
                     + address.replace(" ", "+");
             URL url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) new HttpUrlConnectionProxy(url);
+            HttpURLConnection conn = new HttpUrlConnectionProxy(url);
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "Java App");
 
@@ -48,8 +48,8 @@ public class OpenStreetCoordinates extends Coordinates {
             String lon = jsonResponse.split("\"lon\":\"")[1].split("\"")[0];
             //System.out.println("Latitude: " + lat + ", Longitude: " + lon);
             //Setting the values
-            this.latitude = (double) Double.parseDouble(lat);
-            this.longitude = (double) Double.parseDouble(lon);
+            this.latitude = Double.parseDouble(lat);
+            this.longitude = Double.parseDouble(lon);
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,7 +64,7 @@ public class OpenStreetCoordinates extends Coordinates {
             String urlStr = "https://nominatim.openstreetmap.org/reverse?format=json&lat="
                     + getLatitude() + "&lon=" + getLongitude();
             URL url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) new HttpUrlConnectionProxy(url);
+            HttpURLConnection conn = new HttpUrlConnectionProxy(url);
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "Java App");
 
@@ -95,7 +95,7 @@ public class OpenStreetCoordinates extends Coordinates {
                     + other.getLongitude() + "," + other.getLatitude()
                     + "?overview=false";
             URL url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) new HttpUrlConnectionProxy(url);
+            HttpURLConnection conn = new HttpUrlConnectionProxy(url);
             conn.setRequestMethod("GET");
             BufferedReader in = new BufferedReader(new java.io.InputStreamReader(conn.getInputStream()));
             StringBuilder response = new StringBuilder();
@@ -136,7 +136,7 @@ public class OpenStreetCoordinates extends Coordinates {
                     + other.getLongitude() + "," + other.getLatitude()
                     + "?overview=false";
             URL url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) new HttpUrlConnectionProxy(url);
+            HttpURLConnection conn = new HttpUrlConnectionProxy(url);
             conn.setRequestMethod("GET");
             BufferedReader in = new BufferedReader(new java.io.InputStreamReader(conn.getInputStream()));
             StringBuilder response = new StringBuilder();
@@ -179,7 +179,7 @@ public class OpenStreetCoordinates extends Coordinates {
                     + other.getLongitude() + "," + other.getLatitude()
                     + "?overview=false";
             URL url = new URL(urlStr);
-            HttpURLConnection conn = (HttpURLConnection) new HttpUrlConnectionProxy(url);
+            HttpURLConnection conn = new HttpUrlConnectionProxy(url);
             conn.setRequestMethod("GET");
             BufferedReader in = new BufferedReader(new java.io.InputStreamReader(conn.getInputStream()));
             StringBuilder response = new StringBuilder();

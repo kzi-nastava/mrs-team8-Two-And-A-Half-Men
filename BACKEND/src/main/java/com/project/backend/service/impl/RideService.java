@@ -390,7 +390,10 @@ public class RideService implements IRideService {
         if(ride.getPrice() == null) {
             ride.setPrice(0.0);
         }
-        ride.setTotalCost(ride.getPrice() + 120 * locationTransformer.calculateDistanceAir(path));
+        var distance = locationTransformer.calculateDistanceAir(path, MetricsDistance.KILOMETERS);
+        ride.setTotalCost(ride.getPrice() + 120 * distance);
+        ride.setDistanceKm(distance);
+        ride.setStatus(RideStatus.FINISHED);
         /*
         List<Coordinates>pathCords = locationTransformer.transformToCoordinates(path);
         List<Coordinates> route = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());

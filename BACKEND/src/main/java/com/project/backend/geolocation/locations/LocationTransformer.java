@@ -73,10 +73,10 @@ public abstract class LocationTransformer {
         return distance;
     }
     //Returns in specified metric
-    public double calculateDistance(String hash, MetricsDistance metric) {
+    public double calculateDistanceAir(String hash, MetricsDistance metric) {
         return metric.fromMeters(calculateDistanceAir(hash));
     }
-    public double calculateDistance(List<String> hashCodes, MetricsDistance metric) {
+    public double calculateDistanceAir(List<String> hashCodes, MetricsDistance metric) {
         return metric.fromMeters(calculateDistanceAir(hashCodes));
     }
     //Returns in meters

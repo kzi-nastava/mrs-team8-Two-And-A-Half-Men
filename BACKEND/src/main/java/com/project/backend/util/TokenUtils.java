@@ -20,7 +20,7 @@ public class TokenUtils {
     private String APP_NAME ;
     @Value("${jwt.secret}")
     private String SECRET ;
-    @Value("1800000")
+    @Value("${jwt.expires-in}")
     private int EXPIRES_IN ;
     @Value("${jwt.auth.header}")
     private String AUTH_HEADER ;

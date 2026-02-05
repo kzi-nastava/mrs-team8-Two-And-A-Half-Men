@@ -82,19 +82,6 @@ public class TokenUtils {
         return issueAt;
     }
 
-    public Date getExpirationDateFromToken(String token) {
-        Date expiration;
-        try {
-            final Claims claims = getAllClaimsFromToken(token);
-            expiration = claims.getExpiration();
-        } catch (ExpiredJwtException ex) {
-            throw ex;
-        } catch (Exception e) {
-            expiration = null;
-        }
-        return expiration;
-    }
-
     private Claims getAllClaimsFromToken(String token) {
         Claims claims;
         try {

@@ -6,13 +6,9 @@ import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
-import com.project.backend.exceptions.UnauthorizedException;
-import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.geolocation.coordinates.Coordinates;
-import com.project.backend.models.AppUser;
-import com.project.backend.models.Customer;
-import com.project.backend.models.Driver;
-import com.project.backend.models.Ride;
+import com.project.backend.geolocation.locations.LocationTransformer;
+import com.project.backend.models.*;
 import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.DriverRepository;
@@ -77,7 +73,7 @@ public class CancellationService implements ICancellationService {
             rideRepository.save(ride);
         } else if(reason.getCancelledBy().equals("DRIVER")) {
             FindDriverFilter filter = new FindDriverFilter();
-            List<Long> additionalServicesIds = ride.getAdditionalServices().stream().map(service -> service.getId()).toList();
+            List<Long> additionalServicesIds = ride.getAdditionalServices().stream().map(AdditionalService::getId).toList();
             filter.setAdditionalServicesIds(additionalServicesIds);
             if(ride.getVehicleType() == null) {
                 filter.setVehicleTypeId(null);

@@ -3,7 +3,6 @@ package com.project.backend.config;
 import com.project.backend.security.auth.JWTAuthetntificationFilter;
 import com.project.backend.security.auth.RestAuthenticationEntryPoint;
 import com.project.backend.service.security.CustomUserDetailsService;
-import com.project.backend.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +36,8 @@ public class WebSecurityConfig {
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
-    @Autowired
-    private TokenUtils tokenUtils;
+//    @Autowired
+//    private TokenUtils tokenUtils;
     @Autowired
     private JWTAuthetntificationFilter jwtAuthenticationFilter;
     @Bean

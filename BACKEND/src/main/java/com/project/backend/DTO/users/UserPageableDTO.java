@@ -19,10 +19,18 @@ public class UserPageableDTO {
         private String sortDirection = "ASC";
 
         public Pageable toPageable() {
+            this.setNullsToDefaults();
             Sort.Direction direction = "DESC".equalsIgnoreCase(sortDirection)
                     ? Sort.Direction.DESC
                     : Sort.Direction.ASC;
 
             return PageRequest.of(page, size, Sort.by(direction, sortBy));
+        }
+
+        private void setNullsToDefaults() {
+            if (page == null) page = 0;
+            if (size == null) size = 10;
+            if (sortBy == null || sortBy.isBlank()) sortBy = "id";
+            if (sortDirection == null || sortDirection.isBlank()) sortDirection = "ASC";
         }
 }

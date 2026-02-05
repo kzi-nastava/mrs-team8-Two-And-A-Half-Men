@@ -33,7 +33,7 @@
             System.out.println("=================================================");
             // endpoint for connection
             registry.addEndpoint("/socket")
-                    .setAllowedOrigins("http://localhost:4200")
+                    .setAllowedOrigins("*")
                     .withSockJS()
                     .setInterceptors(new HandshakeInterceptor() {
                         @Override

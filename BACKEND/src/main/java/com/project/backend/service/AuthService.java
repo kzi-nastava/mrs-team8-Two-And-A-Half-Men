@@ -155,6 +155,14 @@ public class AuthService {
         System.out.println("Active: " + customer.isAccountNonExpired());
         System.out.println("Blocked: " + customer.isAccountNonLocked());
         System.out.println("Enabeld: " + customer.isEnabled());
+        if (customer.getIsBlocked()) {
+            throw new BadRequestException("User account is blocked. Reason: \"" + (
+                    customer.getBlockReason() != null ? customer.getBlockReason() : "No reason provided"
+                    ) + "\". Please contact support for more information.");
+        }
+        if (!customer.getIsActive()) {
+            throw new BadRequestException("User account is not active. Please check your email for activation link.");
+        }
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(

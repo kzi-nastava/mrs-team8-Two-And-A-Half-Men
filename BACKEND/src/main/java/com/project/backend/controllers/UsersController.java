@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -24,6 +21,11 @@ public class UsersController {
     @GetMapping
     public ResponseEntity<Page<UserListDTO>> getAllUsers(@ModelAttribute UserFilterDTO filters, @ModelAttribute UserPageableDTO pageableDTO) {
         return ResponseEntity.ok(userService.getAllUsers(filters, pageableDTO.toPageable()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
 //    @GetMapping("/{id}")

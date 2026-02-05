@@ -45,6 +45,9 @@ public class AppUser implements UserDetails{
     private LocalDateTime tokenExpiration;
     private Boolean isActive;
     private Boolean isBlocked;
+
+    private String blockReason;
+
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     Set<Notification> notifications;
     @OneToOne

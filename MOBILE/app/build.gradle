@@ -1,6 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
 }
+import java.util.Properties
+
+def localProps = new Properties()
+def localFile = rootProject.file("local.properties")
+if (!localFile.exists()) {
+    throw new GradleException("local.properties not found in project root!")
+}
+localProps.load(new FileInputStream(localFile))
+def ip = localProps.getProperty("ip_address") ?: "127.0.0.1"
 
 android {
     namespace 'com.project.mobile'
@@ -18,7 +27,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        buildConfigField "String", "BASE_URL", "\"${project.findProperty("ip_address")}\""
+        buildConfigField "String", "BASE_URL", "\"${ip}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

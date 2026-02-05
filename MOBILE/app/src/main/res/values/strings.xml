@@ -28,4 +28,5 @@
     <string name="back">Back</string>
     <string name="restart_password">Restart Password</string>
     <string name="activating_your_account">Activating your account...</string>
+    <string name="enter_your_new_password">Enter your new password</string>
 </resources>

@@ -4,6 +4,7 @@ import com.project.backend.models.Customer;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
 import com.project.backend.models.enums.RideStatus;
+import com.project.backend.repositories.reports.RideReportRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RideRepository extends JpaRepository<Ride, Long> {
+public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRepository {
 
     Page<Ride> findByDriver(Driver driver, Pageable pageable);
 

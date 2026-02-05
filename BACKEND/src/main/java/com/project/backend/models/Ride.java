@@ -34,6 +34,8 @@ public class Ride {
     @Lob
     private String path;
 
+    private Double distanceKm;
+
     private String cancellationReason;
 
     private Double price;

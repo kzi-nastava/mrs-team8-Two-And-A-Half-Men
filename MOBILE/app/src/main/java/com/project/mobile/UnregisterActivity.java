@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
 import com.google.android.material.navigation.NavigationView;
+import com.project.mobile.activities.LoginActivity;
 import com.project.mobile.databinding.ActivityUnregisterBinding;
 
 public class UnregisterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

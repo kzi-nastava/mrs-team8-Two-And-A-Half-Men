@@ -3,7 +3,6 @@ package com.project.mobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -14,7 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.project.mobile.databinding.ActivityAdminBinding;
+import com.project.mobile.activities.RegisterActivity;
 
 public class ForgetPasswordActivity extends AppCompatActivity {
 

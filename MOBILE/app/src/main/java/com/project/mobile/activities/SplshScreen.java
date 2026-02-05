@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.window.SplashScreen;
-import android.util.Log;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -17,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.project.mobile.AdminActivity;
 import com.project.mobile.DTO.MeInfo;
 import com.project.mobile.DriverActivity;
-import com.project.mobile.LoginActivity;
 import com.project.mobile.MainActivity;
 import com.project.mobile.R;
 import com.project.mobile.UnregisterActivity;
@@ -25,7 +23,7 @@ import com.project.mobile.viewModels.AuthModel;
 
 public class SplshScreen extends AppCompatActivity {
     private static final int SPLASH_DELAY = 2000;
-    private AuthModel authModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +34,7 @@ public class SplshScreen extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        authModel = new ViewModelProvider(this).get(AuthModel.class);
+        AuthModel authModel = new ViewModelProvider(this).get(AuthModel.class);
 
         // load user info (cached or fetch from API)
         authModel.getMeInfo().thenAccept(meInfo -> {

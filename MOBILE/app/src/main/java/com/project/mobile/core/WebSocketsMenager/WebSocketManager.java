@@ -156,6 +156,7 @@ public class WebSocketManager {
     }
 
     private void disconnect() {
+        reconnectHandler.removeCallbacksAndMessages(null);
         for (Disposable d : subscriptions.values()) {
             if (!d.isDisposed()) d.dispose();
         }
@@ -167,6 +168,7 @@ public class WebSocketManager {
     }
 
     private void scheduleReconnect() {
+        reconnectHandler.removeCallbacksAndMessages(null);
         if (!topicCallbacks.isEmpty()) {
             reconnectHandler.postDelayed(() -> {
                 if (!isConnected && !topicCallbacks.isEmpty()) connect();

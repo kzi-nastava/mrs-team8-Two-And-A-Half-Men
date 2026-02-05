@@ -20,6 +20,9 @@ public class Driver extends AppUser {
     @OneToMany
     private List<DriverActivity> driverActivities;
 
+    @OneToOne(mappedBy = "driver", fetch = FetchType.EAGER)
+    private UpdateRequest updateRequest;
+
     @Override
     public UserRole getRole() {
         return UserRole.DRIVER;

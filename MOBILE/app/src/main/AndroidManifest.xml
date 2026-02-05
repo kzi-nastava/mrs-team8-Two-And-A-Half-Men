@@ -32,7 +32,6 @@
             android:name=".ForgetPasswordActivity"
             android:exported="false" />
         <activity
-
             android:name=".activities.RegisterActivity"
             android:exported="false" />
         <activity
@@ -46,7 +45,7 @@
             android:exported="false" />
         <activity
             android:name=".UnregisterActivity"
-            android:exported="false"></activity> <!-- Profile Activity -->
+            android:exported="false" /> <!-- Profile Activity -->
         <activity
             android:name=".activities.ProfileActivity"
             android:exported="false" />
@@ -56,19 +55,34 @@
         <activity
             android:name=".activities.CustomerAccountActivation"
             android:exported="true"
-            android:launchMode="singleTask"
-            android:excludeFromRecents="true">
+            android:launchMode="singleTask">
             >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="http"
                     android:host="localhost"
                     android:pathPrefix="/activation"
-                    android:port="4200" />
+                    android:port="4200"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.RestartPassword"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="localhost"
+                    android:pathPrefix="/reset-password"
+                    android:port="4200"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
     </application>

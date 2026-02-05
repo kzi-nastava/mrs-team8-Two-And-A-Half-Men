@@ -6,10 +6,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.project.mobile.DTO.ActivateRequestDTO;
+import com.project.mobile.DTO.ForgotPasswordDTO;
 import com.project.mobile.DTO.LoginTransfer;
 import com.project.mobile.DTO.MeInfo;
 import com.project.mobile.DTO.RegisterDto;
 import com.project.mobile.DTO.MessageResponseDTO;
+import com.project.mobile.DTO.ResetPasswordDTO;
 import com.project.mobile.DTO.UserLoginRequest;
 import com.project.mobile.DTO.UserLoginResponseDto;
 import com.project.mobile.core.TokenHeandler.JwtToken;
@@ -86,7 +88,7 @@ public class AuthModel extends ViewModel {
         );
         return future;
     }
-        public CompletableFuture<MessageResponseDTO> RegisterUser(RegisterDto registerData) {
+    public CompletableFuture<MessageResponseDTO> RegisterUser(RegisterDto registerData) {
             Call<ResponseBody> call = authService.registerUser(registerData);
             CompletableFuture<MessageResponseDTO> future = new CompletableFuture<>();
 
@@ -167,4 +169,92 @@ public class AuthModel extends ViewModel {
 
         return future;
     }
+
+    public void logout() {
+        JwtToken.clearToken();
+        cachedMeInfo = null;
+    }
+
+    public CompletableFuture<MessageResponseDTO> forgotPassword(String email) {
+        Log.d("FORGOT_PASSWORD", "Initiating forgot password for email: " + email);
+        Call<ResponseBody> call = authService.forgotPassword(new ForgotPasswordDTO(email));
+        CompletableFuture<MessageResponseDTO> future = new CompletableFuture<>();
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    String message = "Failed to send reset instructions";
+                    Log.d("FORGOT_PASSWORD", "Response code: " + response.code());
+
+                    if (response.body() != null) {
+                        String json = response.body().string();
+                        JSONObject obj = new JSONObject(json);
+                        message = obj.optString("message", message);
+                    }
+
+                    if (response.errorBody() != null) {
+                        String errorJson = response.errorBody().string();
+                        JSONObject errorObj = new JSONObject(errorJson);
+                        message = errorObj.optString("message", message);
+                    }
+
+                    future.complete(new MessageResponseDTO(response.isSuccessful(), message));
+
+                } catch (Exception e) {
+                    Log.e("FORGOT_PASSWORD", "Error parsing response", e);
+                    future.complete(new MessageResponseDTO(false, "Response parsing error"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("FORGOT_PASSWORD", "Network error", t);
+                future.complete(new MessageResponseDTO(false, "Server error: " + t.getMessage()));
+            }
+        });
+
+        return future;
+    }
+    public CompletableFuture<MessageResponseDTO> resetPassword(String token, String newPassword) {
+        Call<ResponseBody> call = authService.resetPassword(new ResetPasswordDTO(token, newPassword));
+        CompletableFuture<MessageResponseDTO> future = new CompletableFuture<>();
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    String message = "Password reset failed";
+                    Log.d("RESET_PASSWORD", "Response code: " + response.code());
+
+                    if (response.body() != null) {
+                        String json = response.body().string();
+                        JSONObject obj = new JSONObject(json);
+                        message = obj.optString("message", message);
+                    }
+
+                    if (response.errorBody() != null) {
+                        String errorJson = response.errorBody().string();
+                        JSONObject errorObj = new JSONObject(errorJson);
+                        message = errorObj.optString("message", message);
+                    }
+
+                    future.complete(new MessageResponseDTO(response.isSuccessful(), message));
+
+                } catch (Exception e) {
+                    Log.e("RESET_PASSWORD", "Error parsing response", e);
+                    future.complete(new MessageResponseDTO(false, "Response parsing error"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RESET_PASSWORD", "Network error", t);
+                future.complete(new MessageResponseDTO(false, "Server error: " + t.getMessage()));
+            }
+        });
+
+        return future;
+    }
+
 }

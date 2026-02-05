@@ -1,8 +1,10 @@
 package com.project.mobile.service;
 
 import com.project.mobile.DTO.ActivateRequestDTO;
+import com.project.mobile.DTO.ForgotPasswordDTO;
 import com.project.mobile.DTO.MeInfo;
 import com.project.mobile.DTO.RegisterDto;
+import com.project.mobile.DTO.ResetPasswordDTO;
 import com.project.mobile.DTO.UserLoginRequest;
 import com.project.mobile.DTO.UserLoginResponseDto;
 
@@ -26,5 +28,10 @@ public interface AuthService {
 
     @POST("activate")
     Call<ResponseBody> activateAccount(@Body ActivateRequestDTO token);
+    @POST("forgot-password")
+    Call<ResponseBody> forgotPassword(@Body ForgotPasswordDTO dto);
+
+    @POST("reset-password")
+    Call<ResponseBody> resetPassword(@Body ResetPasswordDTO dto);
 
 }

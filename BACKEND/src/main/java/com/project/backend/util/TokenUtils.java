@@ -24,8 +24,7 @@ public class TokenUtils {
     private int EXPIRES_IN ;
     @Value("${jwt.auth.header}")
     private String AUTH_HEADER ;
-    private static String AUDIENCE_WEB = "web";
-    private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+    private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
     @PostConstruct
     public void checkJwtKey() {
         System.out.println("JWT key length (chars): " + SECRET.length());
@@ -44,7 +43,7 @@ public class TokenUtils {
     }
 
     private String generateAudience() {
-        return AUDIENCE_WEB;
+        return "web";
     }
     public String getToken(HttpServletRequest request) {
         String authHeader = getAuthHeaderFromHeader(request);
@@ -81,19 +80,6 @@ public class TokenUtils {
             issueAt = null;
         }
         return issueAt;
-    }
-
-    public Date getExpirationDateFromToken(String token) {
-        Date expiration;
-        try {
-            final Claims claims = getAllClaimsFromToken(token);
-            expiration = claims.getExpiration();
-        } catch (ExpiredJwtException ex) {
-            throw ex;
-        } catch (Exception e) {
-            expiration = null;
-        }
-        return expiration;
     }
 
     private Claims getAllClaimsFromToken(String token) {

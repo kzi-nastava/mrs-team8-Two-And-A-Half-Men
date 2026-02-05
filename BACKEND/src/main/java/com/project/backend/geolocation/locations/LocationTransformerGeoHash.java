@@ -9,7 +9,7 @@ import java.util.List;
 
 public class LocationTransformerGeoHash extends LocationTransformer {
 
-    public int length;
+    public final int length;
     public LocationTransformerGeoHash(CoordinatesFactory factory, int length) {
         super(factory);
         this.length = length;
@@ -37,7 +37,7 @@ public class LocationTransformerGeoHash extends LocationTransformer {
                 GeoHash geoHash = GeoHash.fromGeohashString(base);
                 coordinates.add(factory.getCoordinate(geoHash.getOriginatingPoint().getLatitude(), geoHash.getOriginatingPoint().getLongitude()));
             } catch (Exception e) {
-                e.printStackTrace();
+                // e.printStackTrace();
             }
         }
         return coordinates;

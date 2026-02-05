@@ -33,8 +33,7 @@ public class PanicService implements IPanicService {
         if(passenger == null && user instanceof Customer) {
             passenger = passengerRepository.findByCustomerWithRideStatus((Customer) user,
                     List.of(RideStatus.ACTIVE)).orElse(null);
-        } else if(passenger == null && user instanceof Driver) {
-            Driver driver = (Driver) user;
+        } else if(passenger == null && user instanceof Driver driver) {
             System.out.println("Driver triggering panic");
             Ride activeRide = rideRepository.findRideOfDriverWithStatus(driver, List.of(RideStatus.ACTIVE))
                     .orElse(null);

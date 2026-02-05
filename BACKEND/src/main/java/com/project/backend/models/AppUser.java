@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,12 +46,16 @@ public class AppUser implements UserDetails{
     private LocalDateTime tokenExpiration;
     private Boolean isActive;
     private Boolean isBlocked;
+
+    private String blockReason;
+
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     Set<Notification> notifications;
     @OneToOne
     SupportChat supportChat;
 
     @Override
+    @NullMarked
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String className = this.getClass().getSimpleName();
         return List.of(new SimpleGrantedAuthority("ROLE_" + className.toUpperCase()));
@@ -62,6 +67,7 @@ public class AppUser implements UserDetails{
     }
 
     @Override
+    @NullMarked
     public String getUsername() {
         return this.email;
     }

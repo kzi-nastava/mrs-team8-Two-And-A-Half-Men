@@ -17,6 +17,8 @@ public class PersonalInfoDTO {
     private String email;
     private String imgSrc;
     private String role;
+    private boolean isBlocked;
+    private String blockReason;
 
     public PersonalInfoDTO(AppUser user) {
         this.id = user.getId();
@@ -27,5 +29,7 @@ public class PersonalInfoDTO {
         this.email = user.getEmail();
         this.imgSrc = user.getImgSrc();
         this.role = user.getRole().name();
+        this.isBlocked = user.getIsBlocked();
+        this.blockReason = user.getBlockReason();
     }
 }

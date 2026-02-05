@@ -88,10 +88,10 @@ public class AuthService {
 
         // Send conformation email
         emailService.sendVerificationEmail(customer.getEmail(), customer.getFirstName(),
-                "http://localhost:4200/activation?token=" + token);
+                frontendUrl + "/activation?token=" + token);
     }
 
-    public String activateAccount(ActivateRequestDTO tokenDTO) throws Exception {
+    public String activateAccount(ActivateRequestDTO tokenDTO) {
         String token = tokenDTO.getToken();
         System.out.println(token);
 
@@ -101,7 +101,7 @@ public class AuthService {
             return "Account is active";
         }
         if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Token date experied");
+            throw new IllegalArgumentException("Token date has expired");
         }
         user.setIsActive(true);
         user.setToken(null);
@@ -167,6 +167,7 @@ public class AuthService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             AppUser user = (AppUser) authentication.getPrincipal();
 
+            assert user != null;
             String jwt = tokenUtils.generateToken(user);
             int expiresIn = tokenUtils.getExpiredIn();
             return UserTokenDTO.builder()
@@ -340,6 +341,10 @@ public class AuthService {
 
         var driver = (Driver) appUserRepository.findByToken(driverActivationDTO.getAccessToken())
                 .orElseThrow(() -> new BadRequestException("Invalid token"));
+
+        if (driver == null || driver.getRole() != UserRole.DRIVER) {
+            throw new BadRequestException("Invalid token");
+        }
 
         if (driver.getTokenExpiration() == null || driver.getTokenExpiration().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("Token has expired");

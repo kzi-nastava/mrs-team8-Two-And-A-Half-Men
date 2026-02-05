@@ -1,5 +1,6 @@
     package com.project.backend.config;
 
+    import org.jspecify.annotations.NonNull;
     import org.springframework.context.annotation.Configuration;
     import org.springframework.http.server.ServerHttpRequest;
     import org.springframework.http.server.ServerHttpResponse;
@@ -36,10 +37,10 @@
                     .withSockJS()
                     .setInterceptors(new HandshakeInterceptor() {
                         @Override
-                        public boolean beforeHandshake(ServerHttpRequest request,
-                                                       ServerHttpResponse response,
-                                                       WebSocketHandler wsHandler,
-                                                       Map<String, Object> attributes) throws Exception {
+                        public boolean beforeHandshake(@NonNull ServerHttpRequest request,
+                                                       @NonNull ServerHttpResponse response,
+                                                       @NonNull WebSocketHandler wsHandler,
+                                                       @NonNull Map<String, Object> attributes) {
                             System.out.println("=== WEBSOCKET HANDSHAKE STARTING ===");
                             System.out.println("Request URI: " + request.getURI());
                             System.out.println("Headers: " + request.getHeaders());
@@ -47,14 +48,14 @@
                         }
 
                         @Override
-                        public void afterHandshake(ServerHttpRequest request,
-                                                   ServerHttpResponse response,
-                                                   WebSocketHandler wsHandler,
+                        public void afterHandshake(@NonNull ServerHttpRequest request,
+                                                   @NonNull ServerHttpResponse response,
+                                                   @NonNull WebSocketHandler wsHandler,
                                                    Exception exception) {
                             if (exception != null) {
                                 System.out.println("=== HANDSHAKE FAILED ===");
                                 System.out.println("Error: " + exception.getMessage());
-                                exception.printStackTrace();
+                                // exception.printStackTrace();
                             } else {
                                 System.out.println("=== HANDSHAKE SUCCESSFUL ===");
                             }

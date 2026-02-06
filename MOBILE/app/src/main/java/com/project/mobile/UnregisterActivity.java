@@ -14,6 +14,7 @@ import androidx.core.view.GravityCompat;
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.activities.LoginActivity;
 import com.project.mobile.databinding.ActivityUnregisterBinding;
+import com.project.mobile.fragments.HomeUnregistered;
 
 public class UnregisterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,6 +41,7 @@ public class UnregisterActivity extends AppCompatActivity implements NavigationV
                 }
             }
         });
+        FragmentTransition.to(new HomeUnregistered(), this, false, binding.fragmentContainerViewTag.getId());
     }
 
     @Override
@@ -47,7 +49,7 @@ public class UnregisterActivity extends AppCompatActivity implements NavigationV
         int id = menuItem.getItemId();
         if (id == R.id.home) {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
-
+            FragmentTransition.to(new HomeUnregistered(), this, false, binding.fragmentContainerViewTag.getId());
             return true;
         } else if (id == R.id.login ) {
             binding.drawerLayout.closeDrawer(GravityCompat.START);

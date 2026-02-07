@@ -45,13 +45,20 @@ public class FormStops extends Fragment {
     public MessageCallback callback;
 
     private Long maxStops = null;
-
+    private boolean isDelatable = true;
     public FormStops() {
     }
     public FormStops(Long maxStops) {
         this.maxStops = maxStops;
     }
 
+    public FormStops(boolean isDelatable) {
+        this.isDelatable = isDelatable;
+    }
+    public FormStops(Long maxStops, boolean isDelatable) {
+        this.maxStops = maxStops;
+        this.isDelatable = isDelatable;
+    }
     public static FormStops newInstance() {
         FormStops fragment = new FormStops();
         Bundle args = new Bundle();
@@ -135,9 +142,13 @@ public class FormStops extends Fragment {
         ImageButton btnDelete = row.findViewById(R.id.btn_delete_stop);
         txtLabel.setText(String.valueOf((char)('A' + index)));
         txtAddress.setText(stop.display_name);
-        btnDelete.setOnClickListener(v -> {
-            sheredLocationViewModel.RemoveLocation(index);
-        });
+        if(isDelatable) {
+            btnDelete.setOnClickListener(v -> {
+                sheredLocationViewModel.RemoveLocation(index);
+            });
+        } else {
+            btnDelete.setVisibility(View.GONE);
+        }
         return row;
     }
     @Override

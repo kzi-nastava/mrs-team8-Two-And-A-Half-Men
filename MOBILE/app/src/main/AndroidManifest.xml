@@ -46,7 +46,7 @@
             android:name=".DriverActivity"
             android:exported="false" />
         <activity
-            android:name=".UnregisterActivity"
+            android:name=".activities.UnregisterActivity"
             android:exported="false" /> <!-- Profile Activity -->
         <activity
             android:name=".activities.ProfileActivity"

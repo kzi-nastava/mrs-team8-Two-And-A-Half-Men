@@ -8,67 +8,6 @@
     android:backgroundTint="@color/card_background"
     >
 
-    <!-- Search Section -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        android:background="@color/primary"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp"
-            android:background="@color/primary"
-            >
-
-            <!-- Search Input -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/input_location_search"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_search"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="8dp"
-                    android:contentDescription="Search icon"/>
-
-                <EditText
-                    android:id="@+id/input_search"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Search for a location..."
-                    android:background="@null"
-                    android:textSize="16sp"
-                    android:maxLines="1"
-                    android:inputType="text"
-                    android:imeOptions="actionSearch"
-                    />
-            </LinearLayout>
-
-            <!-- Suggestions List -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_suggestions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:maxHeight="200dp"
-                android:visibility="gone"
-                android:background="@android:color/white"
-                android:elevation="2dp"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
     <!-- Stops List Section -->
     <ScrollView
         android:layout_width="match_parent"
@@ -88,10 +27,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Route Stops"
+                android:text="@string/route_stops"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#333333"
+                android:textColor="@color/primary"
                 android:layout_marginBottom="12dp"/>
 
             <!-- Stops Container (dynamically filled) -->

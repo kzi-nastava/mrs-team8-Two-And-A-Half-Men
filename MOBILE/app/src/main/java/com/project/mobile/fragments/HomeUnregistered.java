@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import com.project.mobile.R;
 import com.project.mobile.map.MapFragment;
 import com.project.mobile.map.mapForm.FormStops;
+import com.project.mobile.map.mapForm.SearchFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,6 +55,7 @@ public class HomeUnregistered extends Fragment {
             Log.d("HomeUnregistered", "Map container size: " + mapContainer.getWidth() + "x" + mapContainer.getHeight());
         });
         getChildFragmentManager().beginTransaction()
+                .replace(R.id.search_container , new SearchFragment())
                 .replace(R.id.map_container, new MapFragment())
                 .replace(R.id.info_container , new FormStops(2L))
                 .commit();

@@ -39,13 +39,10 @@ public class FormStops extends Fragment {
     public MarkerDrawer markerDrawer;
     public RouteDrawer routeDrawer;
     public SheredLocationViewModel sheredLocationViewModel;
-    private EditText inputSearch;
-    private RecyclerView rvSuggestions;
+
     private LinearLayout stopsContainer;
-    private SugestionAdapter suggestionsAdapter;
+
     public MessageCallback callback;
-    private Handler searchHandler = new Handler(Looper.getMainLooper());
-    private Runnable searchRunnable;
 
     private Long maxStops = null;
 
@@ -93,73 +90,12 @@ public class FormStops extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_form_stops_map, container, false);
 
-        inputSearch = view.findViewById(R.id.input_search);
-        rvSuggestions = view.findViewById(R.id.recycler_suggestions);
         stopsContainer = view.findViewById(R.id.stops_container);
-        setupSuggestionsRecyclerView();
-        setupSearchInput();
         setupObservers();
         return view;
     }
-    private void setupSuggestionsRecyclerView() {
-        rvSuggestions.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        suggestionsAdapter = new SugestionAdapter(result -> {
-            sheredLocationViewModel.addLocation(result);
-
-            inputSearch.setText("");
-            inputSearch.clearFocus();
-            rvSuggestions.setVisibility(View.GONE);
-
-            hideKeyboard();
-        });
-
-        rvSuggestions.setAdapter(suggestionsAdapter);
-    }
-    private void setupSearchInput() {
-        inputSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (searchRunnable != null) {
-                    searchHandler.removeCallbacks(searchRunnable);
-                }
-                searchRunnable = () -> {
-                    String query = s.toString().trim();
-                    if (query.length() >= 3) {
-                        sheredLocationViewModel.searchLocations(query);
-                    } else {
-                        sheredLocationViewModel.clearSuggestions();
-                        rvSuggestions.setVisibility(View.GONE);
-                    }
-                };
-
-                searchHandler.postDelayed(searchRunnable, 2000);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-
-        inputSearch.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                v.postDelayed(() -> rvSuggestions.setVisibility(View.GONE), 200);
-            }
-        });
-    }
     private void setupObservers() {
-        // Observe suggestions
-        sheredLocationViewModel.getSuggestions().observe(getViewLifecycleOwner(), suggestions -> {
-            suggestionsAdapter.submitList(suggestions);
-
-            if (suggestions != null && !suggestions.isEmpty()) {
-                rvSuggestions.setVisibility(View.VISIBLE);
-            } else {
-                rvSuggestions.setVisibility(View.GONE);
-            }
-        });
 
         // Observe stops - rebuild stop list when changed
         sheredLocationViewModel.getStops().observe(getViewLifecycleOwner(), stops -> {
@@ -203,16 +139,6 @@ public class FormStops extends Fragment {
             sheredLocationViewModel.RemoveLocation(index);
         });
         return row;
-    }
-    private void hideKeyboard() {
-        if (getActivity() != null && getView() != null) {
-            android.view.inputmethod.InputMethodManager imm =
-                    (android.view.inputmethod.InputMethodManager)
-                            getActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-            }
-        }
     }
     @Override
     public void onDestroy() {

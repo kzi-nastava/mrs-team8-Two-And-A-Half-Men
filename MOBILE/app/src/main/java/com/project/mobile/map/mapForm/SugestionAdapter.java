@@ -26,9 +26,7 @@ public class SugestionAdapter extends RecyclerView.Adapter<SugestionAdapter.View
         this.listener = listener;
     }
 
-    /**
-     * Updates the suggestions list and refreshes RecyclerView
-     */
+
     public void submitList(List<NominatimResult> newSuggestions) {
         this.suggestions = newSuggestions != null ? newSuggestions : new ArrayList<>();
         notifyDataSetChanged();

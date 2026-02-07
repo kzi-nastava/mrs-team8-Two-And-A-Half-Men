@@ -8,18 +8,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,6 +27,9 @@ import com.project.mobile.map.ViewModel.MarkerDrawer;
 import com.project.mobile.map.ViewModel.RouteDrawer;
 import com.project.mobile.map.ViewModel.SheredLocationViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FormStops extends Fragment {
 
     public MarkerDrawer markerDrawer;
@@ -45,20 +41,24 @@ public class FormStops extends Fragment {
     public MessageCallback callback;
 
     private Long maxStops = null;
-    private boolean isDelatable = true;
+    private boolean isEditable = true;
+
     public FormStops() {
     }
+
     public FormStops(Long maxStops) {
         this.maxStops = maxStops;
     }
 
-    public FormStops(boolean isDelatable) {
-        this.isDelatable = isDelatable;
+    public FormStops(boolean isEditable) {
+        this.isEditable = isEditable;
     }
-    public FormStops(Long maxStops, boolean isDelatable) {
+
+    public FormStops(Long maxStops, boolean isEditable) {
         this.maxStops = maxStops;
-        this.isDelatable = isDelatable;
+        this.isEditable = isEditable;
     }
+
     public static FormStops newInstance() {
         FormStops fragment = new FormStops();
         Bundle args = new Bundle();
@@ -69,7 +69,6 @@ public class FormStops extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -80,6 +79,7 @@ public class FormStops extends Fragment {
         this.routeDrawer = new ViewModelProvider(requireActivity()).get(RouteDrawer.class);
         this.sheredLocationViewModel = new ViewModelProvider(requireActivity()).get(SheredLocationViewModel.class);
         routeDrawer.startDrawingRoute(this, this.sheredLocationViewModel.getStops(), 0xFF0000FF, "10.0f");
+
         callback = WebSocketManager.subscribe("/topic/driver-locations", locationUpdate -> {
             FragmentActivity activity = getActivity();
             if (activity != null && !activity.isFinishing() && isAdded()) {
@@ -88,33 +88,34 @@ public class FormStops extends Fragment {
                     DriverLocationDto driverLocation = DriverLocationDto.fromJson(locationUpdate);
                     if (driverLocation != null) {
                         Drawable carIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_car);
-                        markerDrawer.addMarker(new MarkerPointIcon( driverLocation.getLatitude(), driverLocation.getLongitude(), driverLocation.getDriverEmail(), carIcon));
+                        markerDrawer.addMarker(new MarkerPointIcon(driverLocation.getLatitude(), driverLocation.getLongitude(), driverLocation.getDriverEmail(), carIcon));
                     }
                 });
             }
         });
 
-
         View view = inflater.inflate(R.layout.fragment_form_stops_map, container, false);
 
         stopsContainer = view.findViewById(R.id.stops_container);
         setupObservers();
+
         return view;
     }
 
     private void setupObservers() {
-
         // Observe stops - rebuild stop list when changed
         sheredLocationViewModel.getStops().observe(getViewLifecycleOwner(), stops -> {
-            if(maxStops != null && stops.size() > maxStops) {
+            if(maxStops != null && stops != null && stops.size() > maxStops) {
                 sheredLocationViewModel.RemoveLocation(1);
                 return;
             }
             updateStopsList(stops);
         });
-
     }
+
     private void updateStopsList(java.util.List<NominatimResult> stops) {
+        if (stopsContainer == null) return;
+
         stopsContainer.removeAllViews();
 
         if (stops == null || stops.isEmpty()) {
@@ -127,33 +128,102 @@ public class FormStops extends Fragment {
             stopsContainer.addView(emptyText);
             return;
         }
+
         for (int i = 0; i < stops.size(); i++) {
             NominatimResult stop = stops.get(i);
-            View stopRow = createStopRow(stop, i);
-            stopsContainer.addView(stopRow);
+            View stopRow = createStopRow(stop, i, stops.size());
+            if (stopRow != null) {
+                stopsContainer.addView(stopRow);
+            }
         }
     }
-    private View createStopRow(NominatimResult stop, int index) {
-        View row = LayoutInflater.from(getContext())
-                .inflate(R.layout.row_stops, stopsContainer, false);
 
-        TextView txtLabel = row.findViewById(R.id.txt_stop_label);
-        TextView txtAddress = row.findViewById(R.id.txt_stop_address);
-        ImageButton btnDelete = row.findViewById(R.id.btn_delete_stop);
-        txtLabel.setText(String.valueOf((char)('A' + index)));
-        txtAddress.setText(stop.display_name);
-        if(isDelatable) {
-            btnDelete.setOnClickListener(v -> {
-                sheredLocationViewModel.RemoveLocation(index);
-            });
-        } else {
-            btnDelete.setVisibility(View.GONE);
+    private View createStopRow(NominatimResult stop, int index, int totalStops) {
+        try {
+            View row = LayoutInflater.from(getContext())
+                    .inflate(R.layout.row_stops, stopsContainer, false);
+
+            TextView txtLabel = row.findViewById(R.id.txt_stop_label);
+            TextView txtAddress = row.findViewById(R.id.txt_stop_address);
+            ImageButton btnDelete = row.findViewById(R.id.btn_delete_stop);
+            ImageButton btnMoveUp = row.findViewById(R.id.btn_move_up);
+            ImageButton btnMoveDown = row.findViewById(R.id.btn_move_down);
+
+            if (txtLabel != null) {
+                txtLabel.setText(String.valueOf((char)('A' + index)));
+            }
+            if (txtAddress != null) {
+                txtAddress.setText(stop.display_name);
+            }
+
+            // Control delete button
+            if (btnDelete != null) {
+                if(isEditable) {
+                    btnDelete.setVisibility(View.VISIBLE);
+                    btnDelete.setOnClickListener(v -> {
+                        sheredLocationViewModel.RemoveLocation(index);
+                    });
+                } else {
+                    btnDelete.setVisibility(View.GONE);
+                }
+            }
+
+            // Control move up button
+            if (btnMoveUp != null) {
+                if (isEditable && index > 0) {
+                    btnMoveUp.setVisibility(View.VISIBLE);
+                    btnMoveUp.setOnClickListener(v -> {
+                        moveStop(index, index - 1);
+                    });
+                } else {
+                    btnMoveUp.setVisibility(View.GONE);
+                }
+            }
+
+            // Control move down button
+            if (btnMoveDown != null) {
+                if (isEditable && index < totalStops - 1) {
+                    btnMoveDown.setVisibility(View.VISIBLE);
+                    btnMoveDown.setOnClickListener(v -> {
+                        moveStop(index, index + 1);
+                    });
+                } else {
+                    btnMoveDown.setVisibility(View.GONE);
+                }
+            }
+
+            return row;
+        } catch (Exception e) {
+            Log.e("FormStops", "Error creating stop row: " + e.getMessage(), e);
+            return null;
         }
-        return row;
     }
+
+    private void moveStop(int fromIndex, int toIndex) {
+        try {
+            List<NominatimResult> stops = sheredLocationViewModel.getStops().getValue();
+            if (stops == null || fromIndex < 0 || toIndex < 0 ||
+                    fromIndex >= stops.size() || toIndex >= stops.size()) {
+                return;
+            }
+
+            // Create a new list with moved item
+            List<NominatimResult> newStops = new ArrayList<>(stops);
+            NominatimResult item = newStops.remove(fromIndex);
+            newStops.add(toIndex, item);
+
+            // Update the ViewModel
+            sheredLocationViewModel.updateStopsOrder(newStops);
+        } catch (Exception e) {
+            Log.e("FormStops", "Error moving stop: " + e.getMessage(), e);
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        WebSocketManager.unsubscribe("/topic/driver-locations", callback);
+        if (callback != null) {
+            WebSocketManager.unsubscribe("/topic/driver-locations", callback);
+        }
     }
 }

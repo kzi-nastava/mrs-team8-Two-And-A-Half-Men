@@ -27,11 +27,7 @@ import com.project.mobile.viewModels.RideModel;
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeUnregistered#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class HomeUnregistered extends Fragment {
 
     private Button estimateButton;

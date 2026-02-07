@@ -60,6 +60,10 @@ public class SheredLocationViewModel extends ViewModel {
             stops.postValue(currentStops);
         }
     }
+
+    public void updateStopsOrder(List<NominatimResult> reorderedStops) {
+        stops.setValue(new ArrayList<>(reorderedStops));
+    }
     public void searchLocations(String query) {
         if (query.isEmpty() || query.length() < 3) {
             suggestions.postValue(new ArrayList<>());

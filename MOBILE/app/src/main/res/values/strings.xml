@@ -34,4 +34,8 @@
     <string name="restart">Restart</string>
     <string name="search_for_a_location">Search for a location...</string>
     <string name="search_icon">Search icon</string>
+    <string name="drag_to_reorder">Drag to reorder</string>
+    <string name="move_down">Move down</string>
+    <string name="move_up">Move up</string>
+    <string name="delete_stop">Delete stop</string>
 </resources>

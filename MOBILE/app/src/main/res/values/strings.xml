@@ -30,4 +30,8 @@
     <string name="activating_your_account">Activating your account...</string>
     <string name="enter_your_new_password">Enter your new password</string>
     <string name="route_stops">Route Stops</string>
+    <string name="estimate">Estimate</string>
+    <string name="restart">Restart</string>
+    <string name="search_for_a_location">Search for a location...</string>
+    <string name="search_icon">Search icon</string>
 </resources>

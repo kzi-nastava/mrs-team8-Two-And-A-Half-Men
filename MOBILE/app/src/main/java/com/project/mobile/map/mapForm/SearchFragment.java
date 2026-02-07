@@ -23,11 +23,12 @@ import android.widget.TextView;
 import com.project.mobile.DTO.NominatimResult;
 import com.project.mobile.R;
 import com.project.mobile.map.ViewModel.SheredLocationViewModel;
+import com.project.mobile.viewComponent.MaxHeightRecyclerView;
 
 
 public class SearchFragment extends Fragment {
     private EditText inputSearch;
-    private RecyclerView rvSuggestions;
+    private MaxHeightRecyclerView rvSuggestions;
     private SugestionAdapter suggestionsAdapter;
     private SheredLocationViewModel sheredLocationViewModel;
 
@@ -46,8 +47,11 @@ public class SearchFragment extends Fragment {
         sheredLocationViewModel =
                 new ViewModelProvider(requireActivity()).get(SheredLocationViewModel.class);
 
+
+
         inputSearch = view.findViewById(R.id.input_search);
         rvSuggestions = view.findViewById(R.id.recycler_suggestions);
+        rvSuggestions.setMaxHeightDp(100);
         setupSuggestionsRecyclerView();
         setupSearchInput();
         setupObservers();

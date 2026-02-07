@@ -1,4 +1,4 @@
-package com.project.mobile;
+package com.project.mobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
 import com.google.android.material.navigation.NavigationView;
-import com.project.mobile.activities.LoginActivity;
+import com.project.mobile.FragmentTransition;
+import com.project.mobile.R;
 import com.project.mobile.databinding.ActivityUnregisterBinding;
 import com.project.mobile.fragments.HomeUnregistered;
 

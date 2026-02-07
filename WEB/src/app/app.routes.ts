@@ -13,6 +13,11 @@ export const routes: Routes = [
 			import('@features/profile/profile.routes').then((m) => m.PROFILE_ROUTES),
 	},
 	{
+		path: 'reports',
+		loadChildren: () =>
+			import('@features/reports/reports.routes').then((m) => m.REPORTS_ROUTES),
+	},
+	{
 		path: 'driver',
 		loadChildren: () => import('@features/driver/driver.routes').then((m) => m.DRIVER_ROUTES),
 	},

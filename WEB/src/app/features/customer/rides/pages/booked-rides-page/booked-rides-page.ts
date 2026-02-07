@@ -27,16 +27,16 @@ export class BookedRides implements OnInit {
 	}
 	RideClicked(ride: BookedRide): void {
 		if (this.canTrackRide(ride)) {
-			this.router.navigate(['/rides/active'], { queryParams: { rideId: ride.id } }).then();
+			this.router.navigate(['rides', ride.id], { queryParams: { rideId: ride.id } }).then();
 		}
 	}
 	canCancelRide(ride: BookedRide): boolean {
 		if (!ride.scheduleTime) return false;
 		const scheduledTime = new Date(ride.scheduleTime);
 		const currentTime = new Date();
-		const timeDifferenceinMinutes =
+		const timeDifferenceMinutes =
 			(scheduledTime.getTime() - currentTime.getTime()) / 1000 / 60;
-		return timeDifferenceinMinutes > 10;
+		return timeDifferenceMinutes > 10;
 	}
 	canTrackRide(ride: BookedRide): boolean {
 		return ride.status === 'ACTIVE';

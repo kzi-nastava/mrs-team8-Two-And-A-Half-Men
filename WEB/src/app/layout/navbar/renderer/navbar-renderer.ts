@@ -1,20 +1,20 @@
 import { Component, input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { NavbarSettings, NavbarButton } from './models/navbar-models';
+import { NavbarSettings, NavbarButton } from '../models/navbar-models';
 import { ButtonDirective } from "@shared/directives/button/button.directive";
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'app-navbar-renderer',
   standalone: true,
   imports: [CommonModule, ButtonDirective],
-  templateUrl: './navbar-component.html',
-  styleUrls: ['./navbar-component.css']
+  templateUrl: './navbar-renderer.html',
+  styleUrls: ['./navbar-renderer.css']
 })
-export class NavbarComponent { 
-  config = input.required<NavbarSettings>() 
+export class NavbarRenderer {
+  config = input.required<NavbarSettings>()
   @Output() buttonClick = new EventEmitter<string>();
   private router = inject(Router);
   private sanitizer = inject(DomSanitizer);
@@ -46,7 +46,7 @@ export class NavbarComponent {
   }
 
   getSafeLogo(): SafeHtml {
-    console.log(this.config().logoUrl);   
+    console.log(this.config().logoUrl);
     return this.sanitizer.bypassSecurityTrustHtml(this.config().logoUrl || '');
   }
   LogoClick(): void {

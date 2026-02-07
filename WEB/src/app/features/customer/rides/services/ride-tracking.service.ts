@@ -17,7 +17,7 @@ export class RideService {
 			params = params.set('accessToken', accessToken);
 		}
 
-		return this.http.get<RideTracking>(`/api/${environment.apiVersion}/rides/active`, { params });
+		return this.http.get<RideTracking>(`/api/${environment.apiVersion}/rides/me/active`, { params });
 	}
 
 	saveNote(

@@ -1,0 +1,36 @@
+@if (isOpen) {
+	<div class="chat-container">
+		<div class="chat-header">
+			<span class="chat-title">{{ title }}</span>
+			<div class="chat-actions">
+				<button class="action-btn" (click)="onMinimize()">−</button>
+				<button class="action-btn" (click)="onClose()">×</button>
+			</div>
+		</div>
+
+		<div class="chat-messages">
+			@for (message of messages; track message.id) {
+				<div [class]="'message ' + (isOwnMessage(message) ? 'own-message' : 'other-message')">
+					<div class="message-content">
+						@if (!isOwnMessage(message)) {
+							<div class="checkmark">✓</div>
+						}
+						{{ message.content }}
+						<span class="message-time">{{ formatTime(message.timestamp) }}</span>
+					</div>
+				</div>
+			}
+		</div>
+
+		<div class="chat-input-container">
+			<input
+				type="text"
+				class="chat-input"
+				placeholder="Type text..."
+				[(ngModel)]="newMessage"
+				(keyup.enter)="onSend()"
+			/>
+			<button class="send-btn" (click)="onSend()">Send</button>
+		</div>
+	</div>
+}

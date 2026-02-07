@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 
 import com.project.mobile.R;
 import com.project.mobile.map.MapFragment;
-import com.project.mobile.map.mapForm.FormStopsMap;
+import com.project.mobile.map.mapForm.FormStops;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +55,7 @@ public class HomeUnregistered extends Fragment {
         });
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.map_container, new MapFragment())
-                .replace(R.id.info_container , new FormStopsMap())
+                .replace(R.id.info_container , new FormStops(2L))
                 .commit();
     }
 }

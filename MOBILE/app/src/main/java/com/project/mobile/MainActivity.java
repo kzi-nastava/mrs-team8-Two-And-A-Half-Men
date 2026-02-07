@@ -2,8 +2,6 @@ package com.project.mobile;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -12,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityMainBinding;
+import com.project.mobile.fragments.DriverHistoryFragment;
 import com.project.mobile.fragments.ProfileFragment;
 import com.project.mobile.viewModels.AuthModel;
 
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             else if(itemId == R.id.nav_history)
             {
-                FragmentTransition.to(new History(), this, false, containerId);
+                FragmentTransition.to(new DriverHistoryFragment(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_live_chat)

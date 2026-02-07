@@ -8,12 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import com.project.mobile.R;
+import com.project.mobile.models.Ride;
 
 public class RideHistoryAdapter extends RecyclerView.Adapter<RideHistoryAdapter.RideViewHolder> {
 
-    private List<RideHistory> rideList;
+    private List<Ride> rideList;
 
-    public RideHistoryAdapter(List<RideHistory> rideList) {
+    public RideHistoryAdapter(List<Ride> rideList) {
         this.rideList = rideList;
     }
 
@@ -27,15 +28,15 @@ public class RideHistoryAdapter extends RecyclerView.Adapter<RideHistoryAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull RideViewHolder holder, int position) {
-        RideHistory ride = rideList.get(position);
+        Ride ride = rideList.get(position);
 
-        holder.userEmail.setText("User: " + ride.getUserEmail());
-        holder.scheduled.setText("Scheduled:\n" + ride.getScheduled());
-        holder.started.setText("Started:\n" + ride.getStarted());
-        holder.ended.setText("Ended:\n" + ride.getEnded());
+        holder.userEmail.setText("User: " + ride.getRideOwnerName());
+        holder.scheduled.setText("Scheduled:\n" + ride.getScheduledTime());
+        holder.started.setText("Started:\n" + ride.getStartTime());
+        holder.ended.setText("Ended:\n" + ride.getEndTime());
         holder.status.setText("Status: " + ride.getStatus());
         holder.price.setText("Price: " + ride.getPrice());
-        holder.passengers.setText("Passengers: " + ride.getPassengers());
+        holder.passengers.setText("Passengers: " + ride.getPassengersMails());
     }
 
     @Override

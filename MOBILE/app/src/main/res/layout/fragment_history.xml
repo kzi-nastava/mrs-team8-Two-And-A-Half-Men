@@ -1,160 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2D3E3E"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <LinearLayout
+    <!-- Filter Section -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp">
 
-        <!-- Header -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="History"
-            android:textSize="32sp"
-            android:textColor="@android:color/white"
-            android:textAlignment="center"
-            android:padding="24dp"
-            android:fontFamily="sans-serif-medium"/>
-
-        <!-- Filter Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <!-- Sort Options -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="Filter Rides"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Date"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="8dp"/>
-
-                <RadioGroup
-                    android:id="@+id/sortRadioGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/radioAsc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ASC"
-                        android:textColor="@android:color/white"
-                        android:checked="true"
-                        android:buttonTint="#4CAF50"/>
-
-                    <RadioButton
-                        android:id="@+id/radioDesc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="DSC"
-                        android:textColor="@android:color/white"
-                        android:buttonTint="#4CAF50"/>
-                </RadioGroup>
-            </LinearLayout>
-
-            <!-- Date Inputs -->
+            <!-- Date Range -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="vertical"
-                android:layout_marginStart="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Start Date:"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"/>
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="12dp"
-                    app:boxBackgroundColor="#3E5555"
-                    app:boxStrokeColor="#4CAF50"
-                    app:hintTextColor="@android:color/white">
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:hint="Start Date"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/startDateInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="mm/dd/yyyy"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#888888"
                         android:focusable="false"
                         android:clickable="true"
                         android:inputType="none"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="End Date:"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"/>
-
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    app:boxBackgroundColor="#3E5555"
-                    app:boxStrokeColor="#4CAF50"
-                    app:hintTextColor="@android:color/white">
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:hint="End Date"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/endDateInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="mm/dd/yyyy"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#888888"
                         android:focusable="false"
                         android:clickable="true"
                         android:inputType="none"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
+            <!-- Sort Options -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sort by Date"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"/>
+
+            <RadioGroup
+                android:id="@+id/sortRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <RadioButton
+                    android:id="@+id/radioAsc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Oldest First"
+                    android:checked="true"/>
+
+                <RadioButton
+                    android:id="@+id/radioDesc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Newest First"/>
+            </RadioGroup>
+
             <!-- Filter Button -->
             <Button
                 android:id="@+id/filterButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Filter"
-                android:textColor="@android:color/white"
-                android:backgroundTint="#4CAF50"
-                android:layout_marginStart="16dp"
-                android:paddingHorizontal="24dp"/>
+                android:text="Apply Filter"
+                style="@style/Widget.MaterialComponents.Button"/>
         </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-        <!-- RecyclerView for Ride History -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:clipToPadding="false"
-            android:nestedScrollingEnabled="false"/>
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginVertical="16dp"/>
 
-    </LinearLayout>
+    <!-- RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"/>
 
-</androidx.core.widget.NestedScrollView>
+</LinearLayout>

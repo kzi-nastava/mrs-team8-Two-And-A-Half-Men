@@ -1,21 +1,29 @@
     package com.project.backend.config;
 
-    import org.jspecify.annotations.NonNull;
+    import com.project.backend.security.websocket.ChanelInterceptor;
+    import com.project.backend.security.websocket.CustomStompErrorHandler;
+    import com.project.backend.security.websocket.HandshakeInterceptor;
+    import lombok.RequiredArgsConstructor;
     import org.springframework.context.annotation.Configuration;
-    import org.springframework.http.server.ServerHttpRequest;
-    import org.springframework.http.server.ServerHttpResponse;
     import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-    import org.springframework.web.socket.WebSocketHandler;
     import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
     import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
     import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-    import org.springframework.web.socket.server.HandshakeInterceptor;
-
-    import java.util.Map;
 
     @Configuration
     @EnableWebSocketMessageBroker
-    public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    @RequiredArgsConstructor
+    public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
+
+        private final ChanelInterceptor chanelInterceptor;
+        private final HandshakeInterceptor handshakeInterceptor;
+        private final CustomStompErrorHandler customStompErrorHandler;
+
+//        @Override
+//        public void configureClientInboundChannel(ChannelRegistration registration) {
+//            registration.interceptors(chanelInterceptor);
+//        }
+
 
         @Override
         public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -33,34 +41,9 @@
             System.out.println("=================================================");
             // endpoint for connection
             registry.addEndpoint("/socket")
-                    .setAllowedOrigins("*")
+                    .setAllowedOriginPatterns("*")
                     .withSockJS()
-                    .setInterceptors(new HandshakeInterceptor() {
-                        @Override
-                        public boolean beforeHandshake(@NonNull ServerHttpRequest request,
-                                                       @NonNull ServerHttpResponse response,
-                                                       @NonNull WebSocketHandler wsHandler,
-                                                       @NonNull Map<String, Object> attributes) {
-                            System.out.println("=== WEBSOCKET HANDSHAKE STARTING ===");
-                            System.out.println("Request URI: " + request.getURI());
-                            System.out.println("Headers: " + request.getHeaders());
-                            return true;
-                        }
-
-                        @Override
-                        public void afterHandshake(@NonNull ServerHttpRequest request,
-                                                   @NonNull ServerHttpResponse response,
-                                                   @NonNull WebSocketHandler wsHandler,
-                                                   Exception exception) {
-                            if (exception != null) {
-                                System.out.println("=== HANDSHAKE FAILED ===");
-                                System.out.println("Error: " + exception.getMessage());
-                                // exception.printStackTrace();
-                            } else {
-                                System.out.println("=== HANDSHAKE SUCCESSFUL ===");
-                            }
-                        }
-                    });
+                    .setInterceptors(handshakeInterceptor);
+            registry.setErrorHandler(customStompErrorHandler);
         }
-
     }

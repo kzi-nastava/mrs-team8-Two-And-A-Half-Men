@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class RideNotificationService {
     private final RideRepository rideRepository;
     private final EmailService emailService;
     private final EmailBodyGeneratorService emailBodyGeneratorService;
+    private final NotificationsService notificationsService;
 
     @Value("${frontend.url}") private String frontendUrl;
 
@@ -46,6 +48,13 @@ public class RideNotificationService {
                 }
                 else {
                     // TODO: send push notification
+                    notificationsService.sendNotificationToUser(passenger.getUser(),
+                            "Your ride is starting soon",
+                            "Your ride with " + ownerName + " is starting in " + minutesBefore + " minutes.",
+                            Map.of("TYPE", "RIDE_STARTING_SOON",
+                                    "RIDE_ID", ride.getId()
+                            )
+                    );
                 }
             }
             catch (Exception e) {

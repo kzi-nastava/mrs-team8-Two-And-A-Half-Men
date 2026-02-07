@@ -1,5 +1,6 @@
 package com.project.mobile.map;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -134,10 +136,36 @@ public class MapFragment extends Fragment {
             }
             mapView.invalidate();
         });
-
+        setupMapTouchHandling();
         return v;
     }
-    @Override
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupMapTouchHandling() {
+        mapView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disable parent ScrollView scrolling when touching the map
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // Re-enable parent ScrollView scrolling
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+
+                // Let the map handle the touch event normally
+                return false;
+            }
+        });
+    }
+
+        @Override
     public void onResume() {
         super.onResume();
         if (mapView != null) {

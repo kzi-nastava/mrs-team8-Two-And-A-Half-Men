@@ -1,4 +1,4 @@
-package com.project.mobile.fragments;
+package com.project.mobile.fragments.Unregistered;
 
 import android.os.Bundle;
 

@@ -15,7 +15,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.FragmentTransition;
 import com.project.mobile.R;
 import com.project.mobile.databinding.ActivityUnregisterBinding;
-import com.project.mobile.fragments.HomeUnregistered;
+import com.project.mobile.fragments.Unregistered.HomeUnregistered;
 
 public class UnregisterActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

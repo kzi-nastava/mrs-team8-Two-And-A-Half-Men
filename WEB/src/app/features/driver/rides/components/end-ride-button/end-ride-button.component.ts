@@ -1,7 +1,7 @@
 import { Component, inject, input } from '@angular/core';
-import Swal from 'sweetalert2';
 import { DriverRideService } from '@features/driver/rides/services/driver-ride.service';
 import { ButtonDirective } from '@shared/directives/button/button.directive';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-end-ride-button',
@@ -12,29 +12,27 @@ import { ButtonDirective } from '@shared/directives/button/button.directive';
 })
 export class EndRideButtonComponent {
 	private rideService = inject(DriverRideService);
+	private popupsService = inject(PopupsService);
 
 	rideId = input.required<number>();
 
 	endRide() {
 		this.rideService.endRide(this.rideId()).subscribe({
 			next: (response) => {
-				Swal.fire({
-					title: 'Success',
-					text:
-						'Ride ended successfully! Cost: ' +
+				this.popupsService.success(
+					'Ride Ended',
+					'Ride ended successfully! Cost: ' +
 						response.cost +
 						', Time: ' +
 						response.time +
 						' minutes.',
-					icon: 'success',
-					confirmButtonText: 'Finnish a ride',
-				}).then(() => {
-					window.location.reload();
-					// TODO logic for finishing a ride
-				});
+				);
 			},
 			error: (error) => {
-				console.error('Error ending ride:', error);
+				this.popupsService.error(
+					'Error!',
+					'There was an error ending the ride. ' + error.message,
+				);
 			},
 		});
 	}

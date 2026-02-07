@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import Swal from 'sweetalert2';
 import { DriverRideService } from '@features/driver/rides/services/driver-ride.service';
 import { ButtonDirective } from '@shared/directives/button/button.directive';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-cancel-ride-button',
@@ -12,6 +13,7 @@ import { ButtonDirective } from '@shared/directives/button/button.directive';
 })
 export class CancelRideButtonComponent {
 	private rideService = inject(DriverRideService);
+	private popupsService = inject(PopupsService);
 
 	rideId = input.required<number>();
 
@@ -50,14 +52,13 @@ export class CancelRideButtonComponent {
 			}
 			this.rideService.cancelRide(this.rideId(), reason, cancelledBy).subscribe({
 				next: () => {
-					Swal.fire('Cancelled!', 'The ride has been cancelled.', 'success').then();
+					this.popupsService.success('Cancelled!', 'The ride has been cancelled.');
 				},
 				error: (error) => {
-					Swal.fire(
+					this.popupsService.error(
 						'Error!',
 						'There was an error cancelling the ride. ' + error.message,
-						'error',
-					).then();
+					);
 				},
 			});
 		});

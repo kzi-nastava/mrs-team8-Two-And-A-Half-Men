@@ -1,7 +1,7 @@
 import { Component, inject, input, output } from '@angular/core';
 import { ButtonDirective } from '@shared/directives/button/button.directive';
 import { DriverRideService } from '@features/driver/rides/services/driver-ride.service';
-import Swal from 'sweetalert2';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-start-ride-button',
@@ -12,28 +12,21 @@ import Swal from 'sweetalert2';
 })
 export class StartRideButtonComponent {
 	private driverRideService = inject(DriverRideService);
+	private popupsService = inject(PopupsService);
 
 	rideId = input.required<number>();
 
-	rideStarted = output<void>()
+	rideStarted = output<void>();
 
 	startRide(): void {
 		this.driverRideService.startRide(this.rideId()).subscribe({
 			next: (response) => {
 				this.rideStarted.emit();
-				Swal.fire({
-					title: 'Success',
-					text: response.message,
-					icon: 'success',
-				}).then();
+				this.popupsService.success('Ride Started', response.message);
 			},
 			error: (error) => {
 				console.error('Error starting ride:', error);
-				Swal.fire({
-					title: 'Error',
-					text: error?.error?.message ?? 'Error starting ride',
-					icon: 'error',
-				}).then();
+				this.popupsService.error('Error', error?.error?.message ?? 'Error starting ride');
 			},
 		});
 	}

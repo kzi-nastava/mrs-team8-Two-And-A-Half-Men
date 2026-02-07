@@ -1,5 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { UnregisteredAuthService } from '@features/unregistered/services/unregistered-auth.service';
+import { PopupsService } from '@shared/services/popups/popups.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-activation-page',
@@ -8,8 +10,9 @@ import { UnregisteredAuthService } from '@features/unregistered/services/unregis
 	styleUrls: ['./activation-page.component.css'],
 })
 export class ActivationComponent implements OnInit {
-	message = signal('');
 	private hasSendRequest: boolean = false;
+	private popupsService = inject(PopupsService);
+	private router = inject(Router);
 
 	private unregisteredAuthService = inject(UnregisteredAuthService);
 
@@ -21,15 +24,19 @@ export class ActivationComponent implements OnInit {
 		}
 		this.hasSendRequest = true;
 		if (!token) {
-			this.message.set('Invalid activation-page link.');
+			this.popupsService.error('Error', 'Invalid activation-page link.', {
+				onConfirm: () => this.router.navigate(['/']),
+			});
 			return;
 		}
 		this.unregisteredAuthService.activateAccount(token).subscribe({
 			next: (response) => {
-				this.message.set(response.message);
+				this.popupsService.success('Success', response.message, {
+					onConfirm: () => this.router.navigate(['/login']),
+				});
 			},
 			error: () => {
-				this.message.set('Activation failed. Please try again.');
+				this.popupsService.error('Error', 'Activation failed. Please try again.');
 			},
 		});
 	}

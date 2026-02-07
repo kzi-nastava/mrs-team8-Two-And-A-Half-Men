@@ -2,6 +2,7 @@ import { Component, inject, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { RatingService } from '@shared/components/forms/rating-form/services/rating.service';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-rating-form',
@@ -12,6 +13,7 @@ import { RatingService } from '@shared/components/forms/rating-form/services/rat
 })
 export class RatingFormComponent {
 	private ratingService = inject(RatingService);
+	private popupsService = inject(PopupsService);
 
 	@Input() rideId!: number;
 	@Input() accessToken: string | null = null;
@@ -42,10 +44,12 @@ export class RatingFormComponent {
 
 			this.ratingService.submitRating(this.rideId, data, this.accessToken).subscribe({
 				next: () => {
+					this.popupsService.success('Success', 'Your rating has been submitted successfully!');
 					this.isLoading.set(false);
 					this.ratingForm.reset();
 				},
 				error: () => {
+					this.popupsService.error('Error', 'Failed to submit rating. Please try again later.');
 					this.isLoading.set(false);
 				},
 			});

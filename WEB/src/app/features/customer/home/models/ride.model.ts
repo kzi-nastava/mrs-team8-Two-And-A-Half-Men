@@ -7,3 +7,9 @@ export interface RouteItem {
 export interface BookRideRequest {
 	route?: RouteItem[]
 }
+
+export interface BookRideResponse {
+	id: number,
+	status: string,
+	estimatedDistance: number,
+}

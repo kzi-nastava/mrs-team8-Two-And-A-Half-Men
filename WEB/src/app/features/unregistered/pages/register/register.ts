@@ -2,8 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import Swal from 'sweetalert2';
 import { UnregisteredAuthService } from '@features/unregistered/services/unregistered-auth.service';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-register',
@@ -15,6 +15,7 @@ import { UnregisteredAuthService } from '@features/unregistered/services/unregis
 export class Register {
 	private unregisteredAuthService = inject(UnregisteredAuthService);
 	private router = inject(Router);
+	private popupsService = inject(PopupsService);
 
 	errorMessage = signal<string | null>(null);
 	isSubmitButtonDisabled = signal(false);
@@ -64,14 +65,13 @@ export class Register {
 		this.isSubmitButtonDisabled.set(true);
 		result.subscribe({
 			next: () => {
-				Swal.fire({
-					icon: 'success',
-					title: 'Registered!',
-					text: 'Please check your email to activate your account.',
-					showConfirmButton: true,
-				}).then(() => {
-					this.router.navigate(['/login']).then();
-				});
+				this.popupsService.success(
+					'Success',
+					'Registered successfully! Please check your email to activate your account.',
+					{
+						onConfirm: () => this.router.navigate(['/login']).then(),
+					},
+				);
 				this.isSubmitButtonDisabled.set(false);
 			},
 			error: (err) => {

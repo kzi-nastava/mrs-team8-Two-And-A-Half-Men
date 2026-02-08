@@ -4,6 +4,7 @@ import com.project.backend.DTO.Ride.NewRideDTO;
 import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.events.RideCreatedEvent;
 import com.project.backend.exceptions.BadRequestException;
+import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.models.*;
@@ -84,6 +85,10 @@ public class RideBookingServiceImpl implements RideBookingService {
         var ride = new Ride();
 
         var rideOwner = fetchRideOwner(userId);
+        if (rideOwner.getIsBlocked()) {
+            throw new ForbiddenException("You are blocked and cannot book new rides. Reason: "
+                    + rideOwner.getBlockReason());
+        }
         ride.setRideOwner(rideOwner);
 
         if (body.getScheduledTime() != null) {

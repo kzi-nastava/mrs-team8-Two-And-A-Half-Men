@@ -9,6 +9,7 @@ import com.project.backend.models.AdditionalService;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
 import com.project.backend.models.Vehicle;
+import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.repositories.DriverRepository;
 import com.project.backend.repositories.RideRepository;
 import com.project.backend.repositories.VehicleRepository;
@@ -259,15 +260,22 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
      */
     private void checkDriversActivity(Set<Long> driversIds, Map<Long, DriverInformation> drivers) {
         var dbDrivers = driverRepository.findAllById(driversIds);
+        List<DriverStatus> allowedStatuses = List.of(DriverStatus.ACTIVE, DriverStatus.BUSY);
         for (var driver : dbDrivers) {
             var driverInfo = drivers.get(driver.getId());
             driverInfo.setDriver(driver);
+            if (!allowedStatuses.contains(driver.getDriverStatus())) {
+                drivers.remove(driver.getId());
+                driversIds.remove(driver.getId());
+                continue;
+            }
             var now = dateTimeService.getCurrentDateTime();
             var dayAgo = now.minusHours(24);
             var activity = driver.calculateActivityRange(dayAgo, now, now);
             if (activity >= 8 * 60) {
                 drivers.remove(driver.getId());
                 driversIds.remove(driver.getId());
+                continue;
             }
         }
     }

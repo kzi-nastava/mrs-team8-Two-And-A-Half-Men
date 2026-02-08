@@ -29,6 +29,7 @@ public class HistoryService implements IHistoryService {
     private final DriverRepository driverRepository;
     private final CustomerRepository customerRepository;
     private final AppUserRepository appUserRepository;
+    private final RideMapper rideMapper;
 
     public PagedResponse<RideResponseDTO> getDriverRideHistory(
             Long driverId,
@@ -61,7 +62,7 @@ public class HistoryService implements IHistoryService {
         List<RideResponseDTO> historyDTOs = ridePage
                 .getContent()
                 .stream()
-                .map(RideMapper::convertToRideResponseDTO)
+                .map(rideMapper::convertToRideResponseDTO)
                 .toList();
 
         return PagedResponse.fromPage(historyDTOs, ridePage);
@@ -84,7 +85,7 @@ public class HistoryService implements IHistoryService {
         PagedResponse<RideResponseDTO> pagedResponse = new PagedResponse<RideResponseDTO>();
         pagedResponse.setContent(new ArrayList<>()); // Initialize the list
         for(Ride ride : ridePage.getContent()) {
-            RideResponseDTO dto = RideMapper.convertToRideResponseDTO(ride);
+            RideResponseDTO dto = rideMapper.convertToRideResponseDTO(ride);
             if(customer.getFavoriteRoutes().contains(ride.getRoute())) {
                 // Mark as favorite route in DTO
             }

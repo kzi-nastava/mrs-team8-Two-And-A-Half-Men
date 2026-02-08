@@ -48,17 +48,19 @@ export const ADMIN_ROUTES: Routes = [
 		path: 'history',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.ADMIN])],
 		loadComponent: () =>
-			import('./history/pages/history-page/history-page.component').then(
+			import('@features/history/components/history/history.component').then(
 				(m) => m.HistoryComponent,
 			),
+		data: { userRole: LoggedInUserRole.ADMIN },
 	},
 	{
 		path: 'history/:id',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.ADMIN])],
 		loadComponent: () =>
-			import('./history/pages/history-ride-page/history-ride-page.component').then(
-				(m) => m.HistoryRidePageComponent,
+			import('@features/history/components/ride-details/ride-details.component').then(
+				(m) => m.RideDetailsComponent,
 			),
+		data: { userRole: LoggedInUserRole.CUSTOMER },
 	},
 	{
 		path: 'active-rides',
@@ -75,5 +77,5 @@ export const ADMIN_ROUTES: Routes = [
 			import('./rides/pages/active-ride-details/active-ride-details.component').then(
 				(m) => m.ActiveRideDetailsComponent,
 			),
-	}
+	},
 ];

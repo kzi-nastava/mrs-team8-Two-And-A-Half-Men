@@ -46,7 +46,6 @@ export class NavbarRenderer {
   }
 
   getSafeLogo(): SafeHtml {
-    console.log(this.config().logoUrl);
     return this.sanitizer.bypassSecurityTrustHtml(this.config().logoUrl || '');
   }
   LogoClick(): void {

@@ -59,6 +59,7 @@ public class RideService implements IRideService {
     private final VehicleRepository vehicleRepository;
     private final VehicleTypeRepository vehicleTypeRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
+    private final RideMapper rideMapper;
 
     private final SimpMessagingTemplate messagingTemplate;
 
@@ -71,7 +72,7 @@ public class RideService implements IRideService {
                                 "Ride with id " + id + " not found"
                         ));
 
-        return RideMapper.convertToRideResponseDTO(ride);
+        return rideMapper.convertToRideResponseDTO(ride);
     }
 
     @Transactional
@@ -287,7 +288,7 @@ public class RideService implements IRideService {
                                 "Active ride for driver with id " + id + " not found"
                         ));
 
-        return RideMapper.convertToRideResponseDTO(activeRide);
+        return rideMapper.convertToRideResponseDTO(activeRide);
     }
 
     public RideResponseDTO getActiveRideByCustomerId(Long id) {
@@ -302,7 +303,7 @@ public class RideService implements IRideService {
                                 "Active ride for customer with id " + id + " not found"
                         ));
 
-        return RideMapper.convertToRideResponseDTO(activeRide);
+        return rideMapper.convertToRideResponseDTO(activeRide);
     }
 
     public NoteResponseDTO saveRideNote(
@@ -701,7 +702,7 @@ public class RideService implements IRideService {
 
         List<RideResponseDTO> content = rides.getContent()
                 .stream()
-                .map(RideMapper::convertToRideResponseDTO)
+                .map(rideMapper::convertToRideResponseDTO)
                 .toList();
 
         return PagedResponse.fromPage(content, rides);

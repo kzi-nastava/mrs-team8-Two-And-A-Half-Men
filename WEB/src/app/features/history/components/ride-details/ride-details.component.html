@@ -1,0 +1,143 @@
+<div class="ride-details-container">
+	<div class="details-header">
+		<button class="btn-back" (click)="goBack()">
+			← Back to History
+		</button>
+		<h2>Ride Details</h2>
+	</div>
+
+	@if (historyService.loadingDetails()) {
+		<div class="loading-spinner">
+			<div class="spinner"></div>
+			<p>Loading ride details...</p>
+		</div>
+	}
+
+	@if (!historyService.loadingDetails() && !ride()) {
+		<div class="error-message">
+			<p>Ride not found</p>
+			<button (click)="goBack()">Go Back</button>
+		</div>
+	}
+
+	@if (!historyService.loadingDetails() && ride()) {
+		<div class="details-content">
+			<!-- Status Badge -->
+			<div class="status-section">
+                <span class="status-badge" [ngClass]="getStatusClass(ride()!.status)">
+                    {{ getStatusText(ride()!.status) }}
+                </span>
+				@if (ride()!.status === RideStatus.PANICKED) {
+					<span class="panic-indicator">⚠️ PANIC ACTIVATED</span>
+				}
+			</div>
+
+			<!-- Main Info Card -->
+			<div class="info-card">
+				<h3>Basic Information</h3>
+
+				<div class="info-grid">
+					<div class="info-item">
+						<span class="label">Ride ID:</span>
+						<span class="value">{{ ride()!.id }}</span>
+					</div>
+
+					<div class="info-item">
+						<span class="label">Start Point:</span>
+						<span class="value">{{ ride()!.addresses[0] }}</span>
+					</div>
+
+					<div class="info-item">
+						<span class="label">Destination:</span>
+						<span class="value">{{ ride()!.addresses[ride()!.addresses.length - 1] }}</span>
+					</div>
+
+					@if (ride()!.scheduledTime) {
+						<div class="info-item">
+							<span class="label">Scheduled Time:</span>
+							<span class="value">{{ formatDate(ride()!.scheduledTime) }}</span>
+						</div>
+					}
+
+					@if (ride()!.startTime) {
+						<div class="info-item">
+							<span class="label">Start Time:</span>
+							<span class="value">{{ formatDate(ride()!.startTime) }}</span>
+						</div>
+					}
+
+					@if (ride()!.endTime) {
+						<div class="info-item">
+							<span class="label">End Time:</span>
+							<span class="value">{{ formatDate(ride()!.endTime) }}</span>
+						</div>
+					}
+
+					<div class="info-item">
+						<span class="label">Price:</span>
+						<span class="value price">{{ ride()!.price }} RSD</span>
+					</div>
+
+					<div class="info-item">
+						<span class="label">Total Cost:</span>
+						<span class="value price">{{ ride()!.totalCost }} RSD</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- People Info -->
+			<div class="info-card">
+				<h3>People</h3>
+
+				<div class="info-grid">
+					<div class="info-item">
+						<span class="label">Driver:</span>
+						<span class="value">{{ ride()!.driverName }}</span>
+					</div>
+
+					<div class="info-item">
+						<span class="label">Ride Owner:</span>
+						<span class="value">{{ ride()!.rideOwnerName }}</span>
+					</div>
+
+					<div class="info-item full-width">
+						<span class="label">Passengers:</span>
+						<div class="passengers-list">
+							@for (passenger of ride()!.passengersMails; track passenger) {
+								<span class="passenger-badge">{{ passenger }}</span>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Additional Services -->
+			@if (ride()!.additionalServices.length > 0) {
+				<div class="info-card">
+					<h3>Additional Services</h3>
+					<div class="services-grid">
+						@for (service of ride()!.additionalServices; track service) {
+							<span class="service-badge">{{ service }}</span>
+						}
+					</div>
+				</div>
+			}
+
+			<!-- Cancellation Info -->
+			@if (ride()!.status === RideStatus.CANCELLED && ride()!.cancellationReason) {
+				<div class="info-card cancellation">
+					<h3>Cancellation Information</h3>
+					<p>{{ ride()!.cancellationReason }}</p>
+				</div>
+			}
+
+			<!-- Map Section -->
+			<div class="info-card">
+				<h3>Route Map</h3>
+				<div class="map-container">
+					<p class="map-placeholder">Map component goes here (path: {{ ride()!.path }})</p>
+				</div>
+			</div>
+		</div>
+	}
+</div>

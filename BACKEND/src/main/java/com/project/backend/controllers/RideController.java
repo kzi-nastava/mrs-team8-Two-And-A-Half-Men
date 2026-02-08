@@ -231,4 +231,14 @@ public class RideController {
         List<RideBookedDTO> bookedRides = rideService.getAllBookedRidesByCustomer(user);
         return ResponseEntity.ok(bookedRides);
     }
+    @GetMapping("/tracking/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')  or hasRole('DRIVER')")
+    public ResponseEntity<RideTrackingDTO> getBookedRideById(@PathVariable Long id) {
+        AppUser user = authUtils.getCurrentUser();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        RideTrackingDTO ride = rideService.getRideTrackingById(id, user);
+        return ResponseEntity.ok(ride);
+    }
 }

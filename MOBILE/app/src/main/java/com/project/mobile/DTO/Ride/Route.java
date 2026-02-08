@@ -1,8 +1,6 @@
-package com.project.mobile.DTO;
+package com.project.mobile.DTO.Ride;
 
 import org.osmdroid.views.overlay.Polyline;
-
-import java.security.Policy;
 
 public class Route {
     private Polyline routeLine;

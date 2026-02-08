@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.project.mobile.DTO.NominatimResult;
+import com.project.mobile.DTO.Map.NominatimResult;
 import com.project.mobile.R;
 
 import java.util.ArrayList;

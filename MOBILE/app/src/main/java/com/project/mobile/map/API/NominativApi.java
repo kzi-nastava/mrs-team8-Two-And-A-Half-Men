@@ -1,6 +1,6 @@
 package com.project.mobile.map.API;
 
-import com.project.mobile.DTO.NominatimResult;
+import com.project.mobile.DTO.Map.NominatimResult;
 
 import java.util.List;
 

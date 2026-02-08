@@ -14,9 +14,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.project.mobile.AdminActivity;
-import com.project.mobile.DTO.MeInfo;
+import com.project.mobile.DTO.Auth.MeInfo;
 import com.project.mobile.DriverActivity;
-import com.project.mobile.MainActivity;
 import com.project.mobile.R;
 import com.project.mobile.viewModels.AuthModel;
 

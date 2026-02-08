@@ -5,6 +5,8 @@ import com.project.backend.models.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -26,5 +28,28 @@ public class Driver extends AppUser {
     @Override
     public UserRole getRole() {
         return UserRole.DRIVER;
+    }
+
+    public Long calculateActivityRange(LocalDateTime rangeStartTime, LocalDateTime rangeEndTime, LocalDateTime referenceTime) {
+        return driverActivities.stream()
+                .mapToLong(a -> {
+                    // Replace null endTime with referenceTime
+                    LocalDateTime activityEnd =
+                            a.getEndTime() != null ? a.getEndTime() : referenceTime;
+
+                    // Clamp interval to query window
+                    LocalDateTime start =
+                            a.getStartTime().isAfter(rangeStartTime) ? a.getStartTime() : rangeStartTime;
+
+                    LocalDateTime end =
+                            activityEnd.isBefore(rangeEndTime) ? activityEnd : rangeEndTime;
+
+                    if (!start.isBefore(end)) {
+                        return 0;
+                    }
+
+                    return Duration.between(start, end).toMinutes();
+                })
+                .sum();
     }
 }

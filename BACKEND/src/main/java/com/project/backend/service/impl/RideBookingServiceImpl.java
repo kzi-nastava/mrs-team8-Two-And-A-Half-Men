@@ -34,7 +34,6 @@ public class RideBookingServiceImpl implements RideBookingService {
     private final DriverMatchingService driverMatchingService;
     private final DateTimeService dateTimeService;
 
-    private final DriverRepository driverRepository;
     private final CustomerRepository customerRepository;
     private final RideRepository rideRepository;
     private final PassengerRepository passengerRepository;
@@ -46,6 +45,7 @@ public class RideBookingServiceImpl implements RideBookingService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
     private final RouteService routeService;
+    private final AppUserRepository appUserRepository;
 
     @Value("${ride-booking.max-hours}")
     private int MAX_HOURS;
@@ -142,12 +142,12 @@ public class RideBookingServiceImpl implements RideBookingService {
      * @return user with the provided id
      * @throws ResourceNotFoundException if the user does not exist
      */
-    private Customer fetchRideOwner(@NotNull Long userId) {
-        return customerRepository
+    private AppUser fetchRideOwner(@NotNull Long userId) {
+        return appUserRepository
                 .findById(userId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Customer with id " + userId + " not found"
+                                "User with id " + userId + " not found"
                         )
                 );
     }
@@ -171,7 +171,7 @@ public class RideBookingServiceImpl implements RideBookingService {
         // Add ride owner as a passenger
         passengers.add(
                 Passenger.builder()
-                        .user((Customer)rideOwner)
+                        .user(rideOwner)
                         .accessToken(UUID.randomUUID().toString())
                         .build()
         );
@@ -192,7 +192,7 @@ public class RideBookingServiceImpl implements RideBookingService {
      * @param passengers list in witch to add newly created passengers
      */
     private void addPassengersFromEmails(List<String> passengerEmails, List<Passenger> passengers) {
-        var users = customerRepository.findByEmailIn(passengerEmails);
+        var users = appUserRepository.findByEmailIn(passengerEmails);
         for (var passengerEmail : passengerEmails) {
             // Create new Passenger object and setup it's access token
             Passenger passenger = new Passenger();

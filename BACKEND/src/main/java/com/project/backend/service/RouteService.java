@@ -74,8 +74,9 @@ public class RouteService {
         Route route = new Route(null, routeGeohash);
 
         // Remove existing locations
-        Set<Location> existingLocations = new HashSet<>(locationRepository.findAllByGeoHashIn(locations.stream().map(Location::getGeoHash).toList()));
-        locations.removeAll(existingLocations);
+        List<Location> existingLocations = locationRepository.findAllByGeoHashIn(locations.stream().map(Location::getGeoHash).toList());
+        List<String> existingGeohashes = existingLocations.stream().map(Location::getGeoHash).toList();
+        locations.removeIf(loc -> existingGeohashes.contains(loc.getGeoHash()));
 
         // Save route and locations
         routeRepository.save(route);

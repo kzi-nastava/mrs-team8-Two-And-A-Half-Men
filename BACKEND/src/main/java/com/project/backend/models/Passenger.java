@@ -20,7 +20,7 @@ public class Passenger {
     private String accessToken;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Customer user;
+    private AppUser user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Ride ride;

@@ -3,16 +3,17 @@ package com.project.backend.service.impl;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.redis.RedisLocationsDTO;
-import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.geolocation.coordinates.CoordinatesFactory;
 import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.models.AdditionalService;
+import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
 import com.project.backend.models.Vehicle;
 import com.project.backend.repositories.DriverRepository;
 import com.project.backend.repositories.RideRepository;
 import com.project.backend.repositories.VehicleRepository;
 import com.project.backend.repositories.redis.DriverLocationsRepository;
+import com.project.backend.service.DateTimeService;
 import com.project.backend.service.DriverMatchingService;
 import lombok.*;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
     private final LocationTransformer locationTransformer;
     private final CoordinatesFactory coordinatesFactory;
     private final DriverRepository driverRepository;
+    private final DateTimeService dateTimeService;
 
     @Override
     public Optional<FindDriverDTO> findDriverFor(Ride ride) {
@@ -85,28 +87,34 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
                 continue;
             }
 
+            checkDriversActivity(driversIds, drivers);
+            // No more driver's continue further
+            if (drivers.isEmpty()) {
+                continue;
+            }
+
             // There are some suitable driver, find the closest one
             var closestInfo = getClosestDriver(filter, drivers);
-            var driver = driverRepository.findById(closestInfo.getId()).orElseThrow(
-                    () -> new ResourceNotFoundException("Driver with id " +closestInfo.getId() + " does not exist")
-            );
-            return Optional.of(new FindDriverDTO(driver, closestInfo.getTotalDistance()));
+            return Optional.of(new FindDriverDTO(closestInfo.getDriver(), closestInfo.getTotalDistance()));
         }
         // No suitable driver found
         return Optional.empty();
     }
 
-
-
-
-
-    private List<RedisLocationsDTO> getRedisLocationsDTOS(double latitude, double longitude, Integer KM) {
-        if (KM > 0) {
+    /**
+     * Fetch all active drivers from redis in a circle of radius specified by parameter with center at a specific point.
+     * @param latitude latitude of the center point
+     * @param longitude longitude of the center point
+     * @param radius radius in witch to search
+     * @return List of driver locations from Redis
+     */
+    private List<RedisLocationsDTO> getRedisLocationsDTOS(double latitude, double longitude, Integer radius) {
+        if (radius > 0) {
             return driverLocationsRepository
                     .getLocationsWithinRadius(
                             longitude,
                             latitude,
-                            KM
+                            radius
                     );
         }
         else {
@@ -114,6 +122,14 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
         }
     }
 
+    /**
+     * Find the closest driver to the start point of the ride. If driver has an active ride,
+     * the distance to the end point of that ride is also included in the calculation.
+     * @param filter object containing the start point coordinates
+     * @param drivers map of drivers to check, with their coordinates and active ride (if they have one)
+     * @return DriverInformation object of the closest driver, containing also the distance to the start point
+     * and end point of active ride (if they have one)
+     */
     private DriverInformation getClosestDriver(FindDriverFilter filter, Map<Long, DriverInformation> drivers) {
         DriverInformation closest = null;
         for (var driver : drivers.values()) {
@@ -134,7 +150,13 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
         return closest;
     }
 
+    /**
+     * Fetch ride information about each possible driver.
+     * @param driversIds list of possible drivers id's to fetch rides for
+     * @param drivers map that holds driver's information, to which the ride information will be added
+     */
     private void getRideData(Set<Long> driversIds, Map<Long, DriverInformation> drivers) {
+        // TODO: add appropriate handling with scheduled rides
         List<Ride> rides = rideRepository.findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(driversIds);
         for (var ride : rides) {
             var driverInfo = drivers.get(ride.getDriver().getId());
@@ -148,7 +170,18 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
         }
     }
 
+    /**
+     * Fetches vehicle information about every candidate driver and checks if those vehicles satisfy the filters.
+     * Drivers whose vehicles do not match the filter are excluded from the list of possible suitable drivers
+     * @param filter object containing all the filters
+     * @param driversIds id's of currently possible drivers
+     * @param drivers map that holds driver's information
+     */
     private void getVehicleData(FindDriverFilter filter, Set<Long> driversIds, Map<Long, DriverInformation> drivers) {
+        // There are no vehicle related filters, move on
+        if (filter.getVehicleTypeId() == null && (filter.getAdditionalServicesIds() == null || filter.getAdditionalServicesIds().isEmpty())) {
+            return;
+        }
         var vehicles = vehicleRepository.findByDriverIdIn(driversIds);
         for (var vehicle : vehicles) {
             if (!doesVehicleMatch(vehicle, filter)) {
@@ -160,6 +193,12 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
         }
     }
 
+    /**
+     * Check if vehicle matches filter
+     * @param vehicle vehicle to check
+     * @param filter values a vehicle must possess for driver to be suitable
+     * @return true if the vehicle matches the filter, false otherwise
+     */
     private boolean doesVehicleMatch(Vehicle vehicle, FindDriverFilter filter) {
         // Check if vehicle type is set and matches
         if (filter.getVehicleTypeId() != null &&
@@ -180,7 +219,15 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
         return true;
     }
 
-    private static void mapLocationsToDriversInformation(
+    /**
+     * Transform driver locations from redis into private data structure for the algorithm of searching
+     * excluding any driver previously seen in the algorithm
+     * @param driversLocations redis locations to map
+     * @param checkedIds set of ids of all drivers that have already been processed
+     * @param driversIds set of currently viable drivers (possible)
+     * @param drivers map which stores driver's data under the driver's id as key
+     */
+    private void mapLocationsToDriversInformation(
             List<RedisLocationsDTO> driversLocations,
             Set<Long> checkedIds,
             Set<Long> driversIds,
@@ -203,6 +250,27 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
         }
     }
 
+    /**
+     * Check drivers activity and exclude those that have more than 8 hours of activity
+     * in the last 24 hours
+     * @param driversIds id's of currently possible drivers
+     * @param drivers map that holds driver's information, to which the activity information will be added and checked
+     */
+    private void checkDriversActivity(Set<Long> driversIds, Map<Long, DriverInformation> drivers) {
+        var dbDrivers = driverRepository.findAllById(driversIds);
+        for (var driver : dbDrivers) {
+            var driverInfo = drivers.get(driver.getId());
+            driverInfo.setDriver(driver);
+            var now = dateTimeService.getCurrentDateTime();
+            var dayAgo = now.minusHours(24);
+            var activity = driver.calculateActivityRange(dayAgo, now, now);
+            if (activity >= 8 * 60) {
+                drivers.remove(driver.getId());
+                driversIds.remove(driver.getId());
+            }
+        }
+    }
+
 
     @Data
     @NoArgsConstructor
@@ -214,6 +282,7 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
         double longitude;
         Vehicle vehicle;
         Ride currentRide;
+        Driver driver;
         double rideEndDistance = 0;
         double toStartPointDistance = 0;
         public double getTotalDistance() {

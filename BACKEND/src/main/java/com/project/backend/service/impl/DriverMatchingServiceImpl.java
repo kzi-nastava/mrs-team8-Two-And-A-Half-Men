@@ -39,7 +39,8 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
         var startCoordinates = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash()).get(0);
         var filtersBuilder = FindDriverFilter.builder()
                 .longitude(startCoordinates.getLongitude())
-                .latitude(startCoordinates.getLatitude());
+                .latitude(startCoordinates.getLatitude())
+                .numberOfPassengers(ride.getPassengers().size());
 
         if (ride.getAdditionalServices() != null) {
             filtersBuilder.additionalServicesIds(
@@ -178,10 +179,6 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
      * @param drivers map that holds driver's information
      */
     private void getVehicleData(FindDriverFilter filter, Set<Long> driversIds, Map<Long, DriverInformation> drivers) {
-        // There are no vehicle related filters, move on
-        if (filter.getVehicleTypeId() == null && (filter.getAdditionalServicesIds() == null || filter.getAdditionalServicesIds().isEmpty())) {
-            return;
-        }
         var vehicles = vehicleRepository.findByDriverIdIn(driversIds);
         for (var vehicle : vehicles) {
             if (!doesVehicleMatch(vehicle, filter)) {
@@ -200,6 +197,10 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
      * @return true if the vehicle matches the filter, false otherwise
      */
     private boolean doesVehicleMatch(Vehicle vehicle, FindDriverFilter filter) {
+        // Check if number of seats is sufficient
+        if (vehicle.getNumberOfSeats() < filter.getNumberOfPassengers()) {
+            return false;
+        }
         // Check if vehicle type is set and matches
         if (filter.getVehicleTypeId() != null &&
                 !Objects.equals(vehicle.getVehicleType().getId(), filter.getVehicleTypeId())) {

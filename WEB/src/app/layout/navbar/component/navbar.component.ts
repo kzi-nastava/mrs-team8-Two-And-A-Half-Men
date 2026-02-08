@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarRenderer } from '../renderer/navbar-renderer';
 import { NavbarButton, NavbarSettings } from '../models/navbar-models';
@@ -15,21 +15,41 @@ import { Router } from '@angular/router';
 export class NavbarComponent {
 	private authService = inject(AuthService);
 	private router = inject(Router);
-	navbarConfig: NavbarSettings = {
-		isSvgLogo: true,
-		logoUrl: `  <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+
+	buttons = computed(() => {
+		const user = this.authService.user();
+		const imgSrc = user?.imgSrc; // Track imgSrc changes
+
+		if (user == null) {
+			return this.unregisteredButtons;
+		} else if (user.role === LoggedInUserRole.CUSTOMER) {
+			return this.customerButtons;
+		} else if (user.role === LoggedInUserRole.DRIVER) {
+			return this.driverButtons;
+		} else if (user.role === LoggedInUserRole.ADMIN) {
+			return this.adminButtons;
+		}
+		return [];
+	});
+
+	navbarConfig = computed(
+		() =>
+			({
+				isSvgLogo: true,
+				logoUrl: `  <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
         <path d="M18 16.5L20 14M20 14L22 11.5M20 14L18 11.5M20 14L22 16.5"
               stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         <rect x="2" y="6" width="16" height="12" rx="2" stroke="white" stroke-width="2"/>
         <path d="M2 10H18M6 14H6.01M10 14H10.01"
               stroke="white" stroke-width="2" stroke-linecap="round"/>
       </svg>`,
-		logoText: 'Taxi Taxi',
-		backgroundColor: '#2d7a4f',
-		textColor: '#ffffff',
-		logoRoute: '/',
-		buttons: [],
-	};
+				logoText: 'Taxi Taxi',
+				backgroundColor: '#2d7a4f',
+				textColor: '#ffffff',
+				logoRoute: '/',
+				buttons: this.buttons(),
+			}) as NavbarSettings,
+	);
 
 	private get unregisteredButtons(): NavbarButton[] {
 		return [
@@ -79,7 +99,7 @@ export class NavbarComponent {
 			{
 				id: 'profile',
 				type: 'icon',
-				icon: this.authService.user()?.imgSrc || 'assets/default-profile.png',
+				icon: this.authService.userProfileImage(),
 				label: 'Profile',
 				position: 'right',
 				route: '/profile',
@@ -150,19 +170,6 @@ export class NavbarComponent {
 			},
 			...this.loggedInUserButtons,
 		];
-	}
-	constructor() {
-		effect(() => {
-			if (this.authService.user() == null) {
-				this.navbarConfig.buttons = this.unregisteredButtons;
-			} else if (this.authService.user()?.role === LoggedInUserRole.CUSTOMER) {
-				this.navbarConfig.buttons = this.customerButtons;
-			} else if (this.authService.user()?.role === LoggedInUserRole.DRIVER) {
-				this.navbarConfig.buttons = this.driverButtons;
-			} else if (this.authService.user()?.role === LoggedInUserRole.ADMIN) {
-				this.navbarConfig.buttons = this.adminButtons;
-			}
-		});
 	}
 	onNavbarButtonClick(buttonId: string): void {
 		console.log(`Navbar button clicked: ${buttonId}`);

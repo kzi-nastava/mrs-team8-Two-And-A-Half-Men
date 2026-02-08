@@ -62,4 +62,14 @@ export class UnregisteredAuthService {
 			},
 		);
 	}
+
+	public activateDriverAccount(token: string, newPassword: string): Observable<{ message: string }> {
+		return this.http.patch<{ message: string }>(
+			`/api/${environment.apiVersion}/activate/drivers`,
+			{
+				accessToken: token,
+				password: newPassword,
+			},
+		);
+	}
 }

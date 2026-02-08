@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavbarComponent } from './navbar-compnent';
+import { ActiveRidesPageComponent } from './active-rides-page.component';
 
-describe('NavbarComponent', () => {
-  let component: NavbarComponent;
-  let fixture: ComponentFixture<NavbarComponent>;
+describe('ActiveRidesPageComponent', () => {
+  let component: ActiveRidesPageComponent;
+  let fixture: ComponentFixture<ActiveRidesPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavbarComponent]
+      imports: [ActiveRidesPageComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NavbarComponent);
+    fixture = TestBed.createComponent(ActiveRidesPageComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

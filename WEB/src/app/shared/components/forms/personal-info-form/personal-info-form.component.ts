@@ -1,4 +1,4 @@
-// src/app/shared/components/personal-info-form/personal-info-form.component.ts
+// src/app/shared/renderer/personal-info-form/personal-info-form.component.ts
 
 import { Component, input, output, model } from '@angular/core';
 import {CommonModule } from '@angular/common';

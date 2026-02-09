@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/background_dark">
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,7 +18,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/back_button_text"
-            android:textColor="@color/accent"
             style="@style/Widget.Material3.Button.TextButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +30,6 @@
             android:text="@string/ride_details"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +41,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:indeterminateTint="@color/accent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,15 +66,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/failed_to_load_ride_details"
                 android:textSize="16sp"
-                android:textColor="@color/error_red" />
+                android:textColor="@android:color/holo_red_dark" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/retryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/retry"
-                android:backgroundTint="@color/primary"
-                android:textColor="@color/white"
                 android:layout_marginTop="16dp" />
         </LinearLayout>
 
@@ -110,7 +104,7 @@
                     android:paddingVertical="6dp"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/white"
+                    android:textColor="@android:color/white"
                     android:background="@drawable/bg_status_badge"
                     tools:text="FINISHED" />
 
@@ -122,7 +116,7 @@
                     android:text="⚠️"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/error_red"
+                    android:textColor="@android:color/holo_red_dark"
                     android:visibility="gone" />
             </LinearLayout>
 
@@ -131,7 +125,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/card_background"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="12dp">
 
@@ -147,7 +140,6 @@
                         android:text="@string/basic_information"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/white"
                         android:layout_marginBottom="12dp" />
 
                     <!-- Ride ID -->
@@ -162,14 +154,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/ride_id"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/rideIdText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="@color/white"
                             tools:text="12345" />
                     </LinearLayout>
 
@@ -185,14 +176,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/start_point"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/startPointText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="@color/white"/>
+                            android:layout_weight="1"/>
                     </LinearLayout>
 
                     <!-- Destination -->
@@ -207,14 +197,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/destination"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/destinationText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColor="@color/white"/>
+                            android:layout_weight="1"/>
                     </LinearLayout>
 
                     <!-- Scheduled Time -->
@@ -230,14 +219,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/scheduled"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/scheduledTimeText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="@color/white"
                             tools:text="09.02.2026 14:00" />
                     </LinearLayout>
 
@@ -254,14 +242,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/start_time"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/startTimeText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="@color/white"
                             tools:text="09.02.2026 14:30" />
                     </LinearLayout>
 
@@ -278,14 +265,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/end_time"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/endTimeText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="@color/white"
                             tools:text="09.02.2026 15:00" />
                     </LinearLayout>
 
@@ -301,7 +287,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/price"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/priceText"
@@ -309,7 +295,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textStyle="bold"
-                            android:textColor="@color/accent"
+                            android:textColor="#2ecc71"
                             android:textSize="16sp"
                             tools:text="400.00 RSD" />
                     </LinearLayout>
@@ -325,7 +311,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/total_cost"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/totalCostText"
@@ -333,7 +319,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textStyle="bold"
-                            android:textColor="@color/accent"
+                            android:textColor="#2ecc71"
                             android:textSize="18sp"
                             tools:text="450.00 RSD" />
                     </LinearLayout>
@@ -346,7 +332,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/card_background"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="12dp">
 
@@ -362,7 +347,6 @@
                         android:text="@string/people"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/white"
                         android:layout_marginBottom="12dp" />
 
                     <!-- Driver -->
@@ -377,14 +361,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/driver"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/driverNameText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="@color/white"
                             tools:text="John Driver" />
                     </LinearLayout>
 
@@ -400,14 +383,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/ride_owner"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray" />
+                            android:textColor="@android:color/darker_gray" />
 
                         <TextView
                             android:id="@+id/rideOwnerText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:textColor="@color/white"
                             tools:text="Jane Doe" />
                     </LinearLayout>
 
@@ -422,15 +404,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/passengers"
                             android:textStyle="bold"
-                            android:textColor="@color/text_gray"
+                            android:textColor="@android:color/darker_gray"
                             android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.chip.ChipGroup
                             android:id="@+id/passengersChipGroup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:chipBackgroundColor="@color/primary"
-                            app:chipStrokeColor="@color/accent"
                             app:singleLine="false" />
                     </LinearLayout>
 
@@ -444,7 +424,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="@color/card_background"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="12dp">
 
@@ -460,15 +439,12 @@
                         android:text="@string/additional_services"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/white"
                         android:layout_marginBottom="12dp" />
 
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/servicesChipGroup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:chipBackgroundColor="@color/primary"
-                        app:chipStrokeColor="@color/accent"
                         app:singleLine="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -480,9 +456,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="@color/warning_background"
-                app:cardStrokeColor="@color/warning_border"
-                app:cardStrokeWidth="1dp"
+                app:cardBackgroundColor="#fff3cd"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="12dp">
 
@@ -498,14 +472,14 @@
                         android:text="@string/cancellation_information"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/text_dark"
+                        android:textColor="#856404"
                         android:layout_marginBottom="8dp" />
 
                     <TextView
                         android:id="@+id/cancellationReasonText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_dark"
+                        android:textColor="#856404"
                         tools:text="Customer requested cancellation" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -517,7 +491,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="@color/card_background"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="12dp">
 
@@ -533,7 +506,6 @@
                         android:text="Route Addresses"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/white"
                         android:layout_marginBottom="12dp" />
 
                     <LinearLayout
@@ -548,7 +520,6 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/card_background"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="12dp">
 
@@ -563,7 +534,6 @@
                         android:text="@string/route_map"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/white"
                         android:padding="16dp" />
 
                     <!-- Map Container -->

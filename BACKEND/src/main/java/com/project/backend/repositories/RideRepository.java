@@ -108,4 +108,5 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
                 AND r.status IN('PENDING', 'ACCEPTED')
         """)
     Iterable<Ride> findFutureScheduledRides();
+    boolean existsByDriver_IdAndStatusIn(Long driverId, List<RideStatus> statuses);
 }

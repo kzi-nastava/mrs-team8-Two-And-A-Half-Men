@@ -89,8 +89,8 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
     FROM Ride r
     JOIN r.passengers p
     WHERE p.user = :customer
-      AND r.startTime >= COALESCE(:startTime, r.startTime)
-      AND r.startTime <= COALESCE(:endTime, r.startTime)
+      AND coalesce(r.startTime, '1970-01-01 00:00:00') >= COALESCE(:startTime, coalesce(r.startTime, '1970-01-01 00:00:00'))
+      AND coalesce(r.startTime , '1970-01-01 00:00:00') <= COALESCE(:endTime, coalesce(r.startTime , '1970-01-01 00:00:00') )
       AND (r.status IN :statuses)
 """)
     Page<Ride> findRidesByPassengerCustomerWithFilters(

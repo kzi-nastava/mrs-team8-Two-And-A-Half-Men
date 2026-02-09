@@ -1,4 +1,4 @@
-package com.project.mobile.DTO;
+package com.project.mobile.DTO.Auth;
 
 public class MeInfo {
     private Long id;

@@ -20,7 +20,7 @@ import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
 
-import com.project.mobile.DTO.NominatimResult;
+import com.project.mobile.DTO.Map.NominatimResult;
 import com.project.mobile.R;
 import com.project.mobile.map.ViewModel.MarkerDrawer;
 import com.project.mobile.map.ViewModel.RouteDrawer;

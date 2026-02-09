@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.project.mobile.DTO.NominatimResult;
-import com.project.mobile.DTO.Route;
+import com.project.mobile.DTO.Map.NominatimResult;
+import com.project.mobile.DTO.Ride.Route;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +19,7 @@ import org.osmdroid.views.overlay.Polyline;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -127,6 +128,52 @@ public class RouteDrawer extends ViewModel {
             }
         });
     }
+    public CompletableFuture<List<Double>> fetchRouteTimeAndDistanceAsync(List<GeoPoint> routePoints) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                double totalDistance = 0;
+                double totalDuration = 0;
+
+                OkHttpClient client = new OkHttpClient();
+
+                for (int i = 0; i < routePoints.size() - 1; i++) {
+                    GeoPoint start = routePoints.get(i);
+                    GeoPoint end = routePoints.get(i + 1);
+
+                    String url = "https://router.project-osrm.org/route/v1/driving/" +
+                            start.getLongitude() + "," + start.getLatitude() + ";" +
+                            end.getLongitude() + "," + end.getLatitude() +
+                            "?overview=false";
+
+                    Request request = new Request.Builder().url(url).build();
+                    Response response = client.newCall(request).execute();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        String responseBody = response.body().string();
+                        JSONObject json = new JSONObject(responseBody);
+                        JSONObject route = json.getJSONArray("routes").getJSONObject(0);
+
+                        totalDistance += route.getDouble("distance");
+                        totalDuration += route.getDouble("duration");
+                    } else {
+                        throw new IOException("Failed to fetch segment " + i + ": " + response.code());
+                    }
+                }
+
+                List<Double> result = new ArrayList<>();
+                result.add(totalDuration); // index 0 → total duration in seconds
+                result.add(totalDistance); // index 1 → total distance in meters
+                return result;
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+
+
+
 
 
 }

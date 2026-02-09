@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.project.mobile.DTO.NominatimResult;
+import com.project.mobile.DTO.Map.NominatimResult;
 import com.project.mobile.map.API.NominativApi;
 import com.project.mobile.map.API.NominativeClient;
 

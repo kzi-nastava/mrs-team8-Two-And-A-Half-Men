@@ -58,4 +58,5 @@
     <string name="destination">Destination:</string>
     <string name="scheduled">Scheduled:</string>
     <string name="cancellation_information">Cancellation Information</string>
+    <string name="profile_save_changes">Save Changes</string>
 </resources>

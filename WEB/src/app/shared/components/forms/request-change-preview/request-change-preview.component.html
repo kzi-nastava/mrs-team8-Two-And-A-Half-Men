@@ -9,7 +9,7 @@
 		</div>
 		<div class="alert-content">
 			<h4 class="alert-title">Pending Review</h4>
-			<p class="alert-message">Your profile changes are currently under review by the administrator. You will be notified once they are approved.</p>
+			<p class="alert-message">{{title()}}</p>
 			<div class="pending-changes-list">
 				@for (change of pendingChanges; track change.label) {
 					<div class="pending-item">
@@ -46,11 +46,6 @@
 				}
 			</div>
 		</div>
-		<button class="cancel-button" (click)="cancelRequest()">
-			<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-				<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-			</svg>
-			Cancel Request
-		</button>
+		<ng-content />
 	</div>
 }

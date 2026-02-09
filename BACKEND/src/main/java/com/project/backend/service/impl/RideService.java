@@ -681,13 +681,46 @@ public class RideService implements IRideService {
 
         ride.setStatus(finishRideDTO.isInterrupted() ? RideStatus.INTERRUPTED : RideStatus.FINISHED);
         ride.getDriver().setDriverStatus(DriverStatus.ACTIVE);
-        // TODO: redirect driver to new ride
 
         applicationEventPublisher.publishEvent(new RideFinishedEvent(ride));
 
         rideRepository.save(ride);
     }
 
+    @Override
+    public RideTrackingDTO getRideTrackingById(Long id, AppUser user) {
+        Ride ride = rideRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Ride with id " + id + " not found")
+                );
+        if(ride.getStatus() != RideStatus.ACCEPTED && ride.getStatus() != RideStatus.ACTIVE && ride.getStatus() != RideStatus.PENDING) {
+            throw new BadRequestException("Ride is not trackable");
+        }
+        if (user instanceof Driver) {
+            if(!ride.getDriver().getId().equals(user.getId())) {
+                throw new ForbiddenException("You are not assigned to this ride");
+            }
+        } else if (user instanceof Customer) {
+            if(!ride.getRideOwner().getId().equals(user.getId())) {
+                throw new ForbiddenException("You are not the owner of this ride");
+            }
+        }
+        List<Coordinates> coordinates = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
+        List<String> hashes = coordinates
+                .stream().map(
+                        c -> locationTransformer
+                                .transformFromPoints(List.of(new double[] {c.getLatitude(), c.getLongitude()}))
+                ).toList();
+        var locations = locationRepository.findAllByGeoHashIn(hashes);
+
+        return RideTrackingDTO.builder()
+                .id(ride.getId())
+                .driverId(ride.getDriver() != null ? ride.getDriver().getId() : null)
+                .stops(locations)
+                .status(ride.getStatus())
+                .startTime(ride.getStartTime() != null ? ride.getStartTime() : ride.getScheduledTime() != null ? ride.getScheduledTime() : null)
+                .build();
+    }
     public PagedResponse<RideResponseDTO> getActiveRides(
             Pageable pageable,
             String driverFirstName,
@@ -724,4 +757,5 @@ public class RideService implements IRideService {
             return rideEndDistance + toStartPointDistance;
         }
     }
+
 }

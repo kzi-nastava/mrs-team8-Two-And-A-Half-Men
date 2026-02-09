@@ -1,12 +1,9 @@
 package com.project.mobile.map.mapForm;
 
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -17,9 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.project.mobile.DTO.DriverLocationDto;
-import com.project.mobile.DTO.MarkerPointIcon;
-import com.project.mobile.DTO.NominatimResult;
+import com.project.mobile.DTO.Map.NominatimResult;
 import com.project.mobile.R;
 import com.project.mobile.core.WebSocketsMenager.MessageCallback;
 import com.project.mobile.core.WebSocketsMenager.WebSocketManager;
@@ -80,19 +75,7 @@ public class FormStops extends Fragment {
         this.sheredLocationViewModel = new ViewModelProvider(requireActivity()).get(SheredLocationViewModel.class);
         routeDrawer.startDrawingRoute(this, this.sheredLocationViewModel.getStops(), 0xFF0000FF, "10.0f");
 
-        callback = WebSocketManager.subscribe("/topic/driver-locations", locationUpdate -> {
-            FragmentActivity activity = getActivity();
-            if (activity != null && !activity.isFinishing() && isAdded()) {
-                activity.runOnUiThread(() -> {
-                    Log.d("FormStopsMap", "Received location update: " + locationUpdate);
-                    DriverLocationDto driverLocation = DriverLocationDto.fromJson(locationUpdate);
-                    if (driverLocation != null) {
-                        Drawable carIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_car);
-                        markerDrawer.addMarker(new MarkerPointIcon(driverLocation.getLatitude(), driverLocation.getLongitude(), driverLocation.getDriverEmail(), carIcon));
-                    }
-                });
-            }
-        });
+
 
         View view = inflater.inflate(R.layout.fragment_form_stops_map, container, false);
 

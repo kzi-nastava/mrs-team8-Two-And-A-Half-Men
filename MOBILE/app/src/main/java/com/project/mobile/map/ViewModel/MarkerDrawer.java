@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.project.mobile.DTO.MarkerPointIcon;
+import com.project.mobile.DTO.Map.MarkerPointIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,5 +29,9 @@ public class MarkerDrawer extends ViewModel {
             }
             currentMarkerPointIcons.add(markerPointIcon);
             markers.postValue(currentMarkerPointIcons);
+    }
+
+    public void clearMarkers() {
+        markers.postValue(new ArrayList<>());
     }
 }

@@ -29,7 +29,7 @@ export const ADMIN_ROUTES: Routes = [
 			),
 	},
 	{
-		path: 'users/:id',
+		path: 'users/:userId',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.ADMIN])],
 		loadComponent: () =>
 			import('./users/pages/user-details-page/user-details-page.component').then(

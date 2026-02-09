@@ -5,6 +5,7 @@ import com.project.backend.DTO.Ride.RideBookedDTO;
 import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.DTO.Utils.PagedResponse;
+import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
 import com.project.backend.DTO.Ride.*;
 import com.project.backend.models.Driver;
@@ -43,4 +44,6 @@ public interface IRideService {
     List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer);
 
     PagedResponse<RideResponseDTO> getActiveRides(Pageable pageable, String driverFirstName, String driverLastName);
+
+    RideTrackingDTO getRideTrackingById(Long id, AppUser user);
 }

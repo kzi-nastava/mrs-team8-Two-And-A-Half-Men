@@ -18,7 +18,7 @@ import com.google.android.material.chip.Chip;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.project.mobile.DTO.MarkerPointIcon;
+import com.project.mobile.DTO.Map.MarkerPointIcon;
 import com.project.mobile.R;
 import com.project.mobile.core.retrofitClient.RetrofitClient;
 import com.project.mobile.databinding.FragmentRideDetailsBinding;

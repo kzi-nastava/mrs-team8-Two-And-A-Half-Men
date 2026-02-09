@@ -48,7 +48,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-public class RideDetailsFragment extends Fragment {
+public class RideDetailsFragmentActive extends Fragment {
 
 
     private static final String TAG = "RideDetailsFragment";
@@ -80,19 +80,19 @@ public class RideDetailsFragment extends Fragment {
 
     private int updateCounter = 0;
 
-    public RideDetailsFragment() {
+    public RideDetailsFragmentActive() {
     }
 
-    public static RideDetailsFragment newInstanceWithId(Long rideId) {
-        RideDetailsFragment fragment = new RideDetailsFragment();
+    public static RideDetailsFragmentActive newInstanceWithId(Long rideId) {
+        RideDetailsFragmentActive fragment = new RideDetailsFragmentActive();
         Bundle args = new Bundle();
         args.putLong(ARG_RIDE_ID, rideId);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public static RideDetailsFragment newInstanceWithAccessToken(String accessToken) {
-        RideDetailsFragment fragment = new RideDetailsFragment();
+    public static RideDetailsFragmentActive newInstanceWithAccessToken(String accessToken) {
+        RideDetailsFragmentActive fragment = new RideDetailsFragmentActive();
         Bundle args = new Bundle();
         args.putString(ARG_ACCESS_TOKEN, accessToken);
         fragment.setArguments(args);

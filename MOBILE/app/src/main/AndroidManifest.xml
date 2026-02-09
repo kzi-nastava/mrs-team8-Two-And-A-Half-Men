@@ -57,7 +57,7 @@
             android:name=".activities.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="false" />
         <activity
             android:name=".activities.CustomerAccountActivation"

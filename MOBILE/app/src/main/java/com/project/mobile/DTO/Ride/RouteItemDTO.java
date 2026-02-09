@@ -1,6 +1,7 @@
-package com.project.mobile.DTO;
+package com.project.mobile.DTO.Ride;
 
 import com.google.gson.annotations.SerializedName;
+import com.project.mobile.DTO.Map.NominatimResult;
 
 public class RouteItemDTO {
     @SerializedName("address")

@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityDriverBinding;
 import com.project.mobile.fragments.DriverHistoryFragment;
-import com.project.mobile.fragments.ProfileFragment;
+import com.project.mobile.fragments.profile.ProfileFragment;
 
 public class DriverActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

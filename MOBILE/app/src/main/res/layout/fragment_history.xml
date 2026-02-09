@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/background_dark">
 
     <!-- Header -->
     <TextView
@@ -15,6 +16,7 @@
         android:text="Ride History"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="Sort by:"
                 android:textStyle="bold"
+                android:textColor="@color/text_gray"
                 android:layout_marginEnd="8dp" />
 
             <Spinner
@@ -49,14 +52,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:backgroundTint="@color/accent"
+                android:popupBackground="@color/card_background" />
 
             <Spinner
                 android:id="@+id/sortDirectionSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                android:backgroundTint="@color/accent"
+                android:popupBackground="@color/card_background" />
         </LinearLayout>
 
         <!-- Filter Toggle Button -->
@@ -65,7 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Show Filters"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
             app:icon="@drawable/ic_filter"
             app:iconGravity="start" />
 
@@ -76,6 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:visibility="gone"
+            app:cardBackgroundColor="@color/card_background"
             app:cardElevation="2dp"
             app:cardCornerRadius="8dp">
 
@@ -90,6 +99,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Start Date"
+                    android:hintTextColor="@color/text_gray"
+                    app:boxStrokeColor="@color/accent"
+                    app:boxBackgroundColor="@color/card_background"
+                    app:endIconTint="@color/accent"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -98,7 +111,9 @@
                         android:layout_height="wrap_content"
                         android:focusable="false"
                         android:clickable="true"
-                        android:inputType="none" />
+                        android:inputType="none"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/text_gray" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- End Date -->
@@ -107,6 +122,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:hint="End Date"
+                    android:hintTextColor="@color/text_gray"
+                    app:boxStrokeColor="@color/accent"
+                    app:boxBackgroundColor="@color/card_background"
+                    app:endIconTint="@color/accent"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -115,7 +134,9 @@
                         android:layout_height="wrap_content"
                         android:focusable="false"
                         android:clickable="true"
-                        android:inputType="none" />
+                        android:inputType="none"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/text_gray" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Filter Buttons -->
@@ -131,6 +152,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Apply Filters"
+                        android:backgroundTint="@color/primary"
+                        android:textColor="@color/white"
                         android:layout_marginEnd="8dp" />
 
                     <com.google.android.material.button.MaterialButton
@@ -139,6 +162,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Clear"
+                        android:backgroundTint="@color/card_background"
+                        android:textColor="@color/accent"
+                        android:strokeColor="@color/accent"
+                        android:strokeWidth="1dp"
                         style="@style/Widget.Material3.Button.OutlinedButton" />
                 </LinearLayout>
             </LinearLayout>
@@ -152,7 +179,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textSize="12sp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/text_gray"
         android:visibility="gone"
         tools:text="Page 1 of 5 (50 total rides)"
         app:layout_constraintStart_toStartOf="parent"
@@ -165,6 +192,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:minHeight="48dp"
+        android:backgroundTint="@color/accent"
+        android:popupBackground="@color/card_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/controlsContainer" />
 
@@ -176,6 +205,7 @@
         android:layout_marginTop="16dp"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
+        android:background="@color/background_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -188,6 +218,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:indeterminateTint="@color/accent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -200,7 +231,7 @@
         android:layout_height="wrap_content"
         android:text="No rides found"
         android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/text_gray"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

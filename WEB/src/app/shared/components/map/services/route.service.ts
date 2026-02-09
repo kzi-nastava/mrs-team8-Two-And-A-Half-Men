@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 import { MapService } from './map.service';
-import Geohash from 'latlon-geohash';
 
 export interface RouteOptions {
 	color?: string;
@@ -216,51 +215,4 @@ export class RouteService {
 	cleanup(): void {
 		this.clearAllRoutes();
 	}
-
-	drawLineFromGeohash(
-  geohashString: string,
-  geohashLength: number,
-  options?: RouteOptions
-): string {
-  const map = this.mapService.getMap();
-  const lineId = this.generateRouteId();
-
-  const coordinates: L.LatLng[] = [];
-  
-  for (let i = 0; i < geohashString.length; i += geohashLength) {
-    const hash = geohashString.substring(i, i + geohashLength);
-    
-    try {
-      const decoded = Geohash.decode(hash);
-      coordinates.push(L.latLng(decoded.lat, decoded.lon));
-    } catch (error) {
-      console.warn(`Failed to decode geohash: ${hash}`, error);
-    }
-  }
-
-  const polyline = L.polyline(coordinates, {
-    color: options?.color || '#3388ff',
-    weight: options?.weight || 6,
-    opacity: options?.opacity || 0.7,
-  }).addTo(map);
-
-  let totalDistance = 0;
-  for (let i = 0; i < coordinates.length - 1; i++) {
-    totalDistance += coordinates[i].distanceTo(coordinates[i + 1]);
-  }
-
-  const routeInfo: RouteInfo = {
-    id: lineId,
-    waypoints: coordinates,
-    distance: totalDistance,
-    duration: 0,
-    control: polyline as any,
-  };
-
-  this.routes.set(lineId, routeInfo);
-
-  return lineId;
-}
-
-
 }

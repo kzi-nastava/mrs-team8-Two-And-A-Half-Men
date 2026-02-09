@@ -13,6 +13,9 @@ export class AuthService {
 	// --- Reactive state ---
 	private _user = signal<LoggedInUser | null>(null);
 	readonly user = this._user.asReadonly();
+	public readonly userProfileImage = computed(
+		() => this._user()?.imgSrc || 'assets/default-profile.png',
+	);
 
 	constructor() {
 		// On service init, load JWT from storage and fetch user
@@ -53,10 +56,8 @@ export class AuthService {
 		const current = this._user();
 		if (!current) return;
 
-		const updatedUser = { ...current, ...user };
-		this._user.set(updatedUser);
+		this._user.update((current) => ({ ...current!, ...user }));
 	}
-
 
 	updateToken(token: string) {
 		this.tokenService.setToken(token);

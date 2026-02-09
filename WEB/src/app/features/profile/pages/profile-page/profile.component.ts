@@ -103,6 +103,7 @@ export class ProfileComponent implements OnInit {
 		if (profile.pendingChangeRequest) {
 			this.changeRequest.set(profile?.pendingChangeRequest ?? null);
 		}
+		this.authService.updateUserInfo(profile.personalInfo);
 	}
 
 	loadProfileData() {

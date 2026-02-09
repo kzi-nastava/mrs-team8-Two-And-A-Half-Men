@@ -90,7 +90,7 @@ public class BookedRidesFragment extends Fragment {
     private void openRideDetails(Long rideId) {
         Log.d("BookedRidesFragment", "Opening ride details for ID: " + rideId);
 
-        RideDetailsFragmentActive rideDetailsFragment = RideDetailsFragmentActive.newInstanceWithId(rideId);
+        RideDetailsFragment rideDetailsFragment = RideDetailsFragment.newInstanceWithId(rideId);
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, rideDetailsFragment)

@@ -1,28 +1,30 @@
-package com.project.mobile.activities;
+package com.project.mobile.fragments;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-import com.project.mobile.R;
-import com.project.mobile.data.ProfileManager;
-import com.project.mobile.fragments.PersonalDataFragment;
-import com.project.mobile.fragments.VehicleDataFragment;
-import com.project.mobile.models.PendingChange;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.project.mobile.R;
+import com.project.mobile.data.ProfileManager;
+import com.project.mobile.models.PendingChange;
+
 import java.util.List;
 
-public class ProfileActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
+public class ProfileFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private View pendingReviewLayout;
@@ -30,33 +32,30 @@ public class ProfileActivity extends AppCompatActivity {
     private MaterialButton btnCancelRequest;
     private ProfileManager profileManager;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_profile, container, false);
+    }
 
-        profileManager = ProfileManager.getInstance(this);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        initViews();
-        setupToolbar();
+        profileManager = ProfileManager.getInstance(requireContext());
+
+        initViews(view);
         setupViewPager();
         setupPendingReview();
     }
 
-    private void initViews() {
-        toolbar = findViewById(R.id.toolbar);
-        tabLayout = findViewById(R.id.tabLayout);
-        viewPager = findViewById(R.id.viewPager);
-        pendingReviewLayout = findViewById(R.id.pendingReviewLayout);
+    private void initViews(View view) {
+        tabLayout = view.findViewById(R.id.tabLayout);
+        viewPager = view.findViewById(R.id.viewPager);
+        pendingReviewLayout = view.findViewById(R.id.pendingReviewLayout);
         pendingChangesList = pendingReviewLayout.findViewById(R.id.pendingChangesList);
         btnCancelRequest = pendingReviewLayout.findViewById(R.id.btnCancelRequest);
-    }
-
-    private void setupToolbar() {
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("TAXI, TAXI");
-        }
     }
 
     private void setupViewPager() {
@@ -109,10 +108,10 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private class ProfilePagerAdapter extends FragmentStateAdapter {
+    private static class ProfilePagerAdapter extends FragmentStateAdapter {
 
-        public ProfilePagerAdapter(@NonNull AppCompatActivity activity) {
-            super(activity);
+        public ProfilePagerAdapter(@NonNull Fragment fragment) {
+            super(fragment);
         }
 
         @NonNull

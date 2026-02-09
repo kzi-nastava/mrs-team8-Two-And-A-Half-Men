@@ -1,1 +1,251 @@
-<p>report-page works!</p>
+<div class="reports-container">
+	<!-- Header -->
+	<div class="reports-header">
+		<h1 class="reports-title">
+			<span class="icon">📊</span>
+			Ride Statistics Report
+		</h1>
+	</div>
+
+	<!-- Filters Section -->
+	<div class="filters-section" appBox>
+		<h2 class="section-title">
+			<span class="icon">🔍</span>
+			Filters
+		</h2>
+
+		<div class="filters-grid">
+			<!-- Date Range -->
+			<div class="filter-group">
+				<label class="filter-label">Start Date</label>
+				<input
+					type="date"
+					class="filter-input"
+					[value]="startDate()"
+					(change)="startDate.set($any($event.target).value)"
+				/>
+			</div>
+
+			<div class="filter-group">
+				<label class="filter-label">End Date</label>
+				<input
+					type="date"
+					class="filter-input"
+					[value]="endDate()"
+					(change)="endDate.set($any($event.target).value)"
+				/>
+			</div>
+
+			<!-- Admin-only filters -->
+			@if (isAdmin()) {
+				<div class="filter-group">
+					<label class="filter-label">User Type</label>
+					<select
+						class="filter-input"
+						[value]="selectedUserType()"
+						(change)="selectedUserType.set($any($event.target).value); onUserTypeChange()"
+					>
+						<option value="DRIVER">Drivers</option>
+						<option value="PASSENGER">Passengers</option>
+					</select>
+				</div>
+			}
+
+			<!-- Quick Date Ranges -->
+			<div class="quick-filters">
+				<button class="quick-filter-btn" (click)="setDateRange('week')">Last Week</button>
+				<button class="quick-filter-btn" (click)="setDateRange('month')">Last Month</button>
+				<button class="quick-filter-btn" (click)="setDateRange('quarter')">Last Quarter</button>
+				<button class="quick-filter-btn" (click)="setDateRange('year')">Last Year</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Loading State -->
+	@if (loading()) {
+		<div class="loading-container" appBox>
+			<div class="spinner"></div>
+			<p>Loading report data...</p>
+		</div>
+	}
+
+	<!-- Error State -->
+	@if (error()) {
+		<div class="error-container" appBox>
+			<p class="error-message">{{ error() }}</p>
+			<button class="retry-btn" (click)="loadData()">Retry</button>
+		</div>
+	}
+
+	<!-- Admin: User List -->
+	@if (isAdmin() && aggregatedReport() && !loading()) {
+		<div class="users-section" appBox>
+			<h2 class="section-title">
+				<span class="icon">👥</span>
+				{{ selectedUserType() === 'DRIVER' ? 'Drivers' : 'Passengers' }} Report
+			</h2>
+
+			<div class="user-cards-grid">
+				<!-- Combined Stats Card -->
+				<div
+					class="user-card"
+					[class.active]="selectedUserId() === null"
+					(click)="viewCombinedStats()"
+				>
+					<div class="user-card-header">
+						<h3>📈 All {{ selectedUserType() === 'DRIVER' ? 'Drivers' : 'Passengers' }}</h3>
+					</div>
+					<div class="user-card-stats">
+						<div class="stat-item">
+							<span class="stat-label">Total Rides:</span>
+							<span class="stat-value">{{ aggregatedReport()!.combinedStats.totalRides }}</span>
+						</div>
+						<div class="stat-item">
+							<span class="stat-label">Total Distance:</span>
+							<span class="stat-value">{{ aggregatedReport()!.combinedStats.totalDistance.toFixed(2) }} km</span>
+						</div>
+						<div class="stat-item">
+							<span class="stat-label">Total Amount:</span>
+							<span class="stat-value">{{ aggregatedReport()!.combinedStats.totalAmount.toFixed(2) }} RSD</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Individual User Cards -->
+				@for (userReport of aggregatedReport()!.userReports; track userReport.userId) {
+					<div
+						class="user-card"
+						[class.active]="selectedUserId() === userReport.userId"
+						(click)="loadSpecificUserReport(userReport.userId)"
+					>
+						<div class="user-card-header">
+							<h3>{{ userReport.userName }}</h3>
+							<p class="user-email">{{ userReport.userEmail }}</p>
+						</div>
+						<div class="user-card-stats">
+							<div class="stat-item">
+								<span class="stat-label">Rides:</span>
+								<span class="stat-value">{{ userReport.report.totalRides }}</span>
+							</div>
+							<div class="stat-item">
+								<span class="stat-label">Distance:</span>
+								<span class="stat-value">{{ userReport.report.totalDistance.toFixed(2) }} km</span>
+							</div>
+							<div class="stat-item">
+								<span class="stat-label">Amount:</span>
+								<span class="stat-value">{{ userReport.report.totalAmount.toFixed(2) }} RSD</span>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	}
+
+	<!-- Statistics Summary -->
+	@if (getCurrentReportData() && !loading()) {
+		<div class="summary-section" appBox>
+			<h2 class="section-title">
+				<span class="icon">📈</span>
+				Summary Statistics
+			</h2>
+
+			<div class="summary-grid">
+				<!-- Cumulative Totals -->
+				<div class="summary-card">
+					<div class="summary-header">
+						<h3>Cumulative Totals</h3>
+					</div>
+					<div class="summary-stats">
+						<div class="summary-stat">
+							<span class="summary-label">Total Rides</span>
+							<span class="summary-value">{{ getCurrentReportData()!.totalRides }}</span>
+						</div>
+						<div class="summary-stat">
+							<span class="summary-label">Total Distance</span>
+							<span class="summary-value">{{ getCurrentReportData()!.totalDistance.toFixed(2) }} km</span>
+						</div>
+						<div class="summary-stat">
+							<span class="summary-label">Total Amount {{ userTypeLabel() }}</span>
+							<span class="summary-value">{{ getCurrentReportData()!.totalAmount.toFixed(2) }} RSD</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Daily Averages -->
+				<div class="summary-card">
+					<div class="summary-header">
+						<h3>Daily Averages</h3>
+					</div>
+					<div class="summary-stats">
+						<div class="summary-stat">
+							<span class="summary-label">Rides per Day</span>
+							<span class="summary-value">{{ getCurrentReportData()!.averageRidesPerDay.toFixed(2) }}</span>
+						</div>
+						<div class="summary-stat">
+							<span class="summary-label">Distance per Day</span>
+							<span class="summary-value">{{ getCurrentReportData()!.averageDistancePerDay.toFixed(2) }} km</span>
+						</div>
+						<div class="summary-stat">
+							<span class="summary-label">Amount per Day</span>
+							<span class="summary-value">{{ getCurrentReportData()!.averageAmountPerDay.toFixed(2) }} RSD</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Per Ride Averages -->
+				<div class="summary-card">
+					<div class="summary-header">
+						<h3>Per Ride Averages</h3>
+					</div>
+					<div class="summary-stats">
+						<div class="summary-stat">
+							<span class="summary-label">Distance per Ride</span>
+							<span class="summary-value">{{ getCurrentReportData()!.averageDistancePerRide.toFixed(2) }} km</span>
+						</div>
+						<div class="summary-stat">
+							<span class="summary-label">Amount per Ride</span>
+							<span class="summary-value">{{ getCurrentReportData()!.averageAmountPerRide.toFixed(2) }} RSD</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Charts Section -->
+		<div class="charts-section">
+			<!-- Rides Chart -->
+			<div class="chart-container" appBox>
+				<h2 class="section-title">
+					<span class="icon">🚗</span>
+					Number of Rides per Day
+				</h2>
+				<div class="chart-wrapper">
+					<canvas id="ridesChart"></canvas>
+				</div>
+			</div>
+
+			<!-- Distance Chart -->
+			<div class="chart-container" appBox>
+				<h2 class="section-title">
+					<span class="icon">📏</span>
+					Distance Covered per Day (km)
+				</h2>
+				<div class="chart-wrapper">
+					<canvas id="distanceChart"></canvas>
+				</div>
+			</div>
+
+			<!-- Amount Chart -->
+			<div class="chart-container" appBox>
+				<h2 class="section-title">
+					<span class="icon">💰</span>
+					Amount {{ userTypeLabel() | titlecase }} per Day (RSD)
+				</h2>
+				<div class="chart-wrapper">
+					<canvas id="amountChart"></canvas>
+				</div>
+			</div>
+		</div>
+	}
+</div>

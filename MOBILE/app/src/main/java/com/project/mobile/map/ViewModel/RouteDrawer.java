@@ -32,7 +32,7 @@ public class RouteDrawer extends ViewModel {
         return routes;
     }
 
-    private List<GeoPoint> getRoute(GeoPoint startPoint, GeoPoint endPoint) throws IOException, JSONException {
+    public List<GeoPoint> getRoute(GeoPoint startPoint, GeoPoint endPoint) throws IOException, JSONException {
         String url = "https://router.project-osrm.org/route/v1/driving/" +
                 startPoint.getLongitude() + "," + startPoint.getLatitude() + ";" +
                 endPoint.getLongitude() + "," + endPoint.getLatitude() +
@@ -98,7 +98,7 @@ public class RouteDrawer extends ViewModel {
         }).start();
     }
 
-    private void addRoute(Polyline routeLine, String name) {
+    public void addRoute(Polyline routeLine, String name) {
         List<Route> currentRoutes = routes.getValue();
         if (currentRoutes != null) {
             currentRoutes.add(new Route(routeLine, name));

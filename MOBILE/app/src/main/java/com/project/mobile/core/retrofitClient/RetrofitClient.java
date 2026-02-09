@@ -1,7 +1,6 @@
 package com.project.mobile.core.retrofitClient;
 
 import com.project.mobile.BuildConfig;
-import com.project.mobile.api.RideApiService;
 import com.project.mobile.core.Interceptors.AuthInterceptor;
 
 import java.util.concurrent.TimeUnit;
@@ -35,8 +34,4 @@ public interface RetrofitClient {
             .addConverterFactory(GsonConverterFactory.create())
             .client(SetUpClient())
             .build();
-
-    public static RideApiService getRideApiService() {
-        return retrofit.create(RideApiService.class);
-    }
 }

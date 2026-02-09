@@ -3,10 +3,12 @@ package com.project.mobile.service;
 import com.project.mobile.DTO.Ride.CostTimeDTO;
 import com.project.mobile.DTO.Ride.NoteRequestDTO;
 import com.project.mobile.DTO.Ride.NoteResponseDTO;
-import com.project.mobile.DTO.Ride.RideBookedDTO;
-import com.project.mobile.DTO.Ride.RideBookingParametersDTO;
-import com.project.mobile.DTO.Ride.RideCancelationDTO;
+import com.project.mobile.models.PagedResponse;
+import com.project.mobile.models.Ride;
 import com.project.mobile.DTO.Ride.RideTrackingDTO;
+import com.project.mobile.DTO.Ride.RideCancelationDTO;
+import com.project.mobile.DTO.Ride.RideBookingParametersDTO;
+import com.project.mobile.DTO.Ride.RideBookedDTO;
 
 import java.util.List;
 
@@ -21,6 +23,20 @@ import retrofit2.http.Query;
 public interface RideService {
     @POST("rides/estimates")
     Call<CostTimeDTO> estimateRide(@Body RideBookingParametersDTO rideData);
+
+    @GET("rides/history")
+    Call<PagedResponse<Ride>> getRideHistory(
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("startDate") String startDate,
+            @Query("endDate") String endDate,
+            @Query("sort") String sort
+    );
+
+    @GET("rides/{id}")
+    Call<Ride> getRideDetails(
+            @Path("id") Long rideId
+    );
     @GET("rides/booked")
     Call<List<RideBookedDTO>> getBookedRides();
 

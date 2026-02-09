@@ -30,4 +30,8 @@ public class MarkerDrawer extends ViewModel {
             currentMarkerPointIcons.add(markerPointIcon);
             markers.postValue(currentMarkerPointIcons);
     }
+
+    public void clearMarkers() {
+        markers.postValue(new ArrayList<>());
+    }
 }

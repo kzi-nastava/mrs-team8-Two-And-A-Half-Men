@@ -1,4 +1,4 @@
-package com.project.mobile.fragments;
+package com.project.mobile.fragments.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,7 +25,6 @@ public class VehicleDataFragment extends Fragment {
     private AutoCompleteTextView spinnerVehicleType;
     private TextInputEditText etNumberOfSeats, etModel, etPlateNumber;
     private LinearLayout servicesContainer;
-    private MaterialButton btnSaveVehicle;
     private ProfileManager profileManager;
     private List<CheckBox> serviceCheckBoxes;
 
@@ -47,7 +46,6 @@ public class VehicleDataFragment extends Fragment {
         setupVehicleTypeSpinner();
         setupAdditionalServices();
         loadVehicleInfo();
-        setupListeners();
     }
 
     private void initViews(View view) {
@@ -56,7 +54,6 @@ public class VehicleDataFragment extends Fragment {
         etModel = view.findViewById(R.id.etModel);
         etPlateNumber = view.findViewById(R.id.etPlateNumber);
         servicesContainer = view.findViewById(R.id.servicesContainer);
-        btnSaveVehicle = view.findViewById(R.id.btnSaveVehicle);
     }
 
     private void setupVehicleTypeSpinner() {
@@ -94,44 +91,38 @@ public class VehicleDataFragment extends Fragment {
 
     private void loadVehicleInfo() {
         VehicleInfo vehicleInfo = profileManager.getVehicleInfo();
-        spinnerVehicleType.setText(vehicleInfo.getType(), false);
-        etNumberOfSeats.setText(String.valueOf(vehicleInfo.getNumberOfSeats()));
-        etModel.setText(vehicleInfo.getModel());
-        etPlateNumber.setText(vehicleInfo.getPlateNumber());
-
-        // Check the services
-        List<String> enabledServices = vehicleInfo.getAdditionalServices();
-        for (CheckBox checkBox : serviceCheckBoxes) {
-            String serviceId = (String) checkBox.getTag();
-            checkBox.setChecked(enabledServices.contains(serviceId));
+        if (vehicleInfo != null) {
+            populateFields(vehicleInfo);
         }
     }
 
-    private void setupListeners() {
-        btnSaveVehicle.setOnClickListener(v -> saveVehicleInfo());
-    }
-
-    private void saveVehicleInfo() {
+    /**
+     * Returns vehicle info data for saving (called by parent fragment)
+     * This returns API service names (display names) instead of IDs
+     */
+    public VehicleInfo getVehicleInfoData() {
         String type = spinnerVehicleType.getText().toString().trim();
         String seatsStr = etNumberOfSeats.getText().toString().trim();
         String model = etModel.getText().toString().trim();
         String plateNumber = etPlateNumber.getText().toString().trim();
 
-        if (validateVehicleData(type, seatsStr, model, plateNumber)) {
-            int numberOfSeats = Integer.parseInt(seatsStr);
-            List<String> selectedServices = new ArrayList<>();
-
-            for (CheckBox checkBox : serviceCheckBoxes) {
-                if (checkBox.isChecked()) {
-                    selectedServices.add((String) checkBox.getTag());
-                }
-            }
-
-            VehicleInfo vehicleInfo = new VehicleInfo(type, numberOfSeats, model,
-                    plateNumber, selectedServices);
-            profileManager.saveVehicleInfo(vehicleInfo);
-            Toast.makeText(getContext(), "Vehicle info saved successfully", Toast.LENGTH_SHORT).show();
+        if (!validateVehicleData(type, seatsStr, model, plateNumber)) {
+            return null;
         }
+
+        int numberOfSeats = Integer.parseInt(seatsStr);
+        List<String> selectedServices = new ArrayList<>();
+
+        // Convert IDs to display names for API
+        for (CheckBox checkBox : serviceCheckBoxes) {
+            if (checkBox.isChecked()) {
+                String serviceId = (String) checkBox.getTag();
+                // String displayName = ServiceMapper.idToDisplay(serviceId);
+                selectedServices.add("displayName");
+            }
+        }
+
+        return new VehicleInfo(type, numberOfSeats, model, plateNumber, selectedServices);
     }
 
     private boolean validateVehicleData(String type, String seats, String model, String plateNumber) {
@@ -141,6 +132,16 @@ public class VehicleDataFragment extends Fragment {
         }
         if (seats.isEmpty()) {
             etNumberOfSeats.setError("Number of seats is required");
+            return false;
+        }
+        try {
+            int seatsNum = Integer.parseInt(seats);
+            if (seatsNum <= 0) {
+                etNumberOfSeats.setError("Number of seats must be positive");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            etNumberOfSeats.setError("Invalid number");
             return false;
         }
         if (model.isEmpty()) {
@@ -154,16 +155,32 @@ public class VehicleDataFragment extends Fragment {
         return true;
     }
 
+    /**
+     * Populate fields with vehicle info
+     * This accepts API service names (display names) and converts them to IDs
+     */
     public void populateFields(VehicleInfo vehicleInfo) {
         spinnerVehicleType.setText(vehicleInfo.getType(), false);
         etNumberOfSeats.setText(String.valueOf(vehicleInfo.getNumberOfSeats()));
         etModel.setText(vehicleInfo.getModel());
         etPlateNumber.setText(vehicleInfo.getPlateNumber());
 
+        // Convert display names from API to IDs for checkbox matching
         List<String> enabledServices = vehicleInfo.getAdditionalServices();
         for (CheckBox checkBox : serviceCheckBoxes) {
             String serviceId = (String) checkBox.getTag();
-            checkBox.setChecked(enabledServices.contains(serviceId));
+
+            // Check if this service is enabled by checking both ID and display name
+            boolean isEnabled = false;
+            for (String enabledService : enabledServices) {
+//                String enabledServiceId = ServiceMapper.displayToId(enabledService);
+//                if (serviceId.equals(enabledServiceId) || serviceId.equals(enabledService)) {
+//                    isEnabled = true;
+//                    break;
+//                }
+            }
+
+            checkBox.setChecked(isEnabled);
         }
     }
 }

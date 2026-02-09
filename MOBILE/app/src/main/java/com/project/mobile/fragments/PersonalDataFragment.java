@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.project.mobile.R;
-import com.project.mobile.UnregisterActivity;
+import com.project.mobile.activities.UnregisterActivity;
 import com.project.mobile.data.ProfileManager;
 import com.project.mobile.models.UserProfile;
 import com.google.android.material.textfield.TextInputEditText;

@@ -17,6 +17,7 @@ constraintlayout = "2.2.1"
 navigationFragment = "2.9.6"
 navigationUi = "2.9.6"
 viewpager2 = "1.1.0"
+firebaseFirestore = "26.1.0"
 
 [libraries]
 cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }

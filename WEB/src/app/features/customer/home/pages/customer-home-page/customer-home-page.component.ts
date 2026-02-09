@@ -5,6 +5,8 @@ import { ButtonDirective } from '@shared/directives/button/button.directive';
 import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
 import { BookRideRequest } from '@features/customer/home/models/ride.model';
 import { RideService } from '@features/customer/home/services/ride.service';
+import { PopupsService } from '@shared/services/popups/popups.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-customer-home-page',
@@ -16,6 +18,8 @@ export class CustomerHomePageComponent {
 
 	private sharedLocationService = inject(SharedLocationsService);
 	private rideService = inject(RideService);
+	private popupsService = inject(PopupsService);
+	private router = inject(Router);
 
 	protected createRide() {
 		const request: BookRideRequest = {
@@ -26,11 +30,18 @@ export class CustomerHomePageComponent {
 			})),
 		};
 		this.rideService.createRide(request).subscribe({
-			next: () => {
-				alert("CREATED")
+			next: (response) => {
+				this.popupsService.success(
+					'Ride booked',
+					'Your ride has been successfully booked!',
+					{
+						onConfirm: () => this.router.navigate(['rides', response.id]).then()
+					}
+				);
+				this.sharedLocationService.clearLocations();
 			},
 			error: err => {
-				alert(err);
+				this.popupsService.error('Booking failed', err.error?.message || 'An error occurred while booking your ride. Please try again.');
 			}
 		})
 	}

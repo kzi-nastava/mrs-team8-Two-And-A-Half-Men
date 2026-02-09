@@ -3,6 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HistoryService } from '@features/driver/history/services/history.service';
 import { Ride } from '@features/driver/history/models/ride.model';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-drivers-history',
@@ -14,6 +15,7 @@ import { Ride } from '@features/driver/history/models/ride.model';
 export class DriversHistoryComponent implements OnInit {
 
 	rideService = inject(HistoryService);
+	private router = inject(Router);
 
 	selectedRide = signal<Ride | null>(null);
 	startDate = signal<string | null>(null);
@@ -25,6 +27,7 @@ export class DriversHistoryComponent implements OnInit {
 
 	selectRide(ride: Ride): void {
 		this.selectedRide.set(ride);
+		this.router.navigate(['driver', 'history', ride.id]).then();
 	}
 
 	onFilter(): void {

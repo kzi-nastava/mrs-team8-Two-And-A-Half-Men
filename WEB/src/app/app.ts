@@ -1,11 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { routeAnimations } from '@core/animations/route-animation';
-import { NavbarConfig } from "./layout/navbar/navbar-config/navbar-config";
+import { NavbarComponent } from "./layout/navbar/component/navbar.component";
 
 @Component({
 	selector: 'app-root',
-	imports: [RouterOutlet, NavbarConfig],
+	imports: [RouterOutlet, NavbarComponent],
 	templateUrl: './app.html',
 	styleUrl: './app.css',
 	animations: [routeAnimations],

@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { UnregisteredAuthService } from '@features/unregistered/services/unregistered-auth.service';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-restart-password',
@@ -13,6 +13,7 @@ import { UnregisteredAuthService } from '@features/unregistered/services/unregis
 export class RestartPassword {
 	private unregisteredAuthService = inject(UnregisteredAuthService);
 	private router = inject(Router);
+	private popupsService = inject(PopupsService);
 
 	restartPasswordForm = new FormGroup({
 		password: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -37,11 +38,12 @@ export class RestartPassword {
 		// Call the Auth service to reset the password
 		this.unregisteredAuthService.restartPassword(token, password).subscribe({
 			next: () => {
-				Swal.fire('Success', 'Password has been reset successfully.', 'success').then();
-				this.router.navigate(['/login']).then();
+				this.popupsService.success('Success', 'Password has been reset successfully.', {
+					onConfirm: () => this.router.navigate(['/login']),
+				});
 			},
 			error: () => {
-				Swal.fire('Error', 'Failed to reset password. Please try again.', 'error').then();
+				this.popupsService.error('Error', 'Failed to reset password. Please try again.');
 			},
 		});
 	}

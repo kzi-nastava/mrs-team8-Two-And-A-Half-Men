@@ -18,7 +18,6 @@ import com.project.mobile.DTO.MeInfo;
 import com.project.mobile.DriverActivity;
 import com.project.mobile.MainActivity;
 import com.project.mobile.R;
-import com.project.mobile.UnregisterActivity;
 import com.project.mobile.viewModels.AuthModel;
 
 public class SplshScreen extends AppCompatActivity {

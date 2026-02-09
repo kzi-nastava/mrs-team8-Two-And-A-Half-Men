@@ -100,4 +100,12 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
             @Param("statuses") List<RideStatus> statuses,
             Pageable pageable
     );
+
+    @Query("""
+            SELECT r FROM Ride r
+            WHERE r.scheduledTime IS NOT NULL
+                AND r.scheduledTime > CURRENT_TIMESTAMP
+                AND r.status IN('PENDING', 'ACCEPTED')
+        """)
+    Iterable<Ride> findFutureScheduledRides();
 }

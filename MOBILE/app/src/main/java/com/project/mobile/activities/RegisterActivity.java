@@ -9,7 +9,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.project.mobile.DTO.RegisterDto;
+import com.project.mobile.DTO.Auth.RegisterDto;
 import com.project.mobile.databinding.ActivityRegisterBinding;
 import com.project.mobile.viewModels.AuthModel;
 

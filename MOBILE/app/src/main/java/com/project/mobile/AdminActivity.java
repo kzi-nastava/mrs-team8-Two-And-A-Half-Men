@@ -104,7 +104,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.nav_history) {
-            FragmentTransition.to(new History(), this, false, containerId);
+            FragmentTransition.to(new DriverHistoryFragment(), this, false, containerId);
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.price_management) {

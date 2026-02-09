@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityDriverBinding;
+import com.project.mobile.fragments.DriverHistoryFragment;
+import com.project.mobile.fragments.ProfileFragment;
 import com.project.mobile.fragments.profile.ProfileFragment;
 
 public class DriverActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,7 +53,7 @@ public class DriverActivity extends AppCompatActivity implements NavigationView.
             }
             else if(itemId == R.id.nav_history)
             {
-                FragmentTransition.to(new History(), this, false, containerId);
+                FragmentTransition.to(new DriverHistoryFragment(), this, false, containerId);
 
                 return true;
             }

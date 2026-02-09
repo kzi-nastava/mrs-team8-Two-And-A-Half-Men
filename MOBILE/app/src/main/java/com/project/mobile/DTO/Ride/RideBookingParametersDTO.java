@@ -1,4 +1,4 @@
-package com.project.mobile.DTO;
+package com.project.mobile.DTO.Ride;
 
 import com.google.gson.annotations.SerializedName;
 

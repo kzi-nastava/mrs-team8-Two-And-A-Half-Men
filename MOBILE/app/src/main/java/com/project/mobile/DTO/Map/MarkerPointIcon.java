@@ -1,4 +1,4 @@
-package com.project.mobile.DTO;
+package com.project.mobile.DTO.Map;
 
 import android.graphics.drawable.Drawable;
 

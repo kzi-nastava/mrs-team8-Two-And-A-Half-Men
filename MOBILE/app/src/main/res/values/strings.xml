@@ -38,4 +38,5 @@
     <string name="move_down">Move down</string>
     <string name="move_up">Move up</string>
     <string name="delete_stop">Delete stop</string>
+    <string name="profile_save_changes">Save Changes</string>
 </resources>

@@ -7,15 +7,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.navigation.NavigationView;
-import com.project.mobile.databinding.ActivityAdminBinding;
 import com.project.mobile.databinding.ActivityDriverBinding;
-import com.project.mobile.databinding.ActivityMainBinding;
-import com.project.mobile.fragments.ProfileFragment;
+import com.project.mobile.fragments.profile.ProfileFragment;
 
 public class DriverActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

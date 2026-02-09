@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     android:background="@color/background_dark">
 
+
+
     <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -47,30 +49,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"/>
-
-            <!-- Progress indicator -->
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="24dp"
-                android:visibility="gone" />
-
-            <!-- Save all button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveAll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/profile_save_changes"
-                android:textColor="@color/text_dark"
-                android:backgroundTint="@color/accent"
-                app:icon="@drawable/ic_check"
-                app:iconTint="@color/text_dark"
-                app:cornerRadius="8dp"
-                android:padding="14dp"
-                android:visibility="gone" />
 
         </LinearLayout>
 

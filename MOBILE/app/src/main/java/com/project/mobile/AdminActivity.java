@@ -13,7 +13,7 @@ import androidx.core.view.GravityCompat;
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityAdminBinding;
 import com.project.mobile.fragments.DriverHistoryFragment;
-import com.project.mobile.fragments.profile.ProfileFragment;
+import com.project.mobile.fragments.ProfileFragment;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityAdminBinding binding;

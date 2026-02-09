@@ -19,12 +19,12 @@ interface ChangeItem {
 	styleUrl: './request-change-preview.component.css',
 })
 export class RequestChangePreviewComponent {
-	profileService = inject(ProfileService);
-	private popupsService = inject(PopupsService);
 
 	request = model.required<PendingChangeRequest | null>();
 	personalInfo = input.required<PersonalInfo>();
 	vehicleInfo = input.required<VehicleInfo | null>();
+	title = input.required<string>();
+
 
 	get pendingChanges(): ChangeItem[] {
 		const changes: ChangeItem[] = [];
@@ -101,22 +101,5 @@ export class RequestChangePreviewComponent {
 			oldValue: this.personalInfo().imgSrc ?? null,
 			newValue: this.request()?.imgSrc ?? null,
 		};
-	}
-
-	cancelRequest(): void {
-		if (this.personalInfo() === null) return;
-
-		this.popupsService.confirm(
-			'Cancel Request',
-			'Are you sure you want to cancel this change request?',
-			() => {
-				this.profileService.cancelPendingRequest(this.request()!.id).subscribe({
-					next: (value) => {
-						if (value.ok) {
-							this.request.set(null);
-						}
-					},
-				});
-		})
 	}
 }

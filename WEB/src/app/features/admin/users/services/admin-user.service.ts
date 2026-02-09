@@ -29,13 +29,14 @@ export class AdminUserService {
 		page: number = 0,
 		size: number = 10,
 		sort?: string,
-		direction: 'asc' | 'desc' = 'asc',
+		direction: 'ASC' | 'DESC' = 'ASC',
 		filters?: UserFilters,
 	): Observable<UserPageResponse> {
 		let params = new HttpParams().set('page', page.toString()).set('size', size.toString());
 
 		if (sort) {
-			params = params.set('sort', `${sort},${direction}`);
+			params = params.set('sortBy', sort);
+			params = params.set('sortDirection', direction);
 		}
 
 		// Add filters if provided

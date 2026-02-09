@@ -32,7 +32,7 @@ export class AllUsersPageComponent {
 
 	// Sorting
 	sortColumn =  signal<string | null>(null);
-	sortDirection = signal<'asc' | 'desc'>('asc');
+	sortDirection = signal<'ASC' | 'DESC'>('ASC');
 
 	// Filters
 	filters = signal<UserFilters>({});
@@ -87,10 +87,10 @@ export class AllUsersPageComponent {
 
 	onSort(column: string): void {
 		if (this.sortColumn() === column) {
-			this.sortDirection.set(this.sortDirection() === 'asc' ? 'desc' : 'asc');
+			this.sortDirection.set(this.sortDirection() === 'ASC' ? 'DESC' : 'ASC');
 		} else {
 			this.sortColumn.set(column);
-			this.sortDirection.set('asc');
+			this.sortDirection.set('ASC');
 		}
 		this.currentPage.set(0);
 		this.loadUsers();
@@ -100,7 +100,7 @@ export class AllUsersPageComponent {
 		if (this.sortColumn() !== column) {
 			return '↕️';
 		}
-		return this.sortDirection() === 'asc' ? '↑' : '↓';
+		return this.sortDirection() === 'ASC' ? '↑' : '↓';
 	}
 
 	onPageChange(page: number): void {

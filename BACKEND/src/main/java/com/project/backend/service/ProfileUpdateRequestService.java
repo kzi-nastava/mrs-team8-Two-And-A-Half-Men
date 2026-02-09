@@ -74,6 +74,7 @@ public class ProfileUpdateRequestService {
                     Paths.get(System.getProperty("user.dir"), "public", request.getImgSrc()).toString()
             ));
         }
+        request.getDriver().setUpdateRequest(null);
         requestRepository.delete(request);
         return Map.of("ok", true);
     }
@@ -96,10 +97,10 @@ public class ProfileUpdateRequestService {
 
         driver = getUpdatedDriver(request);
         var vehicle = getUpdatedVehicle(request);
-
+        driver.setUpdateRequest(null);
+        requestRepository.delete(request);
         userRepository.save(driver);
         vehicleRepository.save(vehicle);
-        requestRepository.delete(request);
         return Map.of("ok", true);
     }
 

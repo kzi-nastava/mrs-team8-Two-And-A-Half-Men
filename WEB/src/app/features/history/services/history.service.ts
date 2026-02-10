@@ -26,6 +26,9 @@ export class HistoryService {
 	startDate = signal<string | null>(null);
 	endDate = signal<string | null>(null);
 
+	driverId = signal<number | null>(null);
+	customerId = signal<number | null>(null);
+
 	selectedRide = signal<Ride | null>(null);
 
 	getHistory() {
@@ -34,7 +37,8 @@ export class HistoryService {
 		let params = new HttpParams()
 			.set('page', this.page())
 			.set('size', this.size())
-			.set('sort', `${this.sortField()},${this.sortDirection()}`);
+			.set('sortBy', this.sortField())
+			.set('sortDirection', this.sortDirection());
 
 		if (this.startDate()) {
 			params = params.set('startDate', this.startDate()!);
@@ -42,6 +46,14 @@ export class HistoryService {
 
 		if (this.endDate()) {
 			params = params.set('endDate', this.endDate()!);
+		}
+
+		if (this.driverId()) {
+			params = params.set('driverId', this.driverId()!);
+		}
+
+		if (this.customerId()) {
+			params = params.set('customerId', this.customerId()!);
 		}
 
 		this.http.get<any>(`/api/${environment.apiVersion}/rides/history`, { params }).subscribe({
@@ -110,9 +122,18 @@ export class HistoryService {
 		this.getHistory();
 	}
 
+	setUserFilters(driverId: number | null, customerId: number | null) {
+		this.driverId.set(driverId);
+		this.customerId.set(customerId);
+		this.page.set(0);
+		this.getHistory();
+	}
+
 	clearFilters() {
 		this.startDate.set(null);
 		this.endDate.set(null);
+		this.driverId.set(null);
+		this.customerId.set(null);
 		this.page.set(0);
 		this.getHistory();
 	}
@@ -124,5 +145,10 @@ export class HistoryService {
 		this.sortDirection.set('DESC');
 		this.startDate.set(null);
 		this.endDate.set(null);
+		this.driverId.set(null);
+		this.customerId.set(null);
+	}
+
+	toggleFavorite(rideId: number) {
 	}
 }

@@ -1,5 +1,4 @@
-// history-ride-details-page.component.ts
-import { Component, inject, computed, effect } from '@angular/core';
+import { Component, inject, computed, effect, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
@@ -7,11 +6,15 @@ import { HistoryService } from '@features/history/services/history.service';
 import { Ride, RideStatus } from '@features/history/models/ride.model';
 import { map } from 'rxjs/operators';
 import { PopupsService } from '@shared/services/popups/popups.service';
+import { RIDE_HISTORY_CONFIGS } from '@features/history/models/ride-history-config';
+import { LoggedInUserRole } from '@core/models/loggedInUser.model';
+import { MapComponent } from '@shared/components/map/map.component';
+import { MAP_CONFIGS } from '@shared/components/map/map.config';
 
 @Component({
 	selector: 'app-history-ride-details-page',
 	standalone: true,
-	imports: [CommonModule],
+	imports: [CommonModule, MapComponent],
 	templateUrl: './ride-details.component.html',
 	styleUrl: './ride-details.component.css',
 })
@@ -20,9 +23,17 @@ export class RideDetailsComponent {
 	private router = inject(Router);
 
 	historyService = inject(HistoryService);
-	popupService = inject(PopupsService)
+	popupService = inject(PopupsService);
+
+	userRole = toSignal(this.route.data.pipe(map((data) => data['userRole'] as LoggedInUserRole)), {
+		requireSync: true,
+	});
+
+	config = computed(() => RIDE_HISTORY_CONFIGS[this.userRole()]);
+	mapConfig = MAP_CONFIGS.HISTORY_VIEW;
 
 	ride = this.historyService.selectedRide;
+	togglingFavorite = signal(false);
 
 	private rideId = toSignal(this.route.paramMap.pipe(map((params) => params.get('id'))));
 
@@ -73,8 +84,17 @@ export class RideDetailsComponent {
 		});
 	}
 
+	toggleFavorite() {
+		const ride = this.ride();
+		if (!ride) return;
+
+		this.togglingFavorite.set(true);
+
+		this.historyService.toggleFavorite(ride.id);
+	}
+
 	goBack() {
-		this.router.navigate(['..'], { relativeTo: this.route });
+		this.router.navigate(['..'], { relativeTo: this.route }).then();
 	}
 
 	formatDate(date: Date | string): string {

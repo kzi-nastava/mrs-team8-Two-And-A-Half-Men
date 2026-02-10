@@ -9,21 +9,38 @@ export enum RideStatus {
 }
 
 export interface Ride {
-  id: number;
-  startTime: Date;
-  endTime: Date;
-  scheduledTime: Date;
+	id: number;
+	startTime: Date;
+	endTime: Date;
+	scheduledTime: Date;
 
-  driverName: string;
-  rideOwnerName: string;
+	driverName: string;
+	rideOwnerName: string;
 
-  status: RideStatus;
-  path: string;
-  cancellationReason: string;
-  price: number;
-  totalCost: number;
+	status: RideStatus;
+	path: string;
+	cancellationReason: string;
+	cancelledBy?: 'DRIVER' | 'PASSENGER';
+	price: number;
+	totalCost: number;
 
-  additionalServices: string[];
-  addresses: string[];
-  passengersMails: string[];
+	additionalServices: string[];
+	locations: Location[];
+	passengers: PassengerDetails[];
+	isFavorite?: boolean;
+}
+
+export interface Location {
+	geoHash: string;
+	latitude: number;
+	longitude: number;
+	address: string;
+}
+
+export interface PassengerDetails {
+	email: string;
+	inconsistencyNote?: string;
+	driverRating?: number;
+	vehicleRating?: number;
+	comment?: string;
 }

@@ -8,7 +8,11 @@ import { Ride, RideStatus } from '@features/history/models/ride.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { PAGE_SIZE_OPTIONS, SORT_OPTIONS_BY_ROLE, SortField } from '@features/history/models/ride-history-config';
+import {
+	PAGE_SIZE_OPTIONS,
+	SORT_OPTIONS_BY_ROLE,
+	SortField,
+} from '@features/history/models/ride-history-config';
 
 @Component({
 	selector: 'app-history',
@@ -37,6 +41,8 @@ export class HistoryComponent {
 
 	filterStartDate = signal<string>('');
 	filterEndDate = signal<string>('');
+	filterDriverId = signal<string>('');
+	filterCustomerId = signal<string>('');
 
 	config = computed(() => RIDE_HISTORY_CONFIGS[this.userRole()]);
 
@@ -106,11 +112,20 @@ export class HistoryComponent {
 		const end = endValue ? endValue + 'T23:59:59' : null;
 
 		this.historyService.setDateRange(start, end);
+
+		// Apply user filters if available
+		if (this.config().showUserFilters) {
+			const driverId = this.filterDriverId() ? +this.filterDriverId() : null;
+			const customerId = this.filterCustomerId() ? +this.filterCustomerId() : null;
+			this.historyService.setUserFilters(driverId, customerId);
+		}
 	}
 
 	clearFilters() {
 		this.filterStartDate.set('');
 		this.filterEndDate.set('');
+		this.filterDriverId.set('');
+		this.filterCustomerId.set('');
 		this.historyService.clearFilters();
 	}
 

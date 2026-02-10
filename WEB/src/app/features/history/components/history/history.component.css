@@ -1,35 +1,56 @@
+:host {
+	--primary-green: #2d5a3d;
+	--dark-bg: #2a2a2a;
+	--card-bg: #3a3a3a;
+	--accent-green: #4a9d5f;
+	--light-green: #5cb85c;
+	--text-light: #e0e0e0;
+	--text-muted: #999;
+	--border-color: #4a4a4a;
+}
+
 .ride-history-container {
 	padding: 20px;
 	max-width: 1200px;
 	margin: 0 auto;
+	background-color: var(--dark-bg);
+	min-height: 100vh;
+	color: var(--text-light);
 }
 
 h2 {
 	margin-bottom: 24px;
-	color: #333;
+	color: var(--text-light);
 }
 
 .loading-spinner {
 	text-align: center;
 	padding: 40px;
+	color: var(--text-light);
 }
 
 .error-message {
-	background-color: #fee;
-	border: 1px solid #fcc;
+	background-color: #4a2828;
+	border: 1px solid #8b3a3a;
 	border-radius: 8px;
 	padding: 16px;
 	text-align: center;
+	color: var(--text-light);
 }
 
 .error-message button {
 	margin-top: 12px;
 	padding: 8px 16px;
-	background-color: #e53e3e;
+	background-color: #d9534f;
 	color: white;
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.error-message button:hover {
+	background-color: #c9302c;
 }
 
 .rides-list {
@@ -41,12 +62,15 @@ h2 {
 .no-rides {
 	text-align: center;
 	padding: 40px;
-	color: #666;
+	color: var(--text-muted);
+	background-color: var(--card-bg);
+	border-radius: 8px;
+	border: 1px solid var(--border-color);
 }
 
 .ride-card {
-	background: white;
-	border: 1px solid #e0e0e0;
+	background: var(--card-bg);
+	border: 1px solid var(--border-color);
 	border-radius: 12px;
 	padding: 20px;
 	transition: all 0.2s;
@@ -57,8 +81,9 @@ h2 {
 }
 
 .ride-card.clickable:hover {
-	box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+	box-shadow: 0 4px 12px rgba(74, 157, 95, 0.3);
 	transform: translateY(-2px);
+	border-color: var(--accent-green);
 }
 
 .ride-header {
@@ -75,16 +100,16 @@ h2 {
 	font-weight: 600;
 }
 
-.status-pending { background-color: #fff3cd; color: #856404; }
-.status-accepted { background-color: #d1ecf1; color: #0c5460; }
-.status-active { background-color: #d4edda; color: #155724; }
-.status-finished { background-color: #e2e3e5; color: #383d41; }
-.status-interrupted { background-color: #f8d7da; color: #721c24; }
-.status-cancelled { background-color: #f8d7da; color: #721c24; }
-.status-panicked { background-color: #ff4444; color: white; }
+.status-pending { background-color: #8b7d3a; color: #fff; }
+.status-accepted { background-color: #3a6d8b; color: #fff; }
+.status-active { background-color: var(--accent-green); color: #fff; }
+.status-finished { background-color: #5a5a5a; color: var(--text-light); }
+.status-interrupted { background-color: #8b4a3a; color: #fff; }
+.status-cancelled { background-color: #8b3a3a; color: #fff; }
+.status-panicked { background-color: #d9534f; color: white; }
 
 .panic-indicator {
-	background-color: #ff4444;
+	background-color: #d9534f;
 	color: white;
 	padding: 6px 12px;
 	border-radius: 20px;
@@ -110,23 +135,27 @@ h2 {
 
 .info-row .label {
 	font-weight: 600;
-	color: #666;
+	color: var(--text-muted);
 	min-width: 140px;
+	text-transform: uppercase;
+	font-size: 13px;
+	letter-spacing: 1px;
 }
 
 .info-row .value {
-	color: #333;
+	color: var(--text-light);
 }
 
 .info-row.cancellation {
-	background-color: #fff3cd;
+	background-color: #4a3d28;
 	padding: 8px;
 	border-radius: 4px;
+	border-left: 3px solid #f0ad4e;
 }
 
 .price {
 	font-weight: 700;
-	color: #2ecc71;
+	color: var(--light-green);
 	font-size: 18px;
 }
 
@@ -138,17 +167,21 @@ h2 {
 }
 
 .passenger-email {
-	background-color: #e3f2fd;
+	background-color: var(--primary-green);
 	padding: 4px 8px;
 	border-radius: 4px;
 	font-size: 14px;
+	color: var(--text-light);
+	border: 1px solid var(--accent-green);
 }
 
 .service-tag {
-	background-color: #f0f0f0;
+	background-color: var(--dark-bg);
 	padding: 4px 8px;
 	border-radius: 4px;
 	font-size: 14px;
+	color: var(--text-light);
+	border: 1px solid var(--border-color);
 }
 
 .ride-actions {
@@ -156,7 +189,7 @@ h2 {
 	gap: 12px;
 	margin-top: 16px;
 	padding-top: 16px;
-	border-top: 1px solid #e0e0e0;
+	border-top: 1px solid var(--border-color);
 }
 
 .btn-reorder,
@@ -170,21 +203,24 @@ h2 {
 }
 
 .btn-reorder {
-	background-color: #3498db;
+	background-color: var(--light-green);
 	color: white;
 }
 
 .btn-reorder:hover {
-	background-color: #2980b9;
+	background-color: var(--accent-green);
+	transform: translateY(-2px);
 }
 
 .btn-reorder-later {
-	background-color: #95a5a6;
-	color: white;
+	background-color: var(--card-bg);
+	color: var(--text-light);
+	border: 1px solid var(--border-color);
 }
 
 .btn-reorder-later:hover {
-	background-color: #7f8c8d;
+	background-color: #4a4a4a;
+	border-color: var(--accent-green);
 }
 
 .history-header {
@@ -194,6 +230,10 @@ h2 {
 	margin-bottom: 20px;
 	flex-wrap: wrap;
 	gap: 15px;
+	padding: 20px;
+	background-color: var(--primary-green);
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .history-controls {
@@ -205,32 +245,48 @@ h2 {
 .sort-field-select,
 .page-size-select {
 	padding: 8px 12px;
-	border: 1px solid #ddd;
+	border: 1px solid var(--border-color);
 	border-radius: 6px;
-	background-color: white;
+	background-color: var(--card-bg);
+	color: var(--text-light);
 	cursor: pointer;
 	font-size: 14px;
+	transition: all 0.2s;
+}
+
+.sort-field-select:hover,
+.page-size-select:hover {
+	border-color: var(--accent-green);
+}
+
+.sort-field-select option,
+.page-size-select option {
+	background-color: var(--card-bg);
+	color: var(--text-light);
 }
 
 .btn-sort,
 .btn-filter {
 	padding: 8px 16px;
-	background-color: #f0f0f0;
-	border: 1px solid #ddd;
+	background-color: var(--card-bg);
+	color: var(--text-light);
+	border: 1px solid var(--border-color);
 	border-radius: 6px;
 	cursor: pointer;
 	transition: all 0.2s;
 	font-size: 14px;
+	font-weight: 600;
 }
 
 .btn-sort:hover,
 .btn-filter:hover {
-	background-color: #e0e0e0;
+	background-color: #4a4a4a;
+	border-color: var(--accent-green);
 }
 
 .filters-panel {
-	background-color: #f8f9fa;
-	border: 1px solid #e0e0e0;
+	background-color: var(--card-bg);
+	border: 1px solid var(--border-color);
 	border-radius: 8px;
 	padding: 20px;
 	margin-bottom: 20px;
@@ -250,14 +306,24 @@ h2 {
 .filter-group label {
 	font-size: 14px;
 	font-weight: 600;
-	color: #666;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 1px;
 }
 
 .date-input {
 	padding: 8px 12px;
-	border: 1px solid #ddd;
+	border: 1px solid var(--border-color);
 	border-radius: 6px;
 	font-size: 14px;
+	background-color: var(--dark-bg);
+	color: var(--text-light);
+	transition: all 0.2s;
+}
+
+.date-input:focus {
+	outline: none;
+	border-color: var(--accent-green);
 }
 
 .filter-actions {
@@ -272,25 +338,29 @@ h2 {
 	border-radius: 6px;
 	cursor: pointer;
 	font-size: 14px;
+	font-weight: 600;
 	transition: all 0.2s;
 }
 
 .btn-apply {
-	background-color: #3498db;
+	background-color: var(--light-green);
 	color: white;
 }
 
 .btn-apply:hover {
-	background-color: #2980b9;
+	background-color: var(--accent-green);
+	transform: translateY(-2px);
 }
 
 .btn-clear {
-	background-color: #95a5a6;
-	color: white;
+	background-color: var(--card-bg);
+	color: var(--text-light);
+	border: 1px solid var(--border-color);
 }
 
 .btn-clear:hover {
-	background-color: #7f8c8d;
+	background-color: #4a4a4a;
+	border-color: #8b3a3a;
 }
 
 @media (max-width: 768px) {
@@ -313,8 +383,8 @@ h2 {
 }
 
 .spinner {
-	border: 3px solid #f3f3f3;
-	border-top: 3px solid #3498db;
+	border: 3px solid var(--border-color);
+	border-top: 3px solid var(--light-green);
 	border-radius: 50%;
 	width: 40px;
 	height: 40px;
@@ -334,37 +404,41 @@ h2 {
 	gap: 16px;
 	margin-top: 24px;
 	padding: 16px;
-	background-color: #f8f9fa;
+	background-color: var(--card-bg);
 	border-radius: 8px;
+	border: 1px solid var(--border-color);
 }
 
 .btn-pagination {
 	padding: 8px 16px;
-	background-color: #3498db;
+	background-color: var(--light-green);
 	color: white;
 	border: none;
 	border-radius: 6px;
 	cursor: pointer;
 	transition: all 0.2s;
+	font-weight: 600;
 }
 
 .btn-pagination:hover:not(:disabled) {
-	background-color: #2980b9;
+	background-color: var(--accent-green);
+	transform: translateY(-2px);
 }
 
 .btn-pagination:disabled {
-	background-color: #bdc3c7;
+	background-color: #5a5a5a;
 	cursor: not-allowed;
+	opacity: 0.5;
 }
 
 .pagination-info {
 	font-size: 14px;
-	color: #666;
+	color: var(--text-light);
 }
 
 .page-size-select {
 	padding: 6px 12px;
-	border: 1px solid #ddd;
+	border: 1px solid var(--border-color);
 	border-radius: 4px;
 	cursor: pointer;
 }

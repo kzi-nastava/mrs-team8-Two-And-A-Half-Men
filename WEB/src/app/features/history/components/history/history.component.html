@@ -58,6 +58,30 @@
 				/>
 			</div>
 
+			@if (config().showUserFilters) {
+				<div class="filter-group">
+					<label for="driverId">Driver ID:</label>
+					<input
+						type="number"
+						id="driverId"
+						[(ngModel)]="filterDriverId"
+						class="date-input"
+						placeholder="Enter driver ID"
+					/>
+				</div>
+
+				<div class="filter-group">
+					<label for="customerId">Customer ID:</label>
+					<input
+						type="number"
+						id="customerId"
+						[(ngModel)]="filterCustomerId"
+						class="date-input"
+						placeholder="Enter customer ID"
+					/>
+				</div>
+			}
+
 			<div class="filter-actions">
 				<button class="btn-apply" (click)="applyFilters()">
 					Apply Filters
@@ -104,12 +128,12 @@
 					<div class="ride-info">
 						<div class="info-row">
 							<span class="label">Start point:</span>
-							<span class="value">{{ ride.addresses[0] }}</span>
+							<span class="value">{{ ride.locations[0].address }}</span>
 						</div>
 						<div class="info-row">
 							<span class="label">Destination:</span>
 							<span class="value">{{
-									ride.addresses[ride.addresses.length - 1]
+									ride.locations[ride.locations.length - 1].address
 								}}</span>
 						</div>
 
@@ -149,8 +173,8 @@
 							<div class="info-row">
 								<span class="label">Passengers:</span>
 								<div class="passengers-list">
-									@for (passenger of ride.passengersMails; track passenger) {
-										<span class="passenger-email">{{ passenger }}</span>
+									@for (passenger of ride.passengers; track passenger) {
+										<span class="passenger-email">{{ passenger.email }}</span>
 									}
 								</div>
 							</div>

@@ -4,6 +4,22 @@
 			← Back to History
 		</button>
 		<h2>Ride Details</h2>
+		@if (config().showReorderOption && !historyService.loadingDetails() && ride()) {
+			<button
+				class="btn-favorite"
+				[class.is-favorite]="ride()!.isFavorite"
+				(click)="toggleFavorite()"
+				[disabled]="togglingFavorite()"
+			>
+				@if (togglingFavorite()) {
+					⏳ Saving...
+				} @else if (ride()!.isFavorite) {
+					⭐ Favorite Route
+				} @else {
+					☆ Mark as Favorite
+				}
+			</button>
+		}
 	</div>
 
 	@if (historyService.loadingDetails()) {
@@ -42,14 +58,22 @@
 						<span class="value">{{ ride()!.id }}</span>
 					</div>
 
-					<div class="info-item">
-						<span class="label">Start Point:</span>
-						<span class="value">{{ ride()!.addresses[0] }}</span>
-					</div>
-
-					<div class="info-item">
-						<span class="label">Destination:</span>
-						<span class="value">{{ ride()!.addresses[ride()!.addresses.length - 1] }}</span>
+					<div class="info-item full-width">
+						<span class="label">Route:</span>
+						<div class="route-list">
+							@for (location of ride()!.locations; track location.address; let i = $index) {
+								<div class="route-step">
+									<span class="route-number">{{ i + 1 }}.</span>
+									<span class="route-address">{{ location.address }}</span>
+									@if (i === 0) {
+										<span class="route-badge start">Start</span>
+									}
+									@if (i === ride()!.locations.length - 1) {
+										<span class="route-badge end">Destination</span>
+									}
+								</div>
+							}
+						</div>
 					</div>
 
 					@if (ride()!.scheduledTime) {
@@ -103,13 +127,61 @@
 					<div class="info-item full-width">
 						<span class="label">Passengers:</span>
 						<div class="passengers-list">
-							@for (passenger of ride()!.passengersMails; track passenger) {
-								<span class="passenger-badge">{{ passenger }}</span>
+							@for (passenger of ride()!.passengers; track passenger.email) {
+								<span class="passenger-badge">{{ passenger.email }}</span>
 							}
 						</div>
 					</div>
 				</div>
 			</div>
+
+			<!-- Passenger Ratings & Comments (only for roles with showRatings) -->
+			@if (config().showRatings && ride()!.passengers.length > 0) {
+				<div class="info-card">
+					<h3>Passenger Reviews</h3>
+
+					@for (passenger of ride()!.passengers; track passenger.email) {
+						<div class="passenger-review">
+							<div class="review-header">
+								<span class="passenger-email-review">{{ passenger.email }}</span>
+							</div>
+
+							<div class="review-content">
+								@if (passenger.driverRating || passenger.vehicleRating) {
+									<div class="ratings-row">
+										@if (passenger.driverRating) {
+											<div class="rating-item">
+												<span class="rating-label">Driver:</span>
+												<span class="rating-value">⭐ {{ passenger.driverRating }}/5</span>
+											</div>
+										}
+										@if (passenger.vehicleRating) {
+											<div class="rating-item">
+												<span class="rating-label">Vehicle:</span>
+												<span class="rating-value">⭐ {{ passenger.vehicleRating }}/5</span>
+											</div>
+										}
+									</div>
+								}
+
+								@if (passenger.comment) {
+									<div class="passenger-comment">
+										<span class="comment-label">Comment:</span>
+										<p class="comment-text">{{ passenger.comment }}</p>
+									</div>
+								}
+
+								@if (passenger.inconsistencyNote && config().showInconsistencyReports) {
+									<div class="inconsistency-note">
+										<span class="inconsistency-label">⚠️ Inconsistency Report:</span>
+										<p class="inconsistency-text">{{ passenger.inconsistencyNote }}</p>
+									</div>
+								}
+							</div>
+						</div>
+					}
+				</div>
+			}
 
 			<!-- Additional Services -->
 			@if (ride()!.additionalServices.length > 0) {
@@ -132,11 +204,8 @@
 			}
 
 			<!-- Map Section -->
-			<div class="info-card">
-				<h3>Route Map</h3>
-				<div class="map-container">
-					<p class="map-placeholder">Map component goes here (path: {{ ride()!.path }})</p>
-				</div>
+			<div class="map-container">
+				<app-map [path]="ride()!.path" [config]="mapConfig"></app-map>
 			</div>
 		</div>
 	}

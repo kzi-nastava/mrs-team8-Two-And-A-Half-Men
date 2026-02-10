@@ -8,6 +8,7 @@ export interface RideHistoryConfig {
 	showRatings: boolean;
 	showReorderOption: boolean;
 	canViewDetails: boolean;
+	showUserFilters: boolean;
 }
 
 export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideHistoryConfig> = {
@@ -19,6 +20,7 @@ export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideHistoryConfig> =
 		showRatings: true,
 		showReorderOption: true,
 		canViewDetails: true,
+		showUserFilters: false,
 	},
 	[LoggedInUserRole.DRIVER]: {
 		showDriverInfo: false,
@@ -28,6 +30,7 @@ export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideHistoryConfig> =
 		showRatings: false,
 		showReorderOption: false,
 		canViewDetails: true,
+		showUserFilters: false,
 	},
 	[LoggedInUserRole.ADMIN]: {
 		showDriverInfo: true,
@@ -37,12 +40,13 @@ export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideHistoryConfig> =
 		showRatings: true,
 		showReorderOption: true,
 		canViewDetails: true,
+		showUserFilters: true,
 	},
 };
 
 export const PAGE_SIZE_OPTIONS = [5, 10, 20, 50] as const;
 
-export type PageSizeOption = typeof PAGE_SIZE_OPTIONS[number];
+export type PageSizeOption = (typeof PAGE_SIZE_OPTIONS)[number];
 
 export type SortField = 'scheduledTime' | 'startTime' | 'endTime' | 'totalCost' | 'status';
 export type SortDirection = 'ASC' | 'DESC';
@@ -71,5 +75,5 @@ export const SORT_OPTIONS_BY_ROLE: Record<LoggedInUserRole, SortOption[]> = {
 		{ field: 'startTime', label: 'Start Time' },
 		{ field: 'endTime', label: 'End Time' },
 	],
-	[LoggedInUserRole.ADMIN]: SORT_OPTIONS
+	[LoggedInUserRole.ADMIN]: SORT_OPTIONS,
 };

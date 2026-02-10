@@ -8,6 +8,7 @@ import com.project.backend.repositories.reports.RideReportRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRepository {
+public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRepository, JpaSpecificationExecutor<Ride> {
 
     Page<Ride> findByDriver(Driver driver, Pageable pageable);
 
@@ -89,8 +90,8 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
     FROM Ride r
     JOIN r.passengers p
     WHERE p.user = :customer
-      AND r.startTime >= COALESCE(:startTime, r.startTime)
-      AND r.startTime <= COALESCE(:endTime, r.startTime)
+                                  AND coalesce(r.startTime, '1970-01-01 00:00:00') >= COALESCE(:startTime, coalesce(r.startTime, '1970-01-01 00:00:00'))
+                                  AND coalesce(r.startTime , '1970-01-01 00:00:00') <= COALESCE(:endTime, coalesce(r.startTime , '1970-01-01 00:00:00') )
       AND (r.status IN :statuses)
 """)
     Page<Ride> findRidesByPassengerCustomerWithFilters(

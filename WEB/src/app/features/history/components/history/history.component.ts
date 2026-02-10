@@ -1,23 +1,24 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RIDE_HISTORY_CONFIGS } from '@features/history/models/ride-history-config';
-import { HistoryService } from '@features/history/services/history.service';
-import { LoggedInUserRole } from '@core/models/loggedInUser.model';
-import { Ride, RideStatus } from '@features/history/models/ride.model';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
 import {
+	RIDE_HISTORY_CONFIGS,
 	PAGE_SIZE_OPTIONS,
 	SORT_OPTIONS_BY_ROLE,
 	SortField,
-} from '@features/history/models/ride-history-config';
+} from '@shared/models/ride-config';
+import { HistoryService } from '@features/history/services/history.service';
+import { LoggedInUserRole } from '@core/models/loggedInUser.model';
+import { Ride } from '@shared/models/ride.model';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { RidesListComponent, RidesListConfig } from '@shared/components/rides/ride-list/ride-list.component';
 
 @Component({
 	selector: 'app-history',
 	standalone: true,
-	imports: [CommonModule, FormsModule],
+	imports: [CommonModule, FormsModule, RidesListComponent],
 	templateUrl: './history.component.html',
 	styleUrl: './history.component.css',
 })
@@ -46,12 +47,20 @@ export class HistoryComponent {
 
 	config = computed(() => RIDE_HISTORY_CONFIGS[this.userRole()]);
 
+	// Create a config object for the rides list component
+	ridesListConfig = computed<RidesListConfig>(() => ({
+		canViewDetails: this.config().canViewDetails,
+		showDriverInfo: this.config().showDriverInfo,
+		showPassengerInfo: this.config().showPassengerInfo,
+		showPanicButton: this.config().showPanicButton,
+		showReorderOption: this.config().showReorderOption,
+	}));
+
 	pageSizeOptions = PAGE_SIZE_OPTIONS;
 	sortOptions = computed(() => SORT_OPTIONS_BY_ROLE[this.userRole()]);
 
 	showFilters = signal(false);
 
-	protected readonly RideStatus = RideStatus;
 	protected readonly Math = Math;
 
 	ngOnInit() {
@@ -63,10 +72,8 @@ export class HistoryComponent {
 	}
 
 	onRideClick(ride: Ride) {
-		if (this.config().canViewDetails) {
-			this.historyService.selectedRide.set(ride);
-			this.router.navigate([ride.id], { relativeTo: this.route }).then();
-		}
+		this.historyService.selectedRide.set(ride);
+		this.router.navigate([ride.id], { relativeTo: this.route }).then();
 	}
 
 	onReorderNow(ride: Ride) {
@@ -127,43 +134,5 @@ export class HistoryComponent {
 		this.filterDriverId.set('');
 		this.filterCustomerId.set('');
 		this.historyService.clearFilters();
-	}
-
-	// Helper methods
-	getStatusClass(status: RideStatus): string {
-		const statusClasses = {
-			[RideStatus.PENDING]: 'status-pending',
-			[RideStatus.ACCEPTED]: 'status-accepted',
-			[RideStatus.ACTIVE]: 'status-active',
-			[RideStatus.FINISHED]: 'status-finished',
-			[RideStatus.INTERRUPTED]: 'status-interrupted',
-			[RideStatus.CANCELLED]: 'status-cancelled',
-			[RideStatus.PANICKED]: 'status-panicked',
-		};
-		return statusClasses[status];
-	}
-
-	getStatusText(status: RideStatus): string {
-		const statusTexts = {
-			[RideStatus.PENDING]: 'Pending',
-			[RideStatus.ACCEPTED]: 'Accepted',
-			[RideStatus.ACTIVE]: 'Active',
-			[RideStatus.FINISHED]: 'Finished',
-			[RideStatus.INTERRUPTED]: 'Interrupted',
-			[RideStatus.CANCELLED]: 'Cancelled',
-			[RideStatus.PANICKED]: 'Panicked',
-		};
-		return statusTexts[status];
-	}
-
-	formatDate(date: Date | string): string {
-		const d = new Date(date);
-		return d.toLocaleString('sr-RS', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-		});
 	}
 }

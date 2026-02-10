@@ -1,6 +1,6 @@
 import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 
-export interface RideHistoryConfig {
+export interface RideConfig {
 	showDriverInfo: boolean;
 	showPassengerInfo: boolean;
 	showPanicButton: boolean;
@@ -12,7 +12,7 @@ export interface RideHistoryConfig {
 	showRateButton: boolean;
 }
 
-export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideHistoryConfig> = {
+export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideConfig> = {
 	[LoggedInUserRole.CUSTOMER]: {
 		showDriverInfo: true,
 		showPassengerInfo: false,

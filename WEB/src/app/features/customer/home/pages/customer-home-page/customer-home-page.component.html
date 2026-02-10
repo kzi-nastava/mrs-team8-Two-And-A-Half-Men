@@ -1,9 +1,442 @@
 <div class="home-page">
+	<!-- Hero Section with Map and Route Form -->
 	<div class="hero">
-		<app-map id="map-section" [config]="mapConfig"></app-map>
+		<!-- Map Section -->
+		<div id="map-section">
+			<app-map [config]="mapConfig"></app-map>
+		</div>
+
+		<!-- Route Form Section -->
 		<div id="route-form-section">
-			<app-route-form ></app-route-form>
-			<button (click)="createRide()" appButton>Create ride</button>
+			<div class="route-card">
+				<app-tab-navigation
+					[tabs]="routeTabs"
+					[activeTab]="routeActiveTab()"
+					[alignment]="'space-between'"
+					(tabChange)="onRouteTabChange($event)"
+				>
+					<!-- Icon for 'route' tab -->
+					<ng-template appTabIcon="route">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							xmlns:xlink="http://www.w3.org/1999/xlink"
+							version="1.1"
+							width="25"
+							height="25"
+							viewBox="0 0 256 256"
+							xml:space="preserve"
+							fill="currentColor"
+						>
+							<g
+								style="
+									stroke: none;
+									stroke-width: 0;
+									stroke-dasharray: none;
+									stroke-linecap: butt;
+									stroke-linejoin: miter;
+									stroke-miterlimit: 10;
+									fill: none;
+									fill-rule: nonzero;
+									opacity: 1;
+								"
+								transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"
+							>
+								<path
+									d="M 45 0 C 25.463 0 9.625 15.838 9.625 35.375 c 0 8.722 3.171 16.693 8.404 22.861 L 45 90 l 26.97 -31.765 c 5.233 -6.167 8.404 -14.139 8.404 -22.861 C 80.375 15.838 64.537 0 45 0 z M 45 48.705 c -8.035 0 -14.548 -6.513 -14.548 -14.548 c 0 -8.035 6.513 -14.548 14.548 -14.548 s 14.548 6.513 14.548 14.548 C 59.548 42.192 53.035 48.705 45 48.705 z"
+									style="
+										stroke: none;
+										stroke-width: 1;
+										stroke-dasharray: none;
+										stroke-linecap: butt;
+										stroke-linejoin: miter;
+										stroke-miterlimit: 10;
+										fill: currentColor;
+										fill-rule: nonzero;
+										opacity: 1;
+									"
+									transform=" matrix(1 0 0 1 0 0) "
+									stroke-linecap="round"
+								/>
+							</g>
+						</svg>
+					</ng-template>
+					<!-- Icon for 'favourite' tab -->
+					<ng-template appTabIcon="favorites">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							xmlns:xlink="http://www.w3.org/1999/xlink"
+							version="1.1"
+							width="25"
+							height="25"
+							viewBox="0 0 256 256"
+							xml:space="preserve"
+							fill="currentColor"
+						>
+							<g
+								style="
+									stroke: none;
+									stroke-width: 0;
+									stroke-dasharray: none;
+									stroke-linecap: butt;
+									stroke-linejoin: miter;
+									stroke-miterlimit: 10;
+									fill: none;
+									fill-rule: nonzero;
+									opacity: 1;
+								"
+								transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"
+							>
+								<path
+									d="M 69.671 88.046 c -0.808 0 -1.62 -0.195 -2.37 -0.59 L 45 75.732 L 22.7 87.456 c -1.727 0.907 -3.779 0.757 -5.356 -0.388 c -1.577 -1.146 -2.352 -3.052 -2.023 -4.972 l 4.259 -24.832 L 1.539 39.678 c -1.396 -1.361 -1.889 -3.358 -1.287 -5.213 c 0.603 -1.854 2.176 -3.181 4.105 -3.461 l 24.932 -3.622 L 40.44 4.79 C 41.303 3.041 43.05 1.955 45 1.955 c 0 0 0 0 0.001 0 c 1.949 0 3.696 1.086 4.559 2.834 l 11.15 22.592 l 24.932 3.623 c 1.93 0.28 3.503 1.606 4.105 3.461 c 0.603 1.854 0.109 3.851 -1.287 5.213 L 70.419 57.264 l 4.26 24.832 c 0.329 1.921 -0.446 3.827 -2.023 4.972 C 71.764 87.717 70.721 88.046 69.671 88.046 z M 7.055 36.676 l 17.058 16.628 c 1.198 1.167 1.746 2.85 1.462 4.502 l -4.027 23.479 l 21.086 -11.086 c 1.481 -0.779 3.25 -0.779 4.732 0 l 21.085 11.086 l -4.027 -23.48 c -0.283 -1.649 0.264 -3.333 1.463 -4.501 l 17.058 -16.628 L 59.372 33.25 c -1.658 -0.242 -3.089 -1.282 -3.829 -2.783 L 45 9.106 L 34.457 30.468 c -0.74 1.5 -2.171 2.54 -3.827 2.782 L 7.055 36.676 z M 84.779 36.942 h 0.011 H 84.779 z M 44.18 7.444 c 0 0 0 0.001 0.001 0.002 L 44.18 7.444 C 44.18 7.445 44.18 7.445 44.18 7.444 z"
+									style="
+										stroke: none;
+										stroke-width: 1;
+										stroke-dasharray: none;
+										stroke-linecap: butt;
+										stroke-linejoin: miter;
+										stroke-miterlimit: 10;
+										fill: currentColor;
+										fill-rule: nonzero;
+										opacity: 1;
+									"
+									transform=" matrix(1 0 0 1 0 0) "
+									stroke-linecap="round"
+								/>
+							</g>
+						</svg>
+					</ng-template>
+				</app-tab-navigation>
+
+				<app-tab-content
+					[class]="routeActiveTab() === 'route' ? 'hero-tabs-content' : ''"
+					[tabId]="'route'"
+					[activeTab]="routeActiveTab()"
+				>
+					<h2 class="route-title">Create your route</h2>
+					<app-route-form></app-route-form>
+
+					<div class="action-buttons">
+						<button class="more-options-btn" (click)="toggleMoreOptions()">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+								<path
+									d="M12 5v14M5 12h14"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+								/>
+							</svg>
+							More options
+						</button>
+						<button class="get-estimate-btn" (click)="getEstimate()">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+								<path
+									d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+								/>
+							</svg>
+							Get estimate
+						</button>
+						<button class="book-ride-btn" (click)="createRide()" appButton>
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+								<path
+									d="M5 13l4 4L19 7"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								/>
+							</svg>
+							Book a ride
+						</button>
+					</div>
+				</app-tab-content>
+
+				<app-tab-content
+					[class]="routeActiveTab() === 'favorites' ? 'hero-tabs-content' : ''"
+					[tabId]="'favorites'"
+					[activeTab]="routeActiveTab()"
+				>
+					<h2 class="favorites-title">Your favorite routes</h2>
+					<app-favourite-routes
+						[onSelect]="selectFavouriteRoute.bind(this)"
+						[routes]="favourites()"
+						[onRemove]="removeFavouriteRoute.bind(this)"
+					/>
+				</app-tab-content>
+			</div>
 		</div>
 	</div>
+
+	<!-- Booking Form Section (Shows on More Options Click) -->
+	@if (showMoreOptions()) {
+		<div id="booking-form-section" class="booking-form-section">
+			<div class="booking-form-container">
+				<!-- Tab Navigation -->
+				<app-tab-navigation
+					[tabs]="optionsTabs"
+					[activeTab]="optionsActiveTab()"
+					[alignment]="'left'"
+					(tabChange)="onOptionsTabChange($event)"
+				>
+					<!-- Icon for 'time' tab -->
+					<ng-template appTabIcon="time">
+						<svg width="25" height="25" viewBox="0 0 24 24" fill="none">
+							<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+							<path
+								d="M12 6v6l4 2"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+							/>
+						</svg>
+					</ng-template>
+
+					<!-- Icon for 'passengers' tab -->
+					<ng-template appTabIcon="passengers">
+						<svg width="25" height="25" viewBox="0 0 24 24" fill="none">
+							<path
+								d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+							/>
+						</svg>
+					</ng-template>
+
+					<!-- Icon for 'services' tab -->
+					<ng-template appTabIcon="services">
+						<svg width="25" height="25" viewBox="0 0 24 24" fill="none">
+							<path
+								d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
+							<circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" />
+						</svg>
+					</ng-template>
+
+					<!-- Icon for 'vehicle' tab -->
+					<ng-template appTabIcon="vehicle">
+						<svg width="25" height="25" viewBox="0 0 24 24" fill="none">
+							<path
+								d="M5 17h14M5 17a2 2 0 1 1 0-4M5 17a2 2 0 1 0 0-4m14 4a2 2 0 1 0 0-4m0 4a2 2 0 1 1 0-4M3 11l2-7h14l2 7M5 13h14"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
+						</svg>
+					</ng-template>
+				</app-tab-navigation>
+
+				<!-- Tab Contents -->
+				<div class="tab-content-wrapper">
+					<!-- Time Tab -->
+					<app-tab-content [tabId]="'time'" [activeTab]="optionsActiveTab()">
+						<div class="form-section">
+							<h3 class="section-title">Schedule a ride at a specific time</h3>
+
+							<div class="radio-group">
+								<label
+									class="radio-option"
+									[class.selected]="scheduleOption() === 'now'"
+								>
+									<input
+										type="radio"
+										name="schedule"
+										value="now"
+										[checked]="scheduleOption() === 'now'"
+										(change)="setScheduleOption('now')"
+									/>
+									<span class="radio-label">Now</span>
+								</label>
+
+								<label
+									class="radio-option"
+									[class.selected]="scheduleOption() === 'specific'"
+								>
+									<input
+										type="radio"
+										name="schedule"
+										value="specific"
+										[checked]="scheduleOption() === 'specific'"
+										(change)="setScheduleOption('specific')"
+									/>
+									<span class="radio-label">Specific time</span>
+								</label>
+							</div>
+
+							@if (scheduleOption() === 'specific') {
+								<div class="datetime-input-wrapper">
+									<input
+										type="datetime-local"
+										class="datetime-input"
+										[(ngModel)]="scheduledTime"
+										[min]="scheduledTime()"
+									/>
+								</div>
+							}
+						</div>
+					</app-tab-content>
+
+					<!-- Passengers Tab -->
+					<app-tab-content [tabId]="'passengers'" [activeTab]="optionsActiveTab()">
+						<div class="form-section">
+							<h3 class="section-title">Add passengers to the ride</h3>
+
+							<div class="passenger-list">
+								@for (email of passengerEmails(); track email; let i = $index) {
+									<div class="passenger-item">
+										<span class="passenger-email">{{ email }}</span>
+										<button class="remove-btn" (click)="removePassenger(i)">
+											<svg
+												width="16"
+												height="16"
+												viewBox="0 0 24 24"
+												fill="none"
+											>
+												<path
+													d="M18 6L6 18M6 6l12 12"
+													stroke="currentColor"
+													stroke-width="2"
+													stroke-linecap="round"
+												/>
+											</svg>
+										</button>
+									</div>
+								}
+							</div>
+
+							<div class="add-passenger-form">
+								<input
+									type="email"
+									class="passenger-input"
+									placeholder="Enter passenger email"
+									[(ngModel)]="newPassengerEmail"
+									(keyup.enter)="addPassenger()"
+								/>
+								<button class="add-passenger-btn" (click)="addPassenger()">
+									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+										<path
+											d="M12 5v14M5 12h14"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+										/>
+									</svg>
+									Add new passenger
+								</button>
+							</div>
+						</div>
+					</app-tab-content>
+
+					<!-- Additional Services Tab -->
+					<app-tab-content [tabId]="'services'" [activeTab]="optionsActiveTab()">
+						<div class="form-section">
+							<h3 class="section-title">Select additional services you want</h3>
+
+							<div class="services-list">
+								@for (service of availableServices(); track service.id) {
+									<label
+										class="service-item"
+										[class.selected]="isServiceSelected(service.id)"
+									>
+										<input
+											type="checkbox"
+											[checked]="isServiceSelected(service.id)"
+											(change)="toggleService(service.id)"
+										/>
+										<svg
+											class="checkmark"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+										>
+											<path
+												d="M5 13l4 4L19 7"
+												stroke="currentColor"
+												stroke-width="2"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+											/>
+										</svg>
+										<span class="service-label">{{ service.name }}</span>
+									</label>
+								}
+							</div>
+						</div>
+					</app-tab-content>
+
+					<!-- Vehicle Type Tab -->
+					<app-tab-content [tabId]="'vehicle'" [activeTab]="optionsActiveTab()">
+						<div class="form-section">
+							<h3 class="section-title">Select vehicle type</h3>
+
+							<div class="vehicle-types-grid">
+								@for (vehicleType of vehicleTypes(); track vehicleType.id) {
+									<label
+										class="vehicle-type-card"
+										[class.selected]="
+											selectedVehicleTypeId() === vehicleType.id
+										"
+									>
+										<input
+											type="radio"
+											name="vehicleType"
+											[value]="vehicleType.id"
+											[checked]="selectedVehicleTypeId() === vehicleType.id"
+											(change)="selectVehicleType(vehicleType.id)"
+										/>
+										<div class="vehicle-icon">
+											<svg
+												width="48"
+												height="48"
+												viewBox="0 0 24 24"
+												fill="none"
+											>
+												<path
+													d="M5 17h14M5 17a2 2 0 1 1 0-4M5 17a2 2 0 1 0 0-4m14 4a2 2 0 1 0 0-4m0 4a2 2 0 1 1 0-4M3 11l2-7h14l2 7M5 13h14"
+													stroke="currentColor"
+													stroke-width="2"
+												/>
+											</svg>
+										</div>
+										<div class="vehicle-info">
+											<h4 class="vehicle-name">{{ vehicleType.typeName }}</h4>
+											<p class="vehicle-price">
+												{{ vehicleType.price | number: '1.2-2' }} per km
+											</p>
+										</div>
+										<svg
+											class="selection-indicator"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+										>
+											<circle
+												cx="12"
+												cy="12"
+												r="10"
+												stroke="currentColor"
+												stroke-width="2"
+											/>
+											<circle cx="12" cy="12" r="6" fill="currentColor" />
+										</svg>
+									</label>
+								}
+
+								@if (vehicleTypes().length === 0) {
+									<div class="no-vehicles-message">
+										<p>No vehicle types available. Please try again later.</p>
+									</div>
+								}
+							</div>
+						</div>
+					</app-tab-content>
+				</div>
+			</div>
+		</div>
+	}
 </div>

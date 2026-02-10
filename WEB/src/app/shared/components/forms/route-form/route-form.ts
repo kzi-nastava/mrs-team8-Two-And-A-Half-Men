@@ -137,6 +137,9 @@ export class RouteForm implements OnDestroy {
 		const points = this.points().slice(0, Math.max(2, newLength));
 		const arr = this.pointsFormArray;
 		for (let i = arr.length - 1; i >= newLength; i--) {
+			if (!arr.at(i)?.get('query')?.value) {
+				break;
+			}
 			if (i >= 2) {
 				arr.removeAt(i);
 				this.points.update((p) => p.slice(0, p.length - 1));

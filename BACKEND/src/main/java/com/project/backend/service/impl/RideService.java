@@ -515,6 +515,9 @@ public class RideService implements IRideService {
         List<Ride> rides = rideRepository.findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(driversIds);
         for (var ride : rides) {
             var driverInfo = drivers.get(ride.getDriver().getId());
+            if (driverInfo == null) {
+                continue;
+            }
             // If the ride is already set it means driver already has next ride so he is not suitable
             if (driverInfo.getCurrentRide() != null) {
                 drivers.remove(ride.getDriver().getId());

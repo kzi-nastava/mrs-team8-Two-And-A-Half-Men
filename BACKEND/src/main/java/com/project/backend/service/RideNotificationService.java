@@ -32,13 +32,14 @@ public class RideNotificationService {
         }
         var ownerName = ride.getRideOwner().getFirstName() + " " + ride.getRideOwner().getLastName();
         var url = frontendUrl + "/ride/" + ride.getId() + "/track?accessToken=";
+        String message = "Your ride with " + ownerName + " is starting in " + minutesBefore + " minutes.";
         for (var passenger : ride.getPassengers()) {
             try {
                 if (passenger.getUser() == null) {
                     emailService.sendEmail(
                             passenger.getEmail(),
                             "Your ride is starting soon",
-                            emailBodyGeneratorService.generateRideStartingSoonEmail(
+                            emailBodyGeneratorService.generateRideStartingSoonEmailPassenger(
                                     ownerName,
                                     url + passenger.getAccessToken(),
                                     minutesBefore
@@ -46,9 +47,12 @@ public class RideNotificationService {
                     );
                 }
                 else {
+                    if (passenger.getUser().getId().equals(ride.getRideOwner().getId())) {
+                        message = "Your ride is starting in " + minutesBefore + " minutes.";
+                    }
                     notificationsService.sendNotificationToUser(passenger.getUser(),
                             "Your ride is starting soon",
-                            "Your ride with " + ownerName + " is starting in " + minutesBefore + " minutes.",
+                            message,
                             "/rides/"+rideId
                     );
                 }

@@ -1,10 +1,11 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarRenderer } from '../renderer/navbar-renderer';
 import { NavbarButton, NavbarSettings } from '../models/navbar-models';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 import { Router } from '@angular/router';
+import { NotificationService } from '@shared/services/notifications/notifications.service';
 
 @Component({
 	selector: 'app-navbar',
@@ -15,6 +16,7 @@ import { Router } from '@angular/router';
 export class NavbarComponent {
 	private authService = inject(AuthService);
 	private router = inject(Router);
+	private notificationsService = inject(NotificationService);
 
 	buttons = computed(() => {
 		const user = this.authService.user();
@@ -50,6 +52,7 @@ export class NavbarComponent {
 				buttons: this.buttons(),
 			}) as NavbarSettings,
 	);
+	notificationClick = input.required<() => void>();
 
 	private get unregisteredButtons(): NavbarButton[] {
 		return [
@@ -93,7 +96,10 @@ export class NavbarComponent {
 				id: 'notifications',
 				type: 'notification',
 				position: 'right',
-				notificationCount: 5,
+				notificationCount: this.notificationsService.unreadCount(),
+				onClick: () => {
+					this.notificationClick()();
+				},
 				icon: 'assets/notification-icon.png',
 			},
 			{
@@ -172,6 +178,5 @@ export class NavbarComponent {
 		];
 	}
 	onNavbarButtonClick(buttonId: string): void {
-		console.log(`Navbar button clicked: ${buttonId}`);
 	}
 }

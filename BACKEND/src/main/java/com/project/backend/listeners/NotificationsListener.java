@@ -1,6 +1,6 @@
 package com.project.backend.listeners;
 
-import com.project.backend.DTO.Notification.NewNotificationDTO;
+import com.project.backend.DTO.Notification.NotificationDTO;
 import com.project.backend.events.NotificationCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -17,7 +17,7 @@ public class NotificationsListener {
     public void onCreated(NotificationCreatedEvent event) {
         simpMessagingTemplate.convertAndSend(
                 "/topic/notifications/" + event.getNotification().getAppUser().getId(),
-                new NewNotificationDTO(event.getNotification())
+                new NotificationDTO(event.getNotification())
         );
     }
 }

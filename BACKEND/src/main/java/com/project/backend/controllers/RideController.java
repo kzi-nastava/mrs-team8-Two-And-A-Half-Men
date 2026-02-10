@@ -143,34 +143,6 @@ public class RideController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-//    @GetMapping("/history")
-//    public ResponseEntity<PagedResponse<RideResponseDTO>> getDriverRideHistory(
-//            Pageable pageable,
-//            @RequestParam(name = "startDate", required = false)
-//                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-//            @RequestParam(name = "endDate", required = false)
-//                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-//            @RequestParam(name = "userID", required = false) Long userID
-//    ) {
-//        AppUser user = authUtils.getCurrentUser();
-//        if (user == null)
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//
-//        PagedResponse<RideResponseDTO> history = null;
-//
-//        if (user instanceof Driver) {
-//            history = historyService.getDriverRideHistory(user.getId(), pageable, startDate, endDate);
-//        }
-//        if( user instanceof Customer ) {
-//            history = historyService.getCustomerRideHistory(user.getId(), pageable, startDate, endDate);
-//        }
-//        if(user instanceof Admin) {
-//            history = historyService.getRideHistoryForUserID(userID, pageable, startDate, endDate);
-//        }
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(history);
-//    }
-
     @GetMapping("/history")
     public ResponseEntity<PagedResponse<RideResponseDTO>> getRideHistory(
             @ModelAttribute RideFilter filter

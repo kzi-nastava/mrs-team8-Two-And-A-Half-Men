@@ -18,6 +18,7 @@ export class UnregisteredAuthService {
 				this.authService.saveLogin(
 					response.accessToken,
 					{
+						id: response.id,
 						role: response.role,
 						firstName: response.firstName,
 						lastName: response.lastName,

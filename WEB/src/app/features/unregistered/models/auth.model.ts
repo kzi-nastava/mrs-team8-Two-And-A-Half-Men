@@ -1,4 +1,5 @@
 export interface AuthResponse {
+	id: number;
 	accessToken: string;
 	email: string;
 	imgUrl: string | null;

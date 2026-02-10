@@ -181,6 +181,7 @@ public class AuthService {
             return UserTokenDTO.builder()
                     .accessToken(jwt)
                     .expiresIn((long) expiresIn)
+                    .id(user.getId())
                     .email(user.getEmail())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())

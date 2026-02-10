@@ -10,16 +10,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NewNotificationDTO {
+public class NotificationDTO {
+    private Long id;
     private String title;
     private String message;
     private Long recipientId;
+    private boolean read;
     private String additionalData; // Optional field for any extra data (e.g., ride details, driver info)
 
-    public NewNotificationDTO(Notification notification) {
+    public NotificationDTO(Notification notification) {
+        this.id = notification.getId();
         this.title = notification.getTitle();
         this.message = notification.getMessage();
         this.recipientId = notification.getAppUser().getId();
         this.additionalData = notification.getData();
+        this.read = notification.isRead();
     }
 }

@@ -20,15 +20,11 @@ export class NavbarRenderer {
   private sanitizer = inject(DomSanitizer);
   handleButtonClick(button: NavbarButton, event: Event): void {
     event.preventDefault();
-    console.log(`Button clicked: ${button.id}`);
-    console.log(button.route)
     this.buttonClick.emit(button.id);
     if (button.onClick) {
-      console.log('Executing onClick for button:', button.id);
       button.onClick();
     }
     if (button.route) {
-      console.log('Navigating to route for button:', button.id, button.route);
       this.router.navigate([button.route]);
     }
   }
@@ -49,7 +45,6 @@ export class NavbarRenderer {
     return this.sanitizer.bypassSecurityTrustHtml(this.config().logoUrl || '');
   }
   LogoClick(): void {
-    console.log('Logo clicked', this.config().logoRoute);
     if (this.config().logoRoute) {
       this.router.navigate([this.config().logoRoute]);
     }

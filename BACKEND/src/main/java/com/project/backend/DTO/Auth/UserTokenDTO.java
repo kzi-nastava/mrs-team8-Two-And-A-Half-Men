@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserTokenDTO {
     private String accessToken;
     private Long expiresIn;
+    private Long id;
     private String email = null;
     private String firstName = null;
     private String lastName = null;

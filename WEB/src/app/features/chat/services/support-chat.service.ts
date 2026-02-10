@@ -64,8 +64,6 @@ export class SupportChatService {
 	private convertChatDates(chat: SupportChat): SupportChat {
 		return {
 			...chat,
-			createdAt: new Date(chat.createdAt),
-			closedAt: chat.closedAt ? new Date(chat.closedAt) : undefined,
 			lastMessage: chat.lastMessage ? this.convertMessageDates(chat.lastMessage) : undefined,
 		};
 	}

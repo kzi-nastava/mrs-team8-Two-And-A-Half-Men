@@ -3,13 +3,19 @@
 		<div class="chat-header">
 			<span class="chat-title">{{ title }}</span>
 			<div class="chat-actions">
-				<button class="action-btn" (click)="onMinimize()">−</button>
-				<button class="action-btn" (click)="onClose()">×</button>
+				@if (isMinimizable) {
+					<button class="action-btn" (click)="onMinimize()" title="Minimize">−</button>
+				}
+				<button class="action-btn" (click)="onClose()" title="Close">×</button>
 			</div>
 		</div>
 
 		<div class="chat-messages">
-			@for (message of messages; track message.id) {
+			@if (isLoading()) {
+				<div class="loading-indicator">Loading messages...</div>
+			}
+
+			@for (message of messages(); track message.id) {
 				<div [class]="'message ' + (isOwnMessage(message) ? 'own-message' : 'other-message')">
 					<div class="message-content">
 						@if (!isOwnMessage(message)) {
@@ -27,7 +33,8 @@
 				type="text"
 				class="chat-input"
 				placeholder="Type text..."
-				[(ngModel)]="newMessage"
+				[value]="newMessage()"
+				(input)="newMessage.set($any($event.target).value)"
 				(keyup.enter)="onSend()"
 			/>
 			<button class="send-btn" (click)="onSend()">Send</button>

@@ -87,13 +87,12 @@ public class MessageService implements IMessageService {
     }
 
     private void broadcastMessage(SupportChat chat, MessageDTO messageDTO) {
-        messagingTemplate.convertAndSendToUser(
-                chat.getUser().getId().toString(),
-                "/queue/support",
+        messagingTemplate.convertAndSend(
+                "/topic/chat/" + chat.getId(),
                 messageDTO
         );
 
-        messagingTemplate.convertAndSend("/topic/support/admin", messageDTO);
+        messagingTemplate.convertAndSend("/topi c/support/admin", messageDTO);
     }
 
     private boolean isUserAllowedToSendMessage(SupportChat chat, AppUser sender) {

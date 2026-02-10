@@ -12,11 +12,9 @@ export interface Message {
 export interface SupportChat {
 	id: number;
 	userId: number;
-	status: 'OPEN' | 'CLOSED';
-	createdAt: Date;
-	closedAt?: Date;
-	unreadUserMessages?: number;
-	unreadAdminMessages?: number;
+	userEmail?: string;
+	userType?: string;
+	status: 'ACTIVE' | 'CLOSED';
 	lastMessage?: Message;
 }
 

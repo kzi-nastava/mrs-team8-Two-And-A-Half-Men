@@ -1,0 +1,25 @@
+@if(shouldBeVisible()) {
+	<div class="user-chat-page">
+		@if (isLoading()) {
+			<div class="loading">Loading chat...</div>
+		}
+
+		@if (chat()) {
+			<app-chat-window
+				[chatId]="chat()!.id"
+				[title]="'Live support'"
+				[isOpen]="isChatOpen()"
+				[isMinimizable]="false"
+				(minimize)="onMinimize()"
+				(close)="onMinimize()"
+			></app-chat-window>
+		}
+
+		@if (isMinimized()) {
+			<button class="floating-chat-btn" (click)="openChat()">
+				<span class="icon">💬</span>
+				<span class="text">Support</span>
+			</button>
+		}
+	</div>
+}

@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { routeAnimations } from '@core/animations/route-animation';
 import { NavbarComponent } from "./layout/navbar/component/navbar.component";
 import { NotificationSidebarComponent } from './layout/notifications-sidebar/notifications-sidebar.component';
+import { UserChatComponent } from '@features/chat/components/user-chat/user-chat.component';
 
 @Component({
 	selector: 'app-root',
-	imports: [RouterOutlet, NavbarComponent, NotificationSidebarComponent],
+	imports: [RouterOutlet, NavbarComponent, NotificationSidebarComponent, UserChatComponent],
 	templateUrl: './app.html',
 	styleUrl: './app.css',
 	animations: [routeAnimations],

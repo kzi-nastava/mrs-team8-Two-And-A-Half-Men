@@ -52,4 +52,22 @@ export class PopupsService {
 			}
 		});
 	}
+
+	prompt(title: string, text: string, placeholder: string, onConfirm: (value: string) => void, onCancel?: () => void) {
+		Swal.fire({
+			title,
+			text,
+			input: 'text',
+			inputPlaceholder: placeholder,
+			showCancelButton: true,
+			confirmButtonText: 'Submit',
+			cancelButtonText: 'Cancel',
+		}).then((result) => {
+			if (result.isConfirmed && result.value) {
+				onConfirm?.(result.value);
+			} else {
+				onCancel?.();
+			}
+		});
+	}
 }

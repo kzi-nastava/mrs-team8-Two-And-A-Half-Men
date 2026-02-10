@@ -76,7 +76,7 @@ public class WebSocketManager {
     }
 
 
-    public static void subscribe(@NonNull String topic, @NonNull MessageCallback callback) {
+    public static MessageCallback subscribe(@NonNull String topic, @NonNull MessageCallback callback) {
         WebSocketManager manager = getInstance();
 
         List<MessageCallback> callbacks = manager.topicCallbacks.get(topic);
@@ -103,6 +103,7 @@ public class WebSocketManager {
 
             manager.subscriptions.put(topic, disposable);
         }
+        return callback;
     }
 
     public static void unsubscribe(@NonNull String topic, @NonNull MessageCallback callback) {
@@ -122,7 +123,7 @@ public class WebSocketManager {
         }
     }
 
-    private static void unsubscribe(@NonNull String topic) {
+    public static void unsubscribe(@NonNull String topic) {
         WebSocketManager manager = getInstance();
         List<MessageCallback> callbacks = manager.topicCallbacks.get(topic);
         if (callbacks != null) {

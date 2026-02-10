@@ -213,6 +213,8 @@ WHERE c.role = 'CUSTOMER' AND c.id IN (701, 751, 801, 851, 901)
 GROUP BY c.id, customer_name
 ORDER BY c.id;
 
+ALTER TABLE ride ALTER COLUMN path TYPE TEXT;
+
 -- ===================================================================
 -- SUMMARY
 -- ===================================================================

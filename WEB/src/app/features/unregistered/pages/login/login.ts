@@ -34,8 +34,9 @@ export class Login {
 				next: () => {
 					this.router.navigate(['']).then();
 				},
-				error: () => {
+				error: (err) => {
 					this.loginFailed = true;
+					this.popupsService.error('Login Failed', err.error?.message || 'An error occurred during login. Please try again.');
 				},
 			});
 		} else {

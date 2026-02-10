@@ -31,7 +31,7 @@ public class Ride {
     @Enumerated(EnumType.STRING)
     private RideStatus status;
 
-    @Lob
+    @Column(columnDefinition = "text")
     private String path;
 
     private Double distanceKm;

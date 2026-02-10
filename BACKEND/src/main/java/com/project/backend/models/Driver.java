@@ -19,7 +19,7 @@ import java.util.List;
 public class Driver extends AppUser {
     @Enumerated(EnumType.STRING)
     private DriverStatus driverStatus;
-    @OneToMany
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
     private List<DriverActivity> driverActivities;
 
     @OneToOne(mappedBy = "driver", fetch = FetchType.EAGER)

@@ -12,7 +12,7 @@ import {PasswordChange, UserProfile} from '../../models/user-profile.model';
 import { BoxDirective} from '@shared/directives/box/box.directive';
 import {
 	RequestChangePreviewComponent
-} from '@features/profile/components/request-change-preview/request-change-preview.component';
+} from '@shared/components/forms/request-change-preview/request-change-preview.component';
 import {PendingChangeRequest} from '@shared/models/profile-change-request.model';
 import {ProfileService} from '@features/profile/services/profile.service';
 import { AuthService } from '@core/services/auth.service';
@@ -103,6 +103,7 @@ export class ProfileComponent implements OnInit {
 		if (profile.pendingChangeRequest) {
 			this.changeRequest.set(profile?.pendingChangeRequest ?? null);
 		}
+		this.authService.updateUserInfo(profile.personalInfo);
 	}
 
 	loadProfileData() {
@@ -113,8 +114,8 @@ export class ProfileComponent implements OnInit {
 					'Error',
 					'Failed to load profile data. Please try again later. ' + err.message,
 					{
-						onConfirm: () => this.router.navigate(['/']).then()
-					}
+						onConfirm: () => this.router.navigate(['/']).then(),
+					},
 				);
 			},
 		});
@@ -193,7 +194,10 @@ export class ProfileComponent implements OnInit {
 				error: (err) => {
 					console.error('Failed to upload profile picture', err);
 					this.isSaving.set(false);
-					this.popupsService.error('Error', 'Failed to upload profile picture. Please try again later. ' + err.message);
+					this.popupsService.error(
+						'Error',
+						'Failed to upload profile picture. Please try again later. ' + err.message,
+					);
 				},
 			});
 			return;
@@ -209,17 +213,40 @@ export class ProfileComponent implements OnInit {
 				}
 				this.updateProfileDate(response.profile);
 
-				this.popupsService.success('Profile Updated', 'Your profile information has been updated successfully!');
+				this.popupsService.success(
+					'Profile Updated',
+					'Your profile information has been updated successfully!',
+				);
 				this.isSaving.set(false);
 			},
 			error: (err) => {
 				console.error('Failed to update profile', err);
-				this.popupsService.error('Error', 'Failed to update profile information. Please try again later. ' + err.message);
+				this.popupsService.error(
+					'Error',
+					'Failed to update profile information. Please try again later. ' + err.message,
+				);
 				this.isSaving.set(false);
 			},
 		});
 	}
 
+	cancelRequest(): void {
+		if (this.personalInfo() === null) return;
+
+		this.popupsService.confirm(
+			'Cancel Request',
+			'Are you sure you want to cancel this change request?',
+			() => {
+				this.profileService.cancelPendingRequest(this.changeRequest()!.id).subscribe({
+					next: (value) => {
+						if (value.ok) {
+							this.changeRequest.set(null);
+						}
+					},
+				});
+			},
+		);
+	}
 	// Change password
 	async changePassword(): Promise<void> {
 		const { newPassword, confirmPassword } = this.passwordForm();
@@ -246,7 +273,10 @@ export class ProfileComponent implements OnInit {
 					if (response.accessToken) {
 						this.authService.updateToken(response.accessToken);
 					}
-					this.popupsService.success('Password Changed', 'Your password has been changed successfully!');
+					this.popupsService.success(
+						'Password Changed',
+						'Your password has been changed successfully!',
+					);
 					this.passwordForm.set({
 						oldPassword: '',
 						newPassword: '',

@@ -1,4 +1,4 @@
-/* src/app/shared/components/vehicle-info-form/vehicle-info-form.component.css */
+/* src/app/shared/renderer/vehicle-info-form/vehicle-info-form.component.css */
 
 .vehicle-grid {
 	display: grid;
@@ -47,8 +47,9 @@ select.form-input {
 	cursor: pointer;
 }
 
-select.form-input:disabled {
+.form-input:disabled {
 	cursor: not-allowed;
+	opacity: 0.7;
 }
 
 select.form-input option {

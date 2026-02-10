@@ -8,16 +8,12 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityAdminBinding;
-import com.project.mobile.databinding.ActivityMainBinding;
-import com.project.mobile.databinding.ActivityUnregisterBinding;
-import com.project.mobile.fragments.ProfileFragment;
+import com.project.mobile.fragments.DriverHistoryFragment;
+import com.project.mobile.fragments.profile.ProfileFragment;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityAdminBinding binding;
@@ -109,7 +105,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.nav_history) {
-            FragmentTransition.to(new History(), this, false, containerId);
+            FragmentTransition.to(new DriverHistoryFragment(), this, false, containerId);
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.price_management) {

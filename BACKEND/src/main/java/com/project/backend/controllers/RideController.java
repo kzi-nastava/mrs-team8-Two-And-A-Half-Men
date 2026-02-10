@@ -1,6 +1,7 @@
 package com.project.backend.controllers;
 
 import com.project.backend.DTO.Ride.*;
+import com.project.backend.DTO.filters.RideFilter;
 import com.project.backend.exceptions.UnauthorizedException;
 import com.project.backend.models.Admin;
 import com.project.backend.models.AppUser;
@@ -145,31 +146,16 @@ public class RideController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<PagedResponse<RideResponseDTO>> getDriverRideHistory(
-            Pageable pageable,
-            @RequestParam(name = "startDate", required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(name = "endDate", required = false)
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-            @RequestParam(name = "userID", required = false) Long userID
+    public ResponseEntity<PagedResponse<RideResponseDTO>> getRideHistory(
+            @ModelAttribute RideFilter filter
     ) {
-        AppUser user = authUtils.getCurrentUser();
-        if (user == null)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-
-        PagedResponse<RideResponseDTO> history = null;
-
-        if (user instanceof Driver) {
-            history = historyService.getDriverRideHistory(user.getId(), pageable, startDate, endDate);
-        }
-        if( user instanceof Customer ) {
-            history = historyService.getCustomerRideHistory(user.getId(), pageable, startDate, endDate);
-        }
-        if(user instanceof Admin) {
-            history = historyService.getRideHistoryForUserID(userID, pageable, startDate, endDate);
+        AppUser currentUser = authUtils.getCurrentUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(history);
+        PagedResponse<RideResponseDTO> history = historyService.getRideHistory(filter, currentUser);
+        return ResponseEntity.ok(history);
     }
 
     @PostMapping("/panic")
@@ -232,5 +218,15 @@ public class RideController {
         }
         List<RideBookedDTO> bookedRides = rideService.getAllBookedRidesByCustomer(user);
         return ResponseEntity.ok(bookedRides);
+    }
+    @GetMapping("/tracking/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')  or hasRole('DRIVER')")
+    public ResponseEntity<RideTrackingDTO> getBookedRideById(@PathVariable Long id) {
+        AppUser user = authUtils.getCurrentUser();
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        RideTrackingDTO ride = rideService.getRideTrackingById(id, user);
+        return ResponseEntity.ok(ride);
     }
 }

@@ -13,6 +13,24 @@ export const CUSTOMER_ROUTES: Routes = [
 			),
 	},
 	{
+		path: 'history',
+		canActivate: [authGuard, roleGuard([LoggedInUserRole.CUSTOMER])],
+		loadComponent: () =>
+			import('@features/history/components/history/history.component').then(
+				(m) => m.HistoryComponent,
+			),
+		data: { userRole: LoggedInUserRole.CUSTOMER },
+	},
+	{
+		path: 'history/:id',
+		canActivate: [authGuard, roleGuard([LoggedInUserRole.CUSTOMER])],
+		loadComponent: () =>
+			import('@features/history/components/ride-details/ride-details.component').then(
+				(m) => m.RideDetailsComponent,
+			),
+		data: { userRole: LoggedInUserRole.CUSTOMER },
+	},
+	{
 		path: 'rides/booked',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.CUSTOMER])],
 		loadComponent: () =>
@@ -20,15 +38,17 @@ export const CUSTOMER_ROUTES: Routes = [
 	},
 
 	{
-		path: 'rides/active',
+		path: 'rides/:id',
 		loadComponent: () =>
-			import('@features/customer/rides/pages/ride-tracking/ride-tracking.component').then(
+			import('./rides/pages/ride-tracking/ride-tracking.component').then(
 				(m) => m.RideTrackingComponent,
 			),
 	},
 	{
 		path: 'rides/:rideId/rating',
 		loadComponent: () =>
-			import('@features/customer/rides/pages/rating-page/rating-page.component').then(m => m.RatingPageComponent),
+			import('./rides/pages/rating-page/rating-page.component').then(
+				(m) => m.RatingPageComponent,
+			),
 	},
 ];

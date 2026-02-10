@@ -1,4 +1,4 @@
-/* src/app/components/profile/profile.component.css */
+/* src/app/renderer/profile/profile.component.css */
 
 .profile-container {
 	min-height: 100vh;
@@ -375,6 +375,38 @@ select.form-input option {
 	margin-bottom: 1rem;
 }
 
+.cancel-button {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: #dc2626;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 0.75rem 1.25rem;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	height: fit-content;
+}
+
+.cancel-button svg {
+	width: 16px;
+	height: 16px;
+}
+
+.cancel-button:hover {
+	background: #b91c1c;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.cancel-button:active {
+	transform: translateY(0);
+}
+
 /* Responsive */
 @media (max-width: 968px) {
 	.form-grid,
@@ -410,5 +442,10 @@ select.form-input option {
 
 	.form-section {
 		padding: 1.5rem;
+	}
+
+	.cancel-button {
+		width: 100%;
+		justify-content: center;
 	}
 }

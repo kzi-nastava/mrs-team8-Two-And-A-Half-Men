@@ -1,10 +1,11 @@
-<!-- src/app/shared/components/vehicle-info-form/vehicle-info-form.component.html -->
+<!-- src/app/shared/renderer/vehicle-info-form/vehicle-info-form.component.html -->
 
 <div class="vehicle-grid">
 	<div class="vehicle-info">
 		<div class="form-group">
 			<label for="vehicleType">Type</label>
 			<select
+				[disabled]="readonly()"
 				id="vehicleType"
 				[ngModel]="getVehicleTypeId()"
 				(ngModelChange)="onVehicleTypeChange($event)"
@@ -28,7 +29,7 @@
 				type="text"
 				id="model"
 				[(ngModel)]="vehicleInfo().model"
-				[readonly]="readonly()"
+				[disabled]="readonly()"
 				class="form-input"
 				placeholder="e.g., Toyota Prius">
 		</div>
@@ -39,7 +40,7 @@
 				type="text"
 				id="plate"
 				[(ngModel)]="vehicleInfo().licensePlate"
-				[readonly]="readonly()"
+				[disabled]="readonly()"
 				class="form-input"
 				placeholder="e.g., NS-123-AB">
 		</div>
@@ -50,7 +51,7 @@
 				type="number"
 				id="seats"
 				[(ngModel)]="vehicleInfo().numberOfSeats"
-				[readonly]="readonly()"
+				[disabled]="readonly()"
 				class="form-input"
 				min="1"
 				max="20"

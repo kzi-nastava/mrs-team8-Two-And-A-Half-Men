@@ -33,7 +33,7 @@ export class DriverLocationManagerService implements OnDestroy {
     console.log('Initializing DriverLocationManager...');
 
     this.loadInitialLocations();
-    this.webSocket.connect(); // start STOMP connection
+    // this.webSocket.connect(); // start STOMP connection
 
 
     this.isInitialized = true;
@@ -74,20 +74,20 @@ export class DriverLocationManagerService implements OnDestroy {
     return Array.from(this.driverLocationWebSocket.driverLocations().values());
   }
 
-  isWebSocketConnected(): boolean {
-    return this.driverLocationWebSocket.connected();
-  }
+  // isWebSocketConnected(): boolean {
+  //   return this.driverLocationWebSocket.connected();
+  // }
 
-  reconnectWebSocket(): void {
-    this.driverLocationWebSocket.clearAll();
-    this.webSocket.disconnect();
-    this.webSocket.connect();
-  }
+  // reconnectWebSocket(): void {
+  //   this.driverLocationWebSocket.clearAll();
+  //   this.webSocket.disconnect();
+  //   this.webSocket.connect();
+  // }
 
   cleanup(): void {
     console.log('Cleaning up DriverLocationManager...');
     this.driverLocationWebSocket.clearAll();
-    this.webSocket.disconnect();
+    // this.webSocket.disconnect();
     this.driverMarkerService.clearAllMarkers();
     this.isInitialized = false;
   }

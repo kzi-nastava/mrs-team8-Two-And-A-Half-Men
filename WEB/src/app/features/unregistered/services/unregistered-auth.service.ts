@@ -18,6 +18,7 @@ export class UnregisteredAuthService {
 				this.authService.saveLogin(
 					response.accessToken,
 					{
+						id: response.id,
 						role: response.role,
 						firstName: response.firstName,
 						lastName: response.lastName,
@@ -59,6 +60,16 @@ export class UnregisteredAuthService {
 			{
 				token,
 				newPassword,
+			},
+		);
+	}
+
+	public activateDriverAccount(token: string, newPassword: string): Observable<{ message: string }> {
+		return this.http.patch<{ message: string }>(
+			`/api/${environment.apiVersion}/activate/drivers`,
+			{
+				accessToken: token,
+				password: newPassword,
 			},
 		);
 	}

@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
 }
-import java.util.Properties
 
 def localProps = new Properties()
 def localFile = rootProject.file("local.properties")
@@ -75,10 +74,17 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'com.github.NaikSoftware:StompProtocolAndroid:1.6.6'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    implementation 'org.osmdroid:osmdroid-android:6.1.14'
+    implementation 'org.osmdroid:osmdroid-geopackage:6.1.14'
+    implementation 'org.osmdroid:osmdroid-wms:6.1.14'
 
 
     // Testing
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
+    // Lombok
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
 }

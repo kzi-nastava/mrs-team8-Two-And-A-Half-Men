@@ -1,0 +1,168 @@
+<div class="notification-sidebar-container" (click)="onBackdropClick($event)" @fadeIn>
+	<!-- Sidebar -->
+	<div class="notification-sidebar" @slideIn>
+		<!-- Header -->
+		<div class="sidebar-header">
+			<div class="header-title">
+				<h2>Notifications</h2>
+				@if (unreadCount() > 0) {
+					<span class="unread-badge">{{ unreadCount() }}</span>
+				}
+			</div>
+
+			<div class="header-actions">
+				@if (hasUnreadNotifications()) {
+					<button
+						class="action-btn"
+						(click)="markAllAsRead()"
+						title="Mark all as read"
+					>
+						✓ All
+					</button>
+				}
+
+				<button
+					class="action-btn refresh-btn"
+					(click)="refresh()"
+					title="Refresh"
+					[class.loading]="loading()"
+				>
+					🔄
+				</button>
+
+				<button
+					class="action-btn close-btn"
+					(click)="closeSidebar()"
+					title="Close"
+				>
+					✕
+				</button>
+			</div>
+		</div>
+
+		<!-- Loading State -->
+		@if (loading() && !hasNotifications()) {
+			<div class="loading-container">
+				<div class="spinner"></div>
+				<p>Loading notifications...</p>
+			</div>
+		}
+
+		<!-- Error State -->
+		@if (error()) {
+			<div class="error-container">
+				<p class="error-message">{{ error() }}</p>
+				<button class="retry-btn" (click)="refresh()">Retry</button>
+			</div>
+		}
+
+		<!-- Empty State -->
+		@if (!loading() && !hasNotifications() && !error()) {
+			<div class="empty-state">
+				<div class="empty-icon">🔔</div>
+				<h3>No notifications</h3>
+				<p>You're all caught up!</p>
+			</div>
+		}
+
+		<!-- Notifications List -->
+		@if (hasNotifications()) {
+			<div class="notifications-container">
+				<!-- Unread Notifications -->
+				@if (hasUnreadNotifications()) {
+					<div class="notifications-section">
+						<h3 class="section-title">New</h3>
+
+						@for (notification of unreadNotifications(); track notification.id) {
+							<div
+								class="notification-item unread"
+								(click)="onNotificationClick(notification)"
+								[class.clickable]="notification.additionalData"
+							>
+								<div class="notification-icon">
+									{{ getNotificationIcon(notification) }}
+								</div>
+
+								<div class="notification-content">
+									<div class="notification-header">
+										<h4 class="notification-title">{{ notification.title }}</h4>
+										<span class="notification-time">{{ formatTimestamp(notification.timestamp) }}</span>
+									</div>
+
+									<p class="notification-message">{{ notification.message }}</p>
+
+									@if (notification.additionalData) {
+										<div class="notification-action">
+											<span class="action-link">View details →</span>
+										</div>
+									}
+								</div>
+
+								<button
+									class="delete-btn"
+									(click)="deleteNotification($event, notification.id)"
+									title="Delete"
+								>
+									🗑️
+								</button>
+
+								<div class="unread-indicator"></div>
+							</div>
+						}
+					</div>
+				}
+
+				<!-- Read Notifications -->
+				@if (readNotifications().length > 0) {
+					<div class="notifications-section">
+						<div class="section-header">
+							<h3 class="section-title">Earlier</h3>
+							<button
+								class="clear-btn"
+								(click)="clearRead()"
+								title="Clear all read notifications"
+							>
+								Clear all
+							</button>
+						</div>
+
+						@for (notification of readNotifications(); track notification.id) {
+							<div
+								class="notification-item read"
+								(click)="onNotificationClick(notification)"
+								[class.clickable]="notification.additionalData"
+							>
+								<div class="notification-icon faded">
+									{{ getNotificationIcon(notification) }}
+								</div>
+
+								<div class="notification-content">
+									<div class="notification-header">
+										<h4 class="notification-title">{{ notification.title }}</h4>
+										<span class="notification-time">{{ formatTimestamp(notification.timestamp) }}</span>
+									</div>
+
+									<p class="notification-message">{{ notification.message }}</p>
+
+									@if (notification.additionalData) {
+										<div class="notification-action">
+											<span class="action-link">View details →</span>
+										</div>
+									}
+								</div>
+
+								<button
+									class="delete-btn"
+									(click)="deleteNotification($event, notification.id)"
+									title="Delete"
+								>
+									🗑️
+								</button>
+							</div>
+						}
+					</div>
+				}
+			</div>
+		}
+	</div>
+</div>

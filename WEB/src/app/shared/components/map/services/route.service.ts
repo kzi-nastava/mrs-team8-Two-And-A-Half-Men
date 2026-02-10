@@ -218,49 +218,47 @@ export class RouteService {
 	}
 
 	drawLineFromGeohash(
-  geohashString: string,
-  geohashLength: number,
-  options?: RouteOptions
-): string {
-  const map = this.mapService.getMap();
-  const lineId = this.generateRouteId();
+		geohashString: string,
+		geohashLength: number,
+		options?: RouteOptions,
+	): string {
+		const map = this.mapService.getMap();
+		const lineId = this.generateRouteId();
 
-  const coordinates: L.LatLng[] = [];
-  
-  for (let i = 0; i < geohashString.length; i += geohashLength) {
-    const hash = geohashString.substring(i, i + geohashLength);
-    
-    try {
-      const decoded = Geohash.decode(hash);
-      coordinates.push(L.latLng(decoded.lat, decoded.lon));
-    } catch (error) {
-      console.warn(`Failed to decode geohash: ${hash}`, error);
-    }
-  }
+		const coordinates: L.LatLng[] = [];
 
-  const polyline = L.polyline(coordinates, {
-    color: options?.color || '#3388ff',
-    weight: options?.weight || 6,
-    opacity: options?.opacity || 0.7,
-  }).addTo(map);
+		for (let i = 0; i < geohashString.length; i += geohashLength) {
+			const hash = geohashString.substring(i, i + geohashLength);
 
-  let totalDistance = 0;
-  for (let i = 0; i < coordinates.length - 1; i++) {
-    totalDistance += coordinates[i].distanceTo(coordinates[i + 1]);
-  }
+			try {
+				const decoded = Geohash.decode(hash);
+				coordinates.push(L.latLng(decoded.lat, decoded.lon));
+			} catch (error) {
+				console.warn(`Failed to decode geohash: ${hash}`, error);
+			}
+		}
 
-  const routeInfo: RouteInfo = {
-    id: lineId,
-    waypoints: coordinates,
-    distance: totalDistance,
-    duration: 0,
-    control: polyline as any,
-  };
+		const polyline = L.polyline(coordinates, {
+			color: options?.color || '#3388ff',
+			weight: options?.weight || 6,
+			opacity: options?.opacity || 0.7,
+		}).addTo(map);
 
-  this.routes.set(lineId, routeInfo);
+		let totalDistance = 0;
+		for (let i = 0; i < coordinates.length - 1; i++) {
+			totalDistance += coordinates[i].distanceTo(coordinates[i + 1]);
+		}
 
-  return lineId;
-}
+		const routeInfo: RouteInfo = {
+			id: lineId,
+			waypoints: coordinates,
+			distance: totalDistance,
+			duration: 0,
+			control: polyline as any,
+		};
 
+		this.routes.set(lineId, routeInfo);
 
+		return lineId;
+	}
 }

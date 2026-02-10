@@ -16,17 +16,19 @@ export const CUSTOMER_ROUTES: Routes = [
 		path: 'history',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.CUSTOMER])],
 		loadComponent: () =>
-			import('./history/pages/history-page/history-page.component').then(
+			import('@features/history/components/history/history.component').then(
 				(m) => m.HistoryComponent,
 			),
+		data: { userRole: LoggedInUserRole.CUSTOMER },
 	},
 	{
 		path: 'history/:id',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.CUSTOMER])],
 		loadComponent: () =>
-			import('./history/pages/history-ride-page/history-ride-page.component').then(
-				(m) => m.HistoryRidePageComponent,
+			import('@features/history/components/ride-details/ride-details.component').then(
+				(m) => m.RideDetailsComponent,
 			),
+		data: { userRole: LoggedInUserRole.CUSTOMER },
 	},
 	{
 		path: 'rides/booked',

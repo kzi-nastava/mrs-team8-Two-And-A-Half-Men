@@ -7,6 +7,7 @@ import { BookRideRequest } from '@features/customer/home/models/ride.model';
 import { RideService } from '@features/customer/home/services/ride.service';
 import { PopupsService } from '@shared/services/popups/popups.service';
 import { Router } from '@angular/router';
+import { MAP_CONFIGS } from '@shared/components/map/map.config';
 
 @Component({
 	selector: 'app-customer-home-page',
@@ -15,7 +16,7 @@ import { Router } from '@angular/router';
 	styleUrl: './customer-home-page.component.css',
 })
 export class CustomerHomePageComponent {
-
+	mapConfig = MAP_CONFIGS.BOOKING;
 	private sharedLocationService = inject(SharedLocationsService);
 	private rideService = inject(RideService);
 	private popupsService = inject(PopupsService);

@@ -37,7 +37,9 @@ public class RatingService implements IRatingService {
 
         Passenger passenger = resolvePassengerService.resolveActor(actor, ride);
 
-        if (ride.getStatus() != RideStatus.FINISHED && ride.getStatus() != RideStatus.INTERRUPTED)
+        if (ride.getStatus() != RideStatus.FINISHED
+                && ride.getStatus() != RideStatus.INTERRUPTED
+                && ride.getStatus() != RideStatus.PANICKED)
             throw new BadRequestException("Cannot rate ride that is not finished");
 
         if (!canRate(passenger, ride))
@@ -62,9 +64,6 @@ public class RatingService implements IRatingService {
     }
 
     private boolean canRate(Passenger passenger, Ride ride) {
-        if (passenger.getVehicleRating() != null && passenger.getDriverRating() != null)
-            return false;
-
         LocalDateTime deadline = ride.getEndTime().plusDays(RATING_DEADLINE_DAYS);
         return !LocalDateTime.now().isAfter(deadline);
     }

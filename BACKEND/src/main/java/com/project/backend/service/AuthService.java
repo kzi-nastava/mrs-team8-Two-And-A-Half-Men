@@ -181,6 +181,7 @@ public class AuthService {
             return UserTokenDTO.builder()
                     .accessToken(jwt)
                     .expiresIn((long) expiresIn)
+                    .id(user.getId())
                     .email(user.getEmail())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
@@ -194,6 +195,8 @@ public class AuthService {
 
     @Transactional
     public Map<String, Object> registerDriver(RegisterDriverDTO body) throws Exception {
+
+        validateRegisterDriverBody(body);
 
         Pair<Driver, Vehicle> driverAndVehicle = getInitializedDriverAndVehicle(body.getPersonalInfo().getEmail());
         Driver driver = driverAndVehicle.getFirst();
@@ -222,6 +225,46 @@ public class AuthService {
                 "driverId", driver.getId(),
                 "vehicleId", vehicle.getId()
         );
+    }
+
+    private void validateRegisterDriverBody(RegisterDriverDTO body) {
+        if (body.getPersonalInfo() == null) {
+            throw new BadRequestException("Personal info is required");
+        }
+        if (body.getVehicleInfo() == null) {
+            throw new BadRequestException("Vehicle info is required");
+        }
+
+        if (body.getPersonalInfo().getFirstName() == null || body.getPersonalInfo().getFirstName().isEmpty()) {
+            throw new BadRequestException("First name is required");
+        }
+        if (body.getPersonalInfo().getLastName() == null || body.getPersonalInfo().getLastName().isEmpty()) {
+            throw new BadRequestException("Last name is required");
+        }
+        if (body.getPersonalInfo().getEmail() == null || body.getPersonalInfo().getEmail().isEmpty()) {
+            throw new BadRequestException("Email is required");
+        }
+        if (body.getPersonalInfo().getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new BadRequestException("Invalid email format");
+        }
+        if (body.getPersonalInfo().getAddress() == null || body.getPersonalInfo().getAddress().isEmpty()) {
+            throw new BadRequestException("Address is required");
+        }
+        if (body.getPersonalInfo().getPhoneNumber() == null || body.getPersonalInfo().getPhoneNumber().isEmpty()) {
+            throw new BadRequestException("Phone number is required");
+        }
+        if (body.getVehicleInfo().getTypeId() == null) {
+            throw new BadRequestException("Vehicle type is required");
+        }
+        if (body.getVehicleInfo().getModel() == null || body.getVehicleInfo().getModel().isEmpty()) {
+            throw new BadRequestException("Vehicle model is required");
+        }
+        if (body.getVehicleInfo().getLicensePlate() == null || body.getVehicleInfo().getLicensePlate().isEmpty()) {
+            throw new BadRequestException("License plate is required");
+        }
+        if (body.getVehicleInfo().getNumberOfSeats() == null || body.getVehicleInfo().getNumberOfSeats() <= 0) {
+            throw new BadRequestException("Number of seats must be a positive integer");
+        }
     }
 
     private Pair<Driver, Vehicle> getInitializedDriverAndVehicle(String email) {

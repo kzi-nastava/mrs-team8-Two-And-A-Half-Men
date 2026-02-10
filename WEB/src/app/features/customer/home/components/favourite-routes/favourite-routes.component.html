@@ -1,0 +1,74 @@
+<div class="favourite-routes-container">
+	<h2 class="routes-title">Select from your favorite routes</h2>
+
+	@if (routes().length === 0) {
+		<div class="empty-state">
+			<svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+				<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+					  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+			<p class="empty-message">No favorite routes yet</p>
+			<p class="empty-submessage">Create a route and save it as favorite to see it here</p>
+		</div>
+	} @else {
+		<div class="routes-list">
+			@for (route of routes(); track route.id) {
+				<div class="route-card" (click)="handleSelectRoute(route.id)">
+					<!-- Route Start -->
+					<div class="route-endpoint">
+						<svg class="location-icon start" width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/>
+							<circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+						</svg>
+						<span class="endpoint-address">{{ getRouteDisplay(route).start }}</span>
+					</div>
+
+					<!-- Intermediate Stops -->
+					@if (getRouteDisplay(route).stops > 0) {
+						<div class="stops-section">
+							<button class="stops-toggle">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+									<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+								</svg>
+								{{ getRouteDisplay(route).stops }} stop{{ getRouteDisplay(route).stops > 1 ? 's' : '' }}
+							</button>
+
+							<div class="stops-list">
+								@for (stop of getStopPoints(route); track stop) {
+									<div class="stop-point">
+										<span class="stop-address">{{ stop }}</span>
+									</div>
+								}
+							</div>
+						</div>
+					}
+
+					<!-- Route End -->
+					<div class="route-endpoint">
+						<svg class="location-icon end" width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/>
+							<circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
+						</svg>
+						<span class="endpoint-address">{{ getRouteDisplay(route).end }}</span>
+					</div>
+
+					<!-- Actions -->
+					<div class="route-actions">
+						<button class="select-button">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+								<path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							Select route
+						</button>
+
+						<button class="favorite-button active" (click)="handleRemoveRoute($event, route.id)">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+								<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+							</svg>
+						</button>
+					</div>
+				</div>
+			}
+		</div>
+	}
+</div>

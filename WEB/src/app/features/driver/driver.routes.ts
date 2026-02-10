@@ -8,7 +8,7 @@ export const DRIVER_ROUTES: Routes = [
 		path: '',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.DRIVER])],
 		loadComponent: () =>
-			import('@features/driver/home/pages/driver-home-page/driver-home-page.component').then(
+			import('./home/pages/driver-home-page/driver-home-page.component').then(
 				(m) => m.DriverHomePageComponent,
 			),
 	},
@@ -16,17 +16,19 @@ export const DRIVER_ROUTES: Routes = [
 		path: 'history',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.DRIVER])],
 		loadComponent: () =>
-			import('./history/pages/history-page/history-page.component').then(
-				(m) => m.DriversHistoryComponent,
+			import('@features/history/components/history/history.component').then(
+				(m) => m.HistoryComponent,
 			),
+		data: { userRole: LoggedInUserRole.DRIVER },
 	},
 	{
-		path: 'rides/active',
+		path: 'history/:id',
 		canActivate: [authGuard, roleGuard([LoggedInUserRole.DRIVER])],
 		loadComponent: () =>
-			import('./rides/pages/active-ride-page/active-ride-page.component').then(
-				(m) => m.ActiveRidePageComponent,
+			import('@features/history/components/ride-details/ride-details.component').then(
+				(m) => m.RideDetailsComponent,
 			),
+		data: { userRole: LoggedInUserRole.DRIVER },
 	},
 	{
 		path: 'rides/:rideId',

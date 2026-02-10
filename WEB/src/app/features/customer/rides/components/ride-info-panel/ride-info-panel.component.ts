@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RideService } from '@features/customer/rides/services/ride-tracking.service';
 import { RideTracking } from '@features/customer/rides/models/ride.model';
 import { PanicButtonComponent } from '@shared/components/panic-button/panic-button.component';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-ride-info-panel',
@@ -13,6 +14,7 @@ import { PanicButtonComponent } from '@shared/components/panic-button/panic-butt
 })
 export class RideInfoPanelComponent {
 	private rideService = inject(RideService);
+	private popupsService = inject(PopupsService);
 
 	rideData = signal<RideTracking | null>(null);
 
@@ -31,7 +33,11 @@ export class RideInfoPanelComponent {
 	loadActiveRide(): void {
 		this.rideService.getActiveRide(this.accessToken).subscribe({
 			next: (data) => this.rideData.set(data),
-			error: (err) => console.error('Error:', err),
+			error: (err) =>
+				this.popupsService.error(
+					'Error',
+					'Failed to load ride data. Please try again later. ' + err.message,
+				),
 		});
 	}
 
@@ -44,9 +50,14 @@ export class RideInfoPanelComponent {
 
 		this.rideService.saveNote(currentRide.id, this.note, this.accessToken).subscribe({
 			next: (response) => {
-				console.log('Note saved successfully:', response);
+				this.popupsService.success('Note saved', 'Your note has been successfully saved!');
 			},
-			error: (err) => console.error('Error:', err),
+			error: (err) => {
+				this.popupsService.error(
+					'Error',
+					'Failed to save note. Please try again later. ' + err.message,
+				);
+			},
 		});
 	}
 }

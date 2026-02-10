@@ -5,5 +5,16 @@ export interface RouteItem {
 }
 
 export interface BookRideRequest {
-	route?: RouteItem[]
+	route?: RouteItem[];
+	routeId?: number;
+	scheduledTime?: string | null;
+	passengers?: string[];
+	vehicleTypeId?: number | null;
+	additionalServicesIds?: number[];
+}
+
+export interface BookRideResponse {
+	id: number,
+	status: string,
+	estimatedDistance: number,
 }

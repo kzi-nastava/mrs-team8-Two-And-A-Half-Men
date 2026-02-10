@@ -1,5 +1,7 @@
 package com.project.backend.DTO.Ride;
 
+import com.project.backend.DTO.LocationDTO;
+import com.project.backend.DTO.PassengerDTO;
 import com.project.backend.models.enums.RideStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +32,6 @@ public class RideResponseDTO {
     private Double totalCost;
 
     private List<String> additionalServices;
-    private List<String> addresses;
-    private List<String> passengersMails;
+    private List<PassengerDTO> passengers;
+    private List<LocationDTO> locations;
 }

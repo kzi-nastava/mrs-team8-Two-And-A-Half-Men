@@ -11,7 +11,7 @@ export class DriverRideService {
 	private http = inject(HttpClient);
 
 	getActiveRide() {
-		return this.http.get<ActiveRide>(`api/${environment.apiVersion}/rides/active`);
+		return this.http.get<ActiveRide>(`api/${environment.apiVersion}/rides/me/active`);
 	}
 
 	cancelRide(

@@ -14,4 +14,21 @@
     <color name="warning_border">#f59e0b</color>
     <color name="white_transparent">#99ffffff</color>
     <color name="input_background">#1a5c3a</color>
+
+    <color name="status_pending">#FFC107</color>
+    <color name="status_accepted">#2196F3</color>
+    <color name="status_active">#4CAF50</color>
+    <color name="status_finished">#9E9E9E</color>
+    <color name="status_interrupted">#FF9800</color>
+    <color name="status_cancelled">#F44336</color>
+    <color name="status_panicked">#D32F2F</color>
+    <color name="status_default">#757575</color>
+
+    <color name="chip_background">#E3F2FD</color>
+    <color name="chip_text">#1976D2</color>
+    <color name="route_color">#3498db</color>
+
+    <color name="marker_start">#4CAF50</color>
+    <color name="marker_stop">#FF9800</color>
+    <color name="marker_end">#F44336</color>
 </resources>

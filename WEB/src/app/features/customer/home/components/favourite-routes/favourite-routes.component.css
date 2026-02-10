@@ -1,0 +1,296 @@
+/* ==================== */
+/* CONTAINER */
+/* ==================== */
+
+.favourite-routes-container {
+	padding: 1.5rem;
+	background: #1a1a1a;
+	border-radius: 12px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.routes-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #ffffff;
+	margin-bottom: 1.5rem;
+}
+
+/* ==================== */
+/* EMPTY STATE */
+/* ==================== */
+
+.empty-state {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 3rem 1rem;
+	text-align: center;
+}
+
+.empty-state svg {
+	color: #6b7280;
+	margin-bottom: 1rem;
+}
+
+.empty-message {
+	font-size: 1.125rem;
+	font-weight: 600;
+	color: #9ca3af;
+	margin: 0 0 0.5rem 0;
+}
+
+.empty-submessage {
+	font-size: 0.875rem;
+	color: #6b7280;
+	margin: 0;
+}
+
+/* ==================== */
+/* ROUTES LIST */
+/* ==================== */
+
+.routes-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	overflow-y: auto;
+	flex: 1;
+}
+
+/* ==================== */
+/* ROUTE CARD */
+/* ==================== */
+
+.route-card {
+	background: #1a5c3a;
+	border: 2px solid #246b48;
+	border-radius: 12px;
+	padding: 1.25rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+}
+
+.route-card:hover {
+	background: #246b48;
+	border-color: #d4af37;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+/* ==================== */
+/* ROUTE ENDPOINTS */
+/* ==================== */
+
+.route-endpoint {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	margin-bottom: 0.75rem;
+}
+
+.route-endpoint:last-of-type {
+	margin-bottom: 1rem;
+}
+
+.location-icon {
+	flex-shrink: 0;
+}
+
+.location-icon.start {
+	color: #d4af37;
+}
+
+.location-icon.end {
+	color: #10b981;
+}
+
+.endpoint-address {
+	color: #ffffff;
+	font-weight: 500;
+	font-size: 0.9375rem;
+	flex: 1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* ==================== */
+/* STOPS SECTION */
+/* ==================== */
+
+.stops-section {
+	margin-bottom: 0.75rem;
+	padding-left: 2rem;
+}
+
+.stops-toggle {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: rgba(255, 255, 255, 0.1);
+	border: none;
+	border-radius: 6px;
+	padding: 0.5rem 0.75rem;
+	color: #d4af37;
+	font-size: 0.875rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	margin-bottom: 0.75rem;
+}
+
+.stops-toggle:hover {
+	background: rgba(255, 255, 255, 0.15);
+}
+
+.stops-toggle svg {
+	width: 14px;
+	height: 14px;
+}
+
+.stops-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.stop-point {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding-left: 0.5rem;
+	border-left: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.stop-address {
+	color: #d1d5db;
+	font-size: 0.875rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* ==================== */
+/* ROUTE ACTIONS */
+/* ==================== */
+
+.route-actions {
+	display: flex;
+	gap: 0.75rem;
+	align-items: center;
+}
+
+.select-button {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	background: #d4af37;
+	color: #1a1a1a;
+	border: none;
+	border-radius: 8px;
+	padding: 0.75rem 1rem;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.select-button:hover {
+	background: #e5c34a;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+}
+
+.select-button svg {
+	width: 16px;
+	height: 16px;
+}
+
+.favorite-button {
+	background: transparent;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	border-radius: 8px;
+	padding: 0.75rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.favorite-button svg {
+	color: #6b7280;
+	transition: color 0.3s ease;
+}
+
+.favorite-button.active svg {
+	color: #d4af37;
+}
+
+.favorite-button:hover {
+	background: rgba(220, 38, 38, 0.1);
+	border-color: #dc2626;
+	transform: scale(1.05);
+}
+
+.favorite-button:hover svg {
+	color: #dc2626;
+}
+
+/* ==================== */
+/* SCROLLBAR */
+/* ==================== */
+
+.routes-list::-webkit-scrollbar {
+	width: 8px;
+}
+
+.routes-list::-webkit-scrollbar-track {
+	background: #2a2a2a;
+	border-radius: 4px;
+}
+
+.routes-list::-webkit-scrollbar-thumb {
+	background: #d4af37;
+	border-radius: 4px;
+}
+
+.routes-list::-webkit-scrollbar-thumb:hover {
+	background: #e5c34a;
+}
+
+/* ==================== */
+/* RESPONSIVE */
+/* ==================== */
+
+@media (max-width: 640px) {
+	.favourite-routes-container {
+		padding: 1rem;
+	}
+
+	.routes-title {
+		font-size: 1rem;
+	}
+
+	.route-card {
+		padding: 1rem;
+	}
+
+	.endpoint-address {
+		font-size: 0.875rem;
+	}
+
+	.select-button {
+		padding: 0.625rem 0.75rem;
+		font-size: 0.875rem;
+	}
+}

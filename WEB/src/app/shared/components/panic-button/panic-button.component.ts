@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { PanicService } from '@shared/services/panic.service';
 import { ButtonDirective } from '@shared/directives/button/button.directive';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-panic-button',
@@ -10,6 +11,7 @@ import { ButtonDirective } from '@shared/directives/button/button.directive';
 })
 export class PanicButtonComponent {
 	private panicService = inject(PanicService);
+	private popupsService = inject(PopupsService);
 
 	triggerPanic() {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -17,10 +19,10 @@ export class PanicButtonComponent {
 
 		this.panicService.triggerPanic(token).subscribe({
 			next: (response) => {
-				console.log('Panic alert sent successfully:', response);
+				this.popupsService.success('Panic Alert', 'Panic alert sent successfully!');
 			},
 			error: (error) => {
-				console.error('Error sending panic alert:', error);
+				this.popupsService.error('Error', 'Failed to send panic alert. Please try again.');
 			},
 		});
 	}

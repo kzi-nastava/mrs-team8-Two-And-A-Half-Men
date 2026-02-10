@@ -15,6 +15,7 @@ import { AdminUserService } from '@features/admin/users/services/admin-user.serv
 import { VehiclesService } from '@shared/services/vehicles/vehicles.service';
 import { DriverRegistrationRequest } from '@features/admin/users/models/drivers.model';
 import { Router } from '@angular/router';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-new-driver-page',
@@ -35,6 +36,7 @@ export class NewDriverPageComponent implements OnInit {
 	private usersService = inject(AdminUserService);
 	private vehiclesService = inject(VehiclesService);
 	private router = inject(Router);
+	private popupsService = inject(PopupsService);
 
 	// Form data
 	personalInfo = signal<PersonalInfo>({
@@ -124,12 +126,17 @@ export class NewDriverPageComponent implements OnInit {
 		console.log(registrationRequest);
 		this.usersService.registerDriver(registrationRequest).subscribe({
 			next: (response) => {
-				alert(response.message);
 				this.isSaving.set(false);
-				this.router.navigate(['admin', 'users']).then();
+				this.popupsService.success(
+					'Success',
+					'Driver registered successfully!',
+					{
+						onConfirm: () => this.router.navigate(['admin', 'users']).then()
+					}
+				);
 			},
 			error: (err) => {
-				alert('Failed to register Driver!');
+				this.popupsService.error('Failed to register driver', err.error?.message || 'An error occurred while registering the driver.');
 				this.isSaving.set(false);
 				console.error(err);
 			},

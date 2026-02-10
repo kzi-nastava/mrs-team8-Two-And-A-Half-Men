@@ -1,4 +1,4 @@
-<!-- src/app/components/profile/profile.component.html -->
+<!-- src/app/renderer/profile/profile.component.html -->
 
 <div class="profile-container">
 	<div class="profile-content">
@@ -8,7 +8,15 @@
 				[(request)]="changeRequest"
 				[personalInfo]="originalPersonalInfo()!"
 				[vehicleInfo]="originalVehicleInfo()!"
-			/>
+				title="Your profile changes are currently under review by the administrator. You will be notified once they are approved."
+			>
+				<button class="cancel-button" (click)="cancelRequest()">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+						<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					Cancel Request
+				</button>
+			</app-request-change-preview>
 		}
 
 		<!-- Tab Navigation - Using reusable component -->
@@ -37,11 +45,6 @@
 			}
 
 		</app-tab-navigation>
-
-		<!-- Save Message -->
-		@if (saveMessage()) {
-			<div class="save-message">{{ saveMessage() }}</div>
-		}
 
 		<div appBox style="margin-bottom: 2rem;">
 

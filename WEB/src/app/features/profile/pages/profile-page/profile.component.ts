@@ -12,12 +12,14 @@ import {PasswordChange, UserProfile} from '../../models/user-profile.model';
 import { BoxDirective} from '@shared/directives/box/box.directive';
 import {
 	RequestChangePreviewComponent
-} from '@features/profile/components/request-change-preview/request-change-preview.component';
+} from '@shared/components/forms/request-change-preview/request-change-preview.component';
 import {PendingChangeRequest} from '@shared/models/profile-change-request.model';
 import {ProfileService} from '@features/profile/services/profile.service';
 import { AuthService } from '@core/services/auth.service';
 import { UpdateProfileRequest } from '@features/profile/models/update-profile.model';
 import { VehiclesService } from '@shared/services/vehicles/vehicles.service';
+import { PopupsService } from '@shared/services/popups/popups.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-profile',
@@ -40,6 +42,8 @@ export class ProfileComponent implements OnInit {
 	private profileService = inject(ProfileService);
 	private authService = inject(AuthService);
 	private vehicleService = inject(VehiclesService);
+	private router = inject(Router);
+	private popupsService = inject(PopupsService);
 
 	// Active tab
 	activeTab = signal<string>('personal');
@@ -71,7 +75,6 @@ export class ProfileComponent implements OnInit {
 	private selectedFile: File | null = null;
 
 	// UI state
-	saveMessage = signal<string>('');
 	isSaving = signal<boolean>(false);
 
 	private personalTab: TabItem = { id: 'personal', label: 'Personal data', position: 'left' };
@@ -100,13 +103,20 @@ export class ProfileComponent implements OnInit {
 		if (profile.pendingChangeRequest) {
 			this.changeRequest.set(profile?.pendingChangeRequest ?? null);
 		}
+		this.authService.updateUserInfo(profile.personalInfo);
 	}
 
 	loadProfileData() {
 		this.profileService.getUserProfile().subscribe({
 			next: (profile) => this.updateProfileDate(profile),
 			error: (err) => {
-				console.error('Failed to load profile', err);
+				this.popupsService.error(
+					'Error',
+					'Failed to load profile data. Please try again later. ' + err.message,
+					{
+						onConfirm: () => this.router.navigate(['/']).then(),
+					},
+				);
 			},
 		});
 	}
@@ -174,9 +184,7 @@ export class ProfileComponent implements OnInit {
 				next: (response) => {
 					if (!response.ok) {
 						this.isSaving.set(false);
-						this.saveMessage.set('Failed to upload profile picture');
-
-						setTimeout(() => this.saveMessage.set(''), 3000);
+						this.popupsService.error('Error', 'Failed to upload Photo');
 						return;
 					}
 					updateRequest.imgSrc = response.filePath;
@@ -186,9 +194,10 @@ export class ProfileComponent implements OnInit {
 				error: (err) => {
 					console.error('Failed to upload profile picture', err);
 					this.isSaving.set(false);
-					this.saveMessage.set('Failed to upload profile picture');
-
-					setTimeout(() => this.saveMessage.set(''), 3000);
+					this.popupsService.error(
+						'Error',
+						'Failed to upload profile picture. Please try again later. ' + err.message,
+					);
 				},
 			});
 			return;
@@ -204,40 +213,51 @@ export class ProfileComponent implements OnInit {
 				}
 				this.updateProfileDate(response.profile);
 
-				this.saveMessage.set('Profile information saved successfully!');
+				this.popupsService.success(
+					'Profile Updated',
+					'Your profile information has been updated successfully!',
+				);
 				this.isSaving.set(false);
-
-				// Clear message after 3 seconds
-				setTimeout(() => this.saveMessage.set(''), 3000);
 			},
 			error: (err) => {
 				console.error('Failed to update profile', err);
-				this.saveMessage.set('Failed to save profile information');
+				this.popupsService.error(
+					'Error',
+					'Failed to update profile information. Please try again later. ' + err.message,
+				);
 				this.isSaving.set(false);
-
-				// Clear message after 3 seconds
-				setTimeout(() => this.saveMessage.set(''), 3000);
 			},
 		});
 	}
 
-	// Show save message
-	private showSaveMessage(message: string, isError: boolean = false): void {
-		this.saveMessage.set(message);
-		setTimeout(() => this.saveMessage.set(''), 3000);
-	}
+	cancelRequest(): void {
+		if (this.personalInfo() === null) return;
 
+		this.popupsService.confirm(
+			'Cancel Request',
+			'Are you sure you want to cancel this change request?',
+			() => {
+				this.profileService.cancelPendingRequest(this.changeRequest()!.id).subscribe({
+					next: (value) => {
+						if (value.ok) {
+							this.changeRequest.set(null);
+						}
+					},
+				});
+			},
+		);
+	}
 	// Change password
 	async changePassword(): Promise<void> {
 		const { newPassword, confirmPassword } = this.passwordForm();
 
 		if (newPassword !== confirmPassword) {
-			this.showSaveMessage('Passwords do not match', true);
+			this.popupsService.error('Validation Error', 'Passwords do not match');
 			return;
 		}
 
 		if (newPassword.length < 8) {
-			this.showSaveMessage('Password must be at least 8 characters', true);
+			this.popupsService.error('Validation Error', 'Password must be at least 8 characters');
 			return;
 		}
 
@@ -253,14 +273,16 @@ export class ProfileComponent implements OnInit {
 					if (response.accessToken) {
 						this.authService.updateToken(response.accessToken);
 					}
-					this.showSaveMessage('Password changed successfully');
+					this.popupsService.success(
+						'Password Changed',
+						'Your password has been changed successfully!',
+					);
 					this.passwordForm.set({
 						oldPassword: '',
 						newPassword: '',
 						confirmPassword: '',
 					});
 					this.isSaving.set(false);
-					setTimeout(() => this.saveMessage.set(''), 3000);
 				},
 				error: (err) => {
 					console.error('Failed to change password', err);
@@ -269,9 +291,8 @@ export class ProfileComponent implements OnInit {
 						newPassword: '',
 						confirmPassword: '',
 					});
-					this.showSaveMessage('Failed to change password', true);
+					this.popupsService.error('Error', 'Failed to change password');
 					this.isSaving.set(false);
-					setTimeout(() => this.saveMessage.set(''), 3000);
 				},
 			});
 	}

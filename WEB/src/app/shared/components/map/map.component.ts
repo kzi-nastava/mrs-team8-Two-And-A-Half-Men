@@ -1,190 +1,249 @@
-import { Component, AfterViewInit, OnDestroy, effect } from '@angular/core';
+import {
+	Input,
+	OnChanges,
+	SimpleChanges,
+	Component,
+	AfterViewInit,
+	OnDestroy,
+	effect,
+} from '@angular/core';
 import { MapService } from './services/map.service';
 import { LocationPinService } from './services/location-pin.service';
 import { DriverMarkerService } from './services/driver-marker.service';
 import { RouteService } from './services/route.service';
 import { DriverLocationManagerService } from '@shared/services/driver-location/driver-location-manager.service';
 import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
+import { DEFAULT_MAP_CONFIG, MapConfig } from '@shared/components/map/map.config';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css'],
+	selector: 'app-map',
+	templateUrl: './map.component.html',
+	styleUrls: ['./map.component.css'],
 })
-export class MapComponent implements AfterViewInit, OnDestroy {
-  private currentRouteId?: string;
-  private mapInitialized = false;
+export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
+	@Input() path?: string;
+	@Input() config: MapConfig = DEFAULT_MAP_CONFIG;
+	private currentRouteId?: string;
+	private mapInitialized = false;
 
-  constructor(
-    private mapService: MapService,
-    private locationPinService: LocationPinService,
-    private driverMarkerService: DriverMarkerService,
-    private routeService: RouteService,
-    private driverLocationManager: DriverLocationManagerService,
-    private sharedLocationsService: SharedLocationsService
-  ) {
-    effect(() => {
-      const locations = this.sharedLocationsService.locations();
-      console.log('Locations changed, updating route. Count:', locations.length);
+	constructor(
+		private mapService: MapService,
+		private locationPinService: LocationPinService,
+		private driverMarkerService: DriverMarkerService,
+		private routeService: RouteService,
+		private driverLocationManager: DriverLocationManagerService,
+		private sharedLocationsService: SharedLocationsService,
+		private popupService: PopupsService
+	) {
+		effect(() => {
+			const locations = this.sharedLocationsService.locations();
 
-      // Ako ima bar 2 lokacije, iscrtaj rutu
-      if (locations.length >= 2 && this.mapInitialized) {
-        this.updateRouteFromLocations(locations);
-      } else {
-        // Ukloni rutu ako ima manje od 2 tačke
-        this.clearCurrentRoute();
-      }
-    });
-  }
+			if (this.config.enableRouting && locations.length >= 2 && this.mapInitialized) {
+				this.updateRouteFromLocations(locations);
+			} else {
+				this.clearCurrentRoute();
+			}
+		});
+	}
 
-  ngAfterViewInit(): void {
-    console.log('Initializing map...');
+	ngAfterViewInit(): void {
+		console.log('Initializing map...');
 
-    // Initialize the map
-    this.mapService.initMap('map', [45.2396, 19.8227], 13);
-    this.mapInitialized = true;
+		this.config = { ...DEFAULT_MAP_CONFIG, ...this.config };
 
-    // Initialize all driver-location
-    this.locationPinService.initialize();
-    this.driverMarkerService.initialize();
-    this.routeService.initialize();
+		this.mapService.initMap('map', this.config.center!, this.config.zoom!);
 
-    // VAŽNO: Povezujemo klik na mapu sa SheredLocationsService
-    this.setupMapClickHandler();
-    this.setupMapRightClickHandler();
+		this.mapInitialized = true;
 
-    // Initialize driver location tracking
-    this.driverLocationManager.initialize();
+		this.initializeEnabledServices();
 
-    console.log('Map component fully initialized');
-  }
+		if (this.path) {
+			this.drawPath();
+		}
+	}
 
-  private setupMapClickHandler(): void {
-    const map = this.mapService.getMap();
+	private initializeEnabledServices(): void {
+		if (this.config.enableLocationPins) {
+			this.locationPinService.initialize();
+		}
 
-    map.on('click', (e: L.LeafletMouseEvent) => {
-      const { lat, lng } = e.latlng;
+		if (this.config.enableDriverMarkers) {
+			this.driverMarkerService.initialize();
+		}
 
-      console.log('Map clicked at:', lat, lng);
+		if (this.config.enableRouting) {
+			this.routeService.initialize();
+		}
 
-      this.sharedLocationsService.addLocationFromCoordinates(lat, lng).subscribe({
-        next: (nominatimResult) => {
-          console.log('Location added from map click:', nominatimResult.display_name);
-        },
-        error: (error) => {
-          console.error('Error getting location:', error);
-          alert('Greška pri dobavljanju adrese. Pokušajte ponovo.');
-        }
-      });
-    });
-  }
+		if (this.config.enableClickToAddLocation) {
+			this.setupMapClickHandler();
+		}
 
-  private setupMapRightClickHandler(): void {
-    const map = this.mapService.getMap();
+		if (this.config.enableRightClickToRemove) {
+			this.setupMapRightClickHandler();
+		}
 
-    map.on('contextmenu', (e: L.LeafletMouseEvent) => {
-      e.originalEvent.preventDefault();
-      console.log('Right click - removing last location');
-      this.sharedLocationsService.removeLastLocation();
-    });
-  }
+		if (this.config.enableDriverTracking) {
+			this.driverLocationManager.initialize();
+		}
+	}
 
-  ngOnDestroy(): void {
-    console.log('Destroying map component...');
+	private setupMapClickHandler(): void {
+		const map = this.mapService.getMap();
 
-    // Cleanup all driver-location
-    this.locationPinService.cleanup();
-    this.driverMarkerService.cleanup();
-    this.routeService.cleanup();
-    this.driverLocationManager.cleanup();
-    this.mapService.destroyMap();
+		map.on('click', (e: L.LeafletMouseEvent) => {
+			const { lat, lng } = e.latlng;
 
-    this.mapInitialized = false;
-  }
+			console.log('Map clicked at:', lat, lng);
 
+			this.sharedLocationsService.addLocationFromCoordinates(lat, lng).subscribe({
+				next: (nominatimResult) => {
+					console.log('Location added from map click:', nominatimResult.display_name);
+				},
+				error: (error) => {
+					console.error('Error getting location:', error);
+					this.popupService.error('Error getting location:', error);
+				},
+			});
+		});
+	}
 
-  // ===== Public API Methods =====
+	private setupMapRightClickHandler(): void {
+		const map = this.mapService.getMap();
 
-  addLocationPin(lat: number, lng: number): string {
-    return this.locationPinService.addPin(lat, lng);
-  }
+		map.on('contextmenu', (e: L.LeafletMouseEvent) => {
+			e.originalEvent.preventDefault();
+			console.log('Right click - removing last location');
+			this.sharedLocationsService.removeLastLocation();
+		});
+	}
 
-  removeLocationPin(id: string): void {
-    this.locationPinService.removePin(id);
-  }
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes['path'] && this.path && this.mapInitialized) {
+			this.drawPath();
+		}
+	}
 
-  clearAllLocationPins(): void {
-    this.locationPinService.clearAllPins();
-    this.sharedLocationsService.clearLocations();
-  }
+	ngOnDestroy(): void {
+		console.log('Destroying map component...');
 
-  getLocationPins() {
-    return this.locationPinService.getAllPins();
-  }
+		if (this.config.enableLocationPins) {
+			this.locationPinService.cleanup();
+		}
 
-  highlightDriver(driverId: number): void {
-    this.driverMarkerService.highlightMarker(driverId);
-  }
+		if (this.config.enableDriverMarkers) {
+			this.driverMarkerService.cleanup();
+		}
 
-  createRoute(waypoints: [number, number][], options?: any): string {
-    return this.routeService.createRoute(waypoints, options);
-  }
+		if (this.config.enableRouting) {
+			this.routeService.cleanup();
+		}
 
-  createSimpleRoute(start: [number, number], end: [number, number]): string {
-    return this.routeService.createSimpleRoute(start, end);
-  }
+		if (this.config.enableDriverTracking) {
+			this.driverLocationManager.cleanup();
+		}
 
-  removeRoute(routeId: string): void {
-    this.routeService.removeRoute(routeId);
-  }
+		this.mapService.destroyMap();
+		this.mapInitialized = false;
+	}
 
-  clearAllRoutes(): void {
-    this.routeService.clearAllRoutes();
-    this.currentRouteId = undefined;
-  }
+	// ===== Public API Methods =====
 
-  fitRouteInView(routeId: string): void {
-    this.routeService.fitRouteInView(routeId);
-  }
+	addLocationPin(lat: number, lng: number): string {
+		return this.locationPinService.addPin(lat, lng);
+	}
 
-  toggleLocationPinClick(enable: boolean): void {
-    if (enable) {
-      this.locationPinService.enableClickToAdd();
-    } else {
-      this.locationPinService.disableClickToAdd();
-    }
-  }
+	removeLocationPin(id: string): void {
+		this.locationPinService.removePin(id);
+	}
 
-  toggleLocationPinRightClick(enable: boolean): void {
-    if (enable) {
-      this.locationPinService.enableRightClickToRemoveLast();
-    } else {
-      this.locationPinService.disableRightClickToRemoveLast();
-    }
-  }
+	clearAllLocationPins(): void {
+		this.locationPinService.clearAllPins();
+		this.sharedLocationsService.clearLocations();
+	}
 
-  private updateRouteFromLocations(locations: any[]): void {
-    this.clearCurrentRoute();
+	getLocationPins() {
+		return this.locationPinService.getAllPins();
+	}
 
-    const waypoints: [number, number][] = locations.map(loc => [
-      parseFloat(loc.lat),
-      parseFloat(loc.lon)
-    ]);
+	highlightDriver(driverId: number): void {
+		this.driverMarkerService.highlightMarker(driverId);
+	}
 
-    this.currentRouteId = this.routeService.createRoute(waypoints, {
-      color: '#3388ff',
-      weight: 6,
-      opacity: 0.7,
-    });
+	createRoute(waypoints: [number, number][], options?: any): string {
+		return this.routeService.createRoute(waypoints, options);
+	}
 
-    console.log(`Route created with ${waypoints.length} waypoints`);
-  }
+	createSimpleRoute(start: [number, number], end: [number, number]): string {
+		return this.routeService.createSimpleRoute(start, end);
+	}
 
-  private clearCurrentRoute(): void {
-    if (this.currentRouteId) {
-      this.routeService.removeRoute(this.currentRouteId);
-      this.currentRouteId = undefined;
-      console.log('Current route cleared');
-    }
-  }
+	removeRoute(routeId: string): void {
+		this.routeService.removeRoute(routeId);
+	}
+
+	clearAllRoutes(): void {
+		this.routeService.clearAllRoutes();
+		this.currentRouteId = undefined;
+	}
+
+	fitRouteInView(routeId: string): void {
+		this.routeService.fitRouteInView(routeId);
+	}
+
+	toggleLocationPinClick(enable: boolean): void {
+		if (enable) {
+			this.locationPinService.enableClickToAdd();
+		} else {
+			this.locationPinService.disableClickToAdd();
+		}
+	}
+
+	toggleLocationPinRightClick(enable: boolean): void {
+		if (enable) {
+			this.locationPinService.enableRightClickToRemoveLast();
+		} else {
+			this.locationPinService.disableRightClickToRemoveLast();
+		}
+	}
+
+	private updateRouteFromLocations(locations: any[]): void {
+		this.clearCurrentRoute();
+
+		const waypoints: [number, number][] = locations.map((loc) => [
+			parseFloat(loc.lat),
+			parseFloat(loc.lon),
+		]);
+
+		this.currentRouteId = this.routeService.createRoute(waypoints, {
+			color: '#3388ff',
+			weight: 6,
+			opacity: 0.7,
+		});
+
+		console.log(`Route created with ${waypoints.length} waypoints`);
+	}
+
+	private clearCurrentRoute(): void {
+		if (this.currentRouteId) {
+			this.routeService.removeRoute(this.currentRouteId);
+			this.currentRouteId = undefined;
+			console.log('Current route cleared');
+		}
+	}
+
+	private drawPath(): void {
+		this.clearCurrentRoute();
+
+		if (!this.path) return;
+
+		this.currentRouteId = this.routeService.drawLineFromGeohash(this.path, 12, {
+			color: '#3388ff',
+			weight: 6,
+			opacity: 0.7,
+		});
+
+		this.routeService.fitRouteInView(this.currentRouteId);
+	}
 }

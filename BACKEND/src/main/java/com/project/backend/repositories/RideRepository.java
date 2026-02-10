@@ -8,6 +8,7 @@ import com.project.backend.repositories.reports.RideReportRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,44 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRepository {
-
-    Page<Ride> findByDriver(Driver driver, Pageable pageable);
-
-    @Query("""
-            SELECT r FROM Ride r
-            WHERE r.driver = :driver
-            AND r.startTime >= :startDate
-            AND r.startTime <= :endDate
-            """)
-    Page<Ride> findByDriverAndDateRange(
-            Driver driver,
-            LocalDateTime startDate,
-            LocalDateTime endDate,
-            Pageable pageable
-    );
-
-    @Query("""
-            SELECT r FROM Ride r
-            WHERE r.driver = :driver
-            AND r.startTime >= :startDate
-            """)
-    Page<Ride> findByDriverAndStartDateAfter(
-            Driver driver,
-            LocalDateTime startDate,
-            Pageable pageable
-    );
-
-    @Query("""
-            SELECT r FROM Ride r
-            WHERE r.driver = :driver
-            AND r.startTime <= :endDate
-            """)
-    Page<Ride> findByDriverAndEndDateBefore(
-            Driver driver,
-            LocalDateTime endDate,
-            Pageable pageable
-    );
+public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRepository, JpaSpecificationExecutor<Ride> {
+    
     @Query("SELECT r FROM Ride r WHERE r.driver = :driver " +
             "AND r.status IN :statuses")
     Optional<Ride> findRideOfDriverWithStatus(@Param("driver") Driver driver, @Param("statuses") List<RideStatus> status);
@@ -66,7 +31,6 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
     Optional<Ride> findFirstByRideOwnerAndStatusIn(Customer customer, List<RideStatus> statuses);
 
     List<Ride> findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(Collection<Long> driversIds);
-    Optional<Ride> findById(Long rideId);
 
     List<Ride> findByRideOwner(Customer customer);
 
@@ -85,19 +49,11 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
     );
 
     @Query("""
-    SELECT DISTINCT r
-    FROM Ride r
-    JOIN r.passengers p
-    WHERE p.user = :customer
-      AND r.startTime >= COALESCE(:startTime, r.startTime)
-      AND r.startTime <= COALESCE(:endTime, r.startTime)
-      AND (r.status IN :statuses)
-""")
-    Page<Ride> findRidesByPassengerCustomerWithFilters(
-            @Param("customer") Customer customer,
-            @Param("startTime") LocalDateTime startTime,
-            @Param("endTime") LocalDateTime endTime,
-            @Param("statuses") List<RideStatus> statuses,
-            Pageable pageable
-    );
+            SELECT r FROM Ride r
+            WHERE r.scheduledTime IS NOT NULL
+                AND r.scheduledTime > CURRENT_TIMESTAMP
+                AND r.status IN('PENDING', 'ACCEPTED')
+        """)
+    Iterable<Ride> findFutureScheduledRides();
+    boolean existsByDriver_IdAndStatusIn(Long driverId, List<RideStatus> statuses);
 }

@@ -1,160 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2D3E3E"
-    android:fillViewport="true">
+    android:padding="16dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Header -->
+    <TextView
+        android:id="@+id/headerTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="Ride History"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Header -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="History"
-            android:textSize="32sp"
-            android:textColor="@android:color/white"
-            android:textAlignment="center"
-            android:padding="24dp"
-            android:fontFamily="sans-serif-medium"/>
+    <!-- Sort and Filter Controls -->
+    <LinearLayout
+        android:id="@+id/controlsContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerTitle">
 
-        <!-- Filter Section -->
+        <!-- Sort Controls Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
-            <!-- Sort Options -->
-            <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sort by:"
+                android:textStyle="bold"
+                android:layout_marginEnd="8dp" />
+
+            <Spinner
+                android:id="@+id/sortFieldSpinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:minHeight="48dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Date"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="8dp"/>
-
-                <RadioGroup
-                    android:id="@+id/sortRadioGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/radioAsc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ASC"
-                        android:textColor="@android:color/white"
-                        android:checked="true"
-                        android:buttonTint="#4CAF50"/>
-
-                    <RadioButton
-                        android:id="@+id/radioDesc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="DSC"
-                        android:textColor="@android:color/white"
-                        android:buttonTint="#4CAF50"/>
-                </RadioGroup>
-            </LinearLayout>
-
-            <!-- Date Inputs -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <Spinner
+                android:id="@+id/sortDirectionSpinner"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:minHeight="48dp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Filter Toggle Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/toggleFiltersButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Filters"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            app:icon="@drawable/ic_filter"
+            app:iconGravity="start" />
+
+        <!-- Filters Panel (Initially Hidden) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/filtersPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginStart="16dp">
+                android:padding="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Start Date:"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"/>
-
+                <!-- Start Date -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="12dp"
-                    app:boxBackgroundColor="#3E5555"
-                    app:boxStrokeColor="#4CAF50"
-                    app:hintTextColor="@android:color/white">
+                    android:hint="Start Date"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/startDateInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="mm/dd/yyyy"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#888888"
                         android:focusable="false"
                         android:clickable="true"
-                        android:inputType="none"/>
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="End Date:"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"/>
-
+                <!-- End Date -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    app:boxBackgroundColor="#3E5555"
-                    app:boxStrokeColor="#4CAF50"
-                    app:hintTextColor="@android:color/white">
+                    android:layout_marginTop="8dp"
+                    android:hint="End Date"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/endDateInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="mm/dd/yyyy"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#888888"
                         android:focusable="false"
                         android:clickable="true"
-                        android:inputType="none"/>
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Filter Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/applyFiltersButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Apply Filters"
+                        android:layout_marginEnd="8dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/clearDatesButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Clear"
+                        style="@style/Widget.Material3.Button.OutlinedButton" />
+                </LinearLayout>
             </LinearLayout>
-
-            <!-- Filter Button -->
-            <Button
-                android:id="@+id/filterButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Filter"
-                android:textColor="@android:color/white"
-                android:backgroundTint="#4CAF50"
-                android:layout_marginStart="16dp"
-                android:paddingHorizontal="24dp"/>
-        </LinearLayout>
-
-        <!-- RecyclerView for Ride History -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:clipToPadding="false"
-            android:nestedScrollingEnabled="false"/>
-
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+    <!-- Pagination Info -->
+    <TextView
+        android:id="@+id/paginationInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone"
+        tools:text="Page 1 of 5 (50 total rides)"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/controlsContainer" />
+
+    <!-- Page Size Spinner -->
+    <Spinner
+        android:id="@+id/pageSizeSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/controlsContainer" />
+
+    <!-- RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/paginationInfo"
+        tools:listitem="@layout/item_ride_history" />
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Empty State -->
+    <TextView
+        android:id="@+id/emptyStateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No rides found"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

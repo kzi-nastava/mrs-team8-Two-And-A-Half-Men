@@ -1,16 +1,15 @@
 package com.project.mobile.service;
 
-import com.project.mobile.DTO.ActivateRequestDTO;
-import com.project.mobile.DTO.ForgotPasswordDTO;
-import com.project.mobile.DTO.MeInfo;
-import com.project.mobile.DTO.RegisterDto;
-import com.project.mobile.DTO.ResetPasswordDTO;
-import com.project.mobile.DTO.UserLoginRequest;
-import com.project.mobile.DTO.UserLoginResponseDto;
+import com.project.mobile.DTO.Ride.ActivateRequestDTO;
+import com.project.mobile.DTO.Auth.ForgotPasswordDTO;
+import com.project.mobile.DTO.Auth.MeInfo;
+import com.project.mobile.DTO.Auth.RegisterDto;
+import com.project.mobile.DTO.Auth.ResetPasswordDTO;
+import com.project.mobile.DTO.Auth.UserLoginRequest;
+import com.project.mobile.DTO.Auth.UserLoginResponseDto;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;

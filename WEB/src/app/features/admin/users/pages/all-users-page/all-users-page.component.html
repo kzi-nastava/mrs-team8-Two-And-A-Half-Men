@@ -1,2 +1,286 @@
-<p>all-users-page works!</p>
-<a appButton routerLink="/admin/users/drivers/new" style="text-decoration: none; color: white">Create New Driver</a>
+<div class="users-container">
+	<div class="header">
+		<h1>User Management</h1>
+		<div class="header-actions">
+			<button class="btn btn-secondary" (click)="toggleFilters()">
+				<span class="icon">🔍</span>
+				{{ showFilters() ? 'Hide Filters' : 'Show Filters' }}
+			</button>
+			<button class="btn btn-primary" (click)="createDriver()">
+				<span class="icon">➕</span>
+				Create New Driver
+			</button>
+		</div>
+	</div>
+
+	<!-- Filters Section -->
+	@if (showFilters()) {
+		<div class="filters-section" appBox>
+			<div class="filters-grid">
+				<div class="filter-group">
+					<label for="emailFilter">Email</label>
+					<input
+						id="emailFilter"
+						type="text"
+						[(ngModel)]="filters().email"
+						placeholder="Filter by email"
+						class="form-control"
+					/>
+				</div>
+
+				<div class="filter-group">
+					<label for="firstNameFilter">First Name</label>
+					<input
+						id="firstNameFilter"
+						type="text"
+						[(ngModel)]="filters().firstName"
+						placeholder="Filter by first name"
+						class="form-control"
+					/>
+				</div>
+
+				<div class="filter-group">
+					<label for="lastNameFilter">Last Name</label>
+					<input
+						id="lastNameFilter"
+						type="text"
+						[(ngModel)]="filters().lastName"
+						placeholder="Filter by last name"
+						class="form-control"
+					/>
+				</div>
+
+				<div class="filter-group">
+					<label for="roleFilter">Role</label>
+					<select id="roleFilter" [(ngModel)]="filters().role" class="form-control">
+						<option value="">All Roles</option>
+						@for (role of roleOptions; track $index) {
+							<option [value]="role">{{ role }}</option>
+						}
+					</select>
+				</div>
+
+				<div class="filter-group">
+					<label for="statusFilter">Driver Status</label>
+					<select
+						id="statusFilter"
+						[(ngModel)]="filters().driverStatus"
+						class="form-control"
+					>
+						<option value="">All Statuses</option>
+						@for (status of driverStatusOptions; track $index) {
+							<option [value]="status">
+								{{ status }}
+							</option>
+						}
+					</select>
+				</div>
+
+				<div class="filter-group">
+					<label for="blockedFilter">Account Status</label>
+					<select
+						id="blockedFilter"
+						[(ngModel)]="filters().isBlocked"
+						class="form-control"
+					>
+						@for (option of blockedOptions; track $index) {
+							<option [ngValue]="option.value">
+								{{ option.label }}
+							</option>
+						}
+					</select>
+				</div>
+
+				<div class="filter-group">
+					<label for="pendingFilter">Pending Requests</label>
+					<select
+						id="pendingFilter"
+						[(ngModel)]="filters().hasPendingRequests"
+						class="form-control"
+					>
+						@for (option of pendingRequestsOptions; track $index) {
+							<option [ngValue]="option.value">
+								{{ option.label }}
+							</option>
+						}
+					</select>
+				</div>
+			</div>
+
+			<div class="filter-actions">
+				<button class="btn btn-primary" (click)="applyFilters()">Apply Filters</button>
+				<button class="btn btn-secondary" (click)="clearFilters()">Clear Filters</button>
+			</div>
+		</div>
+	}
+
+	<!-- Loading State -->
+	@if (isLoading()) {
+		<div class="loading" appBox>
+			<div class="spinner"></div>
+			<p>Loading users...</p>
+		</div>
+	} @else {
+		<!-- Users Table -->
+		<div class="table-container" appBox>
+			<table class="users-table">
+				<thead>
+					<tr>
+						<th (click)="onSort('id')" class="sortable">ID {{ getSortIcon('id') }}</th>
+						<th (click)="onSort('firstName')" class="sortable">
+							First Name {{ getSortIcon('firstName') }}
+						</th>
+						<th (click)="onSort('lastName')" class="sortable">
+							Last Name {{ getSortIcon('lastName') }}
+						</th>
+						<th (click)="onSort('email')" class="sortable">
+							Email {{ getSortIcon('email') }}
+						</th>
+						<th (click)="onSort('role')" class="sortable">
+							Role {{ getSortIcon('role') }}
+						</th>
+						<th>Driver Status</th>
+						<th (click)="onSort('isBlocked')" class="sortable">
+							Blocked {{ getSortIcon('isBlocked') }}
+						</th>
+						<th>Pending Requests</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for (user of users(); track user.id) {
+						<tr (click)="viewUser(user.id)" class="user-row">
+							<td>{{ user.id }}</td>
+							<td>{{ user.firstName }}</td>
+							<td>{{ user.lastName }}</td>
+							<td>{{ user.email }}</td>
+							<td>
+								<span class="badge" [ngClass]="getRoleBadgeClass(user.role)">
+									{{ user.role }}
+								</span>
+							</td>
+							<td>
+								@if (user.driverStatus) {
+									<span
+										class="badge"
+										[ngClass]="getStatusBadgeClass(user.driverStatus)"
+									>
+										{{ user.driverStatus }}
+									</span>
+								} @else {
+									<span class="text-muted">N/A</span>
+								}
+							</td>
+							<td>
+								<span
+									class="status-indicator"
+									[ngClass]="{ blocked: user.isBlocked, active: !user.isBlocked }"
+								>
+									{{ user.isBlocked ? '🔒 Yes' : '✅ No' }}
+								</span>
+							</td>
+							<td>
+								@switch (user.hasPendingRequests) {
+									@case (true) {
+										<span>⏳ Yes</span>
+									}
+									@case (false) {
+										<span>✅ No</span>
+									}
+									@default {
+										<span class="text-muted">N/A</span>
+									}
+								}
+							</td>
+							<td>
+								<button
+									class="btn btn-sm btn-link"
+									(click)="viewUser(user.id); $event.stopPropagation()"
+								>
+									View →
+								</button>
+							</td>
+						</tr>
+					}
+					@if (users().length === 0) {
+						<tr>
+							<td colspan="9" class="no-data">
+								No users found. Try adjusting your filters.
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+
+		<!-- Pagination -->
+		@if (!isLoading() && users().length > 0) {
+			<div class="pagination-container" appBox>
+				<div class="pagination-info">
+					Showing {{ currentPage() * pageSize() + 1 }} to
+					{{ Math.min((currentPage() + 1) * pageSize(), totalElements()) }} of
+					{{ totalElements }} users
+				</div>
+
+				<div class="pagination-controls">
+					<div class="page-size-selector">
+						<label for="pageSize">Items per page:</label>
+						<select
+							id="pageSize"
+							[(ngModel)]="pageSize"
+							(change)="onPageSizeChange()"
+							class="form-control"
+						>
+							@for (size of pageSizeOptions(); track size) {
+								<option [value]="size">
+									{{ size }}
+								</option>
+							}
+						</select>
+					</div>
+
+					<div class="page-buttons">
+						<button
+							class="btn-pagination"
+							(click)="onPageChange(0)"
+							[disabled]="currentPage() === 0"
+						>
+							⏮️
+						</button>
+						<button
+							class="btn-pagination"
+							(click)="onPageChange(currentPage() - 1)"
+							[disabled]="currentPage() === 0"
+						>
+							◀️
+						</button>
+
+						@for (page of getPages(); track page) {
+							<button
+								class="btn-pagination"
+								[ngClass]="{ active: page === currentPage() }"
+								(click)="onPageChange(page)"
+							>
+								{{ page + 1 }}
+							</button>
+						}
+						<button
+							class="btn-pagination"
+							(click)="onPageChange(currentPage() + 1)"
+							[disabled]="currentPage() === totalPages() - 1"
+						>
+							▶️
+						</button>
+						<button
+							class="btn-pagination"
+							(click)="onPageChange(totalPages() - 1)"
+							[disabled]="currentPage() === totalPages() - 1"
+						>
+							⏭️
+						</button>
+					</div>
+				</div>
+			</div>
+		}
+	}
+</div>

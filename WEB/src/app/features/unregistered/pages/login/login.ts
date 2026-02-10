@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { UnregisteredAuthService } from '@features/unregistered/services/unregistered-auth.service';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-login',
@@ -14,6 +15,7 @@ import { UnregisteredAuthService } from '@features/unregistered/services/unregis
 export class Login {
 	private unregisteredAuthService = inject(UnregisteredAuthService);
 	private router = inject(Router);
+	private popupsService = inject(PopupsService);
 
 	loginFailed = false;
 	loginForm = new FormGroup({
@@ -32,12 +34,13 @@ export class Login {
 				next: () => {
 					this.router.navigate(['']).then();
 				},
-				error: () => {
+				error: (err) => {
 					this.loginFailed = true;
+					this.popupsService.error('Login Failed', err.error?.message || 'An error occurred during login. Please try again.');
 				},
 			});
 		} else {
-			alert('Please fill in the form correctly.');
+			this.popupsService.error('Error', 'Please fill in the form correctly.');
 		}
 	}
 }

@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class NewRideDTO {
     private Long id;
     private String status;
-    private double estimatedDistance;
+    private Double estimatedDistance;
 }

@@ -14,6 +14,7 @@ import java.util.List;
 public class FindDriverFilter {
     double latitude;
     double longitude;
+    int numberOfPassengers = 1;
     Long vehicleTypeId;
     List<Long> additionalServicesIds;
 }

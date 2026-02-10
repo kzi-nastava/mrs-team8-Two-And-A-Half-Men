@@ -46,7 +46,7 @@ public class Ride {
     private Driver driver;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Customer rideOwner;
+    private AppUser rideOwner;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private VehicleType vehicleType;

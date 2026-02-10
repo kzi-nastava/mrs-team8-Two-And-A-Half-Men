@@ -6,6 +6,7 @@ import com.project.backend.exceptions.UnauthorizedException;
 import com.project.backend.models.Admin;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
+import com.project.backend.service.RideBookingService;
 import com.project.backend.service.impl.CancellationService;
 import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.models.Driver;
@@ -40,6 +41,7 @@ public class RideController {
     private final AuthUtils authUtils;
     private final PanicService panicService;
     private final CancellationService cancellationService;
+    private final RideBookingService rideBookingService;
 
     @PostMapping("/estimates")
     public ResponseEntity<?> estimateRide(@RequestBody RideBookingParametersDTO rideData) {
@@ -61,7 +63,7 @@ public class RideController {
         }
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(rideService.createRide(user.getId(), body));
+                .body(rideBookingService.bookRide(user.getId(), body));
     }
 
     @GetMapping("/{id}")

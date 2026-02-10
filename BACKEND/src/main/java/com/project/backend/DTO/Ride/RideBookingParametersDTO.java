@@ -1,5 +1,6 @@
 package com.project.backend.DTO.Ride;
 
+import com.project.backend.DTO.Route.RouteItemDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

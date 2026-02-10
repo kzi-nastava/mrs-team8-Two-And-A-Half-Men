@@ -6,12 +6,14 @@
 
 		@if (chat()) {
 			<app-chat-window
-				[chatId]="chat()!.id"
+				[chat]="chat()!"
 				[title]="'Live support'"
 				[isOpen]="isChatOpen()"
 				[isMinimizable]="false"
+				[userId]="userId()"
 				(minimize)="onMinimize()"
 				(close)="onMinimize()"
+				(messageSend)="onSend($event)"
 			></app-chat-window>
 		}
 

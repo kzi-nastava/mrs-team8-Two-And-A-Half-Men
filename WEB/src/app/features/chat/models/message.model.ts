@@ -15,7 +15,7 @@ export interface SupportChat {
 	userEmail?: string;
 	userType?: string;
 	status: 'ACTIVE' | 'CLOSED';
-	lastMessage?: Message;
+	messages: Message[];
 }
 
 export interface SendMessageRequest {

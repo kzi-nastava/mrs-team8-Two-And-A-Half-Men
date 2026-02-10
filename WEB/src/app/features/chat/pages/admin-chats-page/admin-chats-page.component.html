@@ -13,8 +13,8 @@
 			@for (chat of chats(); track chat.id) {
 				<div
 					class="chat-item"
-					[class.selected]="selectedChat()?.id === chat.id"
-					(click)="selectChat(chat)"
+					[class.selected]="selectedChat?.id === chat.id"
+					(click)="selectChat($index)"
 				>
 					<div class="chat-item-header">
 						<span class="user-email">{{ chat.userEmail }}</span>
@@ -31,13 +31,15 @@
 	</div>
 
 	<div class="chat-display">
-		@if (selectedChat()) {
+		@if (selectedChat) {
 			<app-chat-window
-				[chatId]="selectedChat()!.id"
-				[title]="getChatTitle(selectedChat()!)"
+				[chat]="selectedChat!"
+				[title]="getChatTitle(selectedChat!)"
 				[isOpen]="true"
 				[isMinimizable]="false"
+				[userId]="userId()"
 				(close)="closeSelectedChat()"
+				(messageSend)="onSend($event)"
 			></app-chat-window>
 		} @else {
 			<div class="no-selection">

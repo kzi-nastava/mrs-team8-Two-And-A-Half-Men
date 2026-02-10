@@ -86,11 +86,11 @@
 }
 
 .own-message {
-	justify-content: flex-start;
+	justify-content: flex-end;
 }
 
 .other-message {
-	justify-content: flex-end;
+	justify-content: flex-start;
 }
 
 .message-content {
@@ -104,13 +104,13 @@
 }
 
 .own-message .message-content {
-	background: #5a4a2a;
-	color: #fff;
+	background: #1a5c3a;
+	color: white;
 }
 
 .other-message .message-content {
-	background: #1a5c3a;
-	color: white;
+	background: #5a4a2a;
+	color: #fff;
 }
 
 .checkmark {

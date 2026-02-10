@@ -88,11 +88,11 @@ public class MessageService implements IMessageService {
 
     private void broadcastMessage(SupportChat chat, MessageDTO messageDTO) {
         messagingTemplate.convertAndSend(
-                "/topic/chat/" + chat.getId(),
+                "/topic/chat/" + chat.getUser().getId(),
                 messageDTO
         );
 
-        messagingTemplate.convertAndSend("/topi c/support/admin", messageDTO);
+        messagingTemplate.convertAndSend("/topic/support/admin", messageDTO);
     }
 
     private boolean isUserAllowedToSendMessage(SupportChat chat, AppUser sender) {
@@ -114,6 +114,7 @@ public class MessageService implements IMessageService {
         return MessageDTO.builder()
                 .id(message.getId())
                 .chatId(message.getChat().getId())
+                .content(message.getContent())
                 .senderId(message.getSender().getId())
                 .senderType(message.getSender().getRole().toString())
                 .adminRead(message.isAdminRead())

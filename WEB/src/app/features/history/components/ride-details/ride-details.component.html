@@ -4,22 +4,36 @@
 			← Back to History
 		</button>
 		<h2>Ride Details</h2>
-		@if (config().showReorderOption && !historyService.loadingDetails() && ride()) {
-			<button
-				class="btn-favorite"
-				[class.is-favorite]="ride()!.isFavorite"
-				(click)="toggleFavorite()"
-				[disabled]="togglingFavorite()"
-			>
-				@if (togglingFavorite()) {
-					⏳ Saving...
-				} @else if (ride()!.isFavorite) {
-					⭐ Favorite Route
-				} @else {
-					☆ Mark as Favorite
-				}
-			</button>
-		}
+		<div class="header-actions">
+			@if (config().showReorderOption && !historyService.loadingDetails() && ride()) {
+				<button
+					class="btn-favorite"
+					[class.is-favorite]="ride()!.isFavorite"
+					(click)="toggleFavorite()"
+					[disabled]="togglingFavorite()"
+				>
+					@if (togglingFavorite()) {
+						⏳ Saving...
+					} @else if (ride()!.isFavorite) {
+						⭐ Favorite Route
+					} @else {
+						☆ Mark as Favorite
+					}
+				</button>
+			}
+
+			@if (config().showRateButton && ride()
+			&& (ride()!.status === RideStatus.FINISHED
+				|| ride()!.status === RideStatus.PANICKED
+				|| ride()!.status === RideStatus.INTERRUPTED)) {
+				<button
+					class="btn-rate"
+					(click)="openRatingPopup()"
+				>
+					⭐ Rate ride
+				</button>
+			}
+		</div>
 	</div>
 
 	@if (historyService.loadingDetails()) {
@@ -38,13 +52,26 @@
 
 	@if (!historyService.loadingDetails() && ride()) {
 		<div class="details-content">
+			@if (showRatingPopup()) {
+				<div class="popup-overlay" (click)="closeRatingPopup()">
+					<div class="popup-content" (click)="$event.stopPropagation()">
+						<app-rating-form
+							[rideId]="ride()!.id"
+							[accessToken]="null"
+							(ratingSubmitted)="onRatingSubmitted()"
+							(closePopup)="closeRatingPopup()"
+						/>
+					</div>
+				</div>
+			}
+
 			<!-- Status Badge -->
 			<div class="status-section">
-                <span class="status-badge" [ngClass]="getStatusClass(ride()!.status)">
-                    {{ getStatusText(ride()!.status) }}
-                </span>
+            <span class="status-badge" [ngClass]="getStatusClass(ride()!.status)">
+                {{ getStatusText(ride()!.status) }}
+            </span>
 				@if (ride()!.status === RideStatus.PANICKED) {
-					<span class="panic-indicator">⚠️ PANIC ACTIVATED</span>
+					<span class="panic-indicator">⚠️</span>
 				}
 			</div>
 

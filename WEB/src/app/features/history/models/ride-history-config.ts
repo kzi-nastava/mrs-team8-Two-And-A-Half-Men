@@ -9,6 +9,7 @@ export interface RideHistoryConfig {
 	showReorderOption: boolean;
 	canViewDetails: boolean;
 	showUserFilters: boolean;
+	showRateButton: boolean;
 }
 
 export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideHistoryConfig> = {
@@ -21,6 +22,7 @@ export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideHistoryConfig> =
 		showReorderOption: true,
 		canViewDetails: true,
 		showUserFilters: false,
+		showRateButton: true,
 	},
 	[LoggedInUserRole.DRIVER]: {
 		showDriverInfo: false,
@@ -31,6 +33,7 @@ export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideHistoryConfig> =
 		showReorderOption: false,
 		canViewDetails: true,
 		showUserFilters: false,
+		showRateButton: false,
 	},
 	[LoggedInUserRole.ADMIN]: {
 		showDriverInfo: true,
@@ -41,6 +44,7 @@ export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideHistoryConfig> =
 		showReorderOption: true,
 		canViewDetails: true,
 		showUserFilters: true,
+		showRateButton: false,
 	},
 };
 

@@ -22,7 +22,6 @@ export class RatingService {
 		ratingData: { driverRating: number; vehicleRating: number; comment: string },
 		accessToken: string | null,
 	): Observable<RatingResponse> {
-		console.log('AAA');
 		let params = new HttpParams();
 		if (accessToken) {
 			params = params.set('accessToken', accessToken);

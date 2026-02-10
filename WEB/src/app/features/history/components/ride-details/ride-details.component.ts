@@ -10,11 +10,12 @@ import { RIDE_HISTORY_CONFIGS } from '@features/history/models/ride-history-conf
 import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 import { MapComponent } from '@shared/components/map/map.component';
 import { MAP_CONFIGS } from '@shared/components/map/map.config';
+import { RatingFormComponent } from '@shared/components/forms/rating-form/rating-form.component';
 
 @Component({
 	selector: 'app-history-ride-details-page',
 	standalone: true,
-	imports: [CommonModule, MapComponent],
+	imports: [CommonModule, MapComponent, RatingFormComponent],
 	templateUrl: './ride-details.component.html',
 	styleUrl: './ride-details.component.css',
 })
@@ -34,6 +35,7 @@ export class RideDetailsComponent {
 
 	ride = this.historyService.selectedRide;
 	togglingFavorite = signal(false);
+	showRatingPopup = signal(false);
 
 	private rideId = toSignal(this.route.paramMap.pipe(map((params) => params.get('id'))));
 
@@ -56,7 +58,6 @@ export class RideDetailsComponent {
 			}
 		});
 
-		// Debug effect
 		effect(() => {
 			console.log('Current ride:', this.ride());
 			console.log('Route ID:', this.rideId());
@@ -91,6 +92,23 @@ export class RideDetailsComponent {
 		this.togglingFavorite.set(true);
 
 		this.historyService.toggleFavorite(ride.id);
+	}
+
+	openRatingPopup() {
+		this.showRatingPopup.set(true);
+	}
+
+	closeRatingPopup() {
+		this.showRatingPopup.set(false);
+	}
+
+	onRatingSubmitted() {
+		this.showRatingPopup.set(false);
+
+		const id = this.rideId();
+		if (id) {
+			this.loadRideDetails(+id);
+		}
 	}
 
 	goBack() {

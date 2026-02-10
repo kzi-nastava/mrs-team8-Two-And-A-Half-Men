@@ -1,7 +1,9 @@
 package com.project.backend.service;
 
+import com.project.backend.DTO.Route.RouteItemDTO;
 import com.project.backend.DTO.Route.FavouriteRouteDTO;
 import com.project.backend.DTO.Route.FavouriteRouteItemDTO;
+import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.geolocation.coordinates.Coordinates;
@@ -16,9 +18,7 @@ import com.project.backend.repositories.RouteRepository;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class RouteService {
@@ -39,6 +39,51 @@ public class RouteService {
         this.locationRepository = locationRepository;
     }
 
+    /**
+     * Creates a new route from the stop points provided. Each point that does not already exist in the database
+     * is added to locations for easier fetching of addresses
+     * @param points list of points that make up the route
+     * @return newly created Route
+     */
+    public Route createNew(List<RouteItemDTO> points) {
+
+        if(points == null || points.isEmpty()) {
+            throw new BadRequestException("At least 2 points are need to create a route");
+        }
+
+        List<double[]> coordinates = new ArrayList<>();
+        Set<Location> locations = new HashSet<>();
+
+        for (var point : points) {
+            // Collect coordinates for geohash transformation
+            double[] coordinate = {point.getLatitude(), point.getLongitude()};
+            coordinates.add(coordinate);
+            // Handle location creation
+            locations.add(
+                    Location.builder()
+                            .address(point.getAddress())
+                            .latitude(point.getLatitude())
+                            .longitude(point.getLongitude())
+                            .geoHash(locationTransformer.transformFromPoints(List.of(coordinate)))
+                            .build()
+            );
+        }
+
+        // Create route geohash
+        String routeGeohash = locationTransformer.transformFromPoints(coordinates);
+        Route route = new Route(null, routeGeohash);
+
+        // Remove existing locations
+        List<Location> existingLocations = locationRepository.findAllByGeoHashIn(locations.stream().map(Location::getGeoHash).toList());
+        List<String> existingGeohashes = existingLocations.stream().map(Location::getGeoHash).toList();
+        locations.removeIf(loc -> existingGeohashes.contains(loc.getGeoHash()));
+
+        // Save route and locations
+        routeRepository.save(route);
+        locationRepository.saveAll(locations);
+
+        return route;
+    }
 
     public Map<String, Object> getAllFavourites(Long id) {
         var customer = getCustomer(id);

@@ -134,7 +134,6 @@ public class EmailBodyGeneratorService {
                 "</body>" +
                 "</html>";
     }
-
     public String generateRideRatingEmailBody(String rideOwnerName, String driverName, String rideDate, String ratingLink) {
         return "<table align='center' width='100%' cellpadding='0' cellspacing='0' style='padding:20px; background-color:#f4f6f8; font-family:Arial, Helvetica, sans-serif;'>" +
                 "  <tr>" +
@@ -192,8 +191,7 @@ public class EmailBodyGeneratorService {
                 "  </tr>" +
                 "</table>";
     }
-
-    public String generateRideStartingSoonEmail(String ownerName, String url, Long minutesBefore) {
+    public String generateRideStartingSoonEmailPassenger(String ownerName, String url, Long minutesBefore) {
         return "<table align='center' width='100%' cellpadding='0' cellspacing='0' style='padding:20px; background-color:#f4f6f8; font-family:Arial, Helvetica, sans-serif;'>" +
                 "  <tr>" +
                 "    <td align='center'>" +
@@ -251,5 +249,4 @@ public class EmailBodyGeneratorService {
                 "  </tr>" +
                 "</table>";
     }
-
 }

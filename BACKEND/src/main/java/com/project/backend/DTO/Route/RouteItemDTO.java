@@ -1,4 +1,4 @@
-package com.project.backend.DTO.Ride;
+package com.project.backend.DTO.Route;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

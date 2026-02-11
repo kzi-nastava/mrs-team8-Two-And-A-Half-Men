@@ -1,19 +1,16 @@
 package com.project.backend.repositories;
 
-import com.project.backend.models.Customer;
+import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.reports.RideReportRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -28,24 +25,20 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
 
     Optional<Ride> findFirstByDriverAndStatusIn(Driver driver, List<RideStatus> statuses);
 
-    Optional<Ride> findFirstByRideOwnerAndStatusIn(Customer customer, List<RideStatus> statuses);
+    Optional<Ride> findFirstByRideOwnerAndStatusIn(AppUser customer, List<RideStatus> statuses);
 
     List<Ride> findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(Collection<Long> driversIds);
 
-    List<Ride> findByRideOwner(Customer customer);
+    List<Ride> findByRideOwner(AppUser customer);
 
     @Query("""
         SELECT r FROM Ride r
-        WHERE r.status IN :statuses
-          AND (:firstName IS NULL OR LOWER(r.driver.firstName) LIKE LOWER(CONCAT('%', :firstName, '%')))
-          AND (:lastName IS NULL OR LOWER(r.driver.lastName) LIKE LOWER(CONCAT('%', :lastName, '%')))
+        WHERE r.status IN :statuses AND r.driver IN :drivers
         ORDER BY r.createdAt DESC
         """)
-    Page<Ride> findActiveRides(
+    List<Ride> findActiveRides(
             @Param("statuses") List<RideStatus> statuses,
-            @Param("firstName") String firstName,
-            @Param("lastName") String lastName,
-            Pageable pageable
+            @Param("drivers") List<Driver> drivers
     );
 
     @Query("""
@@ -55,5 +48,5 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
                 AND r.status IN('PENDING', 'ACCEPTED')
         """)
     Iterable<Ride> findFutureScheduledRides();
-    boolean existsByDriver_IdAndStatusIn(Long driverId, List<RideStatus> statuses);
+
 }

@@ -41,7 +41,7 @@ export const RIDE_HISTORY_CONFIGS: Record<LoggedInUserRole, RideConfig> = {
 		showPanicButton: true,
 		showInconsistencyReports: true,
 		showRatings: true,
-		showReorderOption: true,
+		showReorderOption: false,
 		canViewDetails: true,
 		showUserFilters: true,
 		showRateButton: false,

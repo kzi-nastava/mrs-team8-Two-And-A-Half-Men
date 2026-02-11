@@ -1,0 +1,229 @@
+:host {
+	--primary-green: #2d5a3d;
+	--dark-bg: #2a2a2a;
+	--card-bg: #3a3a3a;
+	--accent-green: #4a9d5f;
+	--light-green: #5cb85c;
+	--text-light: #e0e0e0;
+	--text-muted: #999;
+	--border-color: #4a4a4a;
+}
+
+.ride-active-container {
+	padding: 20px;
+	max-width: 1200px;
+	margin: 0 auto;
+	background-color: var(--dark-bg);
+	min-height: 100vh;
+	color: var(--text-light);
+}
+
+h2 {
+	margin-bottom: 24px;
+	color: var(--text-light);
+}
+
+.active-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+	gap: 15px;
+	padding: 20px;
+	background-color: var(--primary-green);
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.active-controls {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.sort-field-select,
+.page-size-select {
+	padding: 8px 12px;
+	border: 1px solid var(--border-color);
+	border-radius: 6px;
+	background-color: var(--card-bg);
+	color: var(--text-light);
+	cursor: pointer;
+	font-size: 14px;
+	transition: all 0.2s;
+}
+
+.sort-field-select:hover,
+.page-size-select:hover {
+	border-color: var(--accent-green);
+}
+
+.sort-field-select option,
+.page-size-select option {
+	background-color: var(--card-bg);
+	color: var(--text-light);
+}
+
+.btn-sort,
+.btn-filter {
+	padding: 8px 16px;
+	background-color: var(--card-bg);
+	color: var(--text-light);
+	border: 1px solid var(--border-color);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.btn-sort:hover,
+.btn-filter:hover {
+	background-color: #4a4a4a;
+	border-color: var(--accent-green);
+}
+
+.filters-panel {
+	background-color: var(--card-bg);
+	border: 1px solid var(--border-color);
+	border-radius: 8px;
+	padding: 20px;
+	margin-bottom: 20px;
+	display: flex;
+	gap: 15px;
+	flex-wrap: wrap;
+	align-items: flex-end;
+}
+
+.filter-group {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	min-width: 200px;
+}
+
+.filter-group label {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.date-input {
+	padding: 8px 12px;
+	border: 1px solid var(--border-color);
+	border-radius: 6px;
+	font-size: 14px;
+	background-color: var(--dark-bg);
+	color: var(--text-light);
+	transition: all 0.2s;
+}
+
+.date-input:focus {
+	outline: none;
+	border-color: var(--accent-green);
+}
+
+.filter-actions {
+	display: flex;
+	gap: 10px;
+}
+
+.btn-apply,
+.btn-clear {
+	padding: 8px 16px;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 600;
+	transition: all 0.2s;
+}
+
+.btn-apply {
+	background-color: var(--light-green);
+	color: white;
+}
+
+.btn-apply:hover {
+	background-color: var(--accent-green);
+	transform: translateY(-2px);
+}
+
+.btn-clear {
+	background-color: var(--card-bg);
+	color: var(--text-light);
+	border: 1px solid var(--border-color);
+}
+
+.btn-clear:hover {
+	background-color: #4a4a4a;
+	border-color: #8b3a3a;
+}
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 16px;
+	margin-top: 24px;
+	padding: 16px;
+	background-color: var(--card-bg);
+	border-radius: 8px;
+	border: 1px solid var(--border-color);
+}
+
+.btn-pagination {
+	padding: 8px 16px;
+	background-color: var(--light-green);
+	color: white;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s;
+	font-weight: 600;
+}
+
+.btn-pagination:hover:not(:disabled) {
+	background-color: var(--accent-green);
+	transform: translateY(-2px);
+}
+
+.btn-pagination:disabled {
+	background-color: #5a5a5a;
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+.pagination-info {
+	font-size: 14px;
+	color: var(--text-light);
+}
+
+.page-size-select {
+	padding: 6px 12px;
+	border: 1px solid var(--border-color);
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+@media (max-width: 768px) {
+	.active-header {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.active-controls {
+		flex-direction: column;
+	}
+
+	.filters-panel {
+		flex-direction: column;
+	}
+
+	.filter-group {
+		min-width: 100%;
+	}
+}

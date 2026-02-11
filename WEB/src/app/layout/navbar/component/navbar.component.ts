@@ -154,13 +154,6 @@ export class NavbarComponent {
 				route: '/admin/history',
 			},
 			{
-				id: 'active-rides',
-				type: 'text',
-				label: 'Active Rides',
-				position: 'right',
-				route: '/admin/active-rides',
-			},
-			{
 				id: 'users',
 				type: 'text',
 				label: 'Users',

@@ -394,23 +394,28 @@ public class RideService implements IRideService {
                 .startTime(ride.getStartTime() != null ? ride.getStartTime() : ride.getScheduledTime() != null ? ride.getScheduledTime() : null)
                 .build();
     }
-    public PagedResponse<RideResponseDTO> getActiveRides(
-            Pageable pageable,
-            String driverFirstName,
-            String driverLastName
+    public List<RideResponseDTO> getActiveRides(
+            String driverName
     ) {
-        Page<Ride> rides = rideRepository.findActiveRides(
+        if (driverName == null){
+            driverName = "";
+        }
+        String lowerDriverName = driverName.toLowerCase();
+        var drivers = driverRepository.findAll().stream().filter(
+                driver -> driver.getFirstName().toLowerCase().contains(lowerDriverName) ||
+                        driver.getLastName().toLowerCase().contains(lowerDriverName)
+            ).toList();
+
+        List<Ride> rides = rideRepository.findActiveRides(
                 List.of(RideStatus.ACTIVE),
-                driverFirstName,
-                driverLastName,
-                pageable
+                drivers
         );
 
-        List<RideResponseDTO> content = rides.getContent()
+        List<RideResponseDTO> dtos = rides
                 .stream()
                 .map(rideMapper::convertToRideResponseDTO)
                 .toList();
 
-        return PagedResponse.fromPage(content, rides);
+        return dtos;
     }
 }

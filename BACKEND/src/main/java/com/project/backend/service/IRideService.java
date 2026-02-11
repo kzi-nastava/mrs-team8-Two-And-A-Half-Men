@@ -1,13 +1,11 @@
 package com.project.backend.service;
 
 import com.project.backend.DTO.Ride.*;
-import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
 import com.project.backend.models.actor.PassengerActor;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +35,7 @@ public interface IRideService {
 
     List<RideResponseDTO> getAllBookedRidesByCustomer(Customer customer);
 
-    PagedResponse<RideResponseDTO> getActiveRides(Pageable pageable, String driverFirstName, String driverLastName);
+    List<RideResponseDTO> getActiveRides(String driverName);
 
     RideTrackingDTO getRideTrackingById(Long id, AppUser user);
 }

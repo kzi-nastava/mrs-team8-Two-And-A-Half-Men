@@ -52,12 +52,10 @@ public class RideQueryController {
     // TODO
     @GetMapping("/active")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PagedResponse<RideResponseDTO>> getActiveRides(
-            Pageable pageable,
-            @RequestParam String firstName,
-            @RequestParam String lastName
+    public ResponseEntity<List<RideResponseDTO>> getActiveRides(
+            @RequestParam(required = false) String name
     ) {
-        PagedResponse<RideResponseDTO> result = rideService.getActiveRides(pageable, firstName, lastName);
+        List<RideResponseDTO> result = rideService.getActiveRides(name);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

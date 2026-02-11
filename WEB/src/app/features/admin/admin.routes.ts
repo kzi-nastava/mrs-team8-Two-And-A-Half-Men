@@ -61,21 +61,5 @@ export const ADMIN_ROUTES: Routes = [
 				(m) => m.RideDetailsComponent,
 			),
 		data: { userRole: LoggedInUserRole.CUSTOMER },
-	},
-	{
-		path: 'active-rides',
-		canActivate: [authGuard, roleGuard([LoggedInUserRole.ADMIN])],
-		loadComponent: () =>
-			import('./rides/pages/active-rides-page/active-rides-page.component').then(
-				(m) => m.ActiveRidesPageComponent,
-			),
-	},
-	{
-		path: 'active-rides/:id',
-		canActivate: [authGuard, roleGuard([LoggedInUserRole.ADMIN])],
-		loadComponent: () =>
-			import('./rides/pages/active-ride-details/active-ride-details.component').then(
-				(m) => m.ActiveRideDetailsComponent,
-			),
-	},
+	}
 ];

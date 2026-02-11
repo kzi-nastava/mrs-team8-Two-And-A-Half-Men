@@ -28,7 +28,10 @@ public class PanicService implements IPanicService {
 
     public void triggerPanicAlert(AppUser user, String accesToken) {
         System.out.println("Panic alert triggered");
-        Passenger passenger = passengerRepository.findByAccessToken(accesToken).orElse(null);
+        Passenger passenger = null;
+        if (accesToken != null) {
+            passenger = passengerRepository.findByAccessToken(accesToken).orElse(null);
+        }
         System.out.println(passenger);
         if(passenger == null && user instanceof Customer) {
             passenger = passengerRepository.findByCustomerWithRideStatus((Customer) user,

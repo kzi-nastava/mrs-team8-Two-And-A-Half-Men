@@ -12,7 +12,7 @@ import java.util.List;
 public interface VehicleTypeRepository extends JpaRepository<VehicleType, Long> {
     @Query("""
         select new com.project.backend.DTO.VehicleTypeDTO(v.id, v.typeName, v.description, v.price)
-        from VehicleType v
+        from VehicleType v ORDER BY v.typeName
     """)
     List<VehicleTypeDTO> findAllDTOs();
 }

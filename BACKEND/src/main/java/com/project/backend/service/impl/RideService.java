@@ -623,8 +623,8 @@ public class RideService implements IRideService {
     }
 
     @Override
-    public List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer) {
-        List<RideBookedDTO> bookedRides = new ArrayList<>();
+    public List<RideResponseDTO> getAllBookedRidesByCustomer(Customer customer) {
+        List<RideResponseDTO> bookedRides = new ArrayList<>();
         List<Ride> rides = rideRepository.findByRideOwner(customer);
         for(Ride ride : rides) {
             boolean isSheculedforNextTenMinutes = ride.getScheduledTime() != null &&
@@ -641,15 +641,7 @@ public class RideService implements IRideService {
                 for(Location location : locations) {
                     address.append(location.getAddress()).append(" ");
                 }
-                String SheduleTime = ride.getScheduledTime() != null ? ride.getScheduledTime().toString() : "Immediate";
-                String driverName = ride.getDriver() != null ? ride.getDriver().firstNameAndLastName() : "Not assigned";
-                RideBookedDTO rideBookedDTO = RideBookedDTO.builder()
-                        .id(ride.getId())
-                        .status(ride.getStatus().toString())
-                        .scheduleTime(SheduleTime)
-                        .driverName(driverName)
-                        .route(address.toString().trim())
-                        .build();
+               RideResponseDTO rideBookedDTO = rideMapper.convertToRideResponseDTO(ride);
                 bookedRides.add(rideBookedDTO);
             }
         }

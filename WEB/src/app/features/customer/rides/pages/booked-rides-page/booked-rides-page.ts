@@ -1,50 +1,59 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BookedRide } from '../../models/BookedRide';
 import { CustomerRideService } from '../../services/customer-ride-service';
-import { CancelRideButton } from '../../components/cancel-ride-button/cancel-ride-button';
 import { Router } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RidesListComponent } from '@shared/components/rides/ride-list/ride-list.component';
+import { RideConfig } from '@shared/models/ride-config';
+import { Ride } from '@shared/models/ride.model';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-booked-rides',
-	imports: [CommonModule, CancelRideButton],
+	imports: [CommonModule, ReactiveFormsModule, RidesListComponent],
 	templateUrl: './booked-rides-page.html',
 	styleUrls: ['./booked-rides-page.css'],
 })
 export class BookedRides implements OnInit {
-	public bookedRides = signal<BookedRide[]>([]);
+	public bookedRides = signal<Ride[]>([]);
+	public loading = signal<boolean>(false);
 	public BookedRidesService = inject(CustomerRideService);
+	private popupsService = inject(PopupsService);
 	public router = inject(Router);
+
+	rideConfig = {
+		showDriverInfo: true,
+		showPassengerInfo: true,
+		showPanicButton: true,
+		showInconsistencyReports: true,
+		showRatings: true,
+		showReorderOption: true,
+		canViewDetails: true,
+		showUserFilters: true,
+		showRateButton: false,
+	} as RideConfig;
 
 	ngOnInit(): void {
 		this.loadRides();
 	}
 	loadRides(): void {
+		this.loading.set(true);
 		this.BookedRidesService.loadBookedRides().subscribe({
-			next: (rides) => this.bookedRides.set(rides),
-			error: () => this.bookedRides.set([]),
+			next: (rides) => {
+				this.bookedRides.set(rides);
+				this.loading.set(false);
+			},
+			error: (err) => {
+				this.popupsService.error(
+					'Error loading bookedRides',
+					err?.error?.message ||
+						'There was an error loading booked rides. Please try again later.',
+				);
+				this.bookedRides.set([]);
+			},
 		});
 	}
-	RideClicked(ride: BookedRide): void {
-		if (this.canTrackRide(ride)) {
-			this.router.navigate(['rides', ride.id], { queryParams: { rideId: ride.id } }).then();
-		}
-	}
-	canCancelRide(ride: BookedRide): boolean {
-		if (!ride.scheduleTime) return false;
-		const scheduledTime = new Date(ride.scheduleTime);
-		const currentTime = new Date();
-		const timeDifferenceMinutes =
-			(scheduledTime.getTime() - currentTime.getTime()) / 1000 / 60;
-		return timeDifferenceMinutes > 10;
-	}
-	canTrackRide(ride: BookedRide): boolean {
-		return ride.status === 'ACTIVE';
-	}
-	isValidDate(value: any): boolean {
-		if (!value) return false;
-		if (typeof value === 'string' && value.toLowerCase() === 'immediate') return false;
-		const date = new Date(value);
-		return !isNaN(date.getTime());
+	onRideClick(ride: Ride) {
+		this.router.navigate(['rides', ride.id]).then();
 	}
 }

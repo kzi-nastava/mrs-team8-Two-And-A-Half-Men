@@ -1,7 +1,6 @@
 package com.project.backend.controllers.ride;
 
 import com.project.backend.DTO.Ride.CostTimeDTO;
-import com.project.backend.DTO.Ride.RideBookedDTO;
 import com.project.backend.DTO.Ride.RideBookingParametersDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.DTO.Utils.PagedResponse;
@@ -65,12 +64,12 @@ public class RideQueryController {
 
     // TODO
     @GetMapping("/booked")
-    public ResponseEntity<List<RideBookedDTO>> getBookedRides() {
+    public ResponseEntity<?> getBookedRides() {
         Customer user = authUtils.getCurrentCustomer();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        List<RideBookedDTO> bookedRides = rideService.getAllBookedRidesByCustomer(user);
+        List<RideResponseDTO> bookedRides = rideService.getAllBookedRidesByCustomer(user);
         return ResponseEntity.ok(bookedRides);
     }
 

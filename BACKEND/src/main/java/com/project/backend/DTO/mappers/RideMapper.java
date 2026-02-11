@@ -56,6 +56,7 @@ public class RideMapper {
                                 .build()
                 ).toList();
 
+
         return RideResponseDTO.builder()
                 .id(ride.getId())
 
@@ -63,7 +64,7 @@ public class RideMapper {
                 .endTime(ride.getEndTime())
                 .scheduledTime(ride.getScheduledTime())
 
-                .driverName(ride.getDriver().firstNameAndLastName())
+                .driverName(ride.getDriver() != null ? ride.getDriver().firstNameAndLastName() : "No driver assigned")
                 .rideOwnerName(ride.getRideOwner().firstNameAndLastName())
 
                 .status(ride.getStatus())

@@ -168,6 +168,13 @@ export class NavbarComponent {
 				route: '/admin/users',
 			},
 			{
+				id: 'chats',
+				type: 'text',
+				label: 'Chats',
+				position: 'right',
+				route: '/chat',
+			},
+			{
 				id: 'settings',
 				type: 'text',
 				label: 'Settings',

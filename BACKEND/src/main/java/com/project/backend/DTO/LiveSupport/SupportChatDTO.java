@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,5 +17,5 @@ public class SupportChatDTO {
     private String userEmail;
     private String userType;
     private String status;
-    private MessageDTO lastMessage;
+    private List<MessageDTO> messages;
 }

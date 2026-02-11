@@ -13,6 +13,7 @@ import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.DriverRepository;
 import com.project.backend.repositories.RideRepository;
+import com.project.backend.service.DriverMatchingService;
 import com.project.backend.service.ICancellationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class CancellationService implements ICancellationService {
     private DriverRepository driverRepository;
     @Autowired
     private DriverLocationService driverLocationService;
+    @Autowired
+    private DriverMatchingService driverMatchingService;
+
     @Override
     public void cancelRide(Long rideId, RideCancelationDTO reason, AppUser user) {
         if(user instanceof Customer) {
@@ -87,9 +91,8 @@ public class CancellationService implements ICancellationService {
             driver.setDriverStatus(DriverStatus.INACTIVE);
             driverLocationService.removeDriverLocation(driver.getId());
             driverRepository.save(driver);
-            FindDriverDTO foundDriver = rideService.findBestSuitableDriver(filter).orElseThrow(() -> new ResourceNotFoundException("No suitable driver found"));
-            System.out.println("Found driver for reassignment: " + foundDriver.getDriverId());
-            Driver newDriver = driverRepository.findById(foundDriver.getDriverId()).orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+            FindDriverDTO foundDriver = driverMatchingService.findBestDriver(filter).orElseThrow(() -> new ResourceNotFoundException("No suitable driver found"));
+            Driver newDriver = foundDriver.getDriver();
             ride.setDriver(newDriver);
             rideRepository.save(ride);
             //NOt sure what this mean ? but ok go on

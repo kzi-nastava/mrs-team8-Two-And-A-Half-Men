@@ -1,0 +1,51 @@
+<div class="admin-chats-page">
+	<div class="chats-sidebar">
+		<div class="sidebar-header">
+			<h2>Active Support Chats</h2>
+			<span class="chat-count">{{ chats().length }}</span>
+		</div>
+
+		@if (isLoading()) {
+			<div class="loading">Loading chats...</div>
+		}
+
+		<div class="chats-list">
+			@for (chat of chats(); track chat.id) {
+				<div
+					class="chat-item"
+					[class.selected]="selectedChat?.id === chat.id"
+					(click)="selectChat($index)"
+				>
+					<div class="chat-item-header">
+						<span class="user-email">{{ chat.userEmail }}</span>
+						<span class="user-type">{{ chat.userType }}</span>
+					</div>
+					<div class="chat-item-preview">
+						{{ getLastMessagePreview(chat) }}
+					</div>
+				</div>
+			} @empty {
+				<div class="no-chats">No active chats</div>
+			}
+		</div>
+	</div>
+
+	<div class="chat-display">
+		@if (selectedChat) {
+			<app-chat-window
+				[chat]="selectedChat!"
+				[title]="getChatTitle(selectedChat!)"
+				[isOpen]="true"
+				[isMinimizable]="false"
+				[userId]="userId()"
+				(close)="closeSelectedChat()"
+				(messageSend)="onSend($event)"
+			></app-chat-window>
+		} @else {
+			<div class="no-selection">
+				<div class="icon">💬</div>
+				<p>Select a chat to start messaging</p>
+			</div>
+		}
+	</div>
+</div>

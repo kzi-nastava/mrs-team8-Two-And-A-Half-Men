@@ -79,10 +79,12 @@ public class SupportChatService implements ISupportChatService {
                 .status(chat.getStatus().toString())
                 .build();
 
-        Message lastMessage = messageRepository.findLastMessageByChatId(chat.getId());
-        if (lastMessage != null) {
-            dto.setLastMessage(messageToDto(lastMessage));
-        }
+        List<Message> messages = messageRepository.findByChatIdOrderByTimestamp(chat.getId());
+//        Message lastMessage = messageRepository.findLastMessageByChatId(chat.getId());
+//        if (lastMessage != null) {
+//            dto.setLastMessage(messageToDto(lastMessage));
+//        }
+        dto.setMessages(messages.stream().map(MessageDTO::new).toList());
 
         return dto;
     }

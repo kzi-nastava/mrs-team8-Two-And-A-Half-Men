@@ -87,9 +87,8 @@ public class MessageService implements IMessageService {
     }
 
     private void broadcastMessage(SupportChat chat, MessageDTO messageDTO) {
-        messagingTemplate.convertAndSendToUser(
-                chat.getUser().getId().toString(),
-                "/queue/support",
+        messagingTemplate.convertAndSend(
+                "/topic/chat/" + chat.getUser().getId(),
                 messageDTO
         );
 
@@ -115,6 +114,7 @@ public class MessageService implements IMessageService {
         return MessageDTO.builder()
                 .id(message.getId())
                 .chatId(message.getChat().getId())
+                .content(message.getContent())
                 .senderId(message.getSender().getId())
                 .senderType(message.getSender().getRole().toString())
                 .adminRead(message.isAdminRead())

@@ -11,7 +11,6 @@ import com.project.backend.service.IHistoryService;
 import com.project.backend.service.IRideService;
 import com.project.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +35,18 @@ public class RideQueryController {
         return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('DRIVER')")
+    public ResponseEntity<?> getMyActiveRide() {
+        AppUser currentUser = authUtils.getCurrentUser();
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        List<RideResponseDTO> activeRides = rideService.getMyRides(currentUser);
+        return ResponseEntity.ok(activeRides);
+    }
+
     @GetMapping("/history")
     public ResponseEntity<PagedResponse<RideResponseDTO>> getRideHistory(
             @ModelAttribute RideFilter filter
@@ -49,7 +60,6 @@ public class RideQueryController {
         return ResponseEntity.ok(history);
     }
 
-    // TODO
     @GetMapping("/active")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<RideResponseDTO>> getActiveRides(
@@ -60,7 +70,6 @@ public class RideQueryController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    // TODO
     @GetMapping("/booked")
     public ResponseEntity<?> getBookedRides() {
         Customer user = authUtils.getCurrentCustomer();

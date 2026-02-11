@@ -52,6 +52,18 @@
 			<h2>Currently active rides</h2>
 		</div>
 
+		<div class="chat-input-container" style="margin-bottom: 1rem;" appBox>
+			<input
+				type="text"
+				class="chat-input"
+				placeholder="Type text..."
+				[value]="driverNameFilter()"
+				(input)="driverNameFilter.set($any($event.target).value)"
+				(keyup.enter)="loadRides()"
+			/>
+			<button class="send-btn" (click)="loadRides()">Filter</button>
+		</div>
+
 		<app-rides-list
 			[rides]="rides()"
 			[config]="rideConfig"

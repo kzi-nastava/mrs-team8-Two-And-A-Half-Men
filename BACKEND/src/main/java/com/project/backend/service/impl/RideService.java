@@ -1,7 +1,6 @@
 package com.project.backend.service.impl;
 
 import com.project.backend.DTO.Ride.*;
-import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
@@ -24,13 +23,13 @@ import com.project.backend.service.IRideService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -394,6 +393,13 @@ public class RideService implements IRideService {
                 .startTime(ride.getStartTime() != null ? ride.getStartTime() : ride.getScheduledTime() != null ? ride.getScheduledTime() : null)
                 .build();
     }
+
+    @Override
+    public List<RideResponseDTO> getMyRides(AppUser currentUser) {
+        return rideRepository.findByDriverAndStatusIn(currentUser, List.of(RideStatus.ACCEPTED, RideStatus.ACTIVE))
+                .stream().map(rideMapper::convertToRideResponseDTO).toList();
+    }
+
     public List<RideResponseDTO> getActiveRides(
             String driverName
     ) {

@@ -8,10 +8,17 @@ import { PopupsService } from '@shared/services/popups/popups.service';
 import { RideConfig } from '@shared/models/ride-config';
 import { AdminHomepageService } from '@features/admin/home/services/admin-homepage.service';
 import { RidesListComponent } from '@shared/components/rides/ride-list/ride-list.component';
+import { BoxDirective } from '@shared/directives/box/box.directive';
 
 @Component({
 	selector: 'app-driver-home-page',
-	imports: [TabContentComponent, TabNavigationComponent, TabIconDirective, RidesListComponent],
+	imports: [
+		TabContentComponent,
+		TabNavigationComponent,
+		TabIconDirective,
+		RidesListComponent,
+		BoxDirective,
+	],
 	templateUrl: './admin-home-page.component.html',
 	styleUrl: './admin-home-page.component.css',
 })
@@ -27,6 +34,7 @@ export class AdminHomePageComponent {
 	}
 
 	public rides = signal<Ride[]>([]);
+	public driverNameFilter = signal<string>('');
 	public loading = signal<boolean>(false);
 	public adminHomepageService = inject(AdminHomepageService);
 	private popupsService = inject(PopupsService);
@@ -49,7 +57,7 @@ export class AdminHomePageComponent {
 	}
 	loadRides(): void {
 		this.loading.set(true);
-		this.adminHomepageService.loadActiveRides().subscribe({
+		this.adminHomepageService.loadActiveRides(this.driverNameFilter()).subscribe({
 			next: (rides) => {
 				this.rides.set(rides);
 				this.loading.set(false);

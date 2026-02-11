@@ -1,2 +1,12 @@
-<h1>ADD Driver's future rides here</h1>
-<p>And maybe a section/tab for him to see scheduled rides and to take some on himself</p>
+<div class="ride-active-container">
+	<div class="active-header">
+		<h2>Your rides</h2>
+	</div>
+
+	<app-rides-list
+		[rides]="rides()"
+		[config]="rideConfig"
+		[loading]="loading()"
+		(rideClick)="onRideClick($event)"
+	/>
+</div>

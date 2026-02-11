@@ -49,4 +49,5 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
         """)
     Iterable<Ride> findFutureScheduledRides();
 
+    List<Ride> findByDriverAndStatusIn(AppUser currentUser, List<RideStatus> accepted);
 }

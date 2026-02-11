@@ -38,4 +38,6 @@ public interface IRideService {
     List<RideResponseDTO> getActiveRides(String driverName);
 
     RideTrackingDTO getRideTrackingById(Long id, AppUser user);
+
+    List<RideResponseDTO> getMyRides(AppUser currentUser);
 }

@@ -7,10 +7,10 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
 	providedIn: 'root',
 })
-export class AdminHomepageService {
+export class DriverHomepageService {
 	private http = inject(HttpClient);
 
-	loadActiveRides(driverName: string): Observable<Ride[]> {
-		return this.http.get<Ride[]>(`api/${environment.apiVersion}/rides/active`, {params: { name: driverName }});
+	loadActiveRides(): Observable<Ride[]> {
+		return this.http.get<Ride[]>(`api/${environment.apiVersion}/rides/my`);
 	}
 }

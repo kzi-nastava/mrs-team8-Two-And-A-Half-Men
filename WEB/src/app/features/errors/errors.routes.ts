@@ -8,4 +8,11 @@ export const ERROR_ROUTES: Routes = [
 				(m) => m.NotFoundPageComponent,
 			),
 	},
+	{
+		path: 'unauthorized',
+		loadComponent: () =>
+			import('./pages/unauthenticated-page/unauthenticated-page.component').then(
+				(m) => m.UnauthenticatedPageComponent,
+			),
+	},
 ];

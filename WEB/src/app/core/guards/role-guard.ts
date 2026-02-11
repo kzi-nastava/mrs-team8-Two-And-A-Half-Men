@@ -1,6 +1,7 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '@core/services/auth.service';
+import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 
 // Factory function to create a guard for specific roles
 export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
@@ -13,19 +14,17 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
 			return router.createUrlTree(['/login']);
 		}
 
-		console.log("role guard");
+		console.log('role guard');
 		const hasRole = allowedRoles.includes(user.role);
 		if (hasRole) return true;
 
 		switch (user.role) {
-			case 'ADMIN':
+			case LoggedInUserRole.ADMIN:
 				return router.createUrlTree(['/admin']);
-			case 'DRIVER':
+			case LoggedInUserRole.DRIVER:
 				return router.createUrlTree(['/driver']);
-			case 'USER':
+			case LoggedInUserRole.CUSTOMER:
 				return router.createUrlTree(['/home']);
 		}
-		// redirect to
-		return router.createUrlTree(['/']);
 	};
 };

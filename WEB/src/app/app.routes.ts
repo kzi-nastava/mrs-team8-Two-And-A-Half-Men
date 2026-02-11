@@ -8,14 +8,27 @@ export const routes: Routes = [
 			import('@features/unregistered/unregistered.routes').then((m) => m.UNREGISTERED_ROUTES),
 	},
 	{
+		path: 'history',
+		loadChildren: () =>
+			import('@features/history/history.routes').then((m) => m.HISTORY_ROUTES),
+	},
+	{
 		path: 'profile',
 		loadChildren: () =>
 			import('@features/profile/profile.routes').then((m) => m.PROFILE_ROUTES),
 	},
 	{
-		path: 'chat',
+		path: 'users',
+		loadChildren: () => import('@features/users/users.routes').then((m) => m.USERS_ROUTES),
+	},
+	{
+		path: 'settings',
 		loadChildren: () =>
-			import('@features/chat/chat.routes').then((m) => m.CHAT_ROUTES),
+			import('@features/settings/settings.routes').then((m) => m.SETTINGS_ROUTES),
+	},
+	{
+		path: 'chat',
+		loadChildren: () => import('@features/chat/chat.routes').then((m) => m.CHAT_ROUTES),
 	},
 	{
 		path: 'reports',
@@ -28,7 +41,8 @@ export const routes: Routes = [
 	},
 	{
 		path: '',
-		loadChildren: () => import('@features/customer/customer.routes').then((m) => m.CUSTOMER_ROUTES),
+		loadChildren: () =>
+			import('@features/customer/customer.routes').then((m) => m.CUSTOMER_ROUTES),
 	},
 	{
 		path: 'error',
@@ -37,6 +51,10 @@ export const routes: Routes = [
 	{
 		path: 'admin',
 		loadChildren: () => import('@features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
+	},
+	{
+		path: 'rides',
+		loadChildren: () => import('@features/rides/rides.routes').then((m) => m.RIDES_ROUTES),
 	},
 	{ path: '**', redirectTo: '/error/not-found' },
 ];

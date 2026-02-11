@@ -6,6 +6,7 @@ import {
 	PAGE_SIZE_OPTIONS,
 	SORT_OPTIONS_BY_ROLE,
 	SortField,
+	RideConfig,
 } from '@shared/models/ride-config';
 import { HistoryService } from '@features/history/services/history.service';
 import { LoggedInUserRole } from '@core/models/loggedInUser.model';
@@ -14,6 +15,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { RidesListComponent, RidesListConfig } from '@shared/components/rides/ride-list/ride-list.component';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
 	selector: 'app-history',
@@ -25,10 +27,9 @@ import { RidesListComponent, RidesListConfig } from '@shared/components/rides/ri
 export class HistoryComponent {
 	private route = inject(ActivatedRoute);
 	private router = inject(Router);
+	private authService = inject(AuthService);
 
-	userRole = toSignal(this.route.data.pipe(map((data) => data['userRole'] as LoggedInUserRole)), {
-		requireSync: true,
-	});
+	userRole = computed(() => this.authService!.user()!.role)
 
 	historyService = inject(HistoryService);
 
@@ -73,7 +74,7 @@ export class HistoryComponent {
 
 	onRideClick(ride: Ride) {
 		this.historyService.selectedRide.set(ride);
-		this.router.navigate([ride.id], { relativeTo: this.route }).then();
+		this.router.navigate(["rides", ride.id]).then();
 	}
 
 	onReorderNow(ride: Ride) {

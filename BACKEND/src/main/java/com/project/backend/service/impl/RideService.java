@@ -278,6 +278,7 @@ public class RideService implements IRideService {
     public CostTimeDTO estimateRide(RideBookingParametersDTO rideData) {
         FindDriverDTO driver = driverMatchingService.findBestDriver(
                 FindDriverFilter.builder()
+                        .numberOfPassengers(rideData.getPassengers() != null ? rideData.getPassengers().size() + 1 : 1)
                         .additionalServicesIds(rideData.getAdditionalServicesIds())
                         .vehicleTypeId(rideData.getVehicleTypeId())
                         .latitude(rideData.getRoute().get(0).getLatitude())

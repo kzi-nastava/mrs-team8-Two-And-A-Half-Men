@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, effect } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouteForm } from '@shared/components/forms/route-form/route-form';
 import { MapComponent } from '@shared/components/map/map.component';
@@ -10,15 +10,14 @@ import { PopupsService } from '@shared/services/popups/popups.service';
 import { Router } from '@angular/router';
 import { MAP_CONFIGS } from '@shared/components/map/map.config';
 import {
-	TabNavigationComponent,
 	TabItem,
+	TabNavigationComponent,
 } from '@shared/components/tabs/tab-navigation/tab-navigation.component';
 import { TabIconDirective } from '@shared/directives/tab-icon/tab-icon.directive';
 import { TabContentComponent } from '@shared/components/tabs/tab-content/tab-content.component';
 import { VehiclesService } from '@shared/services/vehicles/vehicles.service';
 import { AdditionalService, VehicleType } from '@shared/models/vehicles.model';
 import { FormsModule } from '@angular/forms';
-import { BoxDirective } from '@shared/directives/box/box.directive';
 import { FavouriteRoutesComponent } from '@features/customer/home/components/favourite-routes/favourite-routes.component';
 import { FavouriteRoute } from '@shared/models/favourite-route.model';
 import { FavouriteRoutesService } from '@shared/services/routes/favourite-routes.service';
@@ -217,43 +216,49 @@ export class CustomerHomePageComponent implements OnInit {
 
 		const request = this.getBookingRequest();
 
+		const callBookAPI = () => {
+			this.rideService.createRide(request).subscribe({
+				next: (response) => {
+					this.popupsService.success(
+						'Ride booked',
+						'Your ride has been successfully booked!',
+						{
+							onConfirm: () => this.router.navigate(['rides', response.id]).then(),
+						},
+					);
+					this.sharedLocationService.clearLocations();
+					this.resetForm();
+				},
+				error: (err) => {
+					this.popupsService.error(
+						'Booking failed',
+						err.error?.message ||
+							'An error occurred while booking your ride. Please try again.',
+					);
+				},
+			});
+		};
+
+		if (request.scheduledTime) {
+			// If the ride being booked for a specific time, we don't need to get time estimate
+			callBookAPI();
+			return;
+		}
 		this.rideService.estimateRideTime(request).subscribe({
-			next: ({time}) => {
+			next: ({ time }) => {
 				this.popupsService.confirm(
 					'Confirm Ride',
 					`The estimated time for your ride is ${Math.ceil(time)} minutes. Do you want to proceed with booking?`,
-					() => {
-						this.rideService.createRide(request).subscribe({
-							next: (response) => {
-								this.popupsService.success(
-									'Ride booked',
-									'Your ride has been successfully booked!',
-									{
-										onConfirm: () =>
-											this.router.navigate(['rides', response.id]).then(),
-									},
-								);
-								this.sharedLocationService.clearLocations();
-								this.resetForm();
-							},
-							error: (err) => {
-								this.popupsService.error(
-									'Booking failed',
-									err.error?.message ||
-										'An error occurred while booking your ride. Please try again.',
-								);
-							},
-						});
-					},
+					callBookAPI
 				);
 			},
 			error: (err) => {
 				this.popupsService.error(
 					'Estimation Failed',
-					err.error?.message ||
+					err.error?.error ||
 						'An error occurred while estimating your ride time. Please try again.',
 				);
-			}
+			},
 		});
 	}
 
@@ -263,8 +268,7 @@ export class CustomerHomePageComponent implements OnInit {
 		if (this.selectedRoute) {
 			request.routeId = this.selectedRoute.id;
 		} else {
-			request.route = this.sharedLocationService.locations()
-				.map((location) => ({
+			request.route = this.sharedLocationService.locations().map((location) => ({
 				address: location.display_name,
 				latitude: parseFloat(location.lat),
 				longitude: parseFloat(location.lon),
@@ -296,7 +300,10 @@ export class CustomerHomePageComponent implements OnInit {
 
 	getEstimate(): void {
 		if (this.sharedLocationService.locations().length < 2) {
-			this.popupsService.error('Invalid Route', 'Please select at least a start and end location to get an estimate');
+			this.popupsService.error(
+				'Invalid Route',
+				'Please select at least a start and end location to get an estimate',
+			);
 			return;
 		}
 		const request = this.getBookingRequest();
@@ -313,8 +320,8 @@ export class CustomerHomePageComponent implements OnInit {
 					err.error?.message ||
 						'An error occurred while estimating your ride time. Please try again.',
 				);
-			}
-		})
+			},
+		});
 	}
 
 	protected selectFavouriteRoute(routeId: number) {

@@ -5,7 +5,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Ride, RideStatus } from '@shared/models/ride.model';
 import { map } from 'rxjs/operators';
 import { PopupsService } from '@shared/services/popups/popups.service';
-import { RIDE_HISTORY_CONFIGS } from '@shared/models/ride-config';
+import { RIDE_HISTORY_CONFIGS } from '@features/history/models/ride-config';
 import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 import { MapComponent } from '@shared/components/map/map.component';
 import { MAP_CONFIGS } from '@shared/components/map/map.config';

@@ -5,7 +5,7 @@ import { TabItem, TabNavigationComponent } from '@shared/components/tabs/tab-nav
 import { TabIconDirective } from '@shared/directives/tab-icon/tab-icon.directive';
 import { Ride } from '@shared/models/ride.model';
 import { PopupsService } from '@shared/services/popups/popups.service';
-import { RideConfig } from '@shared/models/ride-config';
+import { RideConfig } from '@features/history/models/ride-config';
 import { AdminHomepageService } from '@features/admin/home/services/admin-homepage.service';
 import { RidesListComponent } from '@shared/components/rides/ride-list/ride-list.component';
 import { BoxDirective } from '@shared/directives/box/box.directive';

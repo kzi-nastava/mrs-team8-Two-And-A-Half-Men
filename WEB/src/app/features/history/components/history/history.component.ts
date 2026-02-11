@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, inject, computed, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -6,15 +6,14 @@ import {
 	PAGE_SIZE_OPTIONS,
 	SORT_OPTIONS_BY_ROLE,
 	SortField,
-	RideConfig,
-} from '@shared/models/ride-config';
+} from '@features/history/models/ride-config';
 import { HistoryService } from '@features/history/services/history.service';
-import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 import { Ride } from '@shared/models/ride.model';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { RidesListComponent, RidesListConfig } from '@shared/components/rides/ride-list/ride-list.component';
+import { Router } from '@angular/router';
+import {
+	RidesListComponent,
+	RidesListConfig,
+} from '@shared/components/rides/ride-list/ride-list.component';
 import { AuthService } from '@core/services/auth.service';
 
 @Component({
@@ -24,12 +23,11 @@ import { AuthService } from '@core/services/auth.service';
 	templateUrl: './history.component.html',
 	styleUrl: './history.component.css',
 })
-export class HistoryComponent {
-	private route = inject(ActivatedRoute);
+export class HistoryComponent implements OnInit {
 	private router = inject(Router);
 	private authService = inject(AuthService);
 
-	userRole = computed(() => this.authService!.user()!.role)
+	userRole = computed(() => this.authService!.user()!.role);
 
 	historyService = inject(HistoryService);
 
@@ -74,7 +72,7 @@ export class HistoryComponent {
 
 	onRideClick(ride: Ride) {
 		this.historyService.selectedRide.set(ride);
-		this.router.navigate(["rides", ride.id]).then();
+		this.router.navigate(['rides', ride.id]).then();
 	}
 
 	onReorderNow(ride: Ride) {

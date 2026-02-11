@@ -4,7 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '@environments/environment';
 import { Ride } from '@shared//models/ride.model';
 import { PopupsService } from '@shared/services/popups/popups.service';
-import { SortDirection, SortField } from '@shared/models/ride-config';
+import { SortDirection, SortField } from '@features/history/models/ride-config';
 
 @Injectable({
 	providedIn: 'root',

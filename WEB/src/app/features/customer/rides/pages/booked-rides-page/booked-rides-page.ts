@@ -4,7 +4,7 @@ import { CustomerRideService } from '../../services/customer-ride-service';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RidesListComponent } from '@shared/components/rides/ride-list/ride-list.component';
-import { RideConfig } from '@shared/models/ride-config';
+import { RideConfig } from '@features/history/models/ride-config';
 import { Ride } from '@shared/models/ride.model';
 import { PopupsService } from '@shared/services/popups/popups.service';
 

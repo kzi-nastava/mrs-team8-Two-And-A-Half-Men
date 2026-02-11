@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Ride } from '@shared/models/ride.model';
 import { PopupsService } from '@shared/services/popups/popups.service';
-import { RideConfig } from '@shared/models/ride-config';
+import { RideConfig } from '@features/history/models/ride-config';
 import { RidesListComponent } from '@shared/components/rides/ride-list/ride-list.component';
 import { DriverHomepageService } from '@features/driver/home/services/driver-homepage.service';
 

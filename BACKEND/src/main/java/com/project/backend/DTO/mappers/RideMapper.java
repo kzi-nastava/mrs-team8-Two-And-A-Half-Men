@@ -5,21 +5,25 @@ import com.project.backend.DTO.PassengerDTO;
 import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.geolocation.coordinates.Coordinates;
 import com.project.backend.geolocation.locations.LocationTransformer;
-import com.project.backend.models.Ride;
 import com.project.backend.models.AdditionalService;
+import com.project.backend.models.Ride;
+import com.project.backend.models.Route;
 import com.project.backend.repositories.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
 public class RideMapper {
     private final LocationTransformer locationTransformer;
     private final LocationRepository locationRepository;
-
     public RideResponseDTO convertToRideResponseDTO(Ride ride) {
+        return this.convertToRideResponseDTO(ride, null);
+    }
+    public RideResponseDTO convertToRideResponseDTO(Ride ride, Set<Route> favourites) {
 
         // Additional services
         List<String> additionalServices = ride.getAdditionalServices()
@@ -56,7 +60,6 @@ public class RideMapper {
                                 .build()
                 ).toList();
 
-
         return RideResponseDTO.builder()
                 .id(ride.getId())
 
@@ -66,6 +69,7 @@ public class RideMapper {
 
                 .driverName(ride.getDriver() != null ? ride.getDriver().firstNameAndLastName() : "No driver assigned")
                 .rideOwnerName(ride.getRideOwner().firstNameAndLastName())
+                .rideOwnerId(ride.getRideOwner().getId())
 
                 .status(ride.getStatus())
                 .path(ride.getPath())
@@ -76,6 +80,9 @@ public class RideMapper {
                 .additionalServices(additionalServices)
                 .passengers(passengers)
                 .locations(locations)
+                .routeId(ride.getRoute().getId())
+
+                .isFavourite(favourites != null && favourites.contains(ride.getRoute()))
 
                 .build();
     }

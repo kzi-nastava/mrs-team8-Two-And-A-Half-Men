@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -55,15 +56,25 @@ public class RideService implements IRideService {
     private final SimpMessagingTemplate messagingTemplate;
 
     private final ResolvePassengerService resolvePassengerService;
+    private final AppUserRepository appUserRepository;
 
-    public RideResponseDTO getRideById(Long id) {
+    public RideResponseDTO getRideById(Long id, Long currentUserId) {
         Ride ride = rideRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Ride with id " + id + " not found"
                         ));
 
-        return rideMapper.convertToRideResponseDTO(ride);
+        Set<Route> favourites = null;
+        Customer customer = null;
+        if (currentUserId != null) {
+            customer = customerRepository.findById(currentUserId).orElse(null);
+        }
+        if (customer != null) {
+            favourites = customer.getFavoriteRoutes();
+        }
+
+        return rideMapper.convertToRideResponseDTO(ride, favourites);
     }
 
 

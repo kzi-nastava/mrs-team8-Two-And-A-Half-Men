@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface IRideService {
-    RideResponseDTO getRideById(Long id);
+    RideResponseDTO getRideById(Long id, Long currentUserId);
 
     Map<String, Object> startARide(String id, Long id1);
 

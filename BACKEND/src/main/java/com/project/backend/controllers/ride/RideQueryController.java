@@ -31,7 +31,8 @@ public class RideQueryController {
     public ResponseEntity<RideResponseDTO> getRide(
             @PathVariable Long id
     ) {
-        RideResponseDTO ride = rideService.getRideById(id);
+        AppUser currentUser = authUtils.getCurrentUser();
+        RideResponseDTO ride = rideService.getRideById(id, currentUser != null ? currentUser.getId() : null);
         return ResponseEntity.status(HttpStatus.OK).body(ride);
     }
 

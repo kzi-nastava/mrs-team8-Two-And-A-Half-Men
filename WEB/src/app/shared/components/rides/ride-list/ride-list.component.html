@@ -105,18 +105,6 @@
 						</div>
 					}
 				</div>
-
-				<!-- ACTIONS -->
-				@if (config().showReorderOption && ride.status === RideStatus.FINISHED) {
-					<div class="ride-actions">
-						<button
-							class="btn-reorder"
-							(click)="onReorderClick($event, ride)"
-						>
-							Book now
-						</button>
-					</div>
-				}
 			</div>
 		}
 	</div>

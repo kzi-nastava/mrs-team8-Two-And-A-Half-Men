@@ -1,20 +1,19 @@
 <div class="ride-details-container">
 	<div class="details-header">
-		<button class="btn-back" (click)="goBack()">
-			← Back to History
-		</button>
-		<h2>Ride Details</h2>
-		<div class="header-actions">
-			@if (config().showReorderOption && !loadingDetails() && ride()) {
+		<div class="header-group group-left">
+			@if (canGoBack()) {
+				<button appButton (click)="goBack()">
+					← Back
+				</button>
+			}
+			@if (actionsConfig().favourite && !loadingDetails() && ride()) {
 				<button
-					class="btn-favorite"
-					[class.is-favorite]="ride()!.isFavorite"
+					appButton
+					class="btn"
+					[class.is-favorite]="ride()!.favourite"
 					(click)="toggleFavorite()"
-					[disabled]="togglingFavorite()"
 				>
-					@if (togglingFavorite()) {
-						⏳ Saving...
-					} @else if (ride()!.isFavorite) {
+					@if (ride()!.favourite) {
 						⭐ Favorite Route
 					} @else {
 						☆ Mark as Favorite
@@ -22,7 +21,7 @@
 				</button>
 			}
 
-			@if (config().showRateButton && ride()
+			@if (actionsConfig().rate && ride()
 			&& (ride()!.status === RideStatus.FINISHED
 				|| ride()!.status === RideStatus.PANICKED
 				|| ride()!.status === RideStatus.INTERRUPTED)) {
@@ -31,6 +30,67 @@
 					(click)="openRatingPopup()"
 				>
 					⭐ Rate ride
+				</button>
+			}
+
+			@if (actionsConfig().rebook && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="rebookRide()"
+				>
+					Book again
+				</button>
+			}
+
+
+			@if (actionsConfig().note && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="leaveANote()"
+				>
+					Leave a note
+				</button>
+			}
+			@if (actionsConfig().cancel && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="cancelRide()"
+				>
+					Cancel
+				</button>
+			}
+			@if (actionsConfig().start && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="startRide()"
+				>
+					Start Ride
+				</button>
+			}
+			@if (actionsConfig().end && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="endRide()"
+				>
+					End Ride
+				</button>
+			}
+		</div>
+
+		<div class="header-group group-right">
+
+			@if (actionsConfig().panic && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn btn-panic"
+					(click)="panic()"
+				>
+					PANIC!
 				</button>
 			}
 		</div>
@@ -151,19 +211,21 @@
 						<span class="value">{{ ride()!.rideOwnerName }}</span>
 					</div>
 
-					<div class="info-item full-width">
-						<span class="label">Passengers:</span>
-						<div class="passengers-list">
-							@for (passenger of ride()!.passengers; track passenger.email) {
-								<span class="passenger-badge">{{ passenger.email }}</span>
-							}
+					@if (ride() && ride()!.passengers.length > 0) {
+						<div class="info-item full-width">
+							<span class="label">Passengers:</span>
+							<div class="passengers-list">
+								@for (passenger of ride()!.passengers; track passenger.email) {
+									<span class="passenger-badge">{{ passenger.email }}</span>
+								}
+							</div>
 						</div>
-					</div>
+					}
 				</div>
 			</div>
 
 			<!-- Passenger Ratings & Comments (only for roles with showRatings) -->
-			@if (config().showRatings && ride()!.passengers.length > 0) {
+			@if (ride()!.passengers.length > 0) {
 				<div class="info-card">
 					<h3>Passenger Reviews</h3>
 
@@ -198,7 +260,7 @@
 									</div>
 								}
 
-								@if (passenger.inconsistencyNote && config().showInconsistencyReports) {
+								@if (passenger.inconsistencyNote) {
 									<div class="inconsistency-note">
 										<span class="inconsistency-label">⚠️ Inconsistency Report:</span>
 										<p class="inconsistency-text">{{ passenger.inconsistencyNote }}</p>

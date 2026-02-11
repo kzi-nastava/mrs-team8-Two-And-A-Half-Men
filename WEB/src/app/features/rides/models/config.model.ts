@@ -1,3 +1,5 @@
+import { RideStatus } from '@shared/models/ride.model';
+
 export interface RideActions {
 	cancel: boolean;
 	favourite: boolean;
@@ -7,4 +9,323 @@ export interface RideActions {
 	rebook: boolean;
 	start: boolean;
 	end: boolean;
+}
+
+
+
+const PASSENGER_ACTIONS = {
+	[RideStatus.PENDING]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.ACCEPTED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.ACTIVE]: {
+		cancel: false,
+		favourite: false,
+		panic: true,
+		note: true,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.FINISHED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: true,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.INTERRUPTED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: true,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.PANICKED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: true,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.CANCELLED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+};
+
+const RIDE_OWNER_ACTIONS = {
+	[RideStatus.PENDING]: {
+		cancel: true,
+		favourite: true,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.ACCEPTED]: {
+		cancel: true,
+		favourite: true,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.ACTIVE]: {
+		cancel: false,
+		favourite: true,
+		panic: true,
+		note: true,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.FINISHED]: {
+		cancel: false,
+		favourite: true,
+		panic: false,
+		note: false,
+		rate: true,
+		rebook: true,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.INTERRUPTED]: {
+		cancel: false,
+		favourite: true,
+		panic: false,
+		note: false,
+		rate: true,
+		rebook: true,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.PANICKED]: {
+		cancel: false,
+		favourite: true,
+		panic: false,
+		note: false,
+		rate: true,
+		rebook: true,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.CANCELLED]: {
+		cancel: false,
+		favourite: true,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: true,
+		start: false,
+		end: false,
+	} as RideActions,
+};
+
+const DRIVER_ACTIONS = {
+	[RideStatus.PENDING]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.ACCEPTED]: {
+		cancel: true,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: true,
+		end: false,
+	} as RideActions,
+	[RideStatus.ACTIVE]: {
+		cancel: false,
+		favourite: false,
+		panic: true,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: true,
+	} as RideActions,
+	[RideStatus.FINISHED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.INTERRUPTED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.PANICKED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.CANCELLED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+};
+
+const ADMIN_ACTIONS = {
+	[RideStatus.PENDING]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.ACCEPTED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.ACTIVE]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.FINISHED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.INTERRUPTED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.PANICKED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+	[RideStatus.CANCELLED]: {
+		cancel: false,
+		favourite: false,
+		panic: false,
+		note: false,
+		rate: false,
+		rebook: false,
+		start: false,
+		end: false,
+	} as RideActions,
+};
+
+export const NO_ACTIONS = {
+	cancel: false,
+	favourite: false,
+	panic: false,
+	note: false,
+	rate: false,
+	rebook: false,
+	start: false,
+	end: false,
+} as RideActions;
+
+export const ADMIN = Symbol();
+export const DRIVER = Symbol();
+export const RIDE_OWNER = Symbol();
+export const PASSENGER = Symbol();
+
+export type ACTIONS_CONFIG = { [key: symbol]: { [key: string]: RideActions } }
+
+export const ACTIONS: ACTIONS_CONFIG = {
+	[ADMIN]: ADMIN_ACTIONS,
+	[DRIVER]: DRIVER_ACTIONS,
+	[RIDE_OWNER]: RIDE_OWNER_ACTIONS,
+	[PASSENGER]: PASSENGER_ACTIONS,
 }

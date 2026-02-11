@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,6 +9,7 @@ import { EstimateService } from './service/estimate-service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { NominatimService } from '@shared/services/locations/nominatim-service';
+import { PopupsService } from '@shared/services/popups/popups.service';
 
 @Component({
 	selector: 'app-estimate-form',
@@ -30,6 +31,7 @@ export class EstimateForm {
 
 	private startQuerySubject = new Subject<string>();
 	private endQuerySubject = new Subject<string>();
+	private popupsService = inject(PopupsService);
 
 	constructor(
 		private fb: FormBuilder,
@@ -162,12 +164,21 @@ export class EstimateForm {
 			const endpointLocation = startEnd[1];
 			console.log('Estimate Form Submitted', { startpoint, endpoint });
 
-			this.estimateService
-				.estimateTime(startpointLocation, endpointLocation)
-				.subscribe((estimatedTime) => {
-					let timeInMinutes = Math.round(estimatedTime * 100) / 100;
-					this.estimatedTime.set(timeInMinutes);
-				});
+			this.estimateService.estimateTime(startpointLocation, endpointLocation).subscribe({
+				next: (response) => {
+					this.popupsService.success(
+						'Estimated Time',
+						`The estimated time for your ride is ${Math.ceil(response.time)} minutes.`,
+					);
+				},
+				error: (err) => {
+					this.popupsService.error(
+						'Estimation Failed',
+						err.error?.error ||
+							'An error occurred while estimating your ride time. Please try again.',
+					);
+				},
+			});
 		} else {
 			console.log('Form is invalid');
 		}

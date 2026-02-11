@@ -8,6 +8,11 @@ export const routes: Routes = [
 			import('@features/unregistered/unregistered.routes').then((m) => m.UNREGISTERED_ROUTES),
 	},
 	{
+		path: '',
+		loadChildren: () =>
+			import('@features/customer/customer.routes').then((m) => m.CUSTOMER_ROUTES),
+	},
+	{
 		path: 'history',
 		loadChildren: () =>
 			import('@features/history/history.routes').then((m) => m.HISTORY_ROUTES),
@@ -38,11 +43,6 @@ export const routes: Routes = [
 	{
 		path: 'driver',
 		loadChildren: () => import('@features/driver/driver.routes').then((m) => m.DRIVER_ROUTES),
-	},
-	{
-		path: '',
-		loadChildren: () =>
-			import('@features/customer/customer.routes').then((m) => m.CUSTOMER_ROUTES),
 	},
 	{
 		path: 'error',

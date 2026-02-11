@@ -9,7 +9,7 @@ import { environment } from '@environments/environment';
 export class EstimateService {
   constructor(private http: HttpClient) {}
 
-  estimateTime(start: NominatimResult, end: NominatimResult): Observable<number> {
+  estimateTime(start: NominatimResult, end: NominatimResult){
     const bookingParams = {
   routeId: null,
   route: [
@@ -19,10 +19,7 @@ export class EstimateService {
     };
     console.log('Booking Params:', bookingParams);
 
-    return this.http.post<any>("/api/v1/rides/estimates", bookingParams)
-      .pipe(
-        map(response => response.time) // this is in minutes
-      );
+    return this.http.post<{time: number}>("/api/v1/rides/estimates", bookingParams);
   }
 
 

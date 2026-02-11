@@ -16,6 +16,7 @@ export interface Ride {
 
 	driverName: string;
 	rideOwnerName: string;
+	rideOwnerId: number;
 
 	status: RideStatus;
 	path: string;
@@ -26,8 +27,9 @@ export interface Ride {
 
 	additionalServices: string[];
 	locations: Location[];
+	routeId: number,
 	passengers: PassengerDetails[];
-	isFavorite?: boolean;
+	favourite?: boolean;
 }
 
 export interface Location {

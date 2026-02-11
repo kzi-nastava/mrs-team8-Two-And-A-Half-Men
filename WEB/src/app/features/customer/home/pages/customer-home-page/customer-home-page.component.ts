@@ -317,7 +317,7 @@ export class CustomerHomePageComponent implements OnInit {
 			error: (err) => {
 				this.popupsService.error(
 					'Estimation Failed',
-					err.error?.message ||
+					err.error?.error ||
 						'An error occurred while estimating your ride time. Please try again.',
 				);
 			},

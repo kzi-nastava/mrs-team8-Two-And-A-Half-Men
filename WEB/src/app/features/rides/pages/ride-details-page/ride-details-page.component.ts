@@ -5,18 +5,20 @@ import { CommonModule, Location } from '@angular/common';
 import { Ride, RideStatus } from '@shared/models/ride.model';
 import { map } from 'rxjs/operators';
 import { PopupsService } from '@shared/services/popups/popups.service';
-import { RIDE_HISTORY_CONFIGS } from '@features/history/models/ride-config';
-import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 import { MapComponent } from '@shared/components/map/map.component';
 import { MAP_CONFIGS } from '@shared/components/map/map.config';
 import { RatingFormComponent } from '@shared/components/forms/rating-form/rating-form.component';
 import { RideService } from '@features/rides/services/ride.service';
 import { AuthService } from '@core/services/auth.service';
+import { ConfigService } from '@features/rides/services/config.service';
+import { FavouriteRoutesService } from '@shared/services/routes/favourite-routes.service';
+import { ButtonDirective } from '@shared/directives/button/button.directive';
+import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
 
 @Component({
 	selector: 'app-history-ride-details-page',
 	standalone: true,
-	imports: [CommonModule, MapComponent, RatingFormComponent],
+	imports: [CommonModule, MapComponent, RatingFormComponent, ButtonDirective],
 	templateUrl: './ride-details-page.component.html',
 	styleUrl: './ride-details-page.component.css',
 })
@@ -24,19 +26,21 @@ export class RideDetailsComponent {
 	private route = inject(ActivatedRoute);
 	private location = inject(Location);
 	private router = inject(Router);
+	private actionsConfigService = inject(ConfigService);
+	private favouriteRoutesService = inject(FavouriteRoutesService);
+	private sharedLocationService = inject(SharedLocationsService);
 
 	rideService = inject(RideService);
 	popupService = inject(PopupsService);
 	private authService = inject(AuthService);
 
-
-	userRole = computed(() => this.authService!.user()!.role);
-
-	config = computed(() => RIDE_HISTORY_CONFIGS[this.userRole()]);
 	mapConfig = MAP_CONFIGS.HISTORY_VIEW;
 
+	actionsConfig = computed(() =>
+		this.actionsConfigService.getActions(this.authService.user(), this.ride()),
+	);
+
 	ride = signal<Ride | null>(null);
-	togglingFavorite = signal(false);
 	showRatingPopup = signal(false);
 	loadingDetails = signal<boolean>(true);
 
@@ -48,8 +52,6 @@ export class RideDetailsComponent {
 
 		return id && (!currentRide || currentRide.id !== +id);
 	});
-
-	protected readonly RideStatus = RideStatus;
 
 	constructor() {
 		effect(() => {
@@ -72,7 +74,7 @@ export class RideDetailsComponent {
 
 		if (isNaN(rideId)) {
 			this.router
-				.navigate(['errors', 'not-fountd'], {
+				.navigate(['errors', 'not-found'], {
 					queryParams: { msg: `Ride with id: ${this.rideId()} does not exist` },
 				})
 				.then();
@@ -100,10 +102,31 @@ export class RideDetailsComponent {
 	toggleFavorite() {
 		const ride = this.ride();
 		if (!ride) return;
-
-		this.togglingFavorite.set(true);
-
-		// this.rideService.toggleFavorite(ride.id);
+		if (ride.favourite) {
+			this.favouriteRoutesService.removeFromFavourites(ride.routeId).subscribe({
+				next: () => {
+					this.ride.update((r) => (r ? { ...r, favourite: false } : r));
+				},
+				error: (err) => {
+					this.popupService.error(
+						'Error',
+						'Failed to remove from favourites. Please try again later.',
+					);
+				},
+			});
+		} else {
+			this.favouriteRoutesService.addToFavourites(ride.routeId).subscribe({
+				next: () => {
+					this.ride.update((r) => (r ? { ...r, favourite: true } : r));
+				},
+				error: (err) => {
+					this.popupService.error(
+						'Error',
+						'Failed to add to favourites. Please try again later.',
+					);
+				},
+			});
+		}
 	}
 
 	openRatingPopup() {
@@ -121,6 +144,12 @@ export class RideDetailsComponent {
 		if (id) {
 			this.loadRideDetails(+id);
 		}
+	}
+
+	canGoBack(): boolean {
+		// history.length is a very general indicator and might not be reliable
+		// for complex Angular app history.
+		return window.history.length > 2;
 	}
 
 	goBack() {
@@ -162,5 +191,39 @@ export class RideDetailsComponent {
 			[RideStatus.PANICKED]: 'Panicked',
 		};
 		return statusTexts[status];
+	}
+
+	protected readonly RideStatus = RideStatus;
+
+	protected rebookRide() {
+		if (!this.ride()) return;
+		let newLocations = this.ride()!.locations.map((loc) => ({
+			lon: `${loc.longitude}`,
+			lat: `${loc.latitude}`,
+			display_name: loc.address,
+			place_id: 1,
+		})) as NominatimResult[];
+		this.sharedLocationService.locations.set(newLocations);
+		this.router.navigate(['/home']).then();
+	}
+
+	protected panic() {
+		alert('PANIC');
+	}
+
+	protected leaveANote() {
+		alert('LEAVE A NOTE');
+	}
+
+	protected cancelRide() {
+		alert('CANCEL');
+	}
+
+	protected startRide() {
+		alert('STARTING');
+	}
+
+	protected endRide() {
+		alert('ENDING');
 	}
 }

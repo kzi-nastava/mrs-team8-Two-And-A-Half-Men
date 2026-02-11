@@ -9,6 +9,7 @@ import com.project.backend.models.actor.JwtPassengerActor;
 import com.project.backend.models.actor.PassengerActor;
 import com.project.backend.service.IRatingService;
 import com.project.backend.service.IRideService;
+import com.project.backend.service.RideBookingService;
 import com.project.backend.service.impl.PanicService;
 import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ public class RideInteractionController {
     private final IRideService rideService;
     private final AuthUtils authUtils;
     private final PanicService panicService;
+    private final RideBookingService rideBookingService;
 
     @PostMapping
     public ResponseEntity<?> createRide(
@@ -39,7 +41,7 @@ public class RideInteractionController {
         }
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(rideService.createRide(user.getId(), body));
+                .body(rideBookingService.bookRide(user.getId(), body));
     }
 
     @PostMapping("/{id}/notes")

@@ -1,25 +1,21 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { CostTime } from '@shared/models/cost-time.model';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { StartRideResponse } from '@features/rides/models/api-responses.model';
-import { ActiveRide } from '@features/rides/models/active-ride.model';
 import { Ride } from '@shared/models/ride.model';
+import { NoteResponse } from '@features/rides/models/api-responses.model';
+import { RatingResponse } from '@shared/components/forms/rating-form/services/rating.service';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class RideService {
 	private http = inject(HttpClient);
 
-	getActiveRide() {
-		return this.http.get<ActiveRide>(`api/${environment.apiVersion}/rides/me/active`);
-	}
-
 	getRide(rideId: number): Observable<Ride> {
-		return this.http
-			.get<Ride>(`/api/${environment.apiVersion}/rides/${rideId}`);
+		return this.http.get<Ride>(`/api/${environment.apiVersion}/rides/${rideId}`);
 	}
 
 	cancelRide(
@@ -37,9 +33,61 @@ export class RideService {
 		return this.http.patch<CostTime>(`/api/${environment.apiVersion}/rides/${rideId}/end`, {});
 	}
 
+	finishRide(rideId: number, isInterrupted: boolean, isPayed: boolean): Observable<void> {
+		return this.http.patch<void>(`/api/${environment.apiVersion}/rides/${rideId}/finish`, {
+			isInterrupted,
+			isPayed,
+		});
+	}
+
 	startRide(rideId: number): Observable<StartRideResponse> {
 		return this.http.patch<StartRideResponse>(
 			`/api/${environment.apiVersion}/rides/${rideId}/start`,
+			{},
+		);
+	}
+
+	submitRating(
+		rideId: number,
+		ratingData: { driverRating: number; vehicleRating: number; comment: string },
+		accessToken: string | null,
+	): Observable<RatingResponse> {
+		let params = new HttpParams();
+		if (accessToken) {
+			params = params.set('accessToken', accessToken);
+		}
+
+		return this.http.post<RatingResponse>(
+			`/api/${environment.apiVersion}/rides/${rideId}/rating`,
+			ratingData,
+			{ params },
+		);
+	}
+
+	leaveNote(
+		rideId: number,
+		noteText: string,
+		accessToken: string | null,
+	): Observable<NoteResponse> {
+		let params = new HttpParams();
+
+		if (accessToken) {
+			params = params.set('accessToken', accessToken);
+		}
+
+		return this.http.post<NoteResponse>(
+			`/api/${environment.apiVersion}/rides/${rideId}/notes`,
+			{ noteText },
+			{ params },
+		);
+	}
+
+	triggerPanic(token: string | null): Observable<never> {
+		if (!token) {
+			return this.http.post<never>(`/api/${environment.apiVersion}/rides/panic`, {});
+		}
+		return this.http.post<never>(
+			`/api/${environment.apiVersion}/rides/panic?accessToken=${token}`,
 			{},
 		);
 	}

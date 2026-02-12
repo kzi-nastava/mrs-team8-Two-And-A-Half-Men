@@ -36,7 +36,7 @@ public class RideListener {
         var ownerName = ride.getRideOwner().getFirstName() + " " + ride.getRideOwner().getLastName();
         var driverName = ride.getDriver().firstNameAndLastName();
         var rideStartDate = ride.getStartTime().toLocalDate().toString();
-        var url = frontendUrl + "/rides/" + ride.getId() + "/rating?accessToken=";
+        var url = frontendUrl + "/rides/" + ride.getId() + "?view=rate&accessToken=";
         for (var passenger : ride.getPassengers()) {
             try {
                 emailService.sendEmail(
@@ -62,7 +62,7 @@ public class RideListener {
     public void linkedEmail(RideCreatedEvent event) {
         var ride = event.getRide();
         var ownerName = ride.getRideOwner().getFirstName() + " " + ride.getRideOwner().getLastName();
-        var url = frontendUrl + "/ride/" + ride.getId() + "/track?accessToken=";
+        var url = frontendUrl + "/rides/" + ride.getId() + "?accessToken=";
         for (var passenger : ride.getPassengers()) {
             try {
                 emailService.sendEmail(

@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule, Location } from '@angular/common';
@@ -7,13 +7,19 @@ import { map } from 'rxjs/operators';
 import { PopupsService } from '@shared/services/popups/popups.service';
 import { MapComponent } from '@shared/components/map/map.component';
 import { MAP_CONFIGS } from '@shared/components/map/map.config';
-import { RatingFormComponent } from '@shared/components/forms/rating-form/rating-form.component';
+import {
+	RatingFormComponent,
+	RatingFormData,
+} from '@shared/components/forms/rating-form/rating-form.component';
 import { RideService } from '@features/rides/services/ride.service';
 import { AuthService } from '@core/services/auth.service';
 import { ConfigService } from '@features/rides/services/config.service';
 import { FavouriteRoutesService } from '@shared/services/routes/favourite-routes.service';
 import { ButtonDirective } from '@shared/directives/button/button.directive';
 import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
+import Swal from 'sweetalert2';
+import { LoggedInUserRole } from '@core/models/loggedInUser.model';
+import { NominatimResult } from '@shared/models/nominatim-results.model';
 
 @Component({
 	selector: 'app-history-ride-details-page',
@@ -22,7 +28,7 @@ import { SharedLocationsService } from '@shared/services/locations/shared-locati
 	templateUrl: './ride-details-page.component.html',
 	styleUrl: './ride-details-page.component.css',
 })
-export class RideDetailsComponent {
+export class RideDetailsComponent implements OnInit {
 	private route = inject(ActivatedRoute);
 	private location = inject(Location);
 	private router = inject(Router);
@@ -43,6 +49,7 @@ export class RideDetailsComponent {
 	ride = signal<Ride | null>(null);
 	showRatingPopup = signal(false);
 	loadingDetails = signal<boolean>(true);
+	private shouldOpenRatingPopup = false;
 
 	private rideId = toSignal(this.route.paramMap.pipe(map((params) => params.get('id'))));
 
@@ -52,6 +59,7 @@ export class RideDetailsComponent {
 
 		return id && (!currentRide || currentRide.id !== +id);
 	});
+	private accessToken: string | null = null;
 
 	constructor() {
 		effect(() => {
@@ -67,6 +75,13 @@ export class RideDetailsComponent {
 			console.log('Current ride:', this.ride());
 			console.log('Route ID:', this.rideId());
 		});
+	}
+
+	ngOnInit() {
+		console.log('ON INIT');
+		console.log(this.route.snapshot.queryParams);
+		this.accessToken = this.route.snapshot.queryParams['accessToken'] || null;
+		this.shouldOpenRatingPopup = this.route.snapshot.queryParams['view'] === "rate";
 	}
 
 	private loadRideDetails(rideId: number) {
@@ -86,6 +101,10 @@ export class RideDetailsComponent {
 				console.log('Ride details loaded:', data);
 				this.ride.set(data);
 				this.loadingDetails.set(false);
+				if (this.shouldOpenRatingPopup) {
+					this.showRatingPopup.set(true);
+				}
+				this.shouldOpenRatingPopup = false;
 			},
 			error: (err) => {
 				console.error('Error loading ride details:', err);
@@ -107,7 +126,7 @@ export class RideDetailsComponent {
 				next: () => {
 					this.ride.update((r) => (r ? { ...r, favourite: false } : r));
 				},
-				error: (err) => {
+				error: () => {
 					this.popupService.error(
 						'Error',
 						'Failed to remove from favourites. Please try again later.',
@@ -119,7 +138,7 @@ export class RideDetailsComponent {
 				next: () => {
 					this.ride.update((r) => (r ? { ...r, favourite: true } : r));
 				},
-				error: (err) => {
+				error: () => {
 					this.popupService.error(
 						'Error',
 						'Failed to add to favourites. Please try again later.',
@@ -137,13 +156,23 @@ export class RideDetailsComponent {
 		this.showRatingPopup.set(false);
 	}
 
-	onRatingSubmitted() {
-		this.showRatingPopup.set(false);
-
-		const id = this.rideId();
-		if (id) {
-			this.loadRideDetails(+id);
+	onRatingSubmitted(data: RatingFormData) {
+		if (!this.ride()) {
+			return
 		}
+		this.showRatingPopup.set(false);
+		this.rideService.submitRating(this.ride()!.id, data, this.accessToken).subscribe({
+			next: () => {
+				this.popupService.success('Thank you!', 'Your rating has been submitted.');
+				this.loadRideDetails(this.ride()!.id);
+			},
+			error: (err) => {
+				this.popupService.error(
+					'Error',
+					'Failed to submit rating. '+ (err?.error?.message || 'Please try again later.'),
+				);
+			}
+		});
 	}
 
 	canGoBack(): boolean {
@@ -208,22 +237,285 @@ export class RideDetailsComponent {
 	}
 
 	protected panic() {
-		alert('PANIC');
+		this.rideService.triggerPanic(this.accessToken).subscribe({
+			next: () => {
+				this.popupService.success(
+					'PANICKED!',
+					'Panic alert has been triggered. Help is on the way!',
+				);
+				this.loadRideDetails(this.ride()!.id);
+			},
+			error: (error) => {
+				this.popupService.error(
+					'Error!',
+					'There was a triggering your panic. Pray to God this works soon. ' +
+						error?.error?.message,
+				);
+			},
+		});
 	}
 
 	protected leaveANote() {
-		alert('LEAVE A NOTE');
+		Swal.fire({
+			title: 'Leave Inconsistency Note',
+			html: this.getLeaveNoteFormHtml(),
+			showCancelButton: true,
+			confirmButtonText: 'Save',
+			cancelButtonText: 'Cancel',
+			confirmButtonColor: '#dc3545',
+			cancelButtonColor: '#6c757d',
+			preConfirm: () => {
+				const note = (
+					Swal.getPopup()?.querySelector('#inconsistency-note') as HTMLTextAreaElement
+				).value;
+				if (!note) {
+					return null;
+				}
+				return note;
+			},
+		}).then((result) => {
+			if (!result.isConfirmed) {
+				return;
+			}
+			const note = result.value;
+			if (!note) {
+				return;
+			}
+			this.rideService.leaveNote(this.ride()!.id, note, this.accessToken).subscribe({
+				next: () => {
+					this.popupService.success('Saved', 'Your note has been saved.');
+					this.loadRideDetails(this.ride()!.id);
+				},
+				error: (error) => {
+					this.popupService.error(
+						'Error!',
+						'There was an error saving your note. ' + error?.error?.message,
+					);
+				},
+			});
+		});
 	}
 
 	protected cancelRide() {
-		alert('CANCEL');
+		if (this.authService.user()?.role === LoggedInUserRole.DRIVER) {
+			this.cancelDriverRide();
+		} else {
+			this.cancelRideOwnerRide();
+		}
+	}
+
+	protected cancelRideOwnerRide() {
+		this.popupService.confirm(
+			'Cancel Ride',
+			'Are you sure you want to cancel this ride?',
+			() => {
+				this.rideService.cancelRide(this.ride()!.id).subscribe({
+					next: () => {
+						this.popupService.success('Cancelled!', 'The ride has been cancelled.');
+						this.loadRideDetails(this.ride()!.id);
+					},
+					error: (error) => {
+						this.popupService.error(
+							'Error!',
+							'There was an error cancelling the ride. ' +
+								(error?.error?.message ?? ''),
+						);
+					},
+				});
+			},
+		);
+	}
+
+	protected cancelDriverRide() {
+		Swal.fire({
+			title: 'Cancellation Reason',
+			html: this.getCancellationFormHtml(),
+			showCancelButton: true,
+			confirmButtonText: 'Cancel Ride',
+			cancelButtonText: 'Cancel',
+			confirmButtonColor: '#dc3545',
+			cancelButtonColor: '#6c757d',
+			preConfirm: () => {
+				const reason = (
+					Swal.getPopup()?.querySelector('#cancellationReason') as HTMLTextAreaElement
+				).value;
+				const cancelledBy = (
+					Swal.getPopup()?.querySelector('#cancelledBy') as HTMLSelectElement
+				).value;
+				if (!reason) {
+					return null;
+				}
+				if (!cancelledBy) {
+					return null;
+				}
+				return `${cancelledBy}: ${reason}`;
+			},
+		}).then((result) => {
+			if (!result.isConfirmed) {
+				return;
+			}
+			const cancelledBy = result.value.split(': ')[0];
+			const reason = result.value.split(': ')[1];
+			if (!reason) {
+				return;
+			}
+			this.rideService.cancelRide(this.ride()!.id, reason, cancelledBy).subscribe({
+				next: () => {
+					this.popupService.success('Cancelled!', 'The ride has been cancelled.');
+					this.loadRideDetails(this.ride()!.id);
+				},
+				error: (error) => {
+					this.popupService.error(
+						'Error!',
+						'There was an error cancelling the ride. ' + (error?.error?.message ?? ''),
+					);
+				},
+			});
+		});
 	}
 
 	protected startRide() {
-		alert('STARTING');
+		this.popupService.confirm('Start Ride', 'Are you sure you want to start this ride?', () => {
+			this.rideService.startRide(this.ride()!.id).subscribe({
+				next: (response) => {
+					this.popupService.success('Ride Started', response.message);
+					this.loadRideDetails(this.ride()!.id);
+				},
+				error: (error) => {
+					console.error('Error starting ride:', error);
+					this.popupService.error(
+						'Error',
+						error?.error?.message ?? 'Error starting ride',
+					);
+				},
+			});
+		});
 	}
 
 	protected endRide() {
-		alert('ENDING');
+		this.popupService.confirm('End Ride', 'Are you sure you want to end this ride?', () => {
+			this.rideService.endRide(this.ride()!.id).subscribe({
+				next: (response) => {
+					Swal.fire({
+						title: 'Ride Ending',
+						html: this.getFinishRideForm(
+							response.cost.toString(),
+							response.time.toString(),
+						),
+						showCancelButton: true,
+						confirmButtonText: 'Finish Ride',
+						confirmButtonColor: '#dc3545',
+						preConfirm: () => {
+							const isInterrupted = (
+								Swal.getPopup()?.querySelector('#interrupted') as HTMLInputElement
+							).checked;
+							return `${isInterrupted}`;
+						},
+					}).then((result) => {
+						if (!result.isConfirmed) {
+							return;
+						}
+						const isInterrupted = result.value === 'true';
+						this.rideService
+							.finishRide(this.ride()!.id, isInterrupted, true)
+							.subscribe({
+								next: () => {
+									this.popupService.success(
+										'Ride Finished',
+										'The ride has been successfully finished.',
+									);
+									this.loadRideDetails(this.ride()!.id);
+								},
+								error: (error) => {
+									this.popupService.error(
+										'Error!',
+										'There was an error finishing the ride. ' +
+											(error?.error?.message ?? ''),
+									);
+								},
+							});
+					});
+				},
+				error: (error) => {
+					console.error('Error ending ride:', error);
+					this.popupService.error('Error', error?.error?.message ?? 'Error ending ride');
+				},
+			});
+		});
+	}
+
+	private getFinishRideForm(cost: string, time: string): string {
+		return `
+			<div style="text-align: left; width: 90%;">
+			  <label style="display: block; margin-bottom: 10px; font-weight: bold;">
+				Ride Cost:
+			  </label>
+			  <input
+				id="rideCost"
+				class="swal2-input"
+				type="text"
+				readonly
+				value="${cost}"
+				style="width: 90%; margin-bottom: 15px;"
+			  />
+
+			  <label style="display: block; margin-bottom: 10px; font-weight: bold;">
+				Ride Duration:
+			  </label>
+			  <input
+				id="rideDuration"
+				class="swal2-input"
+				type="text"
+				readonly
+				value="${time}"
+				style="width: 90%; margin-bottom: 15px;"
+			  />
+
+			  <label style="display: flex; align-items: center; gap: 8px; font-weight: bold;">
+				<input type="checkbox" id="interrupted" />
+				Was ride interrupted
+			  </label>
+			</div>
+		`;
+	}
+
+	private getLeaveNoteFormHtml(): string {
+		return `
+			<div style="text-align: left; width: 90%;">
+			  <label style="display: block; margin-bottom: 10px; font-weight: bold;">
+				Note:
+			  </label>
+			  <textarea
+				id="inconsistency-note"
+				class="swal2-textarea"
+				placeholder="Enter your note here..."
+				style="width: 90%; height: 300px; resize: none;"
+				aria-label="Enter your note"></textarea>
+			</div>
+		`;
+	}
+	private getCancellationFormHtml(): string {
+		return `
+			<div style="text-align: left; width: 90%;">
+			  <label style="display: block; margin-bottom: 10px; font-weight: bold;">
+				Cancelled by:
+			  </label>
+			  <select id="cancelledBy" class="swal2-select" style="width: 90%; margin-bottom: 15px;">
+				<option value="">Select...</option>
+				<option value="CUSTOMER">Customer issues</option>
+				<option value="DRIVER">Driver issues</option>
+			  </select>
+
+			  <label style="display: block; margin-bottom: 10px; font-weight: bold;">
+				Reason:
+			  </label>
+			  <textarea
+				id="cancellationReason"
+				class="swal2-textarea"
+				placeholder="Enter your reason here..."
+				style="width: 90%; height: 300px; resize: none;"
+				aria-label="Enter your cancellation reason"></textarea>
+			</div>
+		`;
 	}
 }

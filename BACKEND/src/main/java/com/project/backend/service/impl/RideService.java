@@ -18,6 +18,7 @@ import com.project.backend.models.actor.PassengerActor;
 import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.*;
+import com.project.backend.service.DateTimeService;
 import com.project.backend.service.DriverMatchingService;
 import com.project.backend.service.IRideService;
 import jakarta.transaction.Transactional;
@@ -57,6 +58,7 @@ public class RideService implements IRideService {
 
     private final ResolvePassengerService resolvePassengerService;
     private final AppUserRepository appUserRepository;
+    private final DateTimeService dateTimeService;
 
     public RideResponseDTO getRideById(Long id, Long currentUserId) {
         Ride ride = rideRepository.findById(id)
@@ -94,7 +96,7 @@ public class RideService implements IRideService {
             throw new BadRequestException("Ride is not in ACCEPTED status");
         }
         ride.setStatus(RideStatus.ACTIVE);
-        ride.setStartTime(LocalDateTime.now());
+        ride.setStartTime(dateTimeService.getCurrentDateTime());
         driver.setDriverStatus(DriverStatus.BUSY);
         rideRepository.save(ride);
         driverRepository.save(driver);
@@ -201,22 +203,19 @@ public class RideService implements IRideService {
 
     @Override
     public CostTimeDTO endRideById(Long id, Driver driver) {
-        System.out.println("Ride end requested for ride id: " + id + " by driver id: " + driver.getId());
         Ride ride = rideRepository.findById(id).orElse(null);
 
         if(ride == null) {
             throw new BadRequestException("Ride with id " + id + " not found");
         }
-        System.out.println("Ending ride for driver id: " + driver.getId() + ", ride id: " + ride.getId());
         if(!ride.getDriver().getId().equals(driver.getId())) {
             throw new ForbiddenException("Driver not authorized to end this ride");
         }
-        System.out.println("Ride status: " + ride.getStatus());
         if(ride.getStatus() != RideStatus.ACTIVE) {
             throw new NoActiveRideException("Ride is not active");
         }
+
         String path = rideTracingService.finishRoute(driver.getId());
-        System.out.println(path);
         ride.setPath(path);
         if(ride.getPrice() == null) {
             ride.setPrice(0.0);
@@ -224,22 +223,8 @@ public class RideService implements IRideService {
         var distance = locationTransformer.calculateDistanceAir(path, MetricsDistance.KILOMETERS);
         ride.setTotalCost(ride.getPrice() + 120 * distance);
         ride.setDistanceKm(distance);
-        ride.setStatus(RideStatus.FINISHED);
-        /*
-        List<Coordinates>pathCords = locationTransformer.transformToCoordinates(path);
-        List<Coordinates> route = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
-        List<Coordinates> newCords = getNewRideCords(pathCords, route, 50);
-        String newPath = locationTransformer.transformLocation(newCords);
-        Route newRoute = routeRepository.findByGeoHash(newPath).orElse(null);
-        if(newRoute == null) {
-            newRoute = new Route();
-            newRoute.setGeoHash(newPath);
-            routeRepository.save(newRoute);
-        }
-        ride.setRoute(newRoute);
-        */
 
-        ride.setEndTime(LocalDateTime.now());
+        ride.setEndTime(dateTimeService.getCurrentDateTime());
         rideRepository.save(ride);
         CostTimeDTO costTimeDTO = new CostTimeDTO();
         costTimeDTO.setCost(ride.getTotalCost());
@@ -253,37 +238,6 @@ public class RideService implements IRideService {
         }
         return costTimeDTO;
     }
-    private List<Coordinates> getNewRideCords(List<Coordinates> actualRide, List<Coordinates> plannedRoute , double thresholdMeters) {
-            if (actualRide.isEmpty() || plannedRoute.isEmpty()) {
-                return null;
-            }
-
-            ArrayList<Coordinates> newCords = new ArrayList<>();
-            for (int i = 0; i < plannedRoute.size(); i++) {
-                boolean isViewed = false;
-                if(i == 0)
-                {
-                    newCords.add(plannedRoute.get(i));
-                    continue;
-                }
-                Coordinates plannedCords = plannedRoute.get(i);
-                for (Coordinates actualCords: actualRide) {
-                    double distance =  plannedCords.distanceAirLine(actualCords);
-                    if (distance <= thresholdMeters) {
-                        isViewed = true;
-                        break;
-                    }
-                }
-                if (isViewed) {
-                    newCords.add(plannedCords);
-                } else if(i == plannedRoute.size() -1) {
-                    newCords.add(actualRide.get(actualRide.size() -1)); // add last actual cord
-                }
-            }
-
-            return newCords;
-    }
-
 
     @Override
     public CostTimeDTO estimateRide(RideBookingParametersDTO rideData) {

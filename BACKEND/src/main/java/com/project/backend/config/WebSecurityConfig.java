@@ -80,6 +80,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/v1/rides/estimates").permitAll()
                     .requestMatchers("/api/v1/rides/{id}").permitAll()
                     .requestMatchers("/api/v1/rides/*/rating").permitAll()
+                    .requestMatchers("/api/v1/rides/*/notes").permitAll()
                     .requestMatchers("/socket/**").permitAll()
                     .anyRequest().authenticated();
         });

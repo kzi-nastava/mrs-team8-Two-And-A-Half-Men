@@ -1,6 +1,5 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Component, effect, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -10,6 +9,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { NominatimService } from '@shared/services/locations/nominatim-service';
 import { PopupsService } from '@shared/services/popups/popups.service';
+import { NominatimResult } from '@shared/models/nominatim-results.model';
 
 @Component({
 	selector: 'app-estimate-form',

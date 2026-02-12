@@ -21,6 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { FavouriteRoutesComponent } from '@features/customer/home/components/favourite-routes/favourite-routes.component';
 import { FavouriteRoute } from '@shared/models/favourite-route.model';
 import { FavouriteRoutesService } from '@shared/services/routes/favourite-routes.service';
+import { NominatimResult } from '@shared/models/nominatim-results.model';
 
 @Component({
 	selector: 'app-customer-home-page',

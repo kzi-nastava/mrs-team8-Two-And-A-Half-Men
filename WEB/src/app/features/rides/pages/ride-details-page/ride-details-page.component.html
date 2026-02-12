@@ -116,9 +116,7 @@
 				<div class="popup-overlay" (click)="closeRatingPopup()">
 					<div class="popup-content" (click)="$event.stopPropagation()">
 						<app-rating-form
-							[rideId]="ride()!.id"
-							[accessToken]="null"
-							(ratingSubmitted)="onRatingSubmitted()"
+							(ratingSubmitted)="onRatingSubmitted($event)"
 							(closePopup)="closeRatingPopup()"
 						/>
 					</div>

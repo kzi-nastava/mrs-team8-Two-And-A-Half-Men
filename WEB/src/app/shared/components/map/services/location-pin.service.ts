@@ -1,177 +1,163 @@
-import { Injectable, effect } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import { MapService } from './map.service';
-import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
 
 export interface LocationPin {
-  id: string;
-  lat: number;
-  lng: number;
-  marker: L.Marker;
+	id: string;
+	lat: number;
+	lng: number;
+	marker: L.Marker;
 }
 
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root',
 })
 export class LocationPinService {
-  private pins = new Map<string, LocationPin>();
-  private clickEnabled = false;
-  private rightClickEnabled = false;
+	private pins = new Map<string, LocationPin>();
+	private clickEnabled = false;
+	private rightClickEnabled = false;
 
-  private defaultIcon = L.icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.6.0/dist/images/marker-icon.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  });
+	private defaultIcon = L.icon({
+		iconUrl: 'https://unpkg.com/leaflet@1.6.0/dist/images/marker-icon.png',
+		iconSize: [25, 41],
+		iconAnchor: [12, 41],
+	});
 
-  constructor(private mapService: MapService, private sharedLocationsService: SharedLocationsService) {
+	constructor(private mapService: MapService) {}
 
-        effect(() => {
-            const locations = this.sharedLocationsService.locations();
-            console.log('Locations updated:', locations);
-            for (const pin of this.pins.keys()) {
-                console.log('Removing marker:', pin);
-                this.removePin(pin);
-            }
+	initialize(): void {
+		if (!this.mapService.isInitialized()) {
+			console.warn('Map not initialized. Cannot initialize LocationPinService.');
+			return;
+		}
+		console.log('LocationPinService initialized');
+	}
 
-            locations.forEach(location => {
-              this.addPin(parseFloat(location.lat), parseFloat(location.lon));
-            });
-        });
-    }
+	enableClickToAdd(): void {
+		if (this.clickEnabled) return;
 
-  initialize(): void {
-    if (!this.mapService.isInitialized()) {
-      console.warn('Map not initialized. Cannot initialize LocationPinService.');
-      return;
-    }
-  }
+		const map = this.mapService.getMap();
+		map.on('click', this.onMapClick.bind(this));
+		this.clickEnabled = true;
+	}
 
-  enableClickToAdd(): void {
-    if (this.clickEnabled) return;
+	disableClickToAdd(): void {
+		if (!this.clickEnabled) return;
 
-    const map = this.mapService.getMap();
-    map.on('click', this.onMapClick.bind(this));
-    this.clickEnabled = true;
-  }
+		const map = this.mapService.getMap();
+		map.off('click', this.onMapClick.bind(this));
+		this.clickEnabled = false;
+	}
 
-  disableClickToAdd(): void {
-    if (!this.clickEnabled) return;
+	enableRightClickToRemoveLast(): void {
+		if (this.rightClickEnabled) return;
 
-    const map = this.mapService.getMap();
-    map.off('click', this.onMapClick.bind(this));
-    this.clickEnabled = false;
-  }
+		const map = this.mapService.getMap();
+		map.on('contextmenu', this.onMapRightClick.bind(this));
+		this.rightClickEnabled = true;
+	}
 
-  enableRightClickToRemoveLast(): void {
-    if (this.rightClickEnabled) return;
+	disableRightClickToRemoveLast(): void {
+		if (!this.rightClickEnabled) return;
 
-    const map = this.mapService.getMap();
-    map.on('contextmenu', this.onMapRightClick.bind(this));
-    this.rightClickEnabled = true;
-  }
+		const map = this.mapService.getMap();
+		map.off('contextmenu', this.onMapRightClick.bind(this));
+		this.rightClickEnabled = false;
+	}
 
-  disableRightClickToRemoveLast(): void {
-    if (!this.rightClickEnabled) return;
+	private onMapClick(e: L.LeafletMouseEvent): void {
+		const { lat, lng } = e.latlng;
+		this.addPin(lat, lng);
+	}
 
-    const map = this.mapService.getMap();
-    map.off('contextmenu', this.onMapRightClick.bind(this));
-    this.rightClickEnabled = false;
-  }
+	private onMapRightClick(e: L.LeafletMouseEvent): void {
+		e.originalEvent.preventDefault();
+		this.removeLastPin();
+	}
 
-  private onMapClick(e: L.LeafletMouseEvent): void {
-    const { lat, lng } = e.latlng;
-    this.addPin(lat, lng);
-  }
+	addPin(lat: number, lng: number, options?: { icon?: L.Icon; popupContent?: string }): string {
+		const map = this.mapService.getMap();
+		const id = this.generateId();
 
-  private onMapRightClick(e: L.LeafletMouseEvent): void {
-    e.originalEvent.preventDefault();
-    this.removeLastPin();
-  }
+		const marker = L.marker([lat, lng], {
+			icon: options?.icon || this.defaultIcon,
+		}).addTo(map);
 
-  addPin(lat: number, lng: number, options?: { icon?: L.Icon; popupContent?: string }): string {
-    const map = this.mapService.getMap();
-    const id = this.generateId();
+		if (options?.popupContent) {
+			marker.bindPopup(options.popupContent);
+		}
 
-    const marker = L.marker([lat, lng], {
-      icon: options?.icon || this.defaultIcon,
-    }).addTo(map);
+		// Allow marker click to remove (only if click to add is NOT enabled - to avoid conflicts)
+		if (!this.clickEnabled) {
+			marker.on('click', () => {
+				this.removePin(id);
+			});
+		}
 
-    if (options?.popupContent) {
-      marker.bindPopup(options.popupContent);
-    }
+		const pin: LocationPin = { id, lat, lng, marker };
+		this.pins.set(id, pin);
 
-    // Allow marker click to remove
-    marker.on('click', () => {
-      this.removePin(id);
-    });
+		console.log(`Pin added at [${lat}, ${lng}] with id: ${id}`);
+		return id;
+	}
 
-    const pin: LocationPin = { id, lat, lng, marker };
-    this.pins.set(id, pin);
+	removePin(id: string): void {
+		const pin = this.pins.get(id);
+		if (!pin) return;
 
-    console.log(`Pin added at [${lat}, ${lng}] with id: ${id}`);
-    return id;
-  }
+		const map = this.mapService.getMap();
+		map.removeLayer(pin.marker);
+		this.pins.delete(id);
 
-  removePin(id: string): void {
-    const pin = this.pins.get(id);
-    if (!pin) return;
+		console.log(`Pin removed: ${id}`);
+	}
 
-    const map = this.mapService.getMap();
-    map.removeLayer(pin.marker);
-    this.pins.delete(id);
+	removeLastPin(): void {
+		const pinsArray = Array.from(this.pins.values());
+		if (pinsArray.length === 0) return;
 
-    console.log(`Pin removed: ${id}`);
-  }
+		const lastPin = pinsArray[pinsArray.length - 1];
+		this.removePin(lastPin.id);
+	}
 
-  removeLastPin(): void {
-    const pinsArray = Array.from(this.pins.values());
-    if (pinsArray.length === 0) return;
+	removePinByCoordinates(lat: number, lng: number): void {
+		const pin = Array.from(this.pins.values()).find((p) => p.lat === lat && p.lng === lng);
 
-    const lastPin = pinsArray[pinsArray.length - 1];
-    this.removePin(lastPin.id);
-  }
+		if (pin) {
+			this.removePin(pin.id);
+		}
+	}
 
-  removePinByCoordinates(lat: number, lng: number): void {
-    const pin = Array.from(this.pins.values()).find(
-      p => p.lat === lat && p.lng === lng
-    );
+	clearAllPins(): void {
+		const map = this.mapService.getMap();
 
-    if (pin) {
-      this.removePin(pin.id);
-    }
-  }
+		this.pins.forEach((pin) => {
+			map.removeLayer(pin.marker);
+		});
 
-  clearAllPins(): void {
-    const map = this.mapService.getMap();
+		this.pins.clear();
+		console.log('All pins cleared');
+	}
 
-    this.pins.forEach(pin => {
-      map.removeLayer(pin.marker);
-    });
+	getAllPins(): LocationPin[] {
+		return Array.from(this.pins.values());
+	}
 
-    this.pins.clear();
-    console.log('All pins cleared');
-  }
+	getPinById(id: string): LocationPin | undefined {
+		return this.pins.get(id);
+	}
 
-  getAllPins(): LocationPin[] {
-    return Array.from(this.pins.values());
-  }
+	getPinsCount(): number {
+		return this.pins.size;
+	}
 
-  getPinById(id: string): LocationPin | undefined {
-    return this.pins.get(id);
-  }
+	private generateId(): string {
+		return `pin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+	}
 
-  getPinsCount(): number {
-    return this.pins.size;
-  }
-
-  private generateId(): string {
-    return `pin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
-
-  cleanup(): void {
-    this.disableClickToAdd();
-    this.disableRightClickToRemoveLast();
-    this.clearAllPins();
-  }
+	cleanup(): void {
+		this.disableClickToAdd();
+		this.disableRightClickToRemoveLast();
+		this.clearAllPins();
+	}
 }

@@ -48,6 +48,21 @@ export class RideDetailsComponent implements OnInit {
 		return getMapConfigForRideStatus(currentRide.status);
 	});
 
+	// Computed property za ride locations kao NominatimResult array
+	rideLocations = computed<NominatimResult[]>(() => {
+		const currentRide = this.ride();
+		if (!currentRide || !currentRide.locations) {
+			return [];
+		}
+
+		return currentRide.locations.map((loc) => ({
+			lon: `${loc.longitude}`,
+			lat: `${loc.latitude}`,
+			display_name: loc.address,
+			place_id: 1, // Dummy place_id since we don't have it from ride model
+		})) as NominatimResult[];
+	});
+
 	actionsConfig = computed(() =>
 		this.actionsConfigService.getActions(this.authService.user(), this.ride()),
 	);
@@ -81,6 +96,7 @@ export class RideDetailsComponent implements OnInit {
 			console.log('Current ride:', this.ride());
 			console.log('Route ID:', this.rideId());
 			console.log('Map config:', this.mapConfig());
+			console.log('Ride locations:', this.rideLocations());
 		});
 	}
 
@@ -184,8 +200,6 @@ export class RideDetailsComponent implements OnInit {
 	}
 
 	canGoBack(): boolean {
-		// history.length is a very general indicator and might not be reliable
-		// for complex Angular app history.
 		return window.history.length > 2;
 	}
 
@@ -234,13 +248,7 @@ export class RideDetailsComponent implements OnInit {
 
 	protected rebookRide() {
 		if (!this.ride()) return;
-		let newLocations = this.ride()!.locations.map((loc) => ({
-			lon: `${loc.longitude}`,
-			lat: `${loc.latitude}`,
-			display_name: loc.address,
-			place_id: 1,
-		})) as NominatimResult[];
-		this.sharedLocationService.locations.set(newLocations);
+		this.sharedLocationService.locations.set(this.rideLocations());
 		this.router.navigate(['/home']).then();
 	}
 

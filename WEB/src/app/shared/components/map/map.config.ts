@@ -17,7 +17,7 @@ export const DEFAULT_MAP_CONFIG: MapConfig = {
 	enableClickToAddLocation: false,
 	enableRightClickToRemove: false,
 	enableDriverTracking: false,
-	enablePath: false
+	enablePath: false,
 };
 
 export const BOOKING_MAP_CONFIG: MapConfig = {

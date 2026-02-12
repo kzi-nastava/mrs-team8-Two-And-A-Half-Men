@@ -16,6 +16,7 @@ import { DriverLocationManagerService } from '@shared/services/driver-location/d
 import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
 import { DEFAULT_MAP_CONFIG, MapConfig } from '@shared/components/map/map.config';
 import { PopupsService } from '@shared/services/popups/popups.service';
+import { NominatimResult } from '@shared/models/nominatim-results.model';
 
 const MAP_CENTER: { center: [number, number]; zoom: number } = {
 	center: [45.2396, 19.8227],
@@ -30,7 +31,10 @@ const MAP_CENTER: { center: [number, number]; zoom: number } = {
 export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 	@Input() path?: string;
 	@Input() config: MapConfig = DEFAULT_MAP_CONFIG;
+	@Input() rideLocations?: NominatimResult[];
+
 	private currentRouteId?: string;
+	private currentPathId?: string;
 	private mapInitialized = false;
 
 	private mapService = inject(MapService);
@@ -45,9 +49,15 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		effect(() => {
 			const locations = this.sharedLocationsService.locations();
 
-			if (this.config.enableRouting && locations.length >= 2 && this.mapInitialized) {
+			// Only use shared locations if we don't have rideLocations (booking mode)
+			if (
+				!this.rideLocations &&
+				this.config.enableRouting &&
+				locations.length >= 2 &&
+				this.mapInitialized
+			) {
 				this.updateRouteFromLocations(locations);
-			} else {
+			} else if (!this.rideLocations) {
 				this.clearCurrentRoute();
 			}
 		});
@@ -64,6 +74,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 
 		this.initializeEnabledServices();
 
+		// If we have rideLocations, set them up
+		if (this.rideLocations && this.rideLocations.length > 0) {
+			this.setupRideLocations(this.rideLocations);
+		}
+
 		if (this.path && this.config.enablePath) {
 			this.drawPath();
 		}
@@ -76,9 +91,39 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 			this.handleConfigChange(changes['config'].previousValue, this.config);
 		}
 
+		// Handle rideLocations changes
+		if (changes['rideLocations'] && this.mapInitialized) {
+			const newLocations = changes['rideLocations'].currentValue;
+			if (newLocations && newLocations.length > 0) {
+				this.setupRideLocations(newLocations);
+			}
+		}
+
 		// Handle path changes
 		if (changes['path'] && this.path && this.mapInitialized && this.config.enablePath) {
 			this.drawPath();
+		}
+	}
+
+	private setupRideLocations(locations: NominatimResult[]): void {
+		console.log('Setting up ride locations:', locations);
+
+		// Clear existing pins and routes
+		this.locationPinService.clearAllPins();
+		this.clearCurrentRoute();
+
+		// Add pins for each location
+		if (this.config.enableLocationPins) {
+			locations.forEach((location) => {
+				this.locationPinService.addPin(parseFloat(location.lat), parseFloat(location.lon), {
+					popupContent: location.display_name,
+				});
+			});
+		}
+
+		// Create route between locations
+		if (this.config.enableRouting && locations.length >= 2) {
+			this.updateRouteFromLocations(locations);
 		}
 	}
 
@@ -89,6 +134,18 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		if (oldConfig.enableLocationPins !== newConfig.enableLocationPins) {
 			if (newConfig.enableLocationPins) {
 				this.locationPinService.initialize();
+				// Re-add ride locations if they exist
+				if (this.rideLocations && this.rideLocations.length > 0) {
+					this.rideLocations.forEach((location) => {
+						this.locationPinService.addPin(
+							parseFloat(location.lat),
+							parseFloat(location.lon),
+							{
+								popupContent: location.display_name,
+							},
+						);
+					});
+				}
 			} else {
 				this.locationPinService.cleanup();
 			}
@@ -107,6 +164,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		if (oldConfig.enableRouting !== newConfig.enableRouting) {
 			if (newConfig.enableRouting) {
 				this.routeService.initialize();
+				// Re-create route if we have locations
+				if (this.rideLocations && this.rideLocations.length >= 2) {
+					this.updateRouteFromLocations(this.rideLocations);
+				}
 			} else {
 				this.routeService.cleanup();
 				this.clearCurrentRoute();
@@ -144,7 +205,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 			if (newConfig.enablePath && this.path) {
 				this.drawPath();
 			} else {
-				this.clearCurrentRoute();
+				this.clearPath();
 			}
 		}
 	}
@@ -323,17 +384,27 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		}
 	}
 
+	private clearPath(): void {
+		if (this.currentPathId) {
+			this.routeService.removeRoute(this.currentPathId);
+			this.currentPathId = undefined;
+			console.log('Current path cleared');
+		}
+	}
+
 	private drawPath(): void {
-		this.clearCurrentRoute();
+		this.clearPath();
 
 		if (!this.path) return;
 
-		this.currentRouteId = this.routeService.drawLineFromGeohash(this.path, 12, {
-			color: '#3388ff',
-			weight: 6,
-			opacity: 0.7,
+		console.log('Drawing geohash path:', this.path);
+
+		this.currentPathId = this.routeService.drawLineFromGeohash(this.path, 12, {
+			color: '#e74c3c', // Different color for actual path (red)
+			weight: 4,
+			opacity: 0.8,
 		});
 
-		this.routeService.fitRouteInView(this.currentRouteId);
+		this.routeService.fitRouteInView(this.currentPathId);
 	}
 }

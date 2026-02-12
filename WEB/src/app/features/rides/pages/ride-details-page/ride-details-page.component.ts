@@ -6,7 +6,7 @@ import { Ride, RideStatus } from '@shared/models/ride.model';
 import { map } from 'rxjs/operators';
 import { PopupsService } from '@shared/services/popups/popups.service';
 import { MapComponent } from '@shared/components/map/map.component';
-import { MAP_CONFIGS } from '@shared/components/map/map.config';
+import { getMapConfigForRideStatus, MapConfig } from '@shared/components/map/map.config';
 import {
 	RatingFormComponent,
 	RatingFormData,
@@ -40,7 +40,13 @@ export class RideDetailsComponent implements OnInit {
 	popupService = inject(PopupsService);
 	private authService = inject(AuthService);
 
-	mapConfig = MAP_CONFIGS.HISTORY_VIEW;
+	mapConfig = computed<MapConfig>(() => {
+		const currentRide = this.ride();
+		if (!currentRide) {
+			return getMapConfigForRideStatus(RideStatus.PENDING);
+		}
+		return getMapConfigForRideStatus(currentRide.status);
+	});
 
 	actionsConfig = computed(() =>
 		this.actionsConfigService.getActions(this.authService.user(), this.ride()),
@@ -74,6 +80,7 @@ export class RideDetailsComponent implements OnInit {
 		effect(() => {
 			console.log('Current ride:', this.ride());
 			console.log('Route ID:', this.rideId());
+			console.log('Map config:', this.mapConfig());
 		});
 	}
 
@@ -81,7 +88,7 @@ export class RideDetailsComponent implements OnInit {
 		console.log('ON INIT');
 		console.log(this.route.snapshot.queryParams);
 		this.accessToken = this.route.snapshot.queryParams['accessToken'] || null;
-		this.shouldOpenRatingPopup = this.route.snapshot.queryParams['view'] === "rate";
+		this.shouldOpenRatingPopup = this.route.snapshot.queryParams['view'] === 'rate';
 	}
 
 	private loadRideDetails(rideId: number) {
@@ -158,7 +165,7 @@ export class RideDetailsComponent implements OnInit {
 
 	onRatingSubmitted(data: RatingFormData) {
 		if (!this.ride()) {
-			return
+			return;
 		}
 		this.showRatingPopup.set(false);
 		this.rideService.submitRating(this.ride()!.id, data, this.accessToken).subscribe({
@@ -169,9 +176,10 @@ export class RideDetailsComponent implements OnInit {
 			error: (err) => {
 				this.popupService.error(
 					'Error',
-					'Failed to submit rating. '+ (err?.error?.message || 'Please try again later.'),
+					'Failed to submit rating. ' +
+						(err?.error?.message || 'Please try again later.'),
 				);
-			}
+			},
 		});
 	}
 

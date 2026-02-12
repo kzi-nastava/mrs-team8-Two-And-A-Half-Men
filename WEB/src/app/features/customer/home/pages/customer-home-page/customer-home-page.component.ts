@@ -8,7 +8,7 @@ import { BookRideRequest } from '@features/customer/home/models/ride.model';
 import { RideService } from '@features/customer/home/services/ride.service';
 import { PopupsService } from '@shared/services/popups/popups.service';
 import { Router } from '@angular/router';
-import { MAP_CONFIGS } from '@shared/components/map/map.config';
+import { BOOKING_MAP_CONFIG } from '@shared/components/map/map.config';
 import {
 	TabItem,
 	TabNavigationComponent,
@@ -41,7 +41,7 @@ import { NominatimResult } from '@shared/models/nominatim-results.model';
 	styleUrl: './customer-home-page.component.css',
 })
 export class CustomerHomePageComponent implements OnInit {
-	mapConfig = MAP_CONFIGS.BOOKING;
+	mapConfig = BOOKING_MAP_CONFIG;
 
 	private sharedLocationService = inject(SharedLocationsService);
 	private rideService = inject(RideService);
@@ -250,7 +250,7 @@ export class CustomerHomePageComponent implements OnInit {
 				this.popupsService.confirm(
 					'Confirm Ride',
 					`The estimated time for your ride is ${Math.ceil(time)} minutes. Do you want to proceed with booking?`,
-					callBookAPI
+					callBookAPI,
 				);
 			},
 			error: (err) => {

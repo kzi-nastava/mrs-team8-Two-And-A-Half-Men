@@ -6,6 +6,7 @@ import {
 	AfterViewInit,
 	OnDestroy,
 	effect,
+	inject,
 } from '@angular/core';
 import { MapService } from './services/map.service';
 import { LocationPinService } from './services/location-pin.service';
@@ -15,6 +16,11 @@ import { DriverLocationManagerService } from '@shared/services/driver-location/d
 import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
 import { DEFAULT_MAP_CONFIG, MapConfig } from '@shared/components/map/map.config';
 import { PopupsService } from '@shared/services/popups/popups.service';
+
+const MAP_CENTER: { center: [number, number]; zoom: number } = {
+	center: [45.2396, 19.8227],
+	zoom: 13,
+};
 
 @Component({
 	selector: 'app-map',
@@ -27,15 +33,15 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 	private currentRouteId?: string;
 	private mapInitialized = false;
 
-	constructor(
-		private mapService: MapService,
-		private locationPinService: LocationPinService,
-		private driverMarkerService: DriverMarkerService,
-		private routeService: RouteService,
-		private driverLocationManager: DriverLocationManagerService,
-		private sharedLocationsService: SharedLocationsService,
-		private popupService: PopupsService
-	) {
+	private mapService = inject(MapService);
+	private locationPinService = inject(LocationPinService);
+	private driverMarkerService = inject(DriverMarkerService);
+	private routeService = inject(RouteService);
+	private driverLocationManagerService = inject(DriverLocationManagerService);
+	private sharedLocationsService = inject(SharedLocationsService);
+	private popupsService = inject(PopupsService);
+
+	constructor() {
 		effect(() => {
 			const locations = this.sharedLocationsService.locations();
 
@@ -52,14 +58,94 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 
 		this.config = { ...DEFAULT_MAP_CONFIG, ...this.config };
 
-		this.mapService.initMap('map', this.config.center!, this.config.zoom!);
+		this.mapService.initMap('map', MAP_CENTER.center, MAP_CENTER.zoom);
 
 		this.mapInitialized = true;
 
 		this.initializeEnabledServices();
 
-		if (this.path) {
+		if (this.path && this.config.enablePath) {
 			this.drawPath();
+		}
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
+		// Handle config changes
+		if (changes['config'] && !changes['config'].firstChange) {
+			console.log('Map config changed:', this.config);
+			this.handleConfigChange(changes['config'].previousValue, this.config);
+		}
+
+		// Handle path changes
+		if (changes['path'] && this.path && this.mapInitialized && this.config.enablePath) {
+			this.drawPath();
+		}
+	}
+
+	private handleConfigChange(oldConfig: MapConfig, newConfig: MapConfig): void {
+		if (!this.mapInitialized) return;
+
+		// Handle location pins
+		if (oldConfig.enableLocationPins !== newConfig.enableLocationPins) {
+			if (newConfig.enableLocationPins) {
+				this.locationPinService.initialize();
+			} else {
+				this.locationPinService.cleanup();
+			}
+		}
+
+		// Handle driver markers
+		if (oldConfig.enableActiveDriverMarkers !== newConfig.enableActiveDriverMarkers) {
+			if (newConfig.enableActiveDriverMarkers) {
+				this.driverMarkerService.initialize();
+			} else {
+				this.driverMarkerService.cleanup();
+			}
+		}
+
+		// Handle routing
+		if (oldConfig.enableRouting !== newConfig.enableRouting) {
+			if (newConfig.enableRouting) {
+				this.routeService.initialize();
+			} else {
+				this.routeService.cleanup();
+				this.clearCurrentRoute();
+			}
+		}
+
+		// Handle driver tracking
+		if (oldConfig.enableDriverTracking !== newConfig.enableDriverTracking) {
+			if (newConfig.enableDriverTracking) {
+				this.driverLocationManagerService.initialize();
+			} else {
+				this.driverLocationManagerService.cleanup();
+			}
+		}
+
+		// Handle click handlers
+		if (oldConfig.enableClickToAddLocation !== newConfig.enableClickToAddLocation) {
+			if (newConfig.enableClickToAddLocation) {
+				this.setupMapClickHandler();
+			} else {
+				this.removeMapClickHandler();
+			}
+		}
+
+		if (oldConfig.enableRightClickToRemove !== newConfig.enableRightClickToRemove) {
+			if (newConfig.enableRightClickToRemove) {
+				this.setupMapRightClickHandler();
+			} else {
+				this.removeMapRightClickHandler();
+			}
+		}
+
+		// Handle path display
+		if (oldConfig.enablePath !== newConfig.enablePath) {
+			if (newConfig.enablePath && this.path) {
+				this.drawPath();
+			} else {
+				this.clearCurrentRoute();
+			}
 		}
 	}
 
@@ -68,7 +154,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 			this.locationPinService.initialize();
 		}
 
-		if (this.config.enableDriverMarkers) {
+		if (this.config.enableActiveDriverMarkers) {
 			this.driverMarkerService.initialize();
 		}
 
@@ -85,7 +171,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		}
 
 		if (this.config.enableDriverTracking) {
-			this.driverLocationManager.initialize();
+			this.driverLocationManagerService.initialize();
 		}
 	}
 
@@ -103,10 +189,15 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 				},
 				error: (error) => {
 					console.error('Error getting location:', error);
-					this.popupService.error('Error getting location:', error);
+					this.popupsService.error('Error getting location:', error);
 				},
 			});
 		});
+	}
+
+	private removeMapClickHandler(): void {
+		const map = this.mapService.getMap();
+		map.off('click');
 	}
 
 	private setupMapRightClickHandler(): void {
@@ -119,10 +210,9 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		});
 	}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['path'] && this.path && this.mapInitialized) {
-			this.drawPath();
-		}
+	private removeMapRightClickHandler(): void {
+		const map = this.mapService.getMap();
+		map.off('contextmenu');
 	}
 
 	ngOnDestroy(): void {
@@ -132,7 +222,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 			this.locationPinService.cleanup();
 		}
 
-		if (this.config.enableDriverMarkers) {
+		if (this.config.enableActiveDriverMarkers) {
 			this.driverMarkerService.cleanup();
 		}
 
@@ -141,7 +231,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		}
 
 		if (this.config.enableDriverTracking) {
-			this.driverLocationManager.cleanup();
+			this.driverLocationManagerService.cleanup();
 		}
 
 		this.mapService.destroyMap();

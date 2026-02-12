@@ -30,7 +30,10 @@ public class PanicService implements IPanicService {
 
     public void triggerPanicAlert(AppUser user, String accessToken) {
         System.out.println("Panic alert triggered");
-        Passenger passenger = passengerRepository.findByAccessToken(accessToken).orElse(null);
+        Passenger passenger = null;
+        if (accesToken != null) {
+            passenger = passengerRepository.findByAccessToken(accesToken).orElse(null);
+        }
         System.out.println(passenger);
         if(passenger == null && user instanceof Customer) {
             passenger = passengerRepository.findByCustomerWithRideStatus(user,
@@ -67,7 +70,7 @@ public class PanicService implements IPanicService {
         Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
         String driverLocation = driverPoint.getX() + "," + driverPoint.getY();
         Map<String, String> panicAlert = Map.of(
-                "passengerName", passenger.getUser().getEmail(),
+                "passengerName", passenger.getUser() != null ? passenger.getUser().getEmail() : passenger.getEmail(),
                 "driverName", driver.getEmail(),
                 "driverLocation", driverLocation,
                 "rideId", passenger.getRide().getId().toString()

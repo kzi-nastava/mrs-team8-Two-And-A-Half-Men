@@ -1,7 +1,6 @@
 package com.project.backend.service.impl;
 
 import com.project.backend.DTO.Ride.*;
-import com.project.backend.DTO.Utils.PagedResponse;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
@@ -19,18 +18,20 @@ import com.project.backend.models.actor.PassengerActor;
 import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.*;
+import com.project.backend.service.DateTimeService;
 import com.project.backend.service.DriverMatchingService;
 import com.project.backend.service.IRideService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -56,15 +57,26 @@ public class RideService implements IRideService {
     private final SimpMessagingTemplate messagingTemplate;
 
     private final ResolvePassengerService resolvePassengerService;
+    private final AppUserRepository appUserRepository;
+    private final DateTimeService dateTimeService;
 
-    public RideResponseDTO getRideById(Long id) {
+    public RideResponseDTO getRideById(Long id, Long currentUserId) {
         Ride ride = rideRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Ride with id " + id + " not found"
                         ));
 
-        return rideMapper.convertToRideResponseDTO(ride);
+        Set<Route> favourites = null;
+        Customer customer = null;
+        if (currentUserId != null) {
+            customer = customerRepository.findById(currentUserId).orElse(null);
+        }
+        if (customer != null) {
+            favourites = customer.getFavoriteRoutes();
+        }
+
+        return rideMapper.convertToRideResponseDTO(ride, favourites);
     }
 
 
@@ -84,7 +96,7 @@ public class RideService implements IRideService {
             throw new BadRequestException("Ride is not in ACCEPTED status");
         }
         ride.setStatus(RideStatus.ACTIVE);
-        ride.setStartTime(LocalDateTime.now());
+        ride.setStartTime(dateTimeService.getCurrentDateTime());
         driver.setDriverStatus(DriverStatus.BUSY);
         rideRepository.save(ride);
         driverRepository.save(driver);
@@ -191,22 +203,19 @@ public class RideService implements IRideService {
 
     @Override
     public CostTimeDTO endRideById(Long id, Driver driver) {
-        System.out.println("Ride end requested for ride id: " + id + " by driver id: " + driver.getId());
         Ride ride = rideRepository.findById(id).orElse(null);
 
         if(ride == null) {
             throw new BadRequestException("Ride with id " + id + " not found");
         }
-        System.out.println("Ending ride for driver id: " + driver.getId() + ", ride id: " + ride.getId());
         if(!ride.getDriver().getId().equals(driver.getId())) {
             throw new ForbiddenException("Driver not authorized to end this ride");
         }
-        System.out.println("Ride status: " + ride.getStatus());
         if(ride.getStatus() != RideStatus.ACTIVE) {
             throw new NoActiveRideException("Ride is not active");
         }
+
         String path = rideTracingService.finishRoute(driver.getId());
-        System.out.println(path);
         ride.setPath(path);
         if(ride.getPrice() == null) {
             ride.setPrice(0.0);
@@ -214,22 +223,8 @@ public class RideService implements IRideService {
         var distance = locationTransformer.calculateDistanceAir(path, MetricsDistance.KILOMETERS);
         ride.setTotalCost(ride.getPrice() + 120 * distance);
         ride.setDistanceKm(distance);
-        ride.setStatus(RideStatus.FINISHED);
-        /*
-        List<Coordinates>pathCords = locationTransformer.transformToCoordinates(path);
-        List<Coordinates> route = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
-        List<Coordinates> newCords = getNewRideCords(pathCords, route, 50);
-        String newPath = locationTransformer.transformLocation(newCords);
-        Route newRoute = routeRepository.findByGeoHash(newPath).orElse(null);
-        if(newRoute == null) {
-            newRoute = new Route();
-            newRoute.setGeoHash(newPath);
-            routeRepository.save(newRoute);
-        }
-        ride.setRoute(newRoute);
-        */
 
-        ride.setEndTime(LocalDateTime.now());
+        ride.setEndTime(dateTimeService.getCurrentDateTime());
         rideRepository.save(ride);
         CostTimeDTO costTimeDTO = new CostTimeDTO();
         costTimeDTO.setCost(ride.getTotalCost());
@@ -243,42 +238,12 @@ public class RideService implements IRideService {
         }
         return costTimeDTO;
     }
-    private List<Coordinates> getNewRideCords(List<Coordinates> actualRide, List<Coordinates> plannedRoute , double thresholdMeters) {
-            if (actualRide.isEmpty() || plannedRoute.isEmpty()) {
-                return null;
-            }
-
-            ArrayList<Coordinates> newCords = new ArrayList<>();
-            for (int i = 0; i < plannedRoute.size(); i++) {
-                boolean isViewed = false;
-                if(i == 0)
-                {
-                    newCords.add(plannedRoute.get(i));
-                    continue;
-                }
-                Coordinates plannedCords = plannedRoute.get(i);
-                for (Coordinates actualCords: actualRide) {
-                    double distance =  plannedCords.distanceAirLine(actualCords);
-                    if (distance <= thresholdMeters) {
-                        isViewed = true;
-                        break;
-                    }
-                }
-                if (isViewed) {
-                    newCords.add(plannedCords);
-                } else if(i == plannedRoute.size() -1) {
-                    newCords.add(actualRide.get(actualRide.size() -1)); // add last actual cord
-                }
-            }
-
-            return newCords;
-    }
-
 
     @Override
     public CostTimeDTO estimateRide(RideBookingParametersDTO rideData) {
         FindDriverDTO driver = driverMatchingService.findBestDriver(
                 FindDriverFilter.builder()
+                        .numberOfPassengers(rideData.getPassengers() != null ? rideData.getPassengers().size() + 1 : 1)
                         .additionalServicesIds(rideData.getAdditionalServicesIds())
                         .vehicleTypeId(rideData.getVehicleTypeId())
                         .latitude(rideData.getRoute().get(0).getLatitude())
@@ -304,8 +269,8 @@ public class RideService implements IRideService {
     }
 
     @Override
-    public List<RideBookedDTO> getAllBookedRidesByCustomer(Customer customer) {
-        List<RideBookedDTO> bookedRides = new ArrayList<>();
+    public List<RideResponseDTO> getAllBookedRidesByCustomer(Customer customer) {
+        List<RideResponseDTO> bookedRides = new ArrayList<>();
         List<Ride> rides = rideRepository.findByRideOwner(customer);
         for(Ride ride : rides) {
             boolean isScheduledNextTenMinutes = ride.getScheduledTime() != null &&
@@ -322,15 +287,7 @@ public class RideService implements IRideService {
                 for(Location location : locations) {
                     address.append(location.getAddress()).append(" ");
                 }
-                String ScheduleTime = ride.getScheduledTime() != null ? ride.getScheduledTime().toString() : "Immediate";
-                String driverName = ride.getDriver() != null ? ride.getDriver().firstNameAndLastName() : "Not assigned";
-                RideBookedDTO rideBookedDTO = RideBookedDTO.builder()
-                        .id(ride.getId())
-                        .status(ride.getStatus().toString())
-                        .scheduleTime(ScheduleTime)
-                        .driverName(driverName)
-                        .route(address.toString().trim())
-                        .build();
+               RideResponseDTO rideBookedDTO = rideMapper.convertToRideResponseDTO(ride);
                 bookedRides.add(rideBookedDTO);
             }
         }
@@ -402,23 +359,35 @@ public class RideService implements IRideService {
                 .startTime(ride.getStartTime() != null ? ride.getStartTime() : ride.getScheduledTime() != null ? ride.getScheduledTime() : null)
                 .build();
     }
-    public PagedResponse<RideResponseDTO> getActiveRides(
-            Pageable pageable,
-            String driverFirstName,
-            String driverLastName
+
+    @Override
+    public List<RideResponseDTO> getMyRides(AppUser currentUser) {
+        return rideRepository.findByDriverAndStatusIn(currentUser, List.of(RideStatus.ACCEPTED, RideStatus.ACTIVE))
+                .stream().map(rideMapper::convertToRideResponseDTO).toList();
+    }
+
+    public List<RideResponseDTO> getActiveRides(
+            String driverName
     ) {
-        Page<Ride> rides = rideRepository.findActiveRides(
+        if (driverName == null){
+            driverName = "";
+        }
+        String lowerDriverName = driverName.toLowerCase();
+        var drivers = driverRepository.findAll().stream().filter(
+                driver -> driver.getFirstName().toLowerCase().contains(lowerDriverName) ||
+                        driver.getLastName().toLowerCase().contains(lowerDriverName)
+            ).toList();
+
+        List<Ride> rides = rideRepository.findActiveRides(
                 List.of(RideStatus.ACTIVE),
-                driverFirstName,
-                driverLastName,
-                pageable
+                drivers
         );
 
-        List<RideResponseDTO> content = rides.getContent()
+        List<RideResponseDTO> dtos = rides
                 .stream()
                 .map(rideMapper::convertToRideResponseDTO)
                 .toList();
 
-        return PagedResponse.fromPage(content, rides);
+        return dtos;
     }
 }

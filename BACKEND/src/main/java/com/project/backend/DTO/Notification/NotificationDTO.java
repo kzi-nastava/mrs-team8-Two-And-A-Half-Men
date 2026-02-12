@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +18,7 @@ public class NotificationDTO {
     private String message;
     private Long recipientId;
     private boolean read;
+    private LocalDateTime timestamp;
     private String additionalData; // Optional field for any extra data (e.g., ride details, driver info)
 
     public NotificationDTO(Notification notification) {
@@ -24,6 +27,7 @@ public class NotificationDTO {
         this.message = notification.getMessage();
         this.recipientId = notification.getAppUser().getId();
         this.additionalData = notification.getData();
+        this.timestamp = notification.getTimestamp();
         this.read = notification.isRead();
     }
 }

@@ -1,0 +1,138 @@
+<div class="pricing-settings-section">
+	<!-- Section Header -->
+	<div class="section-header">
+		<div class="header-content">
+			<h2 class="section-title">
+				<span class="icon">💰</span>
+				Vehicle Type Pricing
+			</h2>
+			<p class="section-description">
+				Manage pricing for different vehicle types.
+			</p>
+		</div>
+
+		<button
+			class="refresh-btn"
+			(click)="loadVehicleTypes()"
+			[disabled]="loading()"
+			[class.loading]="loading()"
+		>
+			<span class="refresh-icon">🔄</span>
+			Refresh
+		</button>
+	</div>
+
+	<!-- Loading State -->
+	@if (loading() && !hasVehicleTypes()) {
+		<div class="loading-container">
+			<div class="spinner"></div>
+			<p>Loading vehicle types...</p>
+		</div>
+	}
+
+	<!-- Error State -->
+	@if (error() && !hasVehicleTypes()) {
+		<div class="error-container">
+			<p class="error-message">{{ error() }}</p>
+			<button class="retry-btn" (click)="retry()">Retry</button>
+		</div>
+	}
+
+	<!-- Vehicle Types Grid -->
+	@if (hasVehicleTypes()) {
+		<div class="vehicle-types-grid">
+			@for (vehicleType of vehicleTypes(); track vehicleType.id) {
+				<div class="vehicle-type-card" [class.editing]="isEditing(vehicleType.id)">
+					<!-- Vehicle Type Info -->
+					<div class="vehicle-info">
+						<div class="vehicle-icon">
+							{{ getVehicleIcon(vehicleType.typeName) }}
+						</div>
+
+						<div class="vehicle-details">
+							<h3 class="vehicle-name">{{ vehicleType.typeName }}</h3>
+							<p class="vehicle-description">{{ vehicleType.description }}</p>
+
+							@if (!isEditing(vehicleType.id)) {
+								<div class="price-display">
+									<span class="price-label">Price:</span>
+									<span class="price-value">{{
+										formatPrice(vehicleType.price)
+									}}</span>
+								</div>
+							}
+						</div>
+					</div>
+
+					<!-- Edit Mode -->
+					@if (isEditing(vehicleType.id)) {
+						<div class="edit-section">
+							<div class="edit-form">
+								<label class="input-label">Price:</label>
+								<div class="input-group">
+									<input
+										type="number"
+										class="price-input"
+										[value]="editingPrice()"
+										(input)="onPriceChange($any($event.target).value)"
+										(keydown.enter)="onEnterKey(vehicleType)"
+										(keydown.escape)="cancelEdit()"
+										step="0.1"
+										min="0"
+										placeholder="Enter price:"
+										[disabled]="savingId() === vehicleType.id"
+										autofocus
+									/>
+								</div>
+
+								<div class="edit-actions">
+									<button
+										class="save-btn"
+										(click)="updatePrice(vehicleType)"
+										[disabled]="
+											savingId() === vehicleType.id || editingPrice() === null
+										"
+									>
+										@if (savingId() === vehicleType.id) {
+											<span class="btn-spinner"></span>
+											Saving...
+										} @else {
+											✓ Save
+										}
+									</button>
+
+									<button
+										class="cancel-btn"
+										(click)="cancelEdit()"
+										[disabled]="savingId() === vehicleType.id"
+									>
+										✕ Cancel
+									</button>
+								</div>
+							</div>
+						</div>
+					} @else {
+						<!-- View Mode Actions -->
+						<div class="card-actions">
+							<button
+								class="edit-btn"
+								(click)="startEdit(vehicleType)"
+								[disabled]="editingId() !== null"
+							>
+								✎ Edit Price
+							</button>
+						</div>
+					}
+				</div>
+			}
+		</div>
+
+		<!-- Error Message (when editing) -->
+		@if (error() && editingId() !== null) {
+			<div class="inline-error">
+				<span class="error-icon">⚠️</span>
+				{{ error() }}
+			</div>
+		}
+	}
+</div>

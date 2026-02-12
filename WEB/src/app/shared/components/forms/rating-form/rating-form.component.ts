@@ -4,6 +4,12 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { RatingService } from '@shared/components/forms/rating-form/services/rating.service';
 import { PopupsService } from '@shared/services/popups/popups.service';
 
+export interface RatingFormData {
+	driverRating: number;
+	vehicleRating: number;
+	comment: string;
+}
+
 @Component({
 	selector: 'app-rating-form',
 	standalone: true,
@@ -12,12 +18,8 @@ import { PopupsService } from '@shared/services/popups/popups.service';
 	styleUrls: ['./rating-form.component.css'],
 })
 export class RatingFormComponent {
-	private ratingService = inject(RatingService);
-	private popupsService = inject(PopupsService);
 
-	@Input() rideId!: number;
-	@Input() accessToken: string | null = null;
-	@Output() ratingSubmitted = new EventEmitter<void>();
+	@Output() ratingSubmitted = new EventEmitter<RatingFormData>();
 	@Output() closePopup = new EventEmitter<void>();
 
 	ratingForm = new FormGroup({
@@ -27,7 +29,6 @@ export class RatingFormComponent {
 	});
 
 	stars = [1, 2, 3, 4, 5];
-	isLoading = signal<boolean>(false);
 
 	setRating(field: 'driver' | 'vehicle', val: number) {
 		this.ratingForm.patchValue({ [field]: val });
@@ -38,34 +39,13 @@ export class RatingFormComponent {
 	}
 
 	submit() {
-		console.log(this.ratingForm.valid);
-		console.log(this.rideId);
-		if (this.ratingForm.valid && this.rideId) {
-			this.isLoading.set(true);
+		if (this.ratingForm.valid) {
 			const data = {
 				driverRating: this.ratingForm.value.driver!,
 				vehicleRating: this.ratingForm.value.vehicle!,
 				comment: this.ratingForm.value.comment || '',
 			};
-
-			this.ratingService.submitRating(this.rideId, data, this.accessToken).subscribe({
-				next: () => {
-					this.popupsService.success(
-						'Success',
-						'Your rating has been submitted successfully!',
-					);
-					this.isLoading.set(false);
-					this.ratingForm.reset();
-					this.ratingSubmitted.emit();
-				},
-				error: (err) => {
-					this.popupsService.error(
-						'Error',
-						'Failed to submit rating. ' + err.error.message,
-					);
-					this.isLoading.set(false);
-				},
-			});
+			this.ratingSubmitted.emit(data);
 		}
 	}
 }

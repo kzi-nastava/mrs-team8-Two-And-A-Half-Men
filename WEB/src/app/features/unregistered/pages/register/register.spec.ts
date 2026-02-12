@@ -23,8 +23,9 @@ let component: Register;
     const unregisteredAuthServiceSpy = jasmine.createSpyObj('UnregisteredAuthService', ['register']);
     unregisteredAuthServiceSpy.register.and.returnValue(of(mockSuccessResponse));
 
-    const popupsServiceSpy = jasmine.createSpyObj('PopupsService', ['success']);
 
+    const popupsServiceSpy = jasmine.createSpyObj('PopupsService', ['success']);
+  
     await TestBed.configureTestingModule({
       imports: [Register,ReactiveFormsModule],
       providers: [
@@ -38,6 +39,7 @@ let component: Register;
     component = fixture.componentInstance;
     unregisteredAuthService = TestBed.inject(UnregisteredAuthService) as jasmine.SpyObj<UnregisteredAuthService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    spyOn(router, 'navigate').and.returnValue(Promise.resolve(true)); //spy on this service
     popupsService = TestBed.inject(PopupsService) as jasmine.SpyObj<PopupsService>;
   });
 
@@ -255,8 +257,77 @@ it('should display step 2 fields and hide step 2 fields', fakeAsync(() => {
     expect(errorMessage).toBeTruthy();
     expect(errorMessage.nativeElement.textContent).toContain('Passwords do not match');
   }));
-  
 
-  
+  // Succesfull register
+  // Unsuccessful register - email already exists
+  // Unsuccessful register - server error 
+  it('should display success popup and navigate to login on successful registration', fakeAsync(() => {
+    unregisteredAuthService.register.and.returnValue(of(mockSuccessResponse));
+    component.step = 2;
+    fixture.detectChanges();
+component.registerForm.get('firstName')?.setValue('Petar');
+component.registerForm.get('lastName')?.setValue('Popovic');
+component.registerForm.get('phoneNumber')?.setValue('381628361185');
+component.registerForm.get('address')?.setValue('Dragoseva 1/12');
+component.registerForm.get('email')?.setValue('customer@test.com');
+component.registerForm.get('password')?.setValue('password123');
+component.registerForm.get('confirmPassword')?.setValue('password123');
+const submitBtn = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+submitBtn.click();
+fixture.detectChanges();
+tick();
+expect(popupsService.success).toHaveBeenCalledWith('Success', 'Registered successfully! Please check your email to activate your account.', jasmine.objectContaining({ 
+        onConfirm: jasmine.any(Function) 
+    }) );
+const popupArgs = popupsService.success.calls.mostRecent().args[2];  
 
+if (popupArgs && popupArgs.onConfirm) {
+    popupArgs.onConfirm();
+}
+
+expect(router.navigate).toHaveBeenCalledWith(['/login']);
+  }));
+
+
+
+
+it('should display error message when email already exists', fakeAsync(() => {
+component.step = 2;
+unregisteredAuthService.register.and.returnValue(throwError(mockErrorResponse));
+fixture.detectChanges();
+component.registerForm.get('firstName')?.setValue('Petar');
+component.registerForm.get('lastName')?.setValue('Popovic');
+component.registerForm.get('phoneNumber')?.setValue('381628361185');
+component.registerForm.get('address')?.setValue('Dragoseva 1/12');
+component.registerForm.get('email')?.setValue('customer@test.com'); 
+component.registerForm.get('password')?.setValue('password123');
+component.registerForm.get('confirmPassword')?.setValue('password123');
+const submitBtn = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+submitBtn.click();
+fixture.detectChanges();
+tick();
+const errorMessage = fixture.debugElement.query(By.css('#error-register'));
+expect(component.errorMessage()).toBe('Email already exists');
+expect(errorMessage).toBeTruthy();
+expect(errorMessage.nativeElement.textContent).toContain('Email already exists');
+}));
+it('should display error message when server error occurs', fakeAsync(() => {component.step = 2;
+   fixture.detectChanges(); 
+  unregisteredAuthService.register.and.returnValue(throwError(mockErrorResponseServer));
+   component.registerForm.get('firstName')?.setValue('Petar'); 
+   component.registerForm.get('lastName')?.setValue('Popovic'); 
+   component.registerForm.get('phoneNumber')?.setValue('381628361185'); 
+   component.registerForm.get('address')?.setValue('Dragoseva 1/12'); 
+   component.registerForm.get('email')?.setValue('customer2@test.com');
+   component.registerForm.get('password')?.setValue('password123');
+   component.registerForm.get('confirmPassword')?.setValue('password123');
+   const submitBtn = fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
+   submitBtn.click();
+   fixture.detectChanges();
+   tick();
+   const errorMessage = fixture.debugElement.query(By.css('#error-register'));
+   expect(component.errorMessage()).toBe('Server error occurred');
+   expect(errorMessage).toBeTruthy();
+   expect(errorMessage.nativeElement.textContent).toContain('Server error occurred');
+}));
 });

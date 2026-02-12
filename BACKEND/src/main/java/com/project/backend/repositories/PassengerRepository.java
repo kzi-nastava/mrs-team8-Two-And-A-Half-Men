@@ -1,6 +1,6 @@
 package com.project.backend.repositories;
 
-import com.project.backend.models.Customer;
+import com.project.backend.models.AppUser;
 import com.project.backend.models.Passenger;
 import com.project.backend.models.Ride;
 import com.project.backend.models.enums.RideStatus;
@@ -16,12 +16,10 @@ public interface PassengerRepository extends JpaRepository<Passenger, Long> {
     @Query("SELECT p FROM Passenger p WHERE p.user = :customer " +
             "AND p.ride IS NOT NULL " +
             "AND p.ride.status IN :statuses")
-    Optional<Passenger> findByCustomerWithRideStatus(@Param("customer") Customer customer ,
+    Optional<Passenger> findByCustomerWithRideStatus(@Param("customer") AppUser customer ,
                                                              @Param("statuses") Iterable<RideStatus> statuses);
 
-    Optional<Passenger> findByUserAndRideStatusIn(Customer user, Collection<RideStatus> statuses);
+    Optional<Passenger> findByUserAndRideStatusIn(AppUser user, Collection<RideStatus> statuses);
 
-    Optional<Passenger> findByUserId(Long id);
-
-    Optional<Passenger> findByUserAndRide(Customer user, Ride ride);
+    Optional<Passenger> findByUserAndRide(AppUser user, Ride ride);
 }

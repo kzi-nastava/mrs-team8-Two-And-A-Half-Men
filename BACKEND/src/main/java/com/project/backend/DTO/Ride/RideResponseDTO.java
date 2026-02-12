@@ -24,6 +24,7 @@ public class RideResponseDTO {
 
     private String driverName;
     private String rideOwnerName;
+    private Long rideOwnerId;
 
     private RideStatus status;
     private String path;
@@ -34,4 +35,7 @@ public class RideResponseDTO {
     private List<String> additionalServices;
     private List<PassengerDTO> passengers;
     private List<LocationDTO> locations;
+    private Long routeId;
+
+    private boolean isFavourite;
 }

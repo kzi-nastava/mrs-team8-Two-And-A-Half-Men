@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, delay, retry, tap } from 'rxjs/operators';
+import { NominatimResult } from '@shared/models/nominatim-results.model';
 
 @Injectable({
 	providedIn: 'root',

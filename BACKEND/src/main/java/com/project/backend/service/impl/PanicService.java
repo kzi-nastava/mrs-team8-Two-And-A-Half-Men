@@ -1,32 +1,34 @@
 package com.project.backend.service.impl;
 
+import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.*;
+import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.PassengerRepository;
 import com.project.backend.repositories.RideRepository;
 import com.project.backend.repositories.redis.DriverLocationsRepository;
+import com.project.backend.service.DateTimeService;
 import com.project.backend.service.IPanicService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.geo.Point;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 
 
 @Service
+@RequiredArgsConstructor
 public class PanicService implements IPanicService {
 
-    @Autowired
-    private PassengerRepository passengerRepository;
-    @Autowired
-    private RideRepository rideRepository;
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-    @Autowired
-    private DriverLocationsRepository driverLocationsRepository;
+    private final PassengerRepository passengerRepository;
+    private final RideRepository rideRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final DriverLocationsRepository driverLocationsRepository;
+    private final DateTimeService dateTimeService;
 
-    public void triggerPanicAlert(AppUser user, String accesToken) {
+    public void triggerPanicAlert(AppUser user, String accessToken) {
         System.out.println("Panic alert triggered");
         Passenger passenger = null;
         if (accesToken != null) {
@@ -34,7 +36,7 @@ public class PanicService implements IPanicService {
         }
         System.out.println(passenger);
         if(passenger == null && user instanceof Customer) {
-            passenger = passengerRepository.findByCustomerWithRideStatus((Customer) user,
+            passenger = passengerRepository.findByCustomerWithRideStatus(user,
                     List.of(RideStatus.ACTIVE)).orElse(null);
         } else if(passenger == null && user instanceof Driver driver) {
             System.out.println("Driver triggering panic");
@@ -45,7 +47,7 @@ public class PanicService implements IPanicService {
             }
             activeRide.setStatus(RideStatus.PANICKED);
             rideRepository.save(activeRide);
-            driverLocationsRepository.setLocations(driver.getId(), 10 , 10) ; // Mock location
+            // driverLocationsRepository.setLocations(driver.getId(), 10 , 10) ; // Mock location
             Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
             String driverLocation = driverPoint.getX() + "," + driverPoint.getY();
             Map<String, String> panicAlert = Map.of(
@@ -77,5 +79,30 @@ public class PanicService implements IPanicService {
         simpMessagingTemplate.convertAndSend("/topic/panic", panicAlert);
 
         System.out.println("Panic alert sent to admins.");
+    }
+
+    public void panic(Long rideId, Long userId, String accessToken) {
+        Ride ride = rideRepository.findById(rideId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ride not found with id: " + rideId));
+
+        if (ride.getStatus() != RideStatus.ACTIVE) {
+            throw new IllegalStateException("Panic can only be triggered for active rides.");
+        }
+
+        // Verify users
+
+        // Update the ride status to PANICKED
+        ride.setStatus(RideStatus.PANICKED);
+        ride.setEndTime(dateTimeService.getCurrentDateTime());
+        ride.getDriver().setDriverStatus(DriverStatus.ACTIVE);
+        rideRepository.save(ride);
+
+        // Notify admins about the panic alert
+        Map<String, String> panicAlert = Map.of(
+                "userId", userId.toString(),
+                "rideId", rideId.toString(),
+                "accessToken", accessToken
+        );
+        simpMessagingTemplate.convertAndSend("/topic/panic", panicAlert);
     }
 }

@@ -76,6 +76,13 @@ export class NavbarComponent {
 	private get loggedInUserButtons(): NavbarButton[] {
 		return [
 			{
+				id: 'history',
+				type: 'text',
+				label: 'Ride History',
+				position: 'right',
+				route: '/history',
+			},
+			{
 				id: 'reports',
 				type: 'text',
 				label: 'Reports',
@@ -116,13 +123,6 @@ export class NavbarComponent {
 	private get customerButtons(): NavbarButton[] {
 		return [
 			{
-				id: 'history',
-				type: 'text',
-				label: 'Ride History',
-				position: 'right',
-				route: '/history',
-			},
-			{
 				id: 'rides',
 				type: 'text',
 				label: 'Booked Rides',
@@ -134,38 +134,17 @@ export class NavbarComponent {
 	}
 	private get driverButtons(): NavbarButton[] {
 		return [
-			{
-				id: 'history',
-				type: 'text',
-				label: 'Ride History',
-				position: 'right',
-				route: '/driver/history',
-			},
 			...this.loggedInUserButtons,
 		];
 	}
 	private get adminButtons(): NavbarButton[] {
 		return [
 			{
-				id: 'history',
-				type: 'text',
-				label: 'Ride History',
-				position: 'right',
-				route: '/admin/history',
-			},
-			{
-				id: 'active-rides',
-				type: 'text',
-				label: 'Active Rides',
-				position: 'right',
-				route: '/admin/active-rides',
-			},
-			{
 				id: 'users',
 				type: 'text',
 				label: 'Users',
 				position: 'right',
-				route: '/admin/users',
+				route: '/users',
 			},
 			{
 				id: 'chats',
@@ -179,7 +158,7 @@ export class NavbarComponent {
 				type: 'text',
 				label: 'Settings',
 				position: 'right',
-				route: '/admin/settings',
+				route: '/settings',
 			},
 			...this.loggedInUserButtons,
 		];

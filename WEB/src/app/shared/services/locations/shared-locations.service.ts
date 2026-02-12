@@ -1,9 +1,9 @@
 import { Injectable, Signal, signal } from '@angular/core';
-import * as L from 'leaflet';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { NominatimService } from './nominatim-service';
+import { NominatimResult } from '@shared/models/nominatim-results.model';
 
 @Injectable({
 	providedIn: 'root',

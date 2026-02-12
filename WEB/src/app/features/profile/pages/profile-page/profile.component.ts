@@ -20,6 +20,7 @@ import { UpdateProfileRequest } from '@features/profile/models/update-profile.mo
 import { VehiclesService } from '@shared/services/vehicles/vehicles.service';
 import { PopupsService } from '@shared/services/popups/popups.service';
 import { Router } from '@angular/router';
+import { LoggedInUser } from '@core/models/loggedInUser.model';
 
 @Component({
 	selector: 'app-profile',
@@ -103,7 +104,7 @@ export class ProfileComponent implements OnInit {
 		if (profile.pendingChangeRequest) {
 			this.changeRequest.set(profile?.pendingChangeRequest ?? null);
 		}
-		this.authService.updateUserInfo(profile.personalInfo);
+		this.authService.updateUserInfo(profile.personalInfo as Partial<LoggedInUser>);
 	}
 
 	loadProfileData() {

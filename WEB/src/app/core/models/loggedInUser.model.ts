@@ -1,6 +1,6 @@
 export interface LoggedInUser {
 	id: number;
-	role: string;
+	role: LoggedInUserRole;
 	firstName: string;
 	lastName: string;
 	email: string;

@@ -4,6 +4,7 @@ import { AuthService } from '@core/services/auth.service';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, Login, User } from '@features/unregistered/models/auth.model';
 import { environment } from '@environments/environment';
+import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 
 @Injectable({
 	providedIn: 'root',
@@ -19,7 +20,7 @@ export class UnregisteredAuthService {
 					response.accessToken,
 					{
 						id: response.id,
-						role: response.role,
+						role: response.role as LoggedInUserRole,
 						firstName: response.firstName,
 						lastName: response.lastName,
 						email: response.email,

@@ -2,9 +2,9 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '@environments/environment';
-import { Ride } from '@features/history/models/ride.model';
+import { Ride } from '@shared//models/ride.model';
 import { PopupsService } from '@shared/services/popups/popups.service';
-import { SortDirection, SortField } from '@features/history/models/ride-history-config';
+import { SortDirection, SortField } from '@features/history/models/ride-config';
 
 @Injectable({
 	providedIn: 'root',

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ public class NotificationsService {
                 .title(title)
                 .message(message)
                 .data(additionalData)
+                .timestamp(LocalDateTime.now())
                 .build();
 
         notificationRepository.save(notification);

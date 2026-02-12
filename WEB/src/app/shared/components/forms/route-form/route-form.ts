@@ -6,6 +6,7 @@ import { SharedLocationsService } from '@shared/services/locations/shared-locati
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { NominatimService } from '@shared/services/locations/nominatim-service';
+import { NominatimResult } from '@shared/models/nominatim-results.model';
 
 @Component({
 	selector: 'app-route-form',

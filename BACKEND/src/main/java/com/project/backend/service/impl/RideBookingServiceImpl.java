@@ -60,9 +60,11 @@ public class RideBookingServiceImpl implements RideBookingService {
         Double estimatedDistance = null;
         if (ride.getScheduledTime() == null) {
             // Ride is for right now and we need to look for suitable driver
-            estimatedDistance = driverMatchingService.findDriverFor(ride).orElseThrow(
+            var driverInfo = driverMatchingService.findDriverFor(ride).orElseThrow(
                     () -> new ResourceNotFoundException("No suitable driver found at this moment with these filters")
-            ).getEstimatedDistance();
+            );
+            ride.setDriver(driverInfo.getDriver());
+            estimatedDistance = driverInfo.getEstimatedDistance();
         }
 
         rideRepository.save(ride);

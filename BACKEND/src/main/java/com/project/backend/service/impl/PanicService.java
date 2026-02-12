@@ -68,7 +68,7 @@ public class PanicService implements IPanicService {
         Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
         String driverLocation = driverPoint.getX() + "," + driverPoint.getY();
         Map<String, String> panicAlert = Map.of(
-                "passengerName", passenger.getUser().getEmail(),
+                "passengerName", passenger.getUser() != null ? passenger.getUser().getEmail() : passenger.getEmail(),
                 "driverName", driver.getEmail(),
                 "driverLocation", driverLocation,
                 "rideId", passenger.getRide().getId().toString()

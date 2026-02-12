@@ -108,7 +108,21 @@ export class Register {
 				!!this.registerForm.get('phoneNumber')?.valid &&
 				!!this.registerForm.get('address')?.valid
 			);
+		} else { 
+		if (this.registerForm.get('email')?.invalid) {
+			this.registerForm.get('email')?.markAsTouched();  
 		}
-		return false;
-	}
+		if (this.registerForm.get('password')?.invalid) {
+			this.registerForm.get('password')?.markAsTouched();
+		}
+		if (this.registerForm.get('confirmPassword')?.invalid) {
+			this.registerForm.get('confirmPassword')?.markAsTouched();
+		}
+		return (
+			!!this.registerForm.get('email')?.valid &&
+			!!this.registerForm.get('password')?.valid &&
+			!!this.registerForm.get('confirmPassword')?.valid);
+		}
+	} 
+
 }

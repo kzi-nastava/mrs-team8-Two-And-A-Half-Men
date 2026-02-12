@@ -43,9 +43,11 @@
 		"rxjs": "~7.8.0",
 		"sockjs-client": "^1.6.1",
 		"sweetalert2": "^11.26.17",
-		"tslib": "^2.3.0"
+		"tslib": "^2.3.0",
+		"zone.js": "^0.16.0"
 	},
 	"devDependencies": {
+		"@angular-devkit/build-angular": "^21.1.4",
 		"@angular/build": "^21.0.2",
 		"@angular/cli": "^21.0.2",
 		"@angular/compiler-cli": "^21.0.0",
@@ -54,7 +56,14 @@
 		"@types/latlon-geohash": "^2.0.4",
 		"@types/ngeohash": "^0.6.8",
 		"@types/sockjs-client": "^1.5.4",
+		"jasmine-core": "^6.0.1",
+		"jasmine-spec-reporter": "^7.0.0",
 		"jsdom": "^27.1.0",
+		"karma": "^6.4.4",
+		"karma-chrome-launcher": "^3.2.0",
+		"karma-coverage": "^2.2.1",
+		"karma-jasmine": "^5.1.0",
+		"karma-jasmine-html-reporter": "^2.2.0",
 		"prettier": "3.8.1",
 		"typescript": "~5.9.2",
 		"vitest": "^4.0.8"

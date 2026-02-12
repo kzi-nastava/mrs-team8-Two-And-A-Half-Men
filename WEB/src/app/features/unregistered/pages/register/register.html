@@ -92,7 +92,7 @@
 						registerForm.get('email')?.invalid &&
 						(registerForm.get('email')?.dirty || registerForm.get('email')?.touched)
 					) {
-						<small>
+						<small id="emailError">
 							@if (registerForm.get('email')?.errors?.['required']) {
 								Email is required
 							} @else if (registerForm.get('email')?.errors?.['email']) {
@@ -115,7 +115,7 @@
 						(registerForm.get('password')?.dirty ||
 							registerForm.get('password')?.touched)
 					) {
-						<small> Password must be at least 6 characters </small>
+						<small id="passwordError"> Password must be at least 6 characters </small>
 					}
 				</div>
 				<div class="form-group">

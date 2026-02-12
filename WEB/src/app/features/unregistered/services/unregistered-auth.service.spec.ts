@@ -85,8 +85,7 @@ describe('register()', () => {
       });
 
       const req = httpMock.expectOne(`/api/${environment.apiVersion}/users/register`);
-      req.flush({ error: 'Email already exists' }, { status: 400, statusText: 'Bad Request' });
-
+      req.flush({ error: 'Email already in use' }, { status: 401, statusText: 'Unauthorized' });
       tick();
 
       expect(errorResponse).toBeDefined();

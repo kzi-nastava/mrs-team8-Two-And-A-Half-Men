@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="E2E Test Suite">
+    <parameter name="frontendUrl" value="http://localhost:4200"/>
+    <test name="Backend E2E Tests">
+        <packages>
+            <package name="e2e.tests"/>
+        </packages>
+
+    </test>
+</suite>

@@ -24,7 +24,6 @@ import com.project.backend.service.IRideService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -49,15 +48,9 @@ public class RideService implements IRideService {
     private final CustomerRepository customerRepository;
     private final PassengerRepository passengerRepository;
     private final LocationRepository locationRepository;
-    private final VehicleRepository vehicleRepository;
-    private final VehicleTypeRepository vehicleTypeRepository;
-    private final AdditionalServiceRepository additionalServiceRepository;
     private final RideMapper rideMapper;
 
-    private final SimpMessagingTemplate messagingTemplate;
-
     private final ResolvePassengerService resolvePassengerService;
-    private final AppUserRepository appUserRepository;
     private final DateTimeService dateTimeService;
 
     public RideResponseDTO getRideById(Long id, Long currentUserId) {
@@ -108,36 +101,6 @@ public class RideService implements IRideService {
                 );
     }
 
-    public RideResponseDTO getActiveRideByDriverId(Long id) {
-        Driver driver = driverRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Driver with id " + id + " not found"));
-
-        Ride activeRide = rideRepository
-                .findFirstByDriverAndStatusIn(driver, List.of(RideStatus.ACCEPTED, RideStatus.ACTIVE))
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Active ride for driver with id " + id + " not found"
-                        ));
-
-        return rideMapper.convertToRideResponseDTO(activeRide);
-    }
-
-    public RideResponseDTO getActiveRideByCustomerId(Long id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Customer with id " + id + " not found"));
-
-        Ride activeRide = rideRepository
-                .findFirstByRideOwnerAndStatusIn(customer, List.of(RideStatus.ACTIVE))
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Active ride for customer with id " + id + " not found"
-                        ));
-
-        return rideMapper.convertToRideResponseDTO(activeRide);
-    }
-
     public NoteResponseDTO saveRideNote(
             Long rideId,
             PassengerActor actor,
@@ -161,44 +124,6 @@ public class RideService implements IRideService {
                 .passengerMail(passenger.getEmail())
                 .rideId(ride.getId())
                 .build();
-    }
-
-    public RideTrackingDTO getRideTrackingInfo(PassengerActor actor) {
-        Passenger passenger = resolvePassengerService.resolveActorOnActiveRide(actor);
-
-        Long rideId = passenger.getRide().getId();
-        Ride ride = rideRepository.findById(rideId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Ride with id " + rideId + " not found"));
-
-        List<Coordinates> coordinates = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
-        List<String> hashes = coordinates
-                .stream().map(
-                        c -> locationTransformer
-                                .transformFromPoints(List.of(new double[] {c.getLatitude(), c.getLongitude()}))
-                ).toList();
-        var locations = locationRepository.findAllByGeoHashIn(hashes);
-
-        return RideTrackingDTO.builder()
-                .id(ride.getId())
-                .driverId(ride.getDriver().getId())
-                .stops(locations)
-                .status(ride.getStatus())
-                .startTime(ride.getStartTime())
-                .build();
-    }
-
-    public void sendRideUpdate(Ride ride) {
-        RideTrackingDTO rideTrackingDTO = RideTrackingDTO.builder()
-                .id(ride.getId())
-                .status(ride.getStatus())
-                .startTime(ride.getStartTime())
-                .build();
-
-        messagingTemplate.convertAndSend(
-                "/topic/rides/" + ride.getId(),
-                rideTrackingDTO
-        );
     }
 
     @Override
@@ -294,24 +219,8 @@ public class RideService implements IRideService {
         return bookedRides;
     }
 
-    public RideTrackingDTO getDriversActiveRide(Driver driver) {
-        Ride ride = rideRepository.findFirstByDriverAndStatusIn(
-                driver, List.of(RideStatus.ACTIVE)
-        ).orElseThrow(() ->
-                new ResourceNotFoundException("Drivers active ride is not found")
-        );
-
-        return RideTrackingDTO.builder()
-                .id(ride.getId())
-                .driverId(driver.getId())
-                .passengerId(null)
-                .stops(null)
-                .startTime(ride.getStartTime())
-                .build();
-    }
-
     @Transactional
-    public void finishRide(Long id, FinishRideDTO finishRideDTO) {
+    public RideResponseDTO finishRide(Long id, FinishRideDTO finishRideDTO) {
         Ride ride = rideRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Ride with id " + id + " not found")
@@ -323,41 +232,12 @@ public class RideService implements IRideService {
         applicationEventPublisher.publishEvent(new RideFinishedEvent(ride));
 
         rideRepository.save(ride);
-    }
 
-    @Override
-    public RideTrackingDTO getRideTrackingById(Long id, AppUser user) {
-        Ride ride = rideRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Ride with id " + id + " not found")
-                );
-        if(ride.getStatus() != RideStatus.ACCEPTED && ride.getStatus() != RideStatus.ACTIVE && ride.getStatus() != RideStatus.PENDING) {
-            throw new BadRequestException("Ride is not trackable");
-        }
-        if (user instanceof Driver) {
-            if(!ride.getDriver().getId().equals(user.getId())) {
-                throw new ForbiddenException("You are not assigned to this ride");
-            }
-        } else if (user instanceof Customer) {
-            if(!ride.getRideOwner().getId().equals(user.getId())) {
-                throw new ForbiddenException("You are not the owner of this ride");
-            }
-        }
-        List<Coordinates> coordinates = locationTransformer.transformToCoordinates(ride.getRoute().getGeoHash());
-        List<String> hashes = coordinates
-                .stream().map(
-                        c -> locationTransformer
-                                .transformFromPoints(List.of(new double[] {c.getLatitude(), c.getLongitude()}))
-                ).toList();
-        var locations = locationRepository.findAllByGeoHashIn(hashes);
+        Ride next = rideRepository.findFirstByDriverAndStatusInOrderByCreatedAtAsc(
+                ride.getDriver(), List.of(RideStatus.ACCEPTED)
+        ).orElse(null);
 
-        return RideTrackingDTO.builder()
-                .id(ride.getId())
-                .driverId(ride.getDriver() != null ? ride.getDriver().getId() : null)
-                .stops(locations)
-                .status(ride.getStatus())
-                .startTime(ride.getStartTime() != null ? ride.getStartTime() : ride.getScheduledTime() != null ? ride.getScheduledTime() : null)
-                .build();
+        return next != null ? rideMapper.convertToRideResponseDTO(next) : null;
     }
 
     @Override
@@ -383,11 +263,9 @@ public class RideService implements IRideService {
                 drivers
         );
 
-        List<RideResponseDTO> dtos = rides
+        return rides
                 .stream()
                 .map(rideMapper::convertToRideResponseDTO)
                 .toList();
-
-        return dtos;
     }
 }

@@ -3,6 +3,7 @@ package com.project.backend.controllers.ride;
 import com.project.backend.DTO.Ride.CostTimeDTO;
 import com.project.backend.DTO.Ride.FinishRideDTO;
 import com.project.backend.DTO.Ride.RideCancelationDTO;
+import com.project.backend.DTO.Ride.RideResponseDTO;
 import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
 import com.project.backend.service.IRideService;
@@ -58,8 +59,8 @@ public class RideCommandController {
             @PathVariable Long id,
             @RequestBody FinishRideDTO finishRideDTO
     ) {
-        rideService.finishRide(id, finishRideDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        RideResponseDTO next = rideService.finishRide(id, finishRideDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(next);
     }
 
     @PatchMapping("/{id}/cancel")

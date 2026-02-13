@@ -292,7 +292,11 @@
 
 			<!-- Map Section -->
 			<div class="map-container">
-				<app-map [path]="ride()!.path" [config]="mapConfig"></app-map>
+				<app-map
+					[rideLocations]="rideLocations()"
+					[path]="ride()!.path"
+					[config]="mapConfig()">
+				</app-map>
 			</div>
 		</div>
 	}

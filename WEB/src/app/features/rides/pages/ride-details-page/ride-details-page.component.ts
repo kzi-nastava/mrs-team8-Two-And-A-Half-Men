@@ -6,7 +6,7 @@ import { Ride, RideStatus } from '@shared/models/ride.model';
 import { map } from 'rxjs/operators';
 import { PopupsService } from '@shared/services/popups/popups.service';
 import { MapComponent } from '@shared/components/map/map.component';
-import { MAP_CONFIGS } from '@shared/components/map/map.config';
+import { getMapConfigForRideStatus, MapConfig } from '@shared/components/map/map.config';
 import {
 	RatingFormComponent,
 	RatingFormData,
@@ -40,7 +40,28 @@ export class RideDetailsComponent implements OnInit {
 	popupService = inject(PopupsService);
 	private authService = inject(AuthService);
 
-	mapConfig = MAP_CONFIGS.HISTORY_VIEW;
+	mapConfig = computed<MapConfig>(() => {
+		const currentRide = this.ride();
+		if (!currentRide) {
+			return getMapConfigForRideStatus(RideStatus.PENDING);
+		}
+		return getMapConfigForRideStatus(currentRide.status);
+	});
+
+	// Computed property za ride locations kao NominatimResult array
+	rideLocations = computed<NominatimResult[]>(() => {
+		const currentRide = this.ride();
+		if (!currentRide || !currentRide.locations) {
+			return [];
+		}
+
+		return currentRide.locations.map((loc) => ({
+			lon: `${loc.longitude}`,
+			lat: `${loc.latitude}`,
+			display_name: loc.address,
+			place_id: 1, // Dummy place_id since we don't have it from ride model
+		})) as NominatimResult[];
+	});
 
 	actionsConfig = computed(() =>
 		this.actionsConfigService.getActions(this.authService.user(), this.ride()),
@@ -74,6 +95,8 @@ export class RideDetailsComponent implements OnInit {
 		effect(() => {
 			console.log('Current ride:', this.ride());
 			console.log('Route ID:', this.rideId());
+			console.log('Map config:', this.mapConfig());
+			console.log('Ride locations:', this.rideLocations());
 		});
 	}
 
@@ -81,7 +104,7 @@ export class RideDetailsComponent implements OnInit {
 		console.log('ON INIT');
 		console.log(this.route.snapshot.queryParams);
 		this.accessToken = this.route.snapshot.queryParams['accessToken'] || null;
-		this.shouldOpenRatingPopup = this.route.snapshot.queryParams['view'] === "rate";
+		this.shouldOpenRatingPopup = this.route.snapshot.queryParams['view'] === 'rate';
 	}
 
 	private loadRideDetails(rideId: number) {
@@ -158,7 +181,7 @@ export class RideDetailsComponent implements OnInit {
 
 	onRatingSubmitted(data: RatingFormData) {
 		if (!this.ride()) {
-			return
+			return;
 		}
 		this.showRatingPopup.set(false);
 		this.rideService.submitRating(this.ride()!.id, data, this.accessToken).subscribe({
@@ -169,15 +192,14 @@ export class RideDetailsComponent implements OnInit {
 			error: (err) => {
 				this.popupService.error(
 					'Error',
-					'Failed to submit rating. '+ (err?.error?.message || 'Please try again later.'),
+					'Failed to submit rating. ' +
+						(err?.error?.message || 'Please try again later.'),
 				);
-			}
+			},
 		});
 	}
 
 	canGoBack(): boolean {
-		// history.length is a very general indicator and might not be reliable
-		// for complex Angular app history.
 		return window.history.length > 2;
 	}
 
@@ -226,13 +248,7 @@ export class RideDetailsComponent implements OnInit {
 
 	protected rebookRide() {
 		if (!this.ride()) return;
-		let newLocations = this.ride()!.locations.map((loc) => ({
-			lon: `${loc.longitude}`,
-			lat: `${loc.latitude}`,
-			display_name: loc.address,
-			place_id: 1,
-		})) as NominatimResult[];
-		this.sharedLocationService.locations.set(newLocations);
+		this.sharedLocationService.locations.set(this.rideLocations());
 		this.router.navigate(['/home']).then();
 	}
 

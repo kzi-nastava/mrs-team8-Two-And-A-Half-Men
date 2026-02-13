@@ -1,71 +1,73 @@
+import { RideStatus } from '@shared/models/ride.model';
+
 export interface MapConfig {
 	enableLocationPins?: boolean;
-	enableDriverMarkers?: boolean;
-	enableRouting?: boolean;
 	enableClickToAddLocation?: boolean;
 	enableRightClickToRemove?: boolean;
+	enableActiveDriverMarkers?: boolean;
 	enableDriverTracking?: boolean;
-
-	center?: [number, number];
-	zoom?: number;
-
-	path?: string;
+	enableRouting?: boolean;
+	enablePath?: boolean;
 }
 
 export const DEFAULT_MAP_CONFIG: MapConfig = {
 	enableLocationPins: false,
-	enableDriverMarkers: false,
+	enableActiveDriverMarkers: false,
 	enableRouting: false,
 	enableClickToAddLocation: false,
 	enableRightClickToRemove: false,
 	enableDriverTracking: false,
-	center: [45.2396, 19.8227],
-	zoom: 13,
+	enablePath: false,
 };
 
-export const MAP_CONFIGS = {
-	HISTORY_VIEW: {
-		enableLocationPins: false,
-		enableDriverMarkers: false,
-		enableRouting: true,
-		enableClickToAddLocation: false,
-		enableRightClickToRemove: false,
-		enableDriverTracking: false,
-	} as MapConfig,
+export const BOOKING_MAP_CONFIG: MapConfig = {
+	enableLocationPins: true,
+	enableClickToAddLocation: true,
+	enableRightClickToRemove: true,
+	enableActiveDriverMarkers: true,
+	enableDriverTracking: false,
+	enableRouting: true,
+	enablePath: false,
+};
 
-	BOOKING: {
+/**
+ * Generates map configuration based on ride status
+ * Used in ride-details component
+ */
+export function getMapConfigForRideStatus(status: RideStatus): MapConfig {
+	const baseConfig: MapConfig = {
 		enableLocationPins: true,
-		enableDriverMarkers: true,
-		enableRouting: true,
-		enableClickToAddLocation: true,
-		enableRightClickToRemove: true,
+		enableClickToAddLocation: false,
+		enableRightClickToRemove: false,
+		enableActiveDriverMarkers: false,
 		enableDriverTracking: false,
-	} as MapConfig,
-
-	ACTIVE_RIDE: {
-		enableLocationPins: false,
-		enableDriverMarkers: true,
 		enableRouting: true,
-		enableClickToAddLocation: false,
-		enableRightClickToRemove: false,
-		enableDriverTracking: true,
-	} as MapConfig,
+		enablePath: false,
+	};
 
-	ADMIN_OVERVIEW: {
-		enableLocationPins: false,
-		enableDriverMarkers: true,
-		enableRouting: false,
-		enableClickToAddLocation: false,
-		enableRightClickToRemove: false,
-		enableDriverTracking: true,
-	} as MapConfig,
+	switch (status) {
+		case RideStatus.PENDING:
+		case RideStatus.ACCEPTED:
+		case RideStatus.CANCELLED:
+			return {
+				...baseConfig,
+			};
 
-	ROUTE_DISPLAY_ONLY: {
-		enableLocationPins: false,
-		enableDriverMarkers: false,
-		enableRouting: true,
-		enableClickToAddLocation: false,
-		enableRightClickToRemove: false,
-		enableDriverTracking: false,
-	} as MapConfig,
-};
+		case RideStatus.ACTIVE:
+			return {
+				...baseConfig,
+				enableDriverTracking: true,
+			};
+
+		case RideStatus.PANICKED:
+		case RideStatus.INTERRUPTED:
+		case RideStatus.FINISHED:
+			return {
+				...baseConfig,
+				enablePath: true,
+			};
+
+		default:
+			return baseConfig;
+	}
+}

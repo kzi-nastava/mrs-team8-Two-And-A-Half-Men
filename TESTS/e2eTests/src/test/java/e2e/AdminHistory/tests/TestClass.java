@@ -1,4 +1,4 @@
-package e2e.tests;
+package e2e.AdminHistory.tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;

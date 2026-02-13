@@ -1,4 +1,4 @@
-package e2e.pages;
+package e2e.AdminHistory.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

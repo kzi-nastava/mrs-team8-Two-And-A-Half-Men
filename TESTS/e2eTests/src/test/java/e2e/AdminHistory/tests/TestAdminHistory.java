@@ -1,12 +1,12 @@
-package e2e.tests;
+package e2e.AdminHistory.tests;
 
-import e2e.models.History;
-import e2e.models.HistorySortField;
-import e2e.models.HistorySorter;
-import e2e.pages.HomePageAdmin;
-import e2e.pages.HomeUnregistered;
-import e2e.pages.LoginPage;
-import e2e.pages.RideHistoryPage;
+import e2e.AdminHistory.models.History;
+import e2e.AdminHistory.models.HistorySortField;
+import e2e.AdminHistory.models.HistorySorter;
+import e2e.AdminHistory.pages.HomePageAdmin;
+import e2e.AdminHistory.pages.HomeUnregistered;
+import e2e.AdminHistory.pages.LoginPage;
+import e2e.AdminHistory.pages.RideHistoryPage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.DataProvider;

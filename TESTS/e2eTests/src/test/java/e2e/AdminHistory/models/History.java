@@ -1,4 +1,4 @@
-package e2e.models;
+package e2e.AdminHistory.models;
 
 import java.time.LocalDateTime;
 

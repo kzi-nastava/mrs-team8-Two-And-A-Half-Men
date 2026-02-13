@@ -25,6 +25,7 @@ public class Driver extends AppUser {
     @OneToOne(mappedBy = "driver", fetch = FetchType.EAGER)
     private UpdateRequest updateRequest;
 
+
     @Override
     public UserRole getRole() {
         return UserRole.DRIVER;

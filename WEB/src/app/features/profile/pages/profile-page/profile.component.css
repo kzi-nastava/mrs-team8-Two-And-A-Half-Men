@@ -6,6 +6,37 @@
 	color: #ffffff;
 }
 
+/* Blocked Banner */
+.blocked-banner {
+	background: rgba(220, 53, 69, 0.1) !important;
+	border-color: rgba(220, 53, 69, 0.5) !important;
+	display: flex;
+	gap: 1rem;
+	align-items: flex-start;
+	margin-bottom: 2rem;
+}
+
+.blocked-icon {
+	color: #ff6b6b;
+	flex-shrink: 0;
+}
+
+.blocked-content h3 {
+	color: #ff6b6b;
+	margin: 0 0 0.5rem 0;
+	font-size: 1.25rem;
+}
+
+.blocked-content p {
+	color: #ffffff;
+	margin: 0;
+	line-height: 1.6;
+}
+
+.blocked-content strong {
+	color: #ff6b6b;
+}
+
 /* Header */
 .profile-header {
 	background: #1a5c3a;

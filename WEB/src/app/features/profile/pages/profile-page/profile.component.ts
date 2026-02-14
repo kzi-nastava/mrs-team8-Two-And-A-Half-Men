@@ -57,6 +57,8 @@ export class ProfileComponent implements OnInit {
 		address: '',
 		email: '',
 		imgSrc: null,
+		blocked: false,
+		blockReason: null
 	});
 	originalPersonalInfo = signal<PersonalInfo | null>(null);
 	originalVehicleInfo = signal<VehicleInfo | null>(null);

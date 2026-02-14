@@ -28,7 +28,6 @@ import { PopupsService } from '@shared/services/popups/popups.service';
 		TabNavigationComponent,
 		VehicleInfoFormComponent,
 	],
-	providers: [AdminUserService],
 	templateUrl: './new-driver-page.component.html',
 	styleUrl: './new-driver-page.component.css',
 })
@@ -125,7 +124,7 @@ export class NewDriverPageComponent implements OnInit {
 		};
 		console.log(registrationRequest);
 		this.usersService.registerDriver(registrationRequest).subscribe({
-			next: (response) => {
+			next: () => {
 				this.isSaving.set(false);
 				this.popupsService.success(
 					'Success',

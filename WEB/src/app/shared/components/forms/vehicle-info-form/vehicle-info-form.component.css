@@ -1,5 +1,3 @@
-/* src/app/shared/renderer/vehicle-info-form/vehicle-info-form.component.css */
-
 .vehicle-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;

@@ -12,7 +12,9 @@ import {
 	UserPageResponse,
 } from '@features/users/models/user.model';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root',
+})
 export class AdminUserService {
 	private http = inject(HttpClient);
 

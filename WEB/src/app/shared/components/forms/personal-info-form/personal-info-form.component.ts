@@ -1,5 +1,3 @@
-// src/app/shared/renderer/personal-info-form/personal-info-form.component.ts
-
 import { Component, input, output, model } from '@angular/core';
 import {CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

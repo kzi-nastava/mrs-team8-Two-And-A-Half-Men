@@ -1,9 +1,7 @@
 package com.project.backend.repositories;
 
-import com.project.backend.Student1;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
-import com.project.backend.models.Route;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.fixtures.RideRepositoryTestFindActiveRidesFixtures;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,13 +14,13 @@ import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 import java.util.List;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Use real database, not in-memory
 @ActiveProfiles("test")
 @Tag("Repository")
+@Tag("Student3")
 public class RideRepositoryTestFindActiveRides {
     @Autowired
     private TestEntityManager entityManager;
@@ -124,7 +122,6 @@ public class RideRepositoryTestFindActiveRides {
     @Tag("Student3")
     @Test
     void testFindActiveRides_Order() throws InterruptedException {
-        // Arrange
         Driver driver1 = entityManager.persistAndFlush(fixture.createDriver1());
 
 

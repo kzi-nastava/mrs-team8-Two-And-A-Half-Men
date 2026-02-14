@@ -162,6 +162,8 @@ public class RideBookingServiceImpl implements RideBookingService {
             ride.setRoute(fetchExistingRoute(body.getRouteId()));
         } else if (body.getRoute() != null) {
             ride.setRoute(routeService.createNew(body.getRoute()));
+        } else {
+            throw new BadRequestException("Either routeId or route must be provided");
         }
 
         ride.setPassengers(createPassengers(rideOwner, body.getPassengers()));

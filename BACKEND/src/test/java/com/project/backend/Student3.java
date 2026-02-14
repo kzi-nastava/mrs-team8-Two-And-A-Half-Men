@@ -6,6 +6,6 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @SelectPackages("com.project.backend")
-@IncludeTags("Student1")
+@IncludeTags("Student3")
 public class Student3 {
 }

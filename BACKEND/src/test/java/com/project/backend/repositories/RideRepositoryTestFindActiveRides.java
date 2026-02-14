@@ -23,7 +23,6 @@ import java.util.List;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Use real database, not in-memory
 @ActiveProfiles("test")
 @Tag("Repository")
-@Tag("Student3")
 public class RideRepositoryTestFindActiveRides {
     @Autowired
     private TestEntityManager entityManager;
@@ -37,7 +36,7 @@ public class RideRepositoryTestFindActiveRides {
     void setUp() {
         fixture = new RideRepositoryTestFindActiveRidesFixtures();
     }
-    @Tag("findActiveRides")
+    @Tag("Student3")
     @Test
     void testFindActiveRides_AllMatches() {
         Driver driver1 = entityManager.persistAndFlush(fixture.createDriver1());
@@ -60,7 +59,6 @@ public class RideRepositoryTestFindActiveRides {
                 .allMatch(driver -> drivers.contains(driver));
     }
     @Tag("Student3")
-    @Tag("findActiveRides")
     @Test
     void testFindActiveRides_NoMatches() {
         Driver driver1 = entityManager.persistAndFlush(fixture.createDriver1());
@@ -78,7 +76,6 @@ public class RideRepositoryTestFindActiveRides {
         assertThat(result).isEmpty();
     }
     @Tag("Student3")
-    @Tag("findActiveRides")
     @Test
     void testFindActiveRides_StatusMatchDriverNo() {
         Driver driver1 = entityManager.persistAndFlush(fixture.createDriver1());
@@ -96,7 +93,6 @@ public class RideRepositoryTestFindActiveRides {
         assertThat(result).isEmpty();
     }
     @Tag("Student3")
-    @Tag("findActiveRides")
     @Test
     void testFindActiveRides_DriverMatchStatusDont() {
         Driver driver1 = entityManager.persistAndFlush(fixture.createDriver1());
@@ -112,7 +108,6 @@ public class RideRepositoryTestFindActiveRides {
         assertThat(result).isEmpty();
     }
     @Tag("Student3")
-    @Tag("findActiveRides")
     @Test
     void testFindActiveRides_EmptyStatus() {
         Driver driver1 = entityManager.persistAndFlush(fixture.createDriver1());
@@ -126,9 +121,7 @@ public class RideRepositoryTestFindActiveRides {
 
         assertThat(result).isEmpty();
     }
-
     @Tag("Student3")
-    @Tag("findActiveRides")
     @Test
     void testFindActiveRides_Order() throws InterruptedException {
         // Arrange

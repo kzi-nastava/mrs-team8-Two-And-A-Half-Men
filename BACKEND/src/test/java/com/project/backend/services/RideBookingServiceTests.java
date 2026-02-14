@@ -1,6 +1,7 @@
 package com.project.backend.services;
 
 import com.project.backend.DTO.Ride.NewRideDTO;
+import com.project.backend.events.DriverAssignedEvent;
 import com.project.backend.events.RideCreatedEvent;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ForbiddenException;
@@ -668,6 +669,7 @@ public class RideBookingServiceTests {
         verify(driverMatchingService, times(1)).findDriverFor(any(Ride.class));
         verify(rideRepository, times(1)).save(rideCaptor.capture());
         verify(applicationEventPublisher, times(1)).publishEvent(any(RideCreatedEvent.class));
+        verify(applicationEventPublisher, times(1)).publishEvent(any(DriverAssignedEvent.class));
 
         var capturedRide = rideCaptor.getValue();
         assertThat(capturedRide.getDriver()).isEqualTo(driverDTO.getDriver());

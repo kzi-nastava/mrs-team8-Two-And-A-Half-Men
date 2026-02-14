@@ -5,6 +5,7 @@ import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.DTO.internal.ride.FindDriverFilter;
 import com.project.backend.DTO.mappers.RideMapper;
 import com.project.backend.events.RideFinishedEvent;
+import com.project.backend.events.RideStatusChangedEvent;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.NoActiveRideException;
@@ -93,6 +94,8 @@ public class RideService implements IRideService {
         driver.setDriverStatus(DriverStatus.BUSY);
         rideRepository.save(ride);
         driverRepository.save(driver);
+
+        applicationEventPublisher.publishEvent(new RideStatusChangedEvent(ride));
         return Map.of(
                 "message", "Ride started successfully",
                 "ok", true,

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { StartRideResponse } from '@features/rides/models/api-responses.model';
 import { Ride } from '@shared/models/ride.model';
 import { NoteResponse } from '@features/rides/models/api-responses.model';
-import { RatingResponse } from '@shared/components/forms/rating-form/services/rating.service';
+import {RatingResponse} from '@shared/models/rating-response.model';
 
 @Injectable({
 	providedIn: 'root',

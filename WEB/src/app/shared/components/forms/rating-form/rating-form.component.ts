@@ -1,8 +1,6 @@
-import { Component, inject, Input, Output, EventEmitter, signal } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { RatingService } from '@shared/components/forms/rating-form/services/rating.service';
-import { PopupsService } from '@shared/services/popups/popups.service';
 
 export interface RatingFormData {
 	driverRating: number;
@@ -18,7 +16,6 @@ export interface RatingFormData {
 	styleUrls: ['./rating-form.component.css'],
 })
 export class RatingFormComponent {
-
 	@Output() ratingSubmitted = new EventEmitter<RatingFormData>();
 	@Output() closePopup = new EventEmitter<void>();
 

@@ -41,6 +41,7 @@ import static org.mockito.Mockito.*;
 @MockitoSettings(strictness = Strictness.LENIENT)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Tag("Student1")
+@Tag("Service")
 public class RideBookingServiceTests {
 
     @Mock

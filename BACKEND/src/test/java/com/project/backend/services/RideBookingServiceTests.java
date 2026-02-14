@@ -16,6 +16,7 @@ import com.project.backend.service.RouteService;
 import com.project.backend.service.impl.RideBookingServiceImpl;
 import com.project.backend.services.fixtures.RideBookingServiceTestsFixture;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +40,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@Tag("Student1")
 public class RideBookingServiceTests {
 
     @Mock
@@ -66,8 +68,6 @@ public class RideBookingServiceTests {
     private ArgumentCaptor<Ride> rideCaptor;
     @Captor
     private ArgumentCaptor<List<Passenger>> passengersCaptor;
-    @Captor
-    private ArgumentCaptor<RideCreatedEvent> eventCaptor;
 
     private RideBookingService rideBookingService;
     private RideBookingServiceTestsFixture fixture;

@@ -5,11 +5,13 @@ import com.project.backend.DTO.Route.RouteItemDTO;
 import com.project.backend.DTO.internal.ride.FindDriverDTO;
 import com.project.backend.models.*;
 import com.project.backend.models.enums.DriverStatus;
+import com.project.backend.models.enums.RideStatus;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Fixture class for RideBookingService tests.
@@ -309,6 +311,42 @@ public class RideBookingServiceTestsFixture {
     public RideBookingParametersDTO createRequestWithoutScheduledTime() {
         return RideBookingParametersDTO.builder()
                 .route(createRouteItems())
+                .build();
+    }
+
+    /**
+     * Creates a scheduled ride with a driver already assigned
+     */
+    public Ride createScheduledRideWithDriver() {
+        return Ride.builder()
+                .id(SAVED_RIDE_ID)
+                .status(RideStatus.PENDING)
+                .scheduledTime(currentTime.plusHours(2))
+                .createdAt(currentTime)
+                .driver(createValidDriver())
+                .rideOwner(createValidRideOwner())
+                .vehicleType(createValidVehicleType())
+                .route(createValidRoute())
+                .passengers(List.of())
+                .additionalServices(Set.of())
+                .build();
+    }
+
+    /**
+     * Creates a scheduled ride without a driver (PENDING status)
+     */
+    public Ride createScheduledRideWithoutDriver() {
+        return Ride.builder()
+                .id(SAVED_RIDE_ID)
+                .status(RideStatus.PENDING)
+                .scheduledTime(currentTime.plusHours(2))
+                .createdAt(currentTime)
+                .driver(null)
+                .rideOwner(createValidRideOwner())
+                .vehicleType(createValidVehicleType())
+                .route(createValidRoute())
+                .passengers(List.of())
+                .additionalServices(Set.of())
                 .build();
     }
 

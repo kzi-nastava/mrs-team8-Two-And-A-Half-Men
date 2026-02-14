@@ -158,7 +158,7 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
      * @param drivers map that holds driver's information, to which the ride information will be added
      */
     private void getRideData(Set<Long> driversIds, Map<Long, DriverInformation> drivers) {
-        // TODO: add appropriate handling with scheduled rides
+
         List<Ride> rides = rideRepository.findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(driversIds);
         for (var ride : rides) {
             var driverInfo = drivers.get(ride.getDriver().getId());
@@ -262,9 +262,10 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
      * @param drivers map that holds driver's information, to which the activity information will be added and checked
      */
     private void checkDriversActivity(Set<Long> driversIds, Map<Long, DriverInformation> drivers) {
-        var dbDrivers = driverRepository.findAllById(driversIds);
+        var dbDrivers = driverRepository.findAllByIdIn(driversIds.stream().toList());
         List<DriverStatus> allowedStatuses = List.of(DriverStatus.ACTIVE, DriverStatus.BUSY);
         for (var driver : dbDrivers) {
+            System.out.println("Checking driver " + driver.getId() + " with status " + driver.getDriverStatus());
             var driverInfo = drivers.get(driver.getId());
             driverInfo.setDriver(driver);
             if (!allowedStatuses.contains(driver.getDriverStatus())) {

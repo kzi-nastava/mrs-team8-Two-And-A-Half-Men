@@ -1,7 +1,9 @@
 package com.project.backend.services;
 
 import com.project.backend.DTO.Ride.NewRideDTO;
+import com.project.backend.events.DriverAssignedEvent;
 import com.project.backend.events.RideCreatedEvent;
+import com.project.backend.events.RideStatusChangedEvent;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
@@ -69,6 +71,8 @@ public class RideBookingServiceTests {
     private ArgumentCaptor<Ride> rideCaptor;
     @Captor
     private ArgumentCaptor<List<Passenger>> passengersCaptor;
+    @Captor
+    private ArgumentCaptor<Object> eventCaptor;
 
     private RideBookingService rideBookingService;
     private RideBookingServiceTestsFixture fixture;
@@ -668,6 +672,7 @@ public class RideBookingServiceTests {
         verify(driverMatchingService, times(1)).findDriverFor(any(Ride.class));
         verify(rideRepository, times(1)).save(rideCaptor.capture());
         verify(applicationEventPublisher, times(1)).publishEvent(any(RideCreatedEvent.class));
+        verify(applicationEventPublisher, times(1)).publishEvent(any(DriverAssignedEvent.class));
 
         var capturedRide = rideCaptor.getValue();
         assertThat(capturedRide.getDriver()).isEqualTo(driverDTO.getDriver());
@@ -679,6 +684,149 @@ public class RideBookingServiceTests {
         assertThat(result.getId()).isEqualTo(RideBookingServiceTestsFixture.SAVED_RIDE_ID);
         assertThat(result.getStatus()).isEqualTo(RideStatus.ACCEPTED.toString());
         assertThat(result.getEstimatedDistance()).isEqualTo(RideBookingServiceTestsFixture.ESTIMATED_DISTANCE);
+    }
+
+    // ==================== Test Case 19: Scheduled ride does not exist ====================
+
+    @Test
+    void testFindDriverForScheduledRide_WhenRideDoesNotExist_DoesNothing() {
+        // Arrange
+        Long nonExistentRideId = 999L;
+        long minutesBefore = 5L;
+        when(rideRepository.findById(nonExistentRideId)).thenReturn(Optional.empty());
+
+        // Act
+        rideBookingService.findDriverForScheduledRide(nonExistentRideId, minutesBefore);
+
+        // Assert
+        verify(rideRepository, times(1)).findById(nonExistentRideId);
+        verify(driverMatchingService, never()).findDriverFor(any(Ride.class));
+        verify(rideRepository, never()).save(any(Ride.class));
+        verify(applicationEventPublisher, never()).publishEvent(any());
+    }
+
+    // ==================== Test Case 20: Scheduled ride already has a driver assigned ====================
+
+    @Test
+    void testFindDriverForScheduledRide_WhenDriverAlreadyAssigned_DoesNothing() {
+        // Arrange
+        Long rideId = 100L;
+        long minutesBefore = 5L;
+        Ride ride = fixture.createScheduledRideWithDriver();
+        when(rideRepository.findById(rideId)).thenReturn(Optional.of(ride));
+
+        // Act
+        rideBookingService.findDriverForScheduledRide(rideId, minutesBefore);
+
+        // Assert
+        verify(rideRepository, times(1)).findById(rideId);
+        verify(driverMatchingService, never()).findDriverFor(any(Ride.class));
+        verify(rideRepository, never()).save(any(Ride.class));
+        verify(applicationEventPublisher, never()).publishEvent(any());
+    }
+
+    // ==================== Test Case 21: Scheduled ride is not PENDING ====================
+
+    @Test
+    void testFindDriverForScheduledRide_WhenRideNotPending_DoesNothing() {
+        // Arrange
+        Long rideId = 100L;
+        long minutesBefore = 5L;
+        Ride ride = fixture.createScheduledRideWithoutDriver();
+        ride.setStatus(RideStatus.ACCEPTED);
+        when(rideRepository.findById(rideId)).thenReturn(Optional.of(ride));
+
+        // Act
+        rideBookingService.findDriverForScheduledRide(rideId, minutesBefore);
+
+        // Assert
+        verify(rideRepository, times(1)).findById(rideId);
+        verify(driverMatchingService, never()).findDriverFor(any(Ride.class));
+        verify(rideRepository, never()).save(any(Ride.class));
+        verify(applicationEventPublisher, never()).publishEvent(any());
+    }
+
+    // ==================== Test Case 22: No driver found but not the last chance ====================
+
+    @Test
+    void testFindDriverForScheduledRide_WhenNoDriverFoundAndNotLastChance_DoesNothing() {
+        // Arrange
+        Long rideId = 100L;
+        long minutesBefore = 5L; // Not the last chance
+        Ride ride = fixture.createScheduledRideWithoutDriver();
+        when(rideRepository.findById(rideId)).thenReturn(Optional.of(ride));
+        when(driverMatchingService.findDriverFor(ride)).thenReturn(Optional.empty());
+
+        // Act
+        rideBookingService.findDriverForScheduledRide(rideId, minutesBefore);
+
+        // Assert
+        verify(rideRepository, times(1)).findById(rideId);
+        verify(driverMatchingService, times(1)).findDriverFor(ride);
+        verify(rideRepository, never()).save(any(Ride.class));
+        verify(applicationEventPublisher, never()).publishEvent(any());
+    }
+
+    // ==================== Test Case 23: No driver found and no more chances left ====================
+
+    @Test
+    void testFindDriverForScheduledRide_WhenNoDriverFoundAndLastChance_CancelsRide() {
+        // Arrange
+        Long rideId = 100L;
+        long minutesBefore = 0L; // Last chance
+        Ride ride = fixture.createScheduledRideWithoutDriver();
+        when(rideRepository.findById(rideId)).thenReturn(Optional.of(ride));
+        when(driverMatchingService.findDriverFor(ride)).thenReturn(Optional.empty());
+
+        // Act
+        rideBookingService.findDriverForScheduledRide(rideId, minutesBefore);
+
+        // Assert
+        verify(rideRepository, times(1)).findById(rideId);
+        verify(driverMatchingService, times(1)).findDriverFor(ride);
+        verify(rideRepository, times(1)).save(rideCaptor.capture());
+        verify(applicationEventPublisher, times(1)).publishEvent(eventCaptor.capture());
+
+        var capturedRide = rideCaptor.getValue();
+        assertThat(capturedRide.getStatus()).isEqualTo(RideStatus.CANCELLED);
+        assertThat(capturedRide.getCancellationReason()).isEqualTo("No driver found for scheduled ride");
+
+        var capturedEvent = eventCaptor.getValue();
+        assertThat(capturedEvent).isInstanceOf(RideStatusChangedEvent.class);
+        assertThat(((RideStatusChangedEvent) capturedEvent).getRide()).isEqualTo(ride);
+    }
+
+    // ==================== Test Case 24: Suitable driver found ====================
+
+    @Test
+    void testFindDriverForScheduledRide_WhenDriverFound_AssignsDriverAndUpdatesStatus() {
+        // Arrange
+        Long rideId = 100L;
+        long minutesBefore = 5L;
+        Ride ride = fixture.createScheduledRideWithoutDriver();
+        var driverDTO = fixture.createFindDriverDTO();
+        when(rideRepository.findById(rideId)).thenReturn(Optional.of(ride));
+        when(driverMatchingService.findDriverFor(ride)).thenReturn(Optional.of(driverDTO));
+
+        // Act
+        rideBookingService.findDriverForScheduledRide(rideId, minutesBefore);
+
+        // Assert
+        verify(rideRepository, times(1)).findById(rideId);
+        verify(driverMatchingService, times(1)).findDriverFor(ride);
+        verify(rideRepository, times(1)).save(rideCaptor.capture());
+        verify(applicationEventPublisher, times(2)).publishEvent(eventCaptor.capture());
+
+        var capturedRide = rideCaptor.getValue();
+        assertThat(capturedRide.getDriver()).isEqualTo(driverDTO.getDriver());
+        assertThat(capturedRide.getStatus()).isEqualTo(RideStatus.ACCEPTED);
+
+        var capturedEvents = eventCaptor.getAllValues();
+        assertThat(capturedEvents).hasSize(2);
+        assertThat(capturedEvents.get(0)).isInstanceOf(DriverAssignedEvent.class);
+        assertThat(capturedEvents.get(1)).isInstanceOf(RideStatusChangedEvent.class);
+        assertThat(((DriverAssignedEvent) capturedEvents.get(0)).getRide()).isEqualTo(ride);
+        assertThat(((RideStatusChangedEvent) capturedEvents.get(1)).getRide()).isEqualTo(ride);
     }
 
     // ==================== Helper Methods ====================

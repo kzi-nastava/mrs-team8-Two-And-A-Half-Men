@@ -1,6 +1,7 @@
 # Unit Test Scenarios - Ride Booking Service
 
 `RideBookingService` is responsible for parsing and validating ride booking requests, creating new rides and setting up all the necessary information for the ride, finding suitable driver and then saving the ride to the database. It also handles any exceptions that may occur during the process.
+It is also responsible for looking for a suitable driver for scheduled rides and assigning the driver to the ride if a suitable driver is found.
 
 ## Table of Contents
 
@@ -24,6 +25,12 @@
 | [Test Case 16](#test-case-16) | Valid schedule time is set |
 | [Test Case 17](#test-case-17) | No suitable driver found |
 | [Test Case 18](#test-case-18) | Driver is found and assigned to the ride |
+| [Test Case 19](#test-case-19) | Scheduled ride does not exist |
+| [Test Case 20](#test-case-20) | Scheduled ride already has a driver assigned |
+| [Test Case 21](#test-case-21) | Scheduled ride already not PENDING |
+| [Test Case 22](#test-case-22) | Scheduled ride no driver found but not the last chance |
+| [Test Case 23](#test-case-23) | Scheduled ride no driver found but no more chances left |
+| [Test Case 24](#test-case-24) | Scheduled ride suitable driver found |
 
 ---
 
@@ -48,7 +55,7 @@ This test verifies that when a ride booking request is made with a non-existent 
 - An exception is thrown indicating that the ride owner was not found.
 - The exception message should contain the ride owner ID.
 - The `appUserRepository` should be called once with the correct ride owner ID.
-- The `rideBookingRepository.save()` should not be called since no ride is created.
+- The `rideRepository.save()` should not be called since no ride is created.
 
 **Notes / Additional Info**  
 None
@@ -79,7 +86,7 @@ This test verifies that when a ride booking request is made with a blocked ride 
 - An exception is thrown indicating that the ride owner's account is blocked.
 - The exception message should contain the reason for the block.
 - The `appUserRepository` should be called once with the correct ride owner ID.
-- The `rideBookingRepository.save()` should not be called since no ride is created.
+- The `rideRepository.save()` should not be called since no ride is created.
 
 **Notes / Additional Info**  
 None
@@ -107,7 +114,7 @@ This test verifies that when a ride booking request is made with an invalid sche
 
 **Expected Outcome / Assert**  
 - An exception is thrown indicating that the schedule time is invalid.
-- The `rideBookingRepository.save()` should not be called since no ride is created.
+- The `rideRepository.save()` should not be called since no ride is created.
 
 **Notes / Additional Info**  
 None
@@ -136,7 +143,7 @@ This test verifies that when a ride booking request is made with a non-existent 
 - An exception is thrown indicating that the vehicle type was not found.
 - The exception message should contain the vehicle type ID.
 - The `vehicleTypeRepository` should be called once with the correct vehicle type ID.
-- The `rideBookingRepository.save()` should not be called since no ride is created.
+- The `rideRepository.save()` should not be called since no ride is created.
 
 **Notes / Additional Info**  
 None
@@ -166,7 +173,7 @@ This test verifies that when a ride booking request is made with a valid vehicle
 **Expected Outcome / Assert**  
 - No exception is thrown.
 - The `vehicleTypeRepository` should be called once with the correct vehicle type ID.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object.
+- The `rideRepository.save()` should be called with a properly configured `Ride` object.
 - The ride's `vehicleType` property should be set to the vehicle type returned by the `vehicleTypeRepository`.
 - The ride's price should be set to the price of the vehicle type.
 - The ride's `createdAt` property should be set to the current time returned by the `dateTimeService` mock.
@@ -202,7 +209,7 @@ This test verifies that when a ride booking request is made without specifying a
 
 **Expected Outcome / Assert**  
 - No exception is thrown.
-- The `rideBookingRepository.save()` should be called with a `Ride` object that has an empty set of additional services.
+- The `rideRepository.save()` should be called with a `Ride` object that has an empty set of additional services.
 - The ride's `createdAt` property should be set to the current time returned by the `dateTimeService` mock.
 
 **Notes / Additional Info**  
@@ -233,7 +240,7 @@ The request is made with a list of additional service IDs, where some of the IDs
 **Expected Outcome / Assert**  
 - An exception is thrown indicating which additional service IDs were not found.
 - The `additionalServiceRepository` should be called once with the correct list of additional service IDs
-- The `rideBookingRepository.save()` should not be called since no ride is created.
+- The `rideRepository.save()` should not be called since no ride is created.
 
 **Notes / Additional Info**  
 None
@@ -263,7 +270,7 @@ This test verifies that when a ride booking request is made with valid additiona
 **Expected Outcome / Assert**  
 - No exception is thrown.
 - The `additionalServiceRepository` should be called once with the correct list of additional service IDs.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object that includes the additional services.
+- The `rideRepository.save()` should be called with a properly configured `Ride` object that includes the additional services.
 - The ride's `createdAt` property should be set to the current time returned by the `dateTimeService` mock.
 
 **Notes / Additional Info**  
@@ -294,7 +301,7 @@ This test verifies that when a ride booking request is made with a route ID that
 **Expected Outcome / Assert**  
 - An exception is thrown indicating that the route was not found.
 - The `routeRepository` should be called once with the correct route ID
-- The `rideBookingRepository.save()` should not be called since no ride is created.
+- The `rideRepository.save()` should not be called since no ride is created.
 
 **Notes / Additional Info**  
 None
@@ -324,7 +331,7 @@ This test verifies that when a ride booking request is made with a valid route I
 **Expected Outcome / Assert**  
 - No exception is thrown.
 - The `routeRepository` should be called once with the correct route ID.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object that includes the route.
+- The `rideRepository.save()` should be called with a properly configured `Ride` object that includes the route.
 - The ride's `createdAt` property should be set to the current time returned by the `dateTimeService` mock.
 
 **Notes / Additional Info**  
@@ -357,7 +364,7 @@ This test verifies that when a ride booking request is made without setting a ro
 **Expected Outcome / Assert**  
 - No exception is thrown.
 - The `routeService` should be called once with the correct route data.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object that includes the newly created route.
+- The `rideRepository.save()` should be called with a properly configured `Ride` object that includes the newly created route.
 - The ride's `createdAt` property should be set to the current time returned by the `dateTimeService` mock.
 
 
@@ -388,7 +395,7 @@ This test verifies that when a ride booking request is made without providing a 
 
 **Expected Outcome / Assert**  
 - No exception is thrown.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object that has only one passenger
+- The `rideRepository.save()` should be called with a properly configured `Ride` object that has only one passenger
 - The passenger should have `email`property set to `null`
 - The passenger's `user` property should be set to the ride owner.
 - The ride's `createdAt` property should be set to the current time returned by the `dateTimeService` mock.
@@ -422,7 +429,7 @@ This test verifies that when a ride booking request is made with a passenger lis
 **Expected Outcome / Assert**  
 - No exception is thrown.
 - The `appUserRepository` should be called once for each email address in the passenger list with the correct email.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object that includes the passenger
+- The `rideRepository.save()` should be called with a properly configured `Ride` object that includes the passenger
 - Each passenger should have their `email` property set to `null`
 - Each passenger's `user` property should be set to the corresponding `AppUser` object
 - The ride owner should also be included as a passenger with their `email` property set to `null` and their `user` property set to the ride owner.
@@ -457,7 +464,7 @@ This test verifies that when a ride booking request is made with a passenger lis
 **Expected Outcome / Assert**  
 - No exception is thrown.
 - The `appUserRepository` should be called once for each email address in the passenger list with the correct email.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object that includes the passengers
+- The `rideRepository.save()` should be called with a properly configured `Ride` object that includes the passengers
 - Each passenger aside from the ride owner should have their `email` property set to the email address from the passenger list and their `user` property set to `null`
 - The ride owner should also be included as a passenger with their `email` property set to `null` and their `user` property set to the ride owner.
 - The ride's `createdAt` property should be set to the current time returned by the `dateTimeService` mock.
@@ -491,7 +498,7 @@ This test verifies that when a ride booking request is made with a passenger lis
 **Expected Outcome / Assert**  
 - No exception is thrown.
 - The `appUserRepository` should be called once for each email address in the passenger list with the correct email.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object that includes all passengers
+- The `rideRepository.save()` should be called with a properly configured `Ride` object that includes all passengers
 - Each existing user passenger should have their `email` property set to `null` and their `user` property set to the corresponding `AppUser` object
 - Each non-existing user passenger should have their `email` property set to the email address from the passenger list and their `user` property set to `null`
 - The ride owner should also be included as a passenger with their `email` property set to `null` and their `user` property set to the ride owner.
@@ -527,7 +534,7 @@ This test verifies that when a ride booking request is made with a valid schedul
 **Expected Outcome / Assert**  
 - No exception is thrown.
 - The ride's `scheduleTime` property should be set to the schedule time from the request object.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object that includes the schedule time.
+- The `rideRepository.save()` should be called with a properly configured `Ride` object that includes the schedule time.
 - Ride's `status` property should be set to `PENDING`
 - The ride's `createdAt` property should be set to the current time returned by the `dateTimeService` mock.
 
@@ -561,7 +568,7 @@ This test verifies that when a ride booking request is made without a schedule t
 **Expected Outcome / Assert**  
 - An exception is thrown indicating that no suitable driver was found for the ride. 
 - The `driverMatchingService` should be called once with the correct ride details.
-- The `rideBookingRepository.save()` should not be called since no ride is created.
+- The `rideRepository.save()` should not be called since no ride is created.
 
 **Notes / Additional Info**  
 None
@@ -594,10 +601,208 @@ This test verifies that when a ride booking request is made without a schedule t
 - No exception is thrown.
 - The ride's `driver` property should be set to the driver returned by the `driverMatchingService`.
 - The ride's `distanceToDriver` property should be set to the distance returned by the `driverMatchingService`.
-- The `rideBookingRepository.save()` should be called with a properly configured `Ride` object that includes the assigned driver and distance.
+- The `rideRepository.save()` should be called with a properly configured `Ride` object that includes the assigned driver and distance.
 - Ride's `status` property should be set to `ACCEPTED`
 - The ride's `createdAt` property should be set to the current time returned by the `dateTimeService` mock.
 
 **Notes / Additional Info**  
 - RideCreatedEvent should be published after the ride is saved to the repository.None
+- DriverAssignedEvent should be published after the ride is saved to the repository with the correct ride and driver details.
+
+
+
+---
+
+## Test Case 19
+
+**Title:**
+Scheduled ride does not exist
+
+**Description**  
+This test verifies that when trying to find a suitable driver for a scheduled ride, whose `rideId` provided does not correspond to any existing ride in the system, nothing happens (no exception is thrown because this method is called by a scheduler and we don't want it to crash the scheduler).
+
+**Assumptions / Preconditions**  
+- The `rideId` provided does not correspond to any existing ride in the system.
+
+**Setup / Arrange**  
+- Valid `rideId` that does not exist in the system
+- Valid `minutesBefore` value
+- `rideBookingRepository` mock is set up to return `null` when queried with the non-existent `rideId`.
+
+**Action / Act**  
+- Call the `findDriverForScheduledRide` method with the invalid `rideId` and any `minutesBefore` value.
+
+**Expected Outcome / Assert**  
+- No exception is thrown.
+- The `rideBookingRepository` should be called once with the correct `rideId`.
+- The `driverMatchingService.findDriverFor` method should not be called since the ride does not exist.
+- The `rideRepository.save()` should not be called since no ride is updated.
+- No events should be published since no driver is assigned.
+
+**Notes / Additional Info**  
+None
+
+
+
+---
+
+## Test Case 20
+
+**Title:**
+Scheduled ride already has a driver assigned
+
+**Description**  
+This test verifies that when trying to find a suitable driver for a scheduled ride that already has a driver assigned, nothing happens (no exception is thrown because this method is called by a scheduler and we don't want it to crash the scheduler).
+
+**Assumptions / Preconditions**  
+- The `rideId` provided corresponds to an existing ride in the system that already has a driver assigned.
+
+**Setup / Arrange**  
+- Valid `rideId` that corresponds to an existing ride in the system that already has a driver assigned
+- Valid `minutesBefore` value
+- `rideBookingRepository` mock is set up to return a `Ride` object with a non-null `driver` property when queried with the existing `rideId`.
+
+**Action / Act**  
+- Call the `findDriverForScheduledRide` method with the existing `rideId` and any `minutesBefore` value.
+
+**Expected Outcome / Assert**  
+- No exception is thrown.
+- The `rideBookingRepository` should be called once with the correct `rideId`.
+- The `driverMatchingService.findDriverFor` method should not be called since the ride already has a driver assigned.
+- The `rideRepository.save()` should not be called since no ride is updated.
+- No events should be published since no driver is assigned.
+
+**Notes / Additional Info**  
+None
+
+
+
+---
+
+## Test Case 21
+
+**Title:**
+Scheduled ride already not PENDING
+
+**Description**  
+This test verifies that when trying to find a suitable driver for a scheduled ride that is not in PENDING status, nothing happens (no exception is thrown because this method is called by a scheduler and we don't want it to crash the scheduler).
+
+**Assumptions / Preconditions**  
+- The `rideId` provided corresponds to an existing ride in the system that is not in PENDING status.
+
+**Setup / Arrange**  
+- Valid `rideId` that corresponds to an existing ride in the system that is not in PENDING status
+- Valid `minutesBefore` value
+- `rideBookingRepository` mock is set up to return a `Ride` object with a non-null `driver` property when queried with the existing `rideId`.
+
+**Action / Act**  
+- Call the `findDriverForScheduledRide` method with the existing `rideId` and any `minutesBefore` value.
+
+**Expected Outcome / Assert**  
+- No exception is thrown.
+- The `rideBookingRepository` should be called once with the correct `rideId`.
+- The `driverMatchingService.findDriverFor` method should not be called since the ride is not in PENDING status.
+- The `rideRepository.save()` should not be called since no ride is updated.
+- No events should be published since no driver is assigned.
+
+**Notes / Additional Info**  
+None
+
+
+---
+
+## Test Case 22
+
+**Title:**
+Scheduled ride no driver found but not the last chance
+
+**Description**  
+This test verifies that when trying to find a suitable driver for a scheduled ride and no suitable driver is found, but the current time is not yet within the last chance window for finding a driver, nothing happens (no exception is thrown because this method is called by a scheduler and we don't want it to crash the scheduler).
+
+**Assumptions / Preconditions**  
+- The `rideId` provided corresponds to an existing ride in the system that is in PENDING status.
+- The current time is not yet within the last chance window for finding a driver for the ride (i.e., there is still time before the scheduled ride time minus the `minutesBefore` value)
+
+**Setup / Arrange**  
+- Valid `rideId` that corresponds to an existing ride in the system that is in PENDING status
+- `minutesBefore` value is 0
+- `rideBookingRepository` mock is set up to return a `Ride` object with a null `driver` property and a `scheduleTime` that is in the future when queried with the existing `rideId`.
+
+**Action / Act**  
+- Call the `findDriverForScheduledRide` method with the existing `rideId` and 0 `minutesBefore` value.
+
+**Expected Outcome / Assert**  
+- No exception is thrown.
+- The `rideBookingRepository` should be called once with the correct `rideId`.
+- The `driverMatchingService.findDriverFor` method should  be called since the ride is in PENDING status.
+- The `rideRepository.save()` should not be called since no ride is updated.
+- No events should be published since no driver is assigned.
+
+**Notes / Additional Info**  
+None
+
+---
+
+## Test Case 23
+
+**Title:**
+Scheduled ride no driver found but no more chances left
+**Description**  
+This test verifies that when trying to find a suitable driver for a scheduled ride and no suitable driver is found, and the current time is within the last chance window for finding a driver, the system correctly handles this scenario (e.g., by marking the ride as failed or notifying the ride owner).
+
+**Assumptions / Preconditions**  
+- The `rideId` provided corresponds to an existing ride in the system that is in PENDING status.
+- The current time is within the last chance window for finding a driver for the ride (i.e., there is no time left before the scheduled ride time minus the `minutesBefore` value)
+
+**Setup / Arrange**  
+- Valid `rideId` that corresponds to an existing ride in the system that is in PENDING status
+- `minutesBefore` value is 0
+- `rideBookingRepository` mock is set up to return a `Ride` object with a null `driver` property and a `scheduleTime` that is in the future when queried with the existing `rideId`.
+
+**Action / Act**  
+- Call the `findDriverForScheduledRide` method with the existing `rideId` and 0 `minutesBefore` value.
+
+**Expected Outcome / Assert**  
+- No exception is thrown.
+- The `rideBookingRepository` should be called once with the correct `rideId`.
+- The `driverMatchingService.findDriverFor` method should  be called since the ride is in PENDING status.
+- The `rideRepository.save()` should be called since the ride is updated to CANCELLED status.
+- RideStatusChangedEvent should be published with the correct ride details and new status.
+- DriverAssignedEvent should not be published since no driver is assigned.
+
+**Notes / Additional Info**  
+None
+
+
+---
+
+## Test Case 24
+
+**Title:**
+Scheduled ride suitable driver found
+**Description**  
+This test verifies that when trying to find a suitable driver for a scheduled ride and a suitable driver is found, the system correctly assigns the driver and updates the ride status.
+
+**Assumptions / Preconditions**  
+- The `rideId` provided corresponds to an existing ride in the system that is in PENDING status.
+- A suitable driver exists for the ride.
+
+**Setup / Arrange**  
+- Valid `rideId` that corresponds to an existing ride in the system that is in PENDING status
+- `minutesBefore` value is any
+- 
+
+**Action / Act**  
+- Call the `findDriverForScheduledRide` method with the existing `rideId` and 0 `minutesBefore` value.
+
+**Expected Outcome / Assert**  
+- No exception is thrown.
+- The `rideBookingRepository` should be called once with the correct `rideId`.
+- The `driverMatchingService.findDriverFor` method should  be called since the ride is in PENDING status.
+- The `rideRepository.save()` should be called since the ride is updated to ACCEPTED status and assigned a driver.
+- RideStatusChangedEvent should be published with the correct ride details and new status.
+- DriverAssignedEvent should be published with the correct ride details and assigned driver.
+
+**Notes / Additional Info**  
+None
 

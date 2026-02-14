@@ -2,11 +2,12 @@ package com.project.backend.service.impl;
 
 import com.project.backend.DTO.Ride.NewRideDTO;
 import com.project.backend.DTO.Ride.RideBookingParametersDTO;
+import com.project.backend.events.DriverAssignedEvent;
 import com.project.backend.events.RideCreatedEvent;
+import com.project.backend.events.RideStatusChangedEvent;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
-import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.models.*;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.*;
@@ -14,13 +15,14 @@ import com.project.backend.service.DateTimeService;
 import com.project.backend.service.DriverMatchingService;
 import com.project.backend.service.RideBookingService;
 import com.project.backend.service.RouteService;
-import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,14 +36,11 @@ public class RideBookingServiceImpl implements RideBookingService {
     private final DriverMatchingService driverMatchingService;
     private final DateTimeService dateTimeService;
 
-    private final CustomerRepository customerRepository;
     private final RideRepository rideRepository;
     private final PassengerRepository passengerRepository;
     private final VehicleTypeRepository vehicleTypeRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
     private final RouteRepository routeRepository;
-
-    private final LocationTransformer locationTransformer;
 
     private final ApplicationEventPublisher applicationEventPublisher;
     private final RouteService routeService;
@@ -73,7 +72,52 @@ public class RideBookingServiceImpl implements RideBookingService {
         // Send emails to passengers
         applicationEventPublisher.publishEvent(new RideCreatedEvent(ride));
 
+        // If driver is assigned to the ride, send him notification about new ride
+        if (ride.getDriver() != null) {
+            applicationEventPublisher.publishEvent(new DriverAssignedEvent(ride));
+        }
+
         return new NewRideDTO(ride.getId(), ride.getStatus().toString(), estimatedDistance);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
+    public void findDriverForScheduledRide(Long rideId, long minutesBefore) {
+        var rideOptional = rideRepository.findById(rideId);
+        if (rideOptional.isEmpty()) {
+            // Ride does not exist, nothing to do
+            return;
+        }
+        var ride = rideOptional.get();
+        if (ride.getDriver() != null) {
+            // Driver is already assigned, nothing to do
+            return;
+        }
+
+        if (ride.getStatus() != RideStatus.PENDING) {
+            // Ride is not pending, we should not assign driver to it
+            return;
+        }
+
+        // Look for suitable driver and if found assign him to the ride and change status to ACCEPTED
+        var driverInfo = driverMatchingService.findDriverFor(ride).orElse(null);
+        if (driverInfo == null) {
+
+            if (minutesBefore == 0) {
+                // This is the last try to find a driver, if we don't find him now, we need to cancel the ride
+                ride.setStatus(RideStatus.CANCELLED);
+                ride.setCancellationReason("No driver found for scheduled ride");
+                rideRepository.save(ride);
+                applicationEventPublisher.publishEvent(new RideStatusChangedEvent(ride));
+            }
+            return;
+        }
+        ride.setDriver(driverInfo.getDriver());
+        ride.setStatus(RideStatus.ACCEPTED);
+        rideRepository.save(ride);
+
+        applicationEventPublisher.publishEvent(new DriverAssignedEvent(ride));
+        applicationEventPublisher.publishEvent(new RideStatusChangedEvent(ride));
     }
 
 
@@ -118,6 +162,8 @@ public class RideBookingServiceImpl implements RideBookingService {
             ride.setRoute(fetchExistingRoute(body.getRouteId()));
         } else if (body.getRoute() != null) {
             ride.setRoute(routeService.createNew(body.getRoute()));
+        } else {
+            throw new BadRequestException("Either routeId or route must be provided");
         }
 
         ride.setPassengers(createPassengers(rideOwner, body.getPassengers()));

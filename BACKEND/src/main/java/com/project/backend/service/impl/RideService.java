@@ -229,7 +229,7 @@ public class RideService implements IRideService {
                         new ResourceNotFoundException("Ride with id " + id + " not found")
                 );
 
-        ride.setStatus(finishRideDTO.isInterrupted() ? RideStatus.INTERRUPTED : RideStatus.FINISHED);
+        ride.setStatus(finishRideDTO.getIsInterrupted() ? RideStatus.INTERRUPTED : RideStatus.FINISHED);
         ride.getDriver().setDriverStatus(DriverStatus.ACTIVE);
 
         applicationEventPublisher.publishEvent(new RideFinishedEvent(ride));

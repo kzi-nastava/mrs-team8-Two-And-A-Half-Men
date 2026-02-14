@@ -9,6 +9,7 @@ import com.project.backend.models.Driver;
 import com.project.backend.service.IRideService;
 import com.project.backend.service.impl.CancellationService;
 import com.project.backend.util.AuthUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +56,10 @@ public class RideCommandController {
 
 
     @PatchMapping("/{id}/finish")
+    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<?> finishRide(
             @PathVariable Long id,
-            @RequestBody FinishRideDTO finishRideDTO
+            @Valid @RequestBody FinishRideDTO finishRideDTO
     ) {
         RideResponseDTO next = rideService.finishRide(id, finishRideDTO);
         return ResponseEntity.status(HttpStatus.OK).body(next);

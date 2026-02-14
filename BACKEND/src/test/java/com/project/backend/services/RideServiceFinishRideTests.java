@@ -80,7 +80,7 @@ public class RideServiceFinishRideTests {
     void testFinishRide_WhenRideDoesNotExist_ThrowsResourceNotFoundException() {
         // Arrange
         FinishRideDTO finishRideDTO = new FinishRideDTO();
-        finishRideDTO.setInterrupted(false);
+        finishRideDTO.setIsInterrupted(false);
 
         when(rideRepository.findById(RideServiceFinishRideTestsFixture.NON_EXISTENT_RIDE_ID))
                 .thenReturn(Optional.empty());
@@ -105,7 +105,7 @@ public class RideServiceFinishRideTests {
         Ride ride = RideServiceFinishRideTestsFixture.createRide(driver, RideStatus.ACTIVE);
 
         FinishRideDTO finishRideDTO = new FinishRideDTO();
-        finishRideDTO.setInterrupted(false);
+        finishRideDTO.setIsInterrupted(false);
 
         when(rideRepository.findById(RideServiceFinishRideTestsFixture.VALID_RIDE_ID))
                 .thenReturn(Optional.of(ride));
@@ -140,7 +140,7 @@ public class RideServiceFinishRideTests {
         RideResponseDTO expectedDTO = new RideResponseDTO();
 
         FinishRideDTO finishRideDTO = new FinishRideDTO();
-        finishRideDTO.setInterrupted(false);
+        finishRideDTO.setIsInterrupted(false);
 
         when(rideRepository.findById(RideServiceFinishRideTestsFixture.VALID_RIDE_ID))
                 .thenReturn(Optional.of(ride));
@@ -176,7 +176,7 @@ public class RideServiceFinishRideTests {
         Ride ride = RideServiceFinishRideTestsFixture.createRide(driver, RideStatus.ACTIVE);
 
         FinishRideDTO finishRideDTO = new FinishRideDTO();
-        finishRideDTO.setInterrupted(true);
+        finishRideDTO.setIsInterrupted(true);
 
         when(rideRepository.findById(RideServiceFinishRideTestsFixture.VALID_RIDE_ID))
                 .thenReturn(Optional.of(ride));
@@ -208,7 +208,7 @@ public class RideServiceFinishRideTests {
         Ride ride = RideServiceFinishRideTestsFixture.createRide(driver, RideStatus.ACTIVE);
 
         FinishRideDTO finishRideDTO = new FinishRideDTO();
-        finishRideDTO.setInterrupted(false);
+        finishRideDTO.setIsInterrupted(false);
 
         when(rideRepository.findById(RideServiceFinishRideTestsFixture.VALID_RIDE_ID))
                 .thenReturn(Optional.of(ride));

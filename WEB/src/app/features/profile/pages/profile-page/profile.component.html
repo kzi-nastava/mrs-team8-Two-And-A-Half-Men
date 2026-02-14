@@ -2,6 +2,22 @@
 
 <div class="profile-container">
 	<div class="profile-content">
+		<!-- Block Reason Banner -->
+		@if (personalInfo()!.blocked && personalInfo()!.blockReason) {
+			<div class="blocked-banner" appBox>
+				<div class="blocked-icon">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+						<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+						<path d="M4.93 4.93l14.14 14.14" stroke="currentColor" stroke-width="2"/>
+					</svg>
+				</div>
+				<div class="blocked-content">
+					<h3>Your account is blocked</h3>
+					<p><strong>Reason:</strong> {{ personalInfo()!.blockReason }}</p>
+					<p>Contact support for more details and help unblocking.</p>
+				</div>
+			</div>
+		}
 
 		@if (changeRequest()) {
 			<app-request-change-preview

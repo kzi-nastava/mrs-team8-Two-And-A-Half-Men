@@ -7,4 +7,6 @@ export interface PersonalInfo {
 	email: string;
 	imgSrc?: string | null;
 	role?: string;
+	blockReason?: string | null;
+	blocked?: boolean;
 }

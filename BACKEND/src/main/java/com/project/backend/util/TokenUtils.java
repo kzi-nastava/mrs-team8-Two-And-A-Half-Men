@@ -31,12 +31,12 @@ public class TokenUtils {
         System.out.println("JWT key bytes: " +
                 SECRET.getBytes(StandardCharsets.UTF_8).length);
     }
-    public String generateToken(AppUser user) {
-        return Jwts.builder().setIssuer(APP_NAME).setSubject(user.getEmail())
-                .setAudience(generateAudience()).setIssuedAt(new Date())
-                .claim("role",  "ROLE_" + user.getClass().getSimpleName().toUpperCase()).setExpiration(generateExpirationDate())
-                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SIGNATURE_ALGORITHM).compact();
-    }
+        public String generateToken(AppUser user) {
+            return Jwts.builder().setIssuer(APP_NAME).setSubject(user.getEmail())
+                    .setAudience(generateAudience()).setIssuedAt(new Date())
+                    .claim("role",  "ROLE_" + user.getClass().getSimpleName().toUpperCase()).setExpiration(generateExpirationDate())
+                    .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SIGNATURE_ALGORITHM).compact();
+        }
 
     private Date generateExpirationDate() {
         return new Date(new Date().getTime() + EXPIRES_IN);

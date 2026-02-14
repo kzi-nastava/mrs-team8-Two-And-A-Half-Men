@@ -6,7 +6,6 @@ import com.project.backend.events.RideCreatedEvent;
 import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
-import com.project.backend.geolocation.locations.LocationTransformer;
 import com.project.backend.models.*;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.*;
@@ -34,14 +33,11 @@ public class RideBookingServiceImpl implements RideBookingService {
     private final DriverMatchingService driverMatchingService;
     private final DateTimeService dateTimeService;
 
-    private final CustomerRepository customerRepository;
     private final RideRepository rideRepository;
     private final PassengerRepository passengerRepository;
     private final VehicleTypeRepository vehicleTypeRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
     private final RouteRepository routeRepository;
-
-    private final LocationTransformer locationTransformer;
 
     private final ApplicationEventPublisher applicationEventPublisher;
     private final RouteService routeService;

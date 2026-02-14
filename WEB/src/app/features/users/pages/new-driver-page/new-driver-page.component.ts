@@ -126,16 +126,15 @@ export class NewDriverPageComponent implements OnInit {
 		this.usersService.registerDriver(registrationRequest).subscribe({
 			next: () => {
 				this.isSaving.set(false);
-				this.popupsService.success(
-					'Success',
-					'Driver registered successfully!',
-					{
-						onConfirm: () => this.router.navigate(['users']).then()
-					}
-				);
+				this.popupsService.success('Success', 'Driver registered successfully!', {
+					onConfirm: () => this.router.navigate(['users']).then(),
+				});
 			},
 			error: (err) => {
-				this.popupsService.error('Failed to register driver', err.error?.message || 'An error occurred while registering the driver.');
+				this.popupsService.error(
+					'Failed to register driver',
+					err.error?.message || 'An error occurred while registering the driver.',
+				);
 				this.isSaving.set(false);
 				console.error(err);
 			},

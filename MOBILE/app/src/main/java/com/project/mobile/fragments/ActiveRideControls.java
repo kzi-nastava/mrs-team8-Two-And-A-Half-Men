@@ -1,4 +1,4 @@
-package com.project.mobile.fragments.Registered.Rides.controls;
+package com.project.mobile.fragments;
 
 import android.os.Bundle;
 

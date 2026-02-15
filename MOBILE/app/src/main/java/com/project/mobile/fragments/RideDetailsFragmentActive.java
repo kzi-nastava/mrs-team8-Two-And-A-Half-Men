@@ -31,7 +31,7 @@
     import com.project.mobile.R;
     import com.project.mobile.core.WebSocketsMenager.MessageCallback;
     import com.project.mobile.core.WebSocketsMenager.WebSocketManager;
-    import com.project.mobile.fragments.Registered.Rides.controls.ActiveRideControls;
+    import com.project.mobile.fragments.Driver.controlers.AceptedRide;
     import com.project.mobile.fragments.Registered.Rides.controls.CancelledRideControls;
     import com.project.mobile.fragments.Registered.Rides.controls.PendingRideControls;
     import com.project.mobile.map.MapFragment;
@@ -332,6 +332,9 @@
             if(currentUser.getRole().equals("CUSTOMER")){
                 setUpControlesUser(status , ride);
             }
+            if(currentUser.getRole().equals("DRIVER")){
+                setUpControlesDriver(status , ride);
+            }
             updateMapWithStops(ride.getLocations());
         }
         private void displayPassengerReviews(List<PassengerDTO> passengers) {
@@ -453,12 +456,34 @@
                 if(accessToken == null) {
                     actionCard.setVisibility(View.VISIBLE);
                     actionFrame.setVisibility(View.VISIBLE);
-                    CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken);
+                    CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken, false, true);
+                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
+                }
+            } else if (status.equals("FINISHED")) {
+                if(accessToken == null) {
+                    actionCard.setVisibility(View.VISIBLE);
+                    actionFrame.setVisibility(View.VISIBLE);
+                    CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken, true, true);
                     getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
                 }
             }
-
-
+            else if(status.equals("ACCEPTED")) {
+                if(accessToken == null) {
+                    actionCard.setVisibility(View.VISIBLE);
+                    actionFrame.setVisibility(View.VISIBLE);
+                    CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken, false, false);
+                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
+                }
+            }
+        }
+        private void setUpControlesDriver(String status , RideDTO ride)
+        {
+            if(status.equals("ACCEPTED")) {
+                actionCard.setVisibility(View.VISIBLE);
+                actionFrame.setVisibility(View.VISIBLE);
+                AceptedRide aceptedRide = AceptedRide.newInstance(ride.getId());
+                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , aceptedRide).commit();
+            }
         }
         private void updateMapWithStops(List<RouteItemDTO> stops) {
             if (stops != null && !stops.isEmpty()) {

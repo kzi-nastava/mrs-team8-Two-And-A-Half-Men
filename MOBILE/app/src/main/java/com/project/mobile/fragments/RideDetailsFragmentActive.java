@@ -13,11 +13,13 @@
 
     import android.util.Log;
     import android.view.LayoutInflater;
+    import android.view.MotionEvent;
     import android.view.View;
     import android.view.ViewGroup;
     import android.widget.FrameLayout;
     import android.widget.LinearLayout;
     import android.widget.ProgressBar;
+    import android.widget.ScrollView;
     import android.widget.TextView;
     import android.widget.Toast;
 
@@ -32,6 +34,7 @@
     import com.project.mobile.core.WebSocketsMenager.MessageCallback;
     import com.project.mobile.core.WebSocketsMenager.WebSocketManager;
     import com.project.mobile.fragments.Driver.controlers.AceptedRide;
+    import com.project.mobile.fragments.Driver.controlers.ActiveRideDriver;
     import com.project.mobile.fragments.Registered.Rides.controls.CancelledRideControls;
     import com.project.mobile.fragments.Registered.Rides.controls.PendingRideControls;
     import com.project.mobile.map.MapFragment;
@@ -84,7 +87,7 @@
         private TextView txtServices;
         private TextView txtCancellationReason;
         private TextView txtPath;
-
+        private ScrollView scrollView;
 
         private LinearLayout layoutScheduledTime;
         private LinearLayout layoutStartTime;
@@ -118,6 +121,10 @@
 
         private int updateCounter = 0;
         private MeInfo currentUser;
+        private float lastScrollY = 0;
+        private boolean isRefreshing = false;
+        private static final int SCROLL_THRESHOLD = 50; // Threshold in pixels for triggering refresh
+
 
         public RideDetailsFragmentActive() {
         }
@@ -130,10 +137,11 @@
             return fragment;
         }
 
-        public static RideDetailsFragmentActive newInstanceWithAccessToken(String accessToken) {
+        public static RideDetailsFragmentActive newInstanceWithAccessToken(String accessToken, Long rideId) {
             RideDetailsFragmentActive fragment = new RideDetailsFragmentActive();
             Bundle args = new Bundle();
             args.putString(ARG_ACCESS_TOKEN, accessToken);
+            args.putLong(ARG_RIDE_ID, rideId);
             fragment.setArguments(args);
             return fragment;
         }
@@ -165,6 +173,7 @@
             initializeViews(view);
             setupFragments();
             setupObservers();
+            setupScrollToRefresh();
             loadRideData();
 
             return view;
@@ -174,7 +183,7 @@
             progressBar = view.findViewById(R.id.progress_bar);
             errorView = view.findViewById(R.id.error_view);
             contentContainer = view.findViewById(R.id.content_container);
-
+            scrollView = (ScrollView) view.findViewById(R.id.content_container);
             txtRideId = view.findViewById(R.id.txt_ride_id);
             txtStatus = view.findViewById(R.id.txt_ride_status);
             txtScheduledTime = view.findViewById(R.id.txt_scheduled_time);
@@ -251,11 +260,7 @@
         }
 
         private void loadRideData() {
-            if (accessToken != null && !accessToken.isEmpty()) {
-                // Unregistered user with access token
-                Log.d(TAG, "Loading ride with access token");
-                rideModel.loadRideByAccessToken(accessToken);
-            } else if (rideId != null) {
+            if (rideId != null) {
                 // Registered user with ride ID
                 Log.d(TAG, "Loading ride with ID: " + rideId);
                 rideModel.loadRideById(rideId);
@@ -329,11 +334,14 @@
 
 
             String status = ride.getStatus();
-            if(currentUser.getRole().equals("CUSTOMER")){
+            if(currentUser != null && currentUser.getRole().equals("CUSTOMER")){
                 setUpControlesUser(status , ride);
             }
-            if(currentUser.getRole().equals("DRIVER")){
+            if(currentUser != null && currentUser.getRole().equals("DRIVER")){
                 setUpControlesDriver(status , ride);
+            }
+            if(accessToken != null) {
+                setUpContolesAccessToken(status, ride);
             }
             updateMapWithStops(ride.getLocations());
         }
@@ -459,7 +467,7 @@
                     CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken, false, true);
                     getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
                 }
-            } else if (status.equals("FINISHED")) {
+            } else if (status.equals("FINISHED") || status.equals("INTERRUPTED")) {
                 if(accessToken == null) {
                     actionCard.setVisibility(View.VISIBLE);
                     actionFrame.setVisibility(View.VISIBLE);
@@ -478,12 +486,118 @@
         }
         private void setUpControlesDriver(String status , RideDTO ride)
         {
+            if(status.equals("ACCEPTED") || status.equals("ACTIVE")) {
+                callback = WebSocketManager.subscribe("/topic/driver-locations/" + ride.getDriverId(), locationUpdate -> {
+                    FragmentActivity activity = getActivity();
+                    if (activity != null && !activity.isFinishing() && isAdded()) {
+                        activity.runOnUiThread(() -> {
+                            Log.d("FormStopsMap", "Received location update: " + locationUpdate);
+                            DriverLocationDto driverLocation = DriverLocationDto.fromJson(locationUpdate);
+                            if (driverLocation != null) {
+                                Drawable carIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_car);
+                                carIcon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+                                markerDrawer.addMarker(new MarkerPointIcon(driverLocation.getLatitude(), driverLocation.getLongitude(), driverLocation.getDriverEmail(), carIcon));
+                                if(updateCounter == 0) {
+                                    List<RouteItemDTO> stops = ride.getLocations();
+                                    List<GeoPoint> geoPoints = new ArrayList<>();
+                                    geoPoints.add(new GeoPoint(driverLocation.getLatitude(), driverLocation.getLongitude()));
+                                    for (RouteItemDTO stop : stops) {
+                                        geoPoints.add(new GeoPoint(stop.getLatitude(), stop.getLongitude()));
+                                    }
+                                    routeDrawer.fetchRouteTimeAndDistanceAsync(geoPoints).thenAccept(result -> {
+                                                double totalDuration = result.get(0);
+                                                double totalDistance = result.get(1);
+                                                String timeText = String.format(Locale.getDefault(), "Estimated Time: %.1f mins", totalDuration / 60);
+                                                String distanceText = String.format(Locale.getDefault(), "Estimated Distance: %.1f km", totalDistance / 1000);
+                                                txtEstimatedTime.setText(timeText);
+                                                txtEstimatedDistance.setText(distanceText);
+                                                Log.d("RouteInfo", "Total Duration: " + totalDuration + " sec");
+                                                Log.d("RouteInfo", "Total Distance: " + totalDistance + " m");
+                                            })
+                                            .exceptionally(e -> {
+                                                Log.e("RouteInfo", "Error fetching route info", e);
+                                                return null;
+                                            });
+                                    updateCounter=11;
+                                }
+
+                                updateCounter--;
+                            }
+                        });
+                    }
+                });
+            }
             if(status.equals("ACCEPTED")) {
                 actionCard.setVisibility(View.VISIBLE);
                 actionFrame.setVisibility(View.VISIBLE);
                 AceptedRide aceptedRide = AceptedRide.newInstance(ride.getId());
                 getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , aceptedRide).commit();
+            }else if(status.equals("ACTIVE")) {
+                actionCard.setVisibility(View.VISIBLE);
+                actionFrame.setVisibility(View.VISIBLE);
+                ActiveRideDriver activeRideControls = ActiveRideDriver.newInstance(ride.getId());
+                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , activeRideControls).commit();
             }
+        }
+        private void setUpContolesAccessToken(String status , RideDTO ride)
+        {
+            Log.d("RideDetailsFragment", "Setting up controls for status: " + status + ", accessToken: " + accessToken);
+            if(status.equals("ACTIVE")) {
+                actionCard.setVisibility(View.VISIBLE);
+                actionFrame.setVisibility(View.VISIBLE);
+                ActiveRideControls activeRideControls = ActiveRideControls.newInstance(ride.getId(), accessToken);
+                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , activeRideControls).commit();
+                layoutEstimatedDistance.setVisibility(View.VISIBLE);
+                layoutEstimatedTime.setVisibility(View.VISIBLE);
+                txtEstimatedDistance.setVisibility(View.VISIBLE);
+                txtEstimatedTime.setVisibility(View.VISIBLE);
+                callback = WebSocketManager.subscribe("/topic/driver-locations/" + ride.getDriverId(), locationUpdate -> {
+                    FragmentActivity activity = getActivity();
+                    if (activity != null && !activity.isFinishing() && isAdded()) {
+                        activity.runOnUiThread(() -> {
+                            Log.d("FormStopsMap", "Received location update: " + locationUpdate);
+                            DriverLocationDto driverLocation = DriverLocationDto.fromJson(locationUpdate);
+                            if (driverLocation != null) {
+                                Drawable carIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_car);
+                                carIcon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+                                markerDrawer.addMarker(new MarkerPointIcon(driverLocation.getLatitude(), driverLocation.getLongitude(), driverLocation.getDriverEmail(), carIcon));
+                                if(updateCounter == 0) {
+                                    List<RouteItemDTO> stops = ride.getLocations();
+                                    List<GeoPoint> geoPoints = new ArrayList<>();
+                                    geoPoints.add(new GeoPoint(driverLocation.getLatitude(), driverLocation.getLongitude()));
+                                    for (RouteItemDTO stop : stops) {
+                                        geoPoints.add(new GeoPoint(stop.getLatitude(), stop.getLongitude()));
+                                    }
+                                    routeDrawer.fetchRouteTimeAndDistanceAsync(geoPoints).thenAccept(result -> {
+                                                double totalDuration = result.get(0);
+                                                double totalDistance = result.get(1);
+                                                String timeText = String.format(Locale.getDefault(), "Estimated Time: %.1f mins", totalDuration / 60);
+                                                String distanceText = String.format(Locale.getDefault(), "Estimated Distance: %.1f km", totalDistance / 1000);
+                                                txtEstimatedTime.setText(timeText);
+                                                txtEstimatedDistance.setText(distanceText);
+                                                Log.d("RouteInfo", "Total Duration: " + totalDuration + " sec");
+                                                Log.d("RouteInfo", "Total Distance: " + totalDistance + " m");
+                                            })
+                                            .exceptionally(e -> {
+                                                Log.e("RouteInfo", "Error fetching route info", e);
+                                                return null;
+                                            });
+                                    updateCounter=11;
+                                }
+
+                                updateCounter--;
+                            }
+                        });
+                    }
+                });
+                DriverID = ride.getDriverId();
+            }
+            else if (status.equals("FINISHED") || status.equals("INTERRUPTED")) {
+                    actionCard.setVisibility(View.VISIBLE);
+                    actionFrame.setVisibility(View.VISIBLE);
+                    CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken);
+                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
+                }
         }
         private void updateMapWithStops(List<RouteItemDTO> stops) {
             if (stops != null && !stops.isEmpty()) {
@@ -628,7 +742,54 @@
                 layout.setVisibility(View.GONE);
             }
         }
+        private void setupScrollToRefresh() {
+            if (scrollView == null) return;
 
+            scrollView.setOnTouchListener(new View.OnTouchListener() {
+                private float startY;
+                private boolean isDragging = false;
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            startY = event.getY();
+                            isDragging = false;
+                            break;
+
+                        case MotionEvent.ACTION_MOVE:
+                            float currentY = event.getY();
+                            float deltaY = currentY - startY;
+
+                            // Check if we're at the top of the scroll and user is trying to scroll up more
+                            if (scrollView.getScrollY() == 0 && deltaY > SCROLL_THRESHOLD && !isRefreshing) {
+                                isDragging = true;
+                                triggerRefresh();
+                            }
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            isDragging = false;
+                            break;
+                    }
+                    return false; // Allow ScrollView to handle the event normally
+                }
+            });
+        }
+
+        private void triggerRefresh() {
+            if (isRefreshing) return;
+
+            isRefreshing = true;
+            Log.d(TAG, "Scroll to refresh triggered - reloading ride data");
+            Toast.makeText(getContext(), "Refreshing ride data...", Toast.LENGTH_SHORT).show();
+
+            loadRideData();
+
+            // Reset refresh flag after a delay
+            scrollView.postDelayed(() -> isRefreshing = false, 1500);
+        }
 
 
     }

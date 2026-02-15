@@ -70,4 +70,8 @@
     <string name="start_ride">Start Ride</string>
     <string name="enter_your_reason_here">Enter your reason here...</string>
     <string name="dismiss">Dismiss</string>
+    <string name="ride_cost">Ride Cost:</string>
+    <string name="ride_duration_min">Ride Duration (min):</string>
+    <string name="was_ride_interrupted">Was ride interrupted?</string>
+    <string name="ride_ending">Ride Ending</string>
 </resources>

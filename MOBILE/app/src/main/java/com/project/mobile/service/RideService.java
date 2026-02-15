@@ -1,6 +1,7 @@
 package com.project.mobile.service;
 
 import com.project.mobile.DTO.Ride.CostTimeDTO;
+import com.project.mobile.DTO.Ride.FinishRideDTO;
 import com.project.mobile.DTO.Ride.NoteRequestDTO;
 import com.project.mobile.DTO.Ride.NoteResponseDTO;
 import com.project.mobile.DTO.Ride.RatingRequestDTO;
@@ -69,4 +70,9 @@ public interface RideService {
     );
     @PATCH("rides/{id}/start")
     Call<Void> startRide(@Path("id") Long rideId);
+    @PATCH("rides/{id}/end")
+    Call<CostTimeDTO> endRide(@Path("id") Long id);
+
+    @PATCH("rides/{id}/finish")
+    Call<Void> finishRide(@Path("id") Long id, @Body FinishRideDTO finishRideDTO);
 }

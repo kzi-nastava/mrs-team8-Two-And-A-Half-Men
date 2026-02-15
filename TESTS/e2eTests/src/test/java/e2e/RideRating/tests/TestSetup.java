@@ -12,15 +12,9 @@ public class TestSetup {
 
     protected static final String BASE_URL = "http://localhost:4200";
 
-    protected static final String TEST_USERNAME = "ana@gmail.com";
-    protected static final String TEST_PASSWORD = "password";
-    protected static final int DRIVER_RATING = 5;
-    protected static final int VEHICLE_RATING = 4;
-    protected static final String COMMENT = "Everything was excellent.";
-
     @BeforeEach
     public void initializeWebDriver() {
-        WebDriverManager.chromedriver().setup();
+        WebDriverManager.chromedriver().browserVersion("144").setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--incognito");
         driver = new ChromeDriver(options);

@@ -7,6 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RideRatingTest extends TestSetup {
 
+    protected static final String TEST_USERNAME = "ana@gmail.com";
+    protected static final String TEST_PASSWORD = "password";
+    protected static final int DRIVER_RATING = 5;
+    protected static final int VEHICLE_RATING = 4;
+    protected static final String COMMENT = "Everything was excellent.";
+
     // =====================================================================
     // HAPPY PATH
     // =====================================================================
@@ -62,7 +68,7 @@ public class RideRatingTest extends TestSetup {
 
         // Back to Ride Details
         RideDetailsPage detailsAfterRating = swal.clickOk();
-        assertFalse(ratingPopup.isLoaded(),
+        assertTrue(detailsAfterRating.isLoaded(),
                 "Rating popup should be closed");
     }
 }

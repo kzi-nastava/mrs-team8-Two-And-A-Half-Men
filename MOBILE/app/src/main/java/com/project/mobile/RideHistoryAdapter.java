@@ -74,8 +74,8 @@ public class RideHistoryAdapter extends RecyclerView.Adapter<RideHistoryAdapter.
 
             // Addresses
             if (ride.getAddresses() != null && !ride.getAddresses().isEmpty()) {
-                binding.startPoint.setText(ride.getAddresses().get(0));
-                binding.destination.setText(ride.getAddresses().get(ride.getAddresses().size() - 1));
+                binding.startPoint.setText(ride.getAddresses().get(0).getAddress());
+                binding.destination.setText(ride.getAddresses().get(ride.getAddresses().size() - 1).getAddress());
             }
 
             // Times
@@ -94,7 +94,7 @@ public class RideHistoryAdapter extends RecyclerView.Adapter<RideHistoryAdapter.
             }
 
             // Cost
-            binding.totalCost.setText(String.format(Locale.getDefault(), "%.2f RSD", ride.getTotalCost()));
+            binding.totalCost.setText(String.format(Locale.getDefault(), "%.2f RSD", ride.getTotalCost() != null ? ride.getTotalCost() : 0.0));
 
             // People (for driver view)
             binding.rideOwner.setText(ride.getRideOwnerName());

@@ -2,6 +2,11 @@ package com.project.mobile.fragments;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +19,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelKt;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.project.mobile.DTO.Auth.MeInfo;
 import com.project.mobile.R;
 import com.project.mobile.RideHistoryAdapter;
 import com.project.mobile.databinding.FragmentHistoryBinding;
@@ -26,6 +34,7 @@ import com.project.mobile.config.HistoryConfig;
 import com.project.mobile.core.retrofitClient.RetrofitClient;
 import com.project.mobile.models.PagedResponse;
 import com.project.mobile.models.Ride;
+import com.project.mobile.viewModels.AuthModel;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -41,24 +50,30 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DriverHistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements SensorEventListener {
     private FragmentHistoryBinding binding;
 
     private RideHistoryAdapter adapter;
     private List<Ride> rideList;
     private final RideService rideService = RetrofitClient.retrofit.create(RideService.class);
 
+    private AuthModel authModel;
     // Pagination
     private int currentPage = 0;
     private int pageSize = HistoryConfig.DEFAULT_PAGE_SIZE;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-
+    private MeInfo currentUser;
     // Filtering
     private Long startDateMillis = null;
     private Long endDateMillis = null;
     private boolean filtersVisible = false;
-
+    private SensorManager sensorManager;
+    private static final int SHAKE_THRESHOLD = 500;
+    private long lastUpdate;
+    private float last_x;
+    private float last_y;
+    private float last_z;
     // Sorting
     private HistoryConfig.SortField currentSortField = HistoryConfig.SortField.SCHEDULED_TIME;
     private HistoryConfig.SortDirection currentSortDirection = HistoryConfig.SortDirection.DESC;
@@ -68,14 +83,19 @@ public class DriverHistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
-
+        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+        authModel = new ViewModelProvider(requireActivity()).get(AuthModel.class);
         setupRecyclerView();
         setupSortSpinners();
         setupPageSizeSpinner();
         setupDatePickers();
         setupFilterToggle();
-
+        loadUserInfo();
         loadRideHistory(true);
+
 
         return binding.getRoot();
     }
@@ -107,7 +127,6 @@ public class DriverHistoryFragment extends Fragment {
     }
 
     private void setupSortSpinners() {
-        // Sort Field
         List<String> sortFieldNames = new ArrayList<>();
         for (HistoryConfig.SortField field : HistoryConfig.SortField.values()) {
             sortFieldNames.add(field.getDisplayName());
@@ -121,7 +140,6 @@ public class DriverHistoryFragment extends Fragment {
         sortFieldAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.sortFieldSpinner.setAdapter(sortFieldAdapter);
         binding.sortFieldSpinner.setSelection(0);
-
         binding.sortFieldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -196,9 +214,10 @@ public class DriverHistoryFragment extends Fragment {
             endDateMillis = null;
             binding.startDateInput.setText("");
             binding.endDateInput.setText("");
+            binding.UserIdInput.setText("");
+            binding.driverIdInput.setText("");
             resetAndReload();
         });
-
         binding.applyFiltersButton.setOnClickListener(v -> resetAndReload());
     }
 
@@ -206,6 +225,14 @@ public class DriverHistoryFragment extends Fragment {
         binding.toggleFiltersButton.setOnClickListener(v -> {
             filtersVisible = !filtersVisible;
             binding.filtersPanel.setVisibility(filtersVisible ? View.VISIBLE : View.GONE);
+            Log.d(TAG, "Current user role: " + (currentUser != null ? currentUser.getRole() : "null"));
+            if( currentUser!= null && currentUser.getRole().equals("ADMIN") ){
+                Log.d("HistoryFragment", "Toggling filters for ADMIN user" + (filtersVisible ? " showing" : " hiding") + " userId and driverId inputs");
+                binding.UserIdInput.setVisibility(filtersVisible ? View.VISIBLE : View.GONE);
+                binding.driverIdInput.setVisibility(filtersVisible ? View.VISIBLE : View.GONE);
+                binding.driverIdInputLayout.setVisibility(filtersVisible ? View.VISIBLE : View.GONE);
+                binding.userIdInputLayout.setVisibility(filtersVisible ? View.VISIBLE : View.GONE);
+            }
             binding.toggleFiltersButton.setText(filtersVisible ? "Hide Filters" : "Show Filters");
         });
     }
@@ -234,7 +261,6 @@ public class DriverHistoryFragment extends Fragment {
 
     private void loadRideHistory(boolean reset) {
         if (isLoading) return;
-
         if (reset) {
             currentPage = 0;
             isLastPage = false;
@@ -247,14 +273,23 @@ public class DriverHistoryFragment extends Fragment {
 
         String startDate = formatDateForApi(startDateMillis);
         String endDate = formatDateForApi(endDateMillis);
-        String sort = currentSortField.getApiValue() + "," + currentSortDirection.getApiValue();
-
+        String sort = currentSortField.getApiValue();
+        String direction = currentSortDirection.getApiValue();
+        Long userId = binding.UserIdInput.getText() != null && !binding.UserIdInput.getText().toString().isEmpty()
+                ? Long.parseLong(binding.UserIdInput.getText().toString())
+                : null;
+        Long driverId = binding.driverIdInput.getText() != null && !binding.driverIdInput.getText().toString().isEmpty()
+                ? Long.parseLong(binding.driverIdInput.getText().toString())
+                : null;
         Call<PagedResponse<Ride>> call = rideService.getRideHistory(
                 currentPage,
                 pageSize,
                 startDate,
                 endDate,
-                sort
+                sort,
+                direction,
+                driverId,
+                userId
         );
 
         call.enqueue(new Callback<>() {
@@ -383,5 +418,61 @@ public class DriverHistoryFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void loadUserInfo() {
+        // Load user info if not using access token (registered user)
+            authModel.getMeInfo().thenAccept(meInfo -> {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        currentUser = meInfo;
+                    });
+                }
+            }).exceptionally(e -> {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        currentUser = null;
+                    });
+                }
+                return null;
+            });
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            long curTime = System.currentTimeMillis();
+            if ((curTime - lastUpdate) > 200) {
+                long diffTime = (curTime - lastUpdate);
+                lastUpdate = curTime;
+
+                float[] values = event.values;
+                float x = values[0];
+                float y = values[1];
+                float z = values[2];
+
+                float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+                if(speed > SHAKE_THRESHOLD) {
+                    if (currentSortDirection == HistoryConfig.SortDirection.DESC) {
+                        currentSortDirection = HistoryConfig.SortDirection.ASC;
+                        binding.sortDirectionSpinner.setSelection(0);
+                    } else {
+                        currentSortDirection = HistoryConfig.SortDirection.DESC;
+                        binding.sortDirectionSpinner.setSelection(1); // DESC
+                    }
+                    resetAndReload();
+                }
+            }
+
+             last_x = event.values[0];
+             last_y = event.values[1];
+             last_z = event.values[2];
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        Log.d("HistoryFragment", "Sensor accuracy changed: " + sensor.getName() + " - " + accuracy);
     }
 }

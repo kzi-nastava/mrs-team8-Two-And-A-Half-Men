@@ -117,7 +117,45 @@
                         android:clickable="true"
                         android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/userIdInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="UserId"
+                    android:visibility="gone"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/UserIdInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:inputType="number"
+                        android:visibility="gone"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/driverIdInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="DriverID"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:visibility="gone"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/driverIdInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:inputType="number"
+                        android:visibility="gone"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
                 <!-- Filter Buttons -->
                 <LinearLayout
                     android:layout_width="match_parent"

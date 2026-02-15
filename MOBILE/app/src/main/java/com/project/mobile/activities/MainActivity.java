@@ -2,8 +2,6 @@ package com.project.mobile.activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -11,13 +9,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationView;
-import com.project.mobile.ActiveDrives;
 import com.project.mobile.FragmentTransition;
 import com.project.mobile.HomeRegistered;
 import com.project.mobile.LiveChat;
 import com.project.mobile.R;
 import com.project.mobile.databinding.ActivityMainBinding;
-import com.project.mobile.fragments.DriverHistoryFragment;
+import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.profile.ProfileFragment;
 import com.project.mobile.fragments.Registered.Rides.BookedRidesFragment;
 import com.project.mobile.viewModels.AuthModel;
@@ -58,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             else if(itemId == R.id.nav_history)
             {
-                FragmentTransition.to(new DriverHistoryFragment(), this, false, containerId);
+                FragmentTransition.to(new HistoryFragment(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_live_chat)

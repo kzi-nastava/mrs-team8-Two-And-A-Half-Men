@@ -1,6 +1,8 @@
 package com.project.mobile.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.project.mobile.DTO.Ride.PassengerDTO;
+import com.project.mobile.DTO.Ride.RouteItemDTO;
 
 import java.util.List;
 
@@ -41,11 +43,11 @@ public class Ride {
     @SerializedName("additionalServices")
     private List<String> additionalServices;
 
-    @SerializedName("addresses")
-    private List<String> addresses;
+    @SerializedName("locations")
+    private List<RouteItemDTO> addresses;
 
-    @SerializedName("passengersMails")
-    private List<String> passengersMails;
+    @SerializedName("passengers")
+    private List<PassengerDTO> passengersMails;
 
     // Constructors
     public Ride() {
@@ -148,19 +150,19 @@ public class Ride {
         this.additionalServices = additionalServices;
     }
 
-    public List<String> getAddresses() {
+    public List<RouteItemDTO> getAddresses() {
         return addresses;
     }
 
-    public void setAddresses(List<String> addresses) {
+    public void setAddresses(List<RouteItemDTO> addresses) {
         this.addresses = addresses;
     }
 
-    public List<String> getPassengersMails() {
+    public List<PassengerDTO> getPassengersMails() {
         return passengersMails;
     }
 
-    public void setPassengersMails(List<String> passengersMails) {
+    public void setPassengersMails(List<PassengerDTO> passengersMails) {
         this.passengersMails = passengersMails;
     }
 }

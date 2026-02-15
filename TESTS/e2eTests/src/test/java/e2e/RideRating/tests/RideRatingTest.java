@@ -2,6 +2,7 @@ package e2e.RideRating.tests;
 
 import e2e.RideRating.pages.*;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,9 +67,29 @@ public class RideRatingTest extends TestSetup {
         assertTrue(swal.hasSuccessIcon(), "SweetAlert2 has not success icon");
 
 
-        // Back to Ride Details
         RideDetailsPage detailsAfterRating = swal.clickOk();
-        assertTrue(detailsAfterRating.isLoaded(),
-                "Rating popup should be closed");
+        assertTrue(detailsAfterRating.isLoaded(), "Ride Details page is not reloaded");
+        assertFalse(ratingPopup.isLoaded(), "Rating popup should be closed");
+
+        assertTrue(detailsAfterRating.isPassengerReviewsSectionVisible(),
+                "Passenger Reviews section with entered rate is not visible");
+
+        WebElement myReview = detailsAfterRating.findReviewByEmail(TEST_USERNAME);
+
+        String reviewEmail = detailsAfterRating.getEmailFromReview(myReview);
+        assertEquals(TEST_USERNAME, reviewEmail,
+                "Review card with rating doesn't match with users email");
+
+        int displayedDriverRating = detailsAfterRating.getDriverRatingFromReview(myReview);
+        assertEquals(DRIVER_RATING, displayedDriverRating,
+                "Driver rating doesn't match with value sent");
+
+        int displayedVehicleRating = detailsAfterRating.getVehicleRatingFromReview(myReview);
+        assertEquals(VEHICLE_RATING, displayedVehicleRating,
+                "Driver rating doesn't match with value sent");
+
+        String displayedComment = detailsAfterRating.getCommentFromReview(myReview);
+        assertEquals(COMMENT, displayedComment,
+                "Comment doesn't match with value sent");
     }
 }

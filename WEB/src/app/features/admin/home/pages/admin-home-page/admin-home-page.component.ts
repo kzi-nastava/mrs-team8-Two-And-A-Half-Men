@@ -32,7 +32,7 @@ export class AdminHomePageComponent {
 	setActiveTab(tabId: string) {
 		this.activeTab.set(tabId as 'active-rides' | 'panics');
 	}
-
+	public panics = signal<Ride[]>([]);
 	public rides = signal<Ride[]>([]);
 	public driverNameFilter = signal<string>('');
 	public loading = signal<boolean>(false);
@@ -69,6 +69,19 @@ export class AdminHomePageComponent {
 						'There was an error loading active rides. Please try again later.',
 				);
 				this.rides.set([]);
+			},
+		});
+		this.adminHomepageService.loadPanics().subscribe({
+			next: (panics) => {
+				this.panics.set(panics);
+			},
+			error: (err) => {
+				this.popupsService.error(
+					'Error loading panics',
+					err?.error?.message ||
+						'There was an error loading panics. Please try again later.',
+				);
+				this.panics.set([]);
 			},
 		});
 	}

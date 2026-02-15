@@ -9,6 +9,7 @@ export interface RideActions {
 	rebook: boolean;
 	start: boolean;
 	end: boolean;
+	handlePanic: boolean;
 }
 
 
@@ -23,6 +24,7 @@ const PASSENGER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.ACCEPTED]: {
 		cancel: false,
@@ -33,6 +35,7 @@ const PASSENGER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.ACTIVE]: {
 		cancel: false,
@@ -43,6 +46,7 @@ const PASSENGER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.FINISHED]: {
 		cancel: false,
@@ -53,6 +57,7 @@ const PASSENGER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.INTERRUPTED]: {
 		cancel: false,
@@ -63,6 +68,7 @@ const PASSENGER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.PANICKED]: {
 		cancel: false,
@@ -73,6 +79,7 @@ const PASSENGER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.CANCELLED]: {
 		cancel: false,
@@ -83,6 +90,7 @@ const PASSENGER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 };
 
@@ -96,6 +104,7 @@ const RIDE_OWNER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.ACCEPTED]: {
 		cancel: true,
@@ -106,6 +115,7 @@ const RIDE_OWNER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.ACTIVE]: {
 		cancel: false,
@@ -116,6 +126,7 @@ const RIDE_OWNER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.FINISHED]: {
 		cancel: false,
@@ -126,6 +137,7 @@ const RIDE_OWNER_ACTIONS = {
 		rebook: true,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.INTERRUPTED]: {
 		cancel: false,
@@ -136,6 +148,7 @@ const RIDE_OWNER_ACTIONS = {
 		rebook: true,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.PANICKED]: {
 		cancel: false,
@@ -146,6 +159,7 @@ const RIDE_OWNER_ACTIONS = {
 		rebook: true,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.CANCELLED]: {
 		cancel: false,
@@ -156,6 +170,7 @@ const RIDE_OWNER_ACTIONS = {
 		rebook: true,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 };
 
@@ -169,6 +184,7 @@ const DRIVER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.ACCEPTED]: {
 		cancel: true,
@@ -179,6 +195,7 @@ const DRIVER_ACTIONS = {
 		rebook: false,
 		start: true,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.ACTIVE]: {
 		cancel: false,
@@ -189,6 +206,7 @@ const DRIVER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: true,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.FINISHED]: {
 		cancel: false,
@@ -199,6 +217,7 @@ const DRIVER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.INTERRUPTED]: {
 		cancel: false,
@@ -209,6 +228,7 @@ const DRIVER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.PANICKED]: {
 		cancel: false,
@@ -219,6 +239,7 @@ const DRIVER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.CANCELLED]: {
 		cancel: false,
@@ -229,6 +250,7 @@ const DRIVER_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 };
 
@@ -242,6 +264,7 @@ const ADMIN_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.ACCEPTED]: {
 		cancel: false,
@@ -252,6 +275,7 @@ const ADMIN_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.ACTIVE]: {
 		cancel: false,
@@ -262,6 +286,7 @@ const ADMIN_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.FINISHED]: {
 		cancel: false,
@@ -272,6 +297,7 @@ const ADMIN_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.INTERRUPTED]: {
 		cancel: false,
@@ -282,6 +308,7 @@ const ADMIN_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 	[RideStatus.PANICKED]: {
 		cancel: false,
@@ -292,6 +319,7 @@ const ADMIN_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: true,
 	} as RideActions,
 	[RideStatus.CANCELLED]: {
 		cancel: false,
@@ -302,6 +330,7 @@ const ADMIN_ACTIONS = {
 		rebook: false,
 		start: false,
 		end: false,
+		handlePanic: false,
 	} as RideActions,
 };
 
@@ -314,6 +343,7 @@ export const NO_ACTIONS = {
 	rebook: false,
 	start: false,
 	end: false,
+	handlePanic: false,
 } as RideActions;
 
 export const ADMIN = Symbol();

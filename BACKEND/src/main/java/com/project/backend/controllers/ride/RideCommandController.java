@@ -8,6 +8,7 @@ import com.project.backend.models.AppUser;
 import com.project.backend.models.Driver;
 import com.project.backend.service.IRideService;
 import com.project.backend.service.impl.CancellationService;
+import com.project.backend.service.impl.PanicService;
 import com.project.backend.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class RideCommandController {
     private final IRideService rideService;
     private final AuthUtils authUtils;
     private final CancellationService cancellationService;
+    private final PanicService panicService;
 
     @PatchMapping("/{id}/start")
     @PreAuthorize("hasRole('DRIVER')")
@@ -77,6 +79,14 @@ public class RideCommandController {
         }
         cancellationService.cancelRide(id, reason, user);
         return ResponseEntity.ok(Map.of("message", "Ride cancelled successfully"));
+    }
+    @PostMapping("/{id}/panic/resolve")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> resolvePanic(
+            @PathVariable Long id
+    ) {
+        panicService.resolvePanicAlert(id);
+        return ResponseEntity.ok(Map.of("message", "Panic alert resolved successfully"));
     }
 
 }

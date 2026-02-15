@@ -13,4 +13,7 @@ export class AdminHomepageService {
 	loadActiveRides(driverName: string): Observable<Ride[]> {
 		return this.http.get<Ride[]>(`api/${environment.apiVersion}/rides/active`, {params: { name: driverName }});
 	}
+	loadPanics(): Observable<Ride[]> {
+		return this.http.get<Ride[]>(`api/${environment.apiVersion}/rides/panics`);
+	}
 }

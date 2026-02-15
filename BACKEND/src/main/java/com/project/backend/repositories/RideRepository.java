@@ -52,4 +52,6 @@ public interface RideRepository extends JpaRepository<Ride, Long>, RideReportRep
     List<Ride> findByDriverAndStatusIn(AppUser currentUser, List<RideStatus> accepted);
 
     Optional<Ride> findFirstByDriverAndStatusInOrderByCreatedAtAsc(AppUser currentUser, List<RideStatus> accepted);
+
+    List<Ride> findByStatusAndEndTimeIsNull(RideStatus rideStatus);
 }

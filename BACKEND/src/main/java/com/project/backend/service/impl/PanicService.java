@@ -1,5 +1,7 @@
 package com.project.backend.service.impl;
 
+import com.project.backend.DTO.Ride.RideResponseDTO;
+import com.project.backend.DTO.mappers.RideMapper;
 import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.*;
 import com.project.backend.models.enums.DriverStatus;
@@ -27,6 +29,9 @@ public class PanicService implements IPanicService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final DriverLocationsRepository driverLocationsRepository;
     private final DateTimeService dateTimeService;
+    private final RideMapper rideMapper;
+    private final RideTracingService rideTracingService;
+
 
     public void triggerPanicAlert(AppUser user, String accessToken) {
         System.out.println("Panic alert triggered");
@@ -80,29 +85,25 @@ public class PanicService implements IPanicService {
 
         System.out.println("Panic alert sent to admins.");
     }
-
-    public void panic(Long rideId, Long userId, String accessToken) {
+    public void resolvePanicAlert(Long rideId)
+    {
         Ride ride = rideRepository.findById(rideId)
-                .orElseThrow(() -> new ResourceNotFoundException("Ride not found with id: " + rideId));
+                .orElseThrow(() -> new ResourceNotFoundException("Ride with id " + rideId + " not found"));
 
-        if (ride.getStatus() != RideStatus.ACTIVE) {
-            throw new IllegalStateException("Panic can only be triggered for active rides.");
+        if (ride.getStatus() != RideStatus.PANICKED) {
+            throw new IllegalStateException("Ride is not in panicked state");
         }
-
-        // Verify users
-
-        // Update the ride status to PANICKED
-        ride.setStatus(RideStatus.PANICKED);
+        if(ride.getEndTime() != null) {
+            throw new IllegalStateException("Ride has already ended");
+        }
         ride.setEndTime(dateTimeService.getCurrentDateTime());
-        ride.getDriver().setDriverStatus(DriverStatus.ACTIVE);
+        rideTracingService.finishRoute(ride.getDriver().getId());
         rideRepository.save(ride);
-
-        // Notify admins about the panic alert
-        Map<String, String> panicAlert = Map.of(
-                "userId", userId.toString(),
-                "rideId", rideId.toString(),
-                "accessToken", accessToken
-        );
-        simpMessagingTemplate.convertAndSend("/topic/panic", panicAlert);
+    }
+    public List<RideResponseDTO> getAllUnresolvedPanicAlerts() {
+        List<Ride> panickedRides = rideRepository.findByStatusAndEndTimeIsNull(RideStatus.PANICKED);
+        return  panickedRides.stream()
+                .map(rideMapper::convertToRideResponseDTO)
+                .toList();
     }
 }

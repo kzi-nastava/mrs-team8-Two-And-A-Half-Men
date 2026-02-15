@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center"
+    android:weightSum="2">
+
+    <Button
+        android:id="@+id/btn_panic_driver"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Panic"
+        android:layout_marginEnd="8dp"
+        app:backgroundTint="@color/error_red"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btn_end_ride_driver"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="End Ride"
+        android:layout_marginStart="8dp"
+        app:backgroundTint="@color/primary"
+        android:textColor="@color/white" />
+
+</LinearLayout>

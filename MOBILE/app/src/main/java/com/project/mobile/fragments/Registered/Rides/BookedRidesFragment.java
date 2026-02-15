@@ -15,7 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.project.mobile.FragmentTransition;
 import com.project.mobile.R;
+import com.project.mobile.fragments.RideDetailsFragmentActive;
 import com.project.mobile.viewModels.RideModel;
 
 
@@ -89,13 +91,8 @@ public class BookedRidesFragment extends Fragment {
 
     private void openRideDetails(Long rideId) {
         Log.d("BookedRidesFragment", "Opening ride details for ID: " + rideId);
-
         RideDetailsFragmentActive rideDetailsFragment = RideDetailsFragmentActive.newInstanceWithId(rideId);
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, rideDetailsFragment)
-                .addToBackStack(null)
-                .commit();
+        FragmentTransition.to(rideDetailsFragment, this.getActivity(), true, R.id.fragment_container, "DELETE");
     }
 
 }

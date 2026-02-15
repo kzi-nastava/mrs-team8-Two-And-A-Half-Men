@@ -1,8 +1,12 @@
 package com.project.mobile.service;
 
 import com.project.mobile.DTO.Ride.CostTimeDTO;
+import com.project.mobile.DTO.Ride.FinishRideDTO;
 import com.project.mobile.DTO.Ride.NoteRequestDTO;
 import com.project.mobile.DTO.Ride.NoteResponseDTO;
+import com.project.mobile.DTO.Ride.RatingRequestDTO;
+import com.project.mobile.DTO.Ride.RatingResponseDTO;
+import com.project.mobile.DTO.Ride.RideDTO;
 import com.project.mobile.models.PagedResponse;
 import com.project.mobile.models.Ride;
 import com.project.mobile.DTO.Ride.RideTrackingDTO;
@@ -34,7 +38,7 @@ public interface RideService {
     );
 
     @GET("rides/{id}")
-    Call<Ride> getRideDetails(
+    Call<RideDTO> getRideDetails(
             @Path("id") Long rideId
     );
     @GET("rides/booked")
@@ -57,4 +61,18 @@ public interface RideService {
 
     @PATCH("rides/{id}/cancel")
     Call<Void> cancelRide(@Path("id") Long id, @Body RideCancelationDTO reason);
+
+    @POST("rides/{id}/rating")
+    Call<RatingResponseDTO> rateRide(
+            @Path("id") Long rideId,
+            @Query("accessToken") String accessToken,
+            @Body RatingRequestDTO ratingRequest
+    );
+    @PATCH("rides/{id}/start")
+    Call<Void> startRide(@Path("id") Long rideId);
+    @PATCH("rides/{id}/end")
+    Call<CostTimeDTO> endRide(@Path("id") Long id);
+
+    @PATCH("rides/{id}/finish")
+    Call<Void> finishRide(@Path("id") Long id, @Body FinishRideDTO finishRideDTO);
 }

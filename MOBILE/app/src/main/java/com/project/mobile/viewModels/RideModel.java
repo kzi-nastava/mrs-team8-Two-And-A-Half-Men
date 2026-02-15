@@ -7,13 +7,18 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.project.mobile.DTO.Ride.CostTimeDTO;
+import com.project.mobile.DTO.Ride.FinishRideDTO;
 import com.project.mobile.DTO.Ride.NoteRequestDTO;
 import com.project.mobile.DTO.Ride.NoteResponseDTO;
+import com.project.mobile.DTO.Ride.RatingRequestDTO;
+import com.project.mobile.DTO.Ride.RatingResponseDTO;
 import com.project.mobile.DTO.Ride.RideBookedDTO;
 import com.project.mobile.DTO.Ride.RideBookingParametersDTO;
 import com.project.mobile.DTO.Ride.RideCancelationDTO;
+import com.project.mobile.DTO.Ride.RideDTO;
 import com.project.mobile.DTO.Ride.RideTrackingDTO;
 import com.project.mobile.core.retrofitClient.RetrofitClient;
+import com.project.mobile.models.Ride;
 import com.project.mobile.service.RideService;
 
 import java.util.List;
@@ -26,15 +31,33 @@ import retrofit2.Response;
 public class RideModel extends ViewModel {
     private RideService rideService = RetrofitClient.retrofit.create(RideService.class);
     private String errorLiveData = null;
-
     private MutableLiveData<List<RideBookedDTO>> bookedRides = new MutableLiveData<>();
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private MutableLiveData<String> error = new MutableLiveData<>();
-
-    public LiveData<List<RideBookedDTO>> getBookedRides() {
-        return bookedRides;
+    private MutableLiveData<RideDTO> rideDetails = new MutableLiveData<>();
+    private MutableLiveData<RideTrackingDTO> rideTracking = new MutableLiveData<>();
+    private MutableLiveData<Boolean> cancelSuccess = new MutableLiveData<>();
+    private MutableLiveData<RatingResponseDTO> ratingResponse = new MutableLiveData<>();
+    private MutableLiveData<Boolean> ratingSuccess = new MutableLiveData<>();
+    private MutableLiveData<NoteResponseDTO> noteResponse = new MutableLiveData<>();
+    private MutableLiveData<Boolean> startSuccess = new MutableLiveData<>();
+    private MutableLiveData<CostTimeDTO> endRideResult = new MutableLiveData<>();
+    private MutableLiveData<Boolean> endSuccess = new MutableLiveData<>();
+    private MutableLiveData<Boolean> finishSuccess = new MutableLiveData<>();
+    private MutableLiveData<Boolean> panicSuccess = new MutableLiveData<>();
+    public LiveData<Boolean> getStartSuccess() {
+        return startSuccess;
     }
-
+    public LiveData<NoteResponseDTO> getNoteResponse() {return noteResponse;}
+    public LiveData<RideTrackingDTO> getRideTracking() {
+        return rideTracking;
+    }
+    public LiveData<Boolean> getCancelSuccess() {
+        return cancelSuccess;
+    }
+    public LiveData<RideDTO> getRideDetails() {
+        return rideDetails;
+    }
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
     }
@@ -42,91 +65,59 @@ public class RideModel extends ViewModel {
     public LiveData<String> getError() {
         return error;
     }
-    private MutableLiveData<RideTrackingDTO> rideTracking = new MutableLiveData<>();
+    public LiveData<List<RideBookedDTO>> getBookedRides() {
+        return bookedRides;
+    }
     public String getErrorLiveData() {
         return errorLiveData;
     }
 
-
-    private MutableLiveData<Boolean> cancelSuccess = new MutableLiveData<>();
-
-    public LiveData<Boolean> getCancelSuccess() {
-        return cancelSuccess;
+    public LiveData<RatingResponseDTO> getRatingResponse() {
+        return ratingResponse;
     }
-
-    private MutableLiveData<NoteResponseDTO> noteResponse = new MutableLiveData<>();
-
-    public LiveData<NoteResponseDTO> getNoteResponse() {return noteResponse;}
-    public LiveData<RideTrackingDTO> getRideTracking() {
-        return rideTracking;
+    public LiveData<Boolean> getRatingSuccess() {
+        return ratingSuccess;
     }
-
-
-
-
-
+    public LiveData<CostTimeDTO> getEndRideResult() {
+        return endRideResult;
+    }
+    public LiveData<Boolean> getEndSuccess() {
+        return endSuccess;
+    }
+    public LiveData<Boolean> getFinishSuccess() {
+        return finishSuccess;
+    }
     public void loadRideById(Long rideId) {
         isLoading.setValue(true);
         error.setValue(null);
 
-        Call<RideTrackingDTO> call = rideService.getRideTrackingById(rideId);
+        Call<RideDTO> call = rideService.getRideDetails(rideId);
 
-        call.enqueue(new Callback<RideTrackingDTO>() {
+        call.enqueue(new Callback<RideDTO>() {
             @Override
-            public void onResponse(Call<RideTrackingDTO> call, Response<RideTrackingDTO> response) {
+            public void onResponse(Call<RideDTO> call, Response<RideDTO> response) {
                 isLoading.setValue(false);
 
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d("RIDE_DETAIL", "Success: Loaded ride " + rideId);
-                    rideTracking.setValue(response.body());
+                    rideDetails.setValue(response.body());
                 } else {
                     Log.e("RIDE_DETAIL", "Error: Response code " + response.code());
                     error.setValue("Failed to load ride details. Error code: " + response.code());
-                    rideTracking.setValue(null);
+                    rideDetails.setValue(null);
                 }
             }
 
             @Override
-            public void onFailure(Call<RideTrackingDTO> call, Throwable t) {
+            public void onFailure(Call<RideDTO> call, Throwable t) {
                 isLoading.setValue(false);
                 Log.e("RIDE_DETAIL", "Network error", t);
                 error.setValue("Network error: " + t.getMessage());
-                rideTracking.setValue(null);
+                rideDetails.setValue(null);
             }
         });
     }
 
-
-    public void loadRideByAccessToken(String accessToken) {
-        isLoading.setValue(true);
-        error.setValue(null);
-
-        Call<RideTrackingDTO> call = rideService.getActiveRideByToken(accessToken);
-
-        call.enqueue(new Callback<RideTrackingDTO>() {
-            @Override
-            public void onResponse(Call<RideTrackingDTO> call, Response<RideTrackingDTO> response) {
-                isLoading.setValue(false);
-
-                if (response.isSuccessful() && response.body() != null) {
-                    Log.d("RIDE_TRACKING", "Success: Loaded active ride with token");
-                    rideTracking.setValue(response.body());
-                } else {
-                    Log.e("RIDE_TRACKING", "Error: Response code " + response.code());
-                    error.setValue("Failed to load ride with access token. Error code: " + response.code());
-                    rideTracking.setValue(null);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RideTrackingDTO> call, Throwable t) {
-                isLoading.setValue(false);
-                Log.e("RIDE_TRACKING", "Network error", t);
-                error.setValue("Network error: " + t.getMessage());
-                rideTracking.setValue(null);
-            }
-        });
-    }
     public void loadBookedRides() {
         isLoading.setValue(true);
         error.setValue(null);
@@ -200,6 +191,7 @@ public class RideModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d("ADD_NOTE", "Note added for ride " + rideId);
                     noteResponse.setValue(response.body());
+                    loadRideById(rideId); // Refresh ride details to show new note
                 } else {
                     Log.e("ADD_NOTE", "Error: " + response.code());
                     error.setValue("Failed to add note. Code: " + response.code());
@@ -214,7 +206,6 @@ public class RideModel extends ViewModel {
             }
         });
     }
-    private MutableLiveData<Boolean> panicSuccess = new MutableLiveData<>();
 
     public LiveData<Boolean> getPanicSuccess() {
         return panicSuccess;
@@ -232,6 +223,7 @@ public class RideModel extends ViewModel {
                 isLoading.setValue(false);
 
                 if (response.isSuccessful()) {
+
                     Log.d("PANIC", "Panic alert triggered successfully");
                     panicSuccess.setValue(true);
                 } else {
@@ -263,7 +255,7 @@ public class RideModel extends ViewModel {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 isLoading.setValue(false);
-
+                loadRideById(rideId); // Refresh ride details to reflect cancellation
                 if (response.isSuccessful()) {
                     Log.d("CANCEL_RIDE", "Ride cancelled successfully: " + rideId);
                     cancelSuccess.setValue(true);
@@ -282,5 +274,135 @@ public class RideModel extends ViewModel {
                 cancelSuccess.setValue(false);
             }
         });
+
     }
+    public void rateRide(Long rideId, String accessToken, Integer driverRating, Integer vehicleRating,  String comment) {
+        isLoading.setValue(true);
+        error.setValue(null);
+        ratingSuccess.setValue(null);
+
+        RatingRequestDTO ratingRequest = new RatingRequestDTO(driverRating, vehicleRating, comment);
+
+        Call<RatingResponseDTO> call = rideService.rateRide(rideId, accessToken, ratingRequest);
+
+        call.enqueue(new Callback<RatingResponseDTO>() {
+            @Override
+            public void onResponse(Call<RatingResponseDTO> call, Response<RatingResponseDTO> response) {
+                isLoading.setValue(false);
+                loadRideById(rideId); // Refresh ride details to show updated rating
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("RATE_RIDE", "Ride rated successfully: " + rideId);
+                    ratingResponse.setValue(response.body());
+                    ratingSuccess.setValue(true);
+                } else {
+                    Log.e("RATE_RIDE", "Error: Response code " + response.code());
+                    error.setValue("Failed to rate ride. Error code: " + response.code());
+                    ratingSuccess.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RatingResponseDTO> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.e("RATE_RIDE", "Network error", t);
+                error.setValue("Network error: " + t.getMessage());
+                ratingSuccess.setValue(false);
+            }
+        });
+    }
+    public void startRide(Long rideId) {
+        isLoading.setValue(true);
+        error.setValue(null);
+        startSuccess.setValue(null);
+
+        Call<Void> call = rideService.startRide(rideId);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                isLoading.setValue(false);
+                loadRideById(rideId); // Refresh ride details to reflect started status
+                if (response.isSuccessful()) {
+                    Log.d("START_RIDE", "Ride started successfully: " + rideId);
+                    startSuccess.setValue(true);
+                } else {
+                    error.setValue("Failed to start ride. Error code: " + response.code());
+                    startSuccess.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                isLoading.setValue(false);
+                error.setValue("Network error: " + t.getMessage());
+                startSuccess.setValue(false);
+            }
+        });
+    }
+    public void endRide(Long rideId) {
+        isLoading.setValue(true);
+        error.setValue(null);
+        endSuccess.setValue(null);
+
+        Call<CostTimeDTO> call = rideService.endRide(rideId);
+
+        call.enqueue(new Callback<CostTimeDTO>() {
+            @Override
+            public void onResponse(Call<CostTimeDTO> call, Response<CostTimeDTO> response) {
+                isLoading.setValue(false);
+                loadRideById(rideId);
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("END_RIDE", "Ride ended successfully: " + rideId);
+                    endRideResult.setValue(response.body());
+                    endSuccess.setValue(true);
+                } else {
+                    Log.e("END_RIDE", "Error: Response code " + response.code());
+                    error.setValue("Failed to end ride. Error code: " + response.code());
+                    endSuccess.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CostTimeDTO> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.e("END_RIDE", "Network error", t);
+                error.setValue("Network error: " + t.getMessage());
+                endSuccess.setValue(false);
+            }
+        });
+    }
+
+    public void finishRide(Long rideId, FinishRideDTO finishRideDTO) {
+        isLoading.setValue(true);
+        error.setValue(null);
+        finishSuccess.setValue(null);
+
+        Call<Void> call = rideService.finishRide(rideId, finishRideDTO);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                isLoading.setValue(false);
+                loadRideById(rideId);
+                if (response.isSuccessful()) {
+                    Log.d("FINISH_RIDE", "Ride finished successfully: " + rideId);
+                    finishSuccess.setValue(true);
+                } else {
+                    Log.e("FINISH_RIDE", "Error: Response code " + response.code());
+                    error.setValue("Failed to finish ride. Error code: " + response.code());
+                    finishSuccess.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.e("FINISH_RIDE", "Network error", t);
+                error.setValue("Network error: " + t.getMessage());
+                finishSuccess.setValue(false);
+            }
+        });
+    }
+
 }
+

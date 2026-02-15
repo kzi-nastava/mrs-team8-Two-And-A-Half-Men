@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import ch.hsr.geohash.GeoHash;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -172,7 +173,45 @@ public class RouteDrawer extends ViewModel {
     }
 
 
+    public void drawRouteFromGeohashString(String hash, int precision, int color, String name) {
+        new Thread(() -> {
+            try {
+                removeRoute(name);
 
+                List<GeoPoint> geoPoints = new ArrayList<>();
+
+                for (int i = 0; i < hash.length(); i += precision) {
+                    if (i + precision > hash.length()) break;
+
+                    String base = hash.substring(i, i + precision);
+
+                    try {
+                        GeoHash geoHash = GeoHash.fromGeohashString(base);
+                        double lat = geoHash.getOriginatingPoint().getLatitude();
+                        double lon = geoHash.getOriginatingPoint().getLongitude();
+
+                        geoPoints.add(new GeoPoint(lat, lon));
+
+                    } catch (Exception ignored) {}
+                }
+
+                if (!geoPoints.isEmpty()) {
+                    Polyline polyline = new Polyline();
+                    polyline.setPoints(geoPoints);
+                    polyline.setColor(color);
+                    polyline.setWidth(8f);
+                    polyline.getPaint().setStrokeCap(android.graphics.Paint.Cap.ROUND);
+
+                    addRoute(polyline, name);
+
+                    Log.d("RouteDrawer", "Geohash route drawn with " + geoPoints.size() + " points");
+                }
+
+            } catch (Exception e) {
+                Log.e("RouteDrawer", "Error drawing geohash route", e);
+            }
+        }).start();
+    }
 
 
 

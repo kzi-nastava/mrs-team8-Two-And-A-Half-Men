@@ -59,4 +59,19 @@
     <string name="scheduled">Scheduled:</string>
     <string name="cancellation_information">Cancellation Information</string>
     <string name="profile_save_changes">Save Changes</string>
+    <string name="book_again">Book again</string>
+    <string name="mark_as_favorite">Mark as Favorite</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
+    <string name="leave_a_rate">Leave a rate</string>
+    <string name="close">Close</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="rate">Rate</string>
+    <string name="cancel">Cancel</string>
+    <string name="start_ride">Start Ride</string>
+    <string name="enter_your_reason_here">Enter your reason here...</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="ride_cost">Ride Cost:</string>
+    <string name="ride_duration_min">Ride Duration (min):</string>
+    <string name="was_ride_interrupted">Was ride interrupted?</string>
+    <string name="ride_ending">Ride Ending</string>
 </resources>

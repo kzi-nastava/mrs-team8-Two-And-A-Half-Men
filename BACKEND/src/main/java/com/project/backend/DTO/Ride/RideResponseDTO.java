@@ -23,6 +23,7 @@ public class RideResponseDTO {
     private LocalDateTime scheduledTime;
 
     private String driverName;
+    private Long driverId;
     private String rideOwnerName;
     private Long rideOwnerId;
 

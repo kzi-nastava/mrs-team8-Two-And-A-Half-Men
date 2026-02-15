@@ -77,7 +77,7 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.14'
     implementation 'org.osmdroid:osmdroid-geopackage:6.1.14'
     implementation 'org.osmdroid:osmdroid-wms:6.1.14'
-
+    implementation 'ch.hsr:geohash:1.4.0'
 
     // Testing
     testImplementation libs.junit

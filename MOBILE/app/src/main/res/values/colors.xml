@@ -27,7 +27,7 @@
     <color name="chip_background">#E3F2FD</color>
     <color name="chip_text">#1976D2</color>
     <color name="route_color">#3498db</color>
-
+    <color name="route_color_alternative">#673AB7</color>
     <color name="marker_start">#4CAF50</color>
     <color name="marker_stop">#FF9800</color>
     <color name="marker_end">#F44336</color>

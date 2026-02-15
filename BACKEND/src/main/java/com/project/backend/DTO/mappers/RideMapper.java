@@ -68,6 +68,7 @@ public class RideMapper {
                 .scheduledTime(ride.getScheduledTime())
 
                 .driverName(ride.getDriver() != null ? ride.getDriver().firstNameAndLastName() : "No driver assigned")
+                .driverId(ride.getDriver() != null ? ride.getDriver().getId() : null)
                 .rideOwnerName(ride.getRideOwner().firstNameAndLastName())
                 .rideOwnerId(ride.getRideOwner().getId())
 

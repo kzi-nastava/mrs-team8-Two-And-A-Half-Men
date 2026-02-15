@@ -108,10 +108,13 @@ public class WebSocketManager {
 
     public static void unsubscribe(@NonNull String topic, @NonNull MessageCallback callback) {
         WebSocketManager manager = getInstance();
-
+        Log.d("Unsubscibe", "unsubscribe: Unsubscribing callback from topic: " + topic);
         List<MessageCallback> callbacks = manager.topicCallbacks.get(topic);
         if (callbacks != null) {
+            Log.d("WebSocketManager", "Unsubscribing callback from topic: " + topic);
+            Log.d("WebSocketManager", "Current callbacks before removal: " + callbacks.size());
             callbacks.remove(callback);
+            Log.d("WebSocketManager", "Current callbacks after removal: " + callbacks.size()); 
             if (callbacks.isEmpty()) {
                 Disposable disposable = manager.subscriptions.remove(topic);
                 if (disposable != null && !disposable.isDisposed()) disposable.dispose();

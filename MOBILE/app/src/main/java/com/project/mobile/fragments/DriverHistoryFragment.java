@@ -310,7 +310,7 @@ public class DriverHistoryFragment extends Fragment {
     }
 
     private void onRideClick(Ride ride) {
-        RideDetailsFragment detailsFragment = RideDetailsFragment.newInstance(ride.getId());
+        RideDetailsFragmentActive detailsFragment = RideDetailsFragmentActive.newInstanceWithId(ride.getId());
 
         getParentFragmentManager()
                 .beginTransaction()

@@ -3,29 +3,53 @@ package com.project.mobile;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 
 public class FragmentTransition {
     public static void to(Fragment newFragment, FragmentActivity activity, boolean addToBackstack, int layoutViewID)
     {
-        /*
-         * Fragmenti ne mogu da postoje nezavisno, njih 'lepimo' na aktivnost.
-         * Zato, u metodu prosledjujemo referencu na aktivnost na koju 'lepimo' fragment.
-         *'Lepljenje' fragmenata na aktivnosti ide u transaktivnom maniru.
-         * Potrebno je da zapocnemo trasnakciju koristeci beginTransaction(),
-         * nakon toga specificiramo kakvom animaciom ce doci do primene fragmenata
-         * i nakon toga moze da pozovemu neku od metoda kojima menjamo ili dodajemo fragment na layout.
-         * ako koristimo metodu replace, to znaci da sav prethodni sadrzaj elementa layout-a koji ima id
-         * layoutViewID, menjamo sa kompletnim sadrzajem novog fragmenta.
-         * addToBackstack specificira da li stavljamo fragment na backstack aktivnosti
-         * */
+
         System.out.println("pogodjena metoda");
+        FragmentManager fm = activity.getSupportFragmentManager();
+
+        Fragment specificFragment = fm.findFragmentByTag("DELETE");
+        if (specificFragment != null) {
+            fm.beginTransaction()
+                    .remove(specificFragment)
+                    .commitNow();
+        }
         FragmentTransaction transaction = activity
                 .getSupportFragmentManager()
                 .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(layoutViewID, newFragment);
-        if(addToBackstack) transaction.addToBackStack(null);
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+        transaction.replace(layoutViewID, newFragment);
+
+        if (addToBackstack) transaction.addToBackStack(null);
 
         transaction.commit();
     }
+    public static void to(Fragment newFragment, FragmentActivity activity, boolean addToBackstack, int layoutViewID, String tag)
+    {
+        System.out.println("pogodjena metoda");
+        FragmentManager fm = activity.getSupportFragmentManager();
+
+        Fragment specificFragment = fm.findFragmentByTag("DELETE");
+        if (specificFragment != null) {
+            fm.beginTransaction()
+                    .remove(specificFragment)
+                    .commitNow();
+        }
+        FragmentTransaction transaction = activity
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.replace(layoutViewID, newFragment, tag);
+
+        if (addToBackstack) transaction.addToBackStack(null);
+
+        transaction.commit();
+    }
+
 }

@@ -59,4 +59,7 @@
     <string name="scheduled">Scheduled:</string>
     <string name="cancellation_information">Cancellation Information</string>
     <string name="profile_save_changes">Save Changes</string>
+    <string name="book_again">Book again</string>
+    <string name="mark_as_favorite">Mark as Favorite</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
 </resources>

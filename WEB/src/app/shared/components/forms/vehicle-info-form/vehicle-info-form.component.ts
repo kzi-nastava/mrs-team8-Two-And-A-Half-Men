@@ -1,5 +1,3 @@
-// src/app/shared/renderer/vehicle-info-form/vehicle-info-form.component.ts
-
 import { Component, input, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

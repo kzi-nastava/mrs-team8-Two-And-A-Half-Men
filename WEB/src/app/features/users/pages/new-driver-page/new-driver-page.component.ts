@@ -28,7 +28,6 @@ import { PopupsService } from '@shared/services/popups/popups.service';
 		TabNavigationComponent,
 		VehicleInfoFormComponent,
 	],
-	providers: [AdminUserService],
 	templateUrl: './new-driver-page.component.html',
 	styleUrl: './new-driver-page.component.css',
 })
@@ -125,18 +124,17 @@ export class NewDriverPageComponent implements OnInit {
 		};
 		console.log(registrationRequest);
 		this.usersService.registerDriver(registrationRequest).subscribe({
-			next: (response) => {
+			next: () => {
 				this.isSaving.set(false);
-				this.popupsService.success(
-					'Success',
-					'Driver registered successfully!',
-					{
-						onConfirm: () => this.router.navigate(['users']).then()
-					}
-				);
+				this.popupsService.success('Success', 'Driver registered successfully!', {
+					onConfirm: () => this.router.navigate(['users']).then(),
+				});
 			},
 			error: (err) => {
-				this.popupsService.error('Failed to register driver', err.error?.message || 'An error occurred while registering the driver.');
+				this.popupsService.error(
+					'Failed to register driver',
+					err.error?.message || 'An error occurred while registering the driver.',
+				);
 				this.isSaving.set(false);
 				console.error(err);
 			},

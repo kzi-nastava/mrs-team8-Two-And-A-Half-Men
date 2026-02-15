@@ -1,9 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import {
-	PersonalInfo,
-	UserDetailResponse,
-	VehicleInfo,
-} from '@features/users/models/user.model';
+import { PersonalInfo, UserDetailResponse, VehicleInfo } from '@features/users/models/user.model';
 import { PendingChangeRequest } from '@shared/models/profile-change-request.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminUserService } from '@features/users/services/admin-user.service';
@@ -32,7 +28,6 @@ import { PopupsService } from '@shared/services/popups/popups.service';
 		TabNavigationComponent,
 		VehicleInfoFormComponent,
 	],
-	providers: [AdminUserService],
 	templateUrl: './user-details-page.component.html',
 	styleUrl: './user-details-page.component.css',
 })
@@ -253,12 +248,18 @@ export class UserDetailsPageComponent implements OnInit {
 						this.isProcessing.set(false);
 						// Reload user details
 						this.loadUserDetails();
-						this.popupsService.success('Changes Rejected', 'The changes have been rejected successfully.');
+						this.popupsService.success(
+							'Changes Rejected',
+							'The changes have been rejected successfully.',
+						);
 					},
 					error: (err) => {
 						console.error('Error rejecting changes:', err);
 						this.isProcessing.set(false);
-						this.popupsService.error('Error', 'Failed to reject changes. Please try again later.');
+						this.popupsService.error(
+							'Error',
+							'Failed to reject changes. Please try again later.',
+						);
 					},
 				});
 			},

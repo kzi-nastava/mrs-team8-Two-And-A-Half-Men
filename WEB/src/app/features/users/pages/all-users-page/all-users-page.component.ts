@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { ButtonDirective } from '@shared/directives/button/button.directive';
+import { Router } from '@angular/router';
 import { User, UserFilters, UserPageResponse } from '@features/users/models/user.model';
 import { AdminUserService } from '@features/users/services/admin-user.service';
 import { PopupsService } from '@shared/services/popups/popups.service';
@@ -11,7 +10,6 @@ import { CommonModule } from '@angular/common';
 @Component({
 	selector: 'app-all-users-page',
 	imports: [CommonModule, FormsModule, BoxDirective],
-	providers: [AdminUserService],
 	templateUrl: './all-users-page.component.html',
 	styleUrl: './all-users-page.component.css',
 })
@@ -31,7 +29,7 @@ export class AllUsersPageComponent {
 	pageSizeOptions = signal<number[]>([5, 10, 20, 50]);
 
 	// Sorting
-	sortColumn =  signal<string | null>(null);
+	sortColumn = signal<string | null>(null);
 	sortDirection = signal<'ASC' | 'DESC'>('ASC');
 
 	// Filters
@@ -111,12 +109,12 @@ export class AllUsersPageComponent {
 	}
 
 	onPageSizeChange(): void {
-		this.currentPage.set(0)
+		this.currentPage.set(0);
 		this.loadUsers();
 	}
 
 	applyFilters(): void {
-		this.currentPage.set(0)
+		this.currentPage.set(0);
 		this.loadUsers();
 	}
 
@@ -127,7 +125,7 @@ export class AllUsersPageComponent {
 	}
 
 	toggleFilters(): void {
-		this.showFilters.update(current => !current);
+		this.showFilters.update((current) => !current);
 	}
 
 	viewUser(userId: number): void {

@@ -7,8 +7,8 @@
 			<div class="blocked-banner" appBox>
 				<div class="blocked-icon">
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-						<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-						<path d="M4.93 4.93l14.14 14.14" stroke="currentColor" stroke-width="2"/>
+						<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+						<path d="M4.93 4.93l14.14 14.14" stroke="currentColor" stroke-width="2" />
 					</svg>
 				</div>
 				<div class="blocked-content">
@@ -28,7 +28,12 @@
 			>
 				<button class="cancel-button" (click)="cancelRequest()">
 					<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-						<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						<path
+							d="M18 6L6 18M6 6l12 12"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+						/>
 					</svg>
 					Cancel Request
 				</button>
@@ -40,13 +45,16 @@
 			[tabs]="tabs"
 			[activeTab]="activeTab()"
 			[alignment]="'left'"
-			(tabChange)="onTabChange($event)">
-
+			(tabChange)="onTabChange($event)"
+		>
 			<!-- Icon for 'personal' tab - Using inline SVG -->
 			<ng-template appTabIcon="personal">
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-					<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
-						  stroke="currentColor" stroke-width="2"/>
+					<path
+						d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+						stroke="currentColor"
+						stroke-width="2"
+					/>
 				</svg>
 			</ng-template>
 
@@ -54,22 +62,24 @@
 				<!-- Icon for 'vehicle' tab - Using inline SVG -->
 				<ng-template appTabIcon="vehicle">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-						<path d="M5 17h14M5 17a2 2 0 1 1 0-4M5 17a2 2 0 1 0 0-4m14 4a2 2 0 1 0 0-4m0 4a2 2 0 1 1 0-4M3 11l2-7h14l2 7M5 13h14"
-							  stroke="currentColor" stroke-width="2"/>
+						<path
+							d="M5 17h14M5 17a2 2 0 1 1 0-4M5 17a2 2 0 1 0 0-4m14 4a2 2 0 1 0 0-4m0 4a2 2 0 1 1 0-4M3 11l2-7h14l2 7M5 13h14"
+							stroke="currentColor"
+							stroke-width="2"
+						/>
 					</svg>
 				</ng-template>
 			}
-
 		</app-tab-navigation>
 
-		<div appBox style="margin-bottom: 2rem;">
-
+		<div appBox style="margin-bottom: 2rem">
 			<!-- Personal Data Tab -->
 			<app-tab-content [tabId]="'personal'" [activeTab]="activeTab()">
 				<app-personal-info-form
 					[(personalInfo)]="personalInfo"
 					[showPhotoUpload]="true"
-					(photoChange)="onPhotoChange($event)">
+					(photoChange)="onPhotoChange($event)"
+				>
 				</app-personal-info-form>
 			</app-tab-content>
 
@@ -80,19 +90,21 @@
 						[vehicleInfo]="vehicleInfo()!"
 						(vehicleInfoChange)="vehicleInfo.set($event)"
 						[vehicleTypes]="vehicleTypes()"
-						[availableServices]="availableServices()">
+						[availableServices]="availableServices()"
+					>
 					</app-vehicle-info-form>
 				</app-tab-content>
 			}
 
-
 			<div class="form-actions">
-				<button
-					class="save-button"
-					[disabled]="isSaving()"
-					(click)="saveProfile()">
+				<button class="save-button" [disabled]="isSaving()" (click)="saveProfile()">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-						<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						<path
+							d="M20 6L9 17l-5-5"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+						/>
 					</svg>
 					Save changes
 				</button>
@@ -103,8 +115,20 @@
 		<div appBox class="password-section">
 			<h3 class="section-title">
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-					<path d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3" stroke="currentColor" stroke-width="2"/>
-					<rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+					<path
+						d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3"
+						stroke="currentColor"
+						stroke-width="2"
+					/>
+					<rect
+						x="5"
+						y="11"
+						width="14"
+						height="10"
+						rx="2"
+						stroke="currentColor"
+						stroke-width="2"
+					/>
 				</svg>
 				Change password
 			</h3>
@@ -115,7 +139,8 @@
 					type="password"
 					id="oldPassword"
 					[(ngModel)]="passwordForm().oldPassword"
-					class="form-input">
+					class="form-input"
+				/>
 			</div>
 
 			<div class="form-group">
@@ -124,7 +149,8 @@
 					type="password"
 					id="newPassword"
 					[(ngModel)]="passwordForm().newPassword"
-					class="form-input">
+					class="form-input"
+				/>
 			</div>
 
 			<div class="form-group">
@@ -133,51 +159,92 @@
 					type="password"
 					id="confirmPassword"
 					[(ngModel)]="passwordForm().confirmPassword"
-					class="form-input">
+					class="form-input"
+				/>
 			</div>
 			<div class="form-actions">
-				<button
-					class="save-button"
-					[disabled]="isSaving()"
-					(click)="changePassword()">
+				<button class="save-button" [disabled]="isSaving()" (click)="changePassword()">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-						<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						<path
+							d="M20 6L9 17l-5-5"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+						/>
 					</svg>
 					Save changes
 				</button>
 			</div>
 		</div>
-					@if(isWorking() !== null) {	<!-- Working Activity Section -->
-		<div appBox class="working-activity-section">
-			<h3 class="section-title">
-				<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-					<path d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3" stroke="currentColor" stroke-width="2"/>
-					<rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
-				</svg>
-				Working Activity
-			</h3>
-			
-				<div class="form-actions" >
-				<button class="save-button" style="margin-right: 1rem;"
-					[disabled]="isWorking()"
-					(click)="startWorking()">
+		@if (isWorking() !== null) {
+			<!-- Working Activity Section -->
+			<div appBox class="working-activity-section">
+				<h3 class="section-title">
 					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-						<path d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3" stroke="currentColor" stroke-width="2"/>
-						<rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+						<path
+							d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3"
+							stroke="currentColor"
+							stroke-width="2"
+						/>
+						<rect
+							x="5"
+							y="11"
+							width="14"
+							height="10"
+							rx="2"
+							stroke="currentColor"
+							stroke-width="2"
+						/>
 					</svg>
-					Start working
-				</button>
-				<button class="save-button" 
-					[disabled]="!isWorking()"
-					(click)="stopWorking()">
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-						<path d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3" stroke="currentColor" stroke-width="2"/>
-						<rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
-					</svg>
-					Stop working
-				</button>
+					Working Activity
+				</h3>
+
+				<div class="form-actions">
+					<button
+						class="save-button"
+						style="margin-right: 1rem"
+						[disabled]="isWorking()"
+						(click)="startWorking()"
+					>
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<path
+								d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
+							<rect
+								x="5"
+								y="11"
+								width="14"
+								height="10"
+								rx="2"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
+						</svg>
+						Start working
+					</button>
+					<button class="save-button" [disabled]="!isWorking()" (click)="stopWorking()">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<path
+								d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
+							<rect
+								x="5"
+								y="11"
+								width="14"
+								height="10"
+								rx="2"
+								stroke="currentColor"
+								stroke-width="2"
+							/>
+						</svg>
+						Stop working
+					</button>
+				</div>
 			</div>
-			
+		}
 	</div>
-	}
 </div>

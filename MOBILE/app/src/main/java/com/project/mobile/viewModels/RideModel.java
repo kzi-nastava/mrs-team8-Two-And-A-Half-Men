@@ -45,6 +45,7 @@ public class RideModel extends ViewModel {
     private MutableLiveData<Boolean> endSuccess = new MutableLiveData<>();
     private MutableLiveData<Boolean> finishSuccess = new MutableLiveData<>();
     private MutableLiveData<Boolean> panicSuccess = new MutableLiveData<>();
+    private MutableLiveData<Boolean> resolvePanicSuccess = new MutableLiveData<>();
     public LiveData<Boolean> getStartSuccess() {
         return startSuccess;
     }
@@ -72,6 +73,9 @@ public class RideModel extends ViewModel {
         return errorLiveData;
     }
 
+    public LiveData<Boolean> getResolvePanicSuccess() {
+        return resolvePanicSuccess;
+    }
     public LiveData<RatingResponseDTO> getRatingResponse() {
         return ratingResponse;
     }
@@ -210,7 +214,38 @@ public class RideModel extends ViewModel {
     public LiveData<Boolean> getPanicSuccess() {
         return panicSuccess;
     }
+    public void resolvePanic(Long rideId) {
+        isLoading.setValue(true);
+        error.setValue(null);
+        resolvePanicSuccess.setValue(null);
 
+        Call<Void> call = rideService.resolvePanic(rideId);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                isLoading.setValue(false);
+
+                if (response.isSuccessful()) {
+                    Log.d("RESOLVE_PANIC", "Panic alert resolved successfully for ride: " + rideId);
+                    resolvePanicSuccess.setValue(true);
+                    loadRideById(rideId); // Refresh ride details if needed
+                } else {
+                    Log.e("RESOLVE_PANIC", "Error: Response code " + response.code());
+                    error.setValue("Failed to resolve panic. Error code: " + response.code());
+                    resolvePanicSuccess.setValue(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                isLoading.setValue(false);
+                Log.e("RESOLVE_PANIC", "Network error", t);
+                error.setValue("Network error: " + t.getMessage());
+                resolvePanicSuccess.setValue(false);
+            }
+        });
+    }
     public void triggerPanic(String accessToken) {
         isLoading.setValue(true);
         error.setValue(null);

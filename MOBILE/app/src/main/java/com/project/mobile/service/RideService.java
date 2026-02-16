@@ -79,4 +79,8 @@ public interface RideService {
 
     @PATCH("rides/{id}/finish")
     Call<Void> finishRide(@Path("id") Long id, @Body FinishRideDTO finishRideDTO);
+
+    @POST("rides/{id}/panic/resolve")
+    Call<Void> resolvePanic(@Path("id") Long id);
+
 }

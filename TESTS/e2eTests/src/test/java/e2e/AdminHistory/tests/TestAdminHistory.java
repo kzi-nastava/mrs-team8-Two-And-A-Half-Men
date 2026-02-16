@@ -92,7 +92,7 @@ public class TestAdminHistory extends TestClass {
         }
         if(customerId != null) {
             historyList = HistorySorter.filterHistoryByRange(historyList, HistorySortField.CUSTOMER_OWNER, customerName, null);
-        }
+        };
         for(int i = 0; i < filteredHistoryList.size(); i++) {
             log.info("Expected: " + historyList.get(i).toString());
             log.info("Actual: " + filteredHistoryList.get(i).toString());
@@ -114,10 +114,12 @@ public class TestAdminHistory extends TestClass {
     }
     @DataProvider(name = "filterDataProvider")
     public Object[][] filterDataProvider() {
+
+
         return new Object[][] {
-                {"01.28.2026", "02.02.2026", null , null , null, null},
-                {"01.28.2026", null, null , null , null, null},
-                {null , null, "1401", null, "Driver6", null},
+                {"02.13.2026", "02.16.2026", null , null , null, null},
+                {"02.14.2026", null, null , null , null, null},
+                {null , null, "1201", null, "Driver2", null},
         };
     }
 }

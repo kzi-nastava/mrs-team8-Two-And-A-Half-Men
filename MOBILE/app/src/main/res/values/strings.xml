@@ -74,4 +74,9 @@
     <string name="ride_duration_min">Ride Duration (min):</string>
     <string name="was_ride_interrupted">Was ride interrupted?</string>
     <string name="ride_ending">Ride Ending</string>
+    <string name="no_messages_yet">No messages yet</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="send">Send</string>
+    <string name="no_active_chats">No active chats</string>
+    <string name="active_support_chats">Active Support Chats</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.project.backend.service;
 
 import com.project.backend.DTO.Profile.*;
+import com.project.backend.events.ProfileChangeRequestHandled;
 import com.project.backend.events.ProfilePictureUpdatedEvent;
 import com.project.backend.exceptions.ForbiddenException;
 import com.project.backend.exceptions.ResourceNotFoundException;
@@ -27,6 +28,7 @@ public class ProfileUpdateRequestService {
     private final VehicleRepository vehicleRepository;
     private final AppUserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public Page<AdminUpdateRequestListItemDTO> getRequests(Pageable pageable) {
         return requestRepository.findAll(pageable).map(AdminUpdateRequestListItemDTO::new);
@@ -75,6 +77,13 @@ public class ProfileUpdateRequestService {
             ));
         }
         request.getDriver().setUpdateRequest(null);
+
+        applicationEventPublisher.publishEvent(
+                new ProfileChangeRequestHandled(
+                        request.getDriver(),
+                        false
+                )
+        );
         requestRepository.delete(request);
         return Map.of("ok", true);
     }
@@ -98,6 +107,12 @@ public class ProfileUpdateRequestService {
         driver = getUpdatedDriver(request);
         var vehicle = getUpdatedVehicle(request);
         driver.setUpdateRequest(null);
+        applicationEventPublisher.publishEvent(
+                new ProfileChangeRequestHandled(
+                        request.getDriver(),
+                        true
+                )
+        );
         requestRepository.delete(request);
         userRepository.save(driver);
         vehicleRepository.save(vehicle);

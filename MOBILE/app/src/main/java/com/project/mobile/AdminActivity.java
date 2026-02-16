@@ -12,7 +12,7 @@ import androidx.core.view.GravityCompat;
 
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityAdminBinding;
-import com.project.mobile.fragments.DriverHistoryFragment;
+import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.profile.ProfileFragment;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -105,7 +105,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.nav_history) {
-            FragmentTransition.to(new DriverHistoryFragment(), this, false, containerId);
+            FragmentTransition.to(new HistoryFragment(), this, false, containerId);
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.price_management) {

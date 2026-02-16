@@ -34,7 +34,11 @@ public interface RideService {
             @Query("size") int size,
             @Query("startDate") String startDate,
             @Query("endDate") String endDate,
-            @Query("sort") String sort
+            @Query("sortBy") String sort,
+            @Query("sortDirection") String sortDirection,
+            @Query("driverId") Long driverId,
+            @Query("customerId") Long userId
+
     );
 
     @GET("rides/{id}")

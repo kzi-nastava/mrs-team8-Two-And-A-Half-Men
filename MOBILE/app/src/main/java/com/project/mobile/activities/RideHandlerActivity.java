@@ -4,19 +4,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.appbar.MaterialToolbar;
 import com.project.mobile.fragments.RideDetailsFragmentActive;
 import com.project.mobile.R;
 
 public class RideHandlerActivity extends AppCompatActivity {
 
+    private MaterialToolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_handler); // A simple layout with a FrameLayout
-
+        setupToolbar();
         handleIntent();
     }
-
+    private void setupToolbar() {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
     private void handleIntent() {
         Uri data = getIntent().getData();
         if (data != null) {

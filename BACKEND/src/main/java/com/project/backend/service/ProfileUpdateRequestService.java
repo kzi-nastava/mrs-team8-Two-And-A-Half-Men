@@ -44,7 +44,9 @@ public class ProfileUpdateRequestService {
         return new ProfileDTO(
                 new PersonalInfoDTO(request.getDriver()),
                 new VehicleInfoDTO(vehicle),
-                new ChangeRequestDTO(request));
+                new ChangeRequestDTO(request),
+                null
+        );
     }
 
     @Transactional
@@ -61,6 +63,8 @@ public class ProfileUpdateRequestService {
                     Paths.get(System.getProperty("user.dir"), "public", request.getImgSrc()).toString()
             ));
         }
+        request.getDriver().setUpdateRequest(null);
+        userRepository.save(request.getDriver());
         requestRepository.delete(request);
         return Map.of("ok", true);
     }
@@ -84,6 +88,7 @@ public class ProfileUpdateRequestService {
                         false
                 )
         );
+        userRepository.save(request.getDriver());
         requestRepository.delete(request);
         return Map.of("ok", true);
     }

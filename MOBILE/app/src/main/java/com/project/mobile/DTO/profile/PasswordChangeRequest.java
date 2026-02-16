@@ -1,19 +1,16 @@
 package com.project.mobile.DTO.profile;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class PasswordChangeRequest {
-    private String currentPassword;
+    private String oldPassword;
     private String newPassword;
-
-    public PasswordChangeRequest(String currentPassword, String newPassword) {
-        this.currentPassword = currentPassword;
-        this.newPassword = newPassword;
-    }
-
-    public String getCurrentPassword() {
-        return currentPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
+    private String confirmNewPassword;
 }

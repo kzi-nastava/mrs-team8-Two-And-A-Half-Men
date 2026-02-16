@@ -1,19 +1,16 @@
 package com.project.mobile.DTO.profile;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ImageUploadResponse {
-    private boolean success;
+    private boolean ok;
     private String message;
-    private String imgSrc;
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getImgSrc() {
-        return imgSrc;
-    }
+    private String filePath;
 }

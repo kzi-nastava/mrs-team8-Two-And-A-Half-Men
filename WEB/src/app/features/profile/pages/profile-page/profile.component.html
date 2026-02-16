@@ -135,7 +135,6 @@
 					[(ngModel)]="passwordForm().confirmPassword"
 					class="form-input">
 			</div>
-
 			<div class="form-actions">
 				<button
 					class="save-button"
@@ -148,5 +147,37 @@
 				</button>
 			</div>
 		</div>
+					@if(isWorking() !== null) {	<!-- Working Activity Section -->
+		<div appBox class="working-activity-section">
+			<h3 class="section-title">
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+					<path d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3" stroke="currentColor" stroke-width="2"/>
+					<rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+				</svg>
+				Working Activity
+			</h3>
+			
+				<div class="form-actions" >
+				<button class="save-button" style="margin-right: 1rem;"
+					[disabled]="isWorking()"
+					(click)="startWorking()">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+						<path d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3" stroke="currentColor" stroke-width="2"/>
+						<rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+					</svg>
+					Start working
+				</button>
+				<button class="save-button" 
+					[disabled]="!isWorking()"
+					(click)="stopWorking()">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+						<path d="M12 17v-4M7 12V9a5 5 0 1 1 10 0v3" stroke="currentColor" stroke-width="2"/>
+						<rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+					</svg>
+					Stop working
+				</button>
+			</div>
+			
 	</div>
+	}
 </div>

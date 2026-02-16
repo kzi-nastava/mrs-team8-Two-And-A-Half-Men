@@ -48,4 +48,44 @@
     <color name="read_checkmark">#4CAF50</color>
 
     <color name="chat_item_selected">#E3F2FD</color>
+
+    <!--  Profile Page Colors  -->
+    <color name="profile_background">#2a2a2a</color>
+    <color name="box_background">#3a3a3a</color>
+    <color name="input_text">#FFFFFF</color>
+    <color name="input_hint">#6b7280</color>
+    <color name="label_text">#d1d5db</color>
+    <color name="primary_text">#FFFFFF</color>
+    <color name="secondary_text">#9ca3af</color>
+    <!--  Button Colors  -->
+    <color name="button_primary">#d4af37</color>
+    <color name="button_primary_pressed">#e5c34a</color>
+    <color name="button_text">#1a1a1a</color>
+    <!--  Tab Colors  -->
+    <color name="tab_active">#d4af37</color>
+    <color name="tab_inactive">#6b7280</color>
+    <color name="tab_indicator">#d4af37</color>
+    <!--  Blocked Banner Colors  -->
+    <color name="blocked_background">#dc3545</color>
+    <color name="blocked_border">#f59e0b</color>
+    <color name="blocked_icon_bg">#f59e0b</color>
+    <color name="blocked_text">#fff</color>
+    <color name="blocked_text_secondary">#eee</color>
+    <!--  Pending Changes Colors  -->
+    <color name="pending_background">#9D9078</color>
+    <color name="pending_border">#f59e0b</color>
+    <color name="pending_icon_bg">#f59e0b</color>
+    <color name="pending_text">#1a1a1a</color>
+    <color name="pending_item_bg">#ffffff99</color>
+    <color name="pending_change_field">#1a1a1a</color>
+    <color name="pending_change_value">#4a4a4a</color>
+    <!--  Checkbox Colors  -->
+    <color name="checkbox_checked">#d4af37</color>
+    <color name="checkbox_unchecked">#6b7280</color>
+    <!--  General Colors  -->
+    <color name="divider">#2a4a3a</color>
+    <color name="overlay">#80000000</color>
+
+    <color name="button_danger">#dc2626</color>
+    <color name="button_danger_pressed">#b91c1c</color>
 </resources>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/profile_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_large">
+
+        <!-- Blocked Banner -->
+        <include
+            android:id="@+id/blockedBanner"
+            layout="@layout/layout_blocked_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:visibility="gone"/>
+
+        <!-- Pending Changes Preview -->
+        <include
+            android:id="@+id/pendingChangesPreview"
+            layout="@layout/layout_pending_changes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <!-- Tab Layout -->
+        <com.google.android.material.tabs.TabLayout
+            android:contentDescription="tabs"
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/box_background"
+            app:tabTextColor="@color/tab_inactive"
+            app:tabSelectedTextColor="@color/tab_active"
+            app:tabIndicatorColor="@color/tab_indicator"
+            app:tabMode="fixed"
+            app:tabGravity="start"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_medium"
+            />
+
+        <!-- Content Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/box_background"
+            android:orientation="vertical"
+            android:padding="@dimen/card_padding"
+            android:layout_marginBottom="@dimen/spacing_medium">
+
+            <!-- ViewPager for tab content -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!-- Save Button -->
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:text="@string/btn_save_changes"
+                android:textColor="@color/button_text"
+                android:background="@color/button_primary"
+                android:paddingStart="@dimen/button_padding_horizontal"
+                android:paddingEnd="@dimen/button_padding_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/spacing_large"/>
+
+        </LinearLayout>
+
+        <!-- Password Change Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/box_background"
+            android:orientation="vertical"
+            android:padding="@dimen/card_padding">
+
+            <!-- Section Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/section_change_password"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/text_size_large"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_large"/>
+
+            <!-- Old Password -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_old_password"
+                android:textColor="@color/label_text"
+                android:textSize="@dimen/text_size_normal"
+                android:layout_marginBottom="@dimen/spacing_small"/>
+
+            <EditText
+                android:contentDescription="@string/old_password_input"
+                android:id="@+id/etOldPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height"
+                android:autofillHints=""
+                android:background="@drawable/bg_input"
+                android:textColor="@color/input_text"
+                android:padding="@dimen/input_padding"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:inputType="textPassword"
+                tools:ignore="LabelFor" />
+
+            <!-- New Password -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_new_password"
+                android:textColor="@color/label_text"
+                android:textSize="@dimen/text_size_normal"
+                android:layout_marginBottom="@dimen/spacing_small"/>
+
+            <EditText
+                android:contentDescription="@string/new_password_input"
+                android:id="@+id/etNewPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height"
+                android:autofillHints=""
+                android:background="@drawable/bg_input"
+                android:textColor="@color/input_text"
+                android:padding="@dimen/input_padding"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:inputType="textPassword"
+                tools:ignore="LabelFor" />
+
+            <!-- Confirm Password -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_confirm_password"
+                android:textColor="@color/label_text"
+                android:textSize="@dimen/text_size_normal"
+                android:layout_marginBottom="@dimen/spacing_small"/>
+
+            <EditText
+                android:contentDescription="@string/confrim_new_password_input"
+                android:id="@+id/etConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height"
+                android:autofillHints=""
+                android:background="@drawable/bg_input"
+                android:textColor="@color/input_text"
+                android:padding="@dimen/input_padding"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:inputType="textPassword"
+                tools:ignore="LabelFor" />
+
+            <!-- Change Password Button -->
+            <Button
+                android:id="@+id/btnChangePassword"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:text="@string/btn_save_changes"
+                android:textColor="@color/button_text"
+                android:background="@drawable/bg_button_primary"
+                android:layout_gravity="center_horizontal"
+                android:paddingStart="@dimen/button_padding_horizontal"
+                android:paddingEnd="@dimen/button_padding_horizontal"/>
+
+        </LinearLayout>
+
+        <!-- Logout Button -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:text="@string/btn_logout"
+            android:textColor="@color/primary_text"
+            android:background="@color/button_danger"
+            android:layout_marginTop="@dimen/spacing_large"/>
+    </LinearLayout>
+
+</ScrollView>

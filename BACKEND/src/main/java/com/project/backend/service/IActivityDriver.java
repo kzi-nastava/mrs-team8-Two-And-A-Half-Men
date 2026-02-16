@@ -8,7 +8,7 @@ public interface IActivityDriver {
     public boolean workingHours(Driver driver , int hours);
     public void deActivateDriver(Driver driver);
     public void activateDriver(Driver driver);
-    public void lastRide(Driver driver);
+    public void cancelRides(Driver driver);
     public boolean isDriving(Driver driver);
 
 }

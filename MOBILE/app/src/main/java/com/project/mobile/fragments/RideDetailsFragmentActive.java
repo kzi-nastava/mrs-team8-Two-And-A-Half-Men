@@ -33,6 +33,7 @@
     import com.project.mobile.R;
     import com.project.mobile.core.WebSocketsMenager.MessageCallback;
     import com.project.mobile.core.WebSocketsMenager.WebSocketManager;
+    import com.project.mobile.fragments.Admin.controlers.ResolvePanicFragment;
     import com.project.mobile.fragments.Driver.controlers.AceptedRide;
     import com.project.mobile.fragments.Driver.controlers.ActiveRideDriver;
     import com.project.mobile.fragments.Registered.Rides.controls.CancelledRideControls;
@@ -340,9 +341,13 @@
             if(currentUser != null && currentUser.getRole().equals("DRIVER")){
                 setUpControlesDriver(status , ride);
             }
+            if(currentUser != null && currentUser.getRole().equals("ADMIN")){
+                setUpControlesAdmin(status , ride);
+            }
             if(accessToken != null) {
                 setUpContolesAccessToken(status, ride);
             }
+            DriverID = ride.getDriverId();
             updateMapWithStops(ride.getLocations());
         }
         private void displayPassengerReviews(List<PassengerDTO> passengers) {
@@ -383,7 +388,6 @@
                     driverRating.setText("No ratings");
                     vehicleRating.setVisibility(View.GONE);
                 }
-
                 comment.setText(passenger.getComment() != null ? passenger.getComment() : "No comment");
                 if(comment == null || comment.getText().toString().isEmpty()) {
                     comment.setVisibility(View.GONE);
@@ -482,6 +486,57 @@
                     CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken, false, false);
                     getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
                 }
+            }
+        }
+        private void setUpControlesAdmin(String status , RideDTO ride){
+            if(status.equals("ACCEPTED") || status.equals("ACTIVE") || (status.equals("PANICKED") && ride.getEndTime() == null)) {
+                callback = WebSocketManager.subscribe("/topic/driver-locations/" + ride.getDriverId(), locationUpdate -> {
+                    FragmentActivity activity = getActivity();
+                    if (activity != null && !activity.isFinishing() && isAdded()) {
+                        activity.runOnUiThread(() -> {
+                            Log.d("FormStopsMap", "Received location update: " + locationUpdate);
+                            DriverLocationDto driverLocation = DriverLocationDto.fromJson(locationUpdate);
+                            if (driverLocation != null) {
+                                Drawable carIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_car);
+                                carIcon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_IN);
+                                markerDrawer.addMarker(new MarkerPointIcon(driverLocation.getLatitude(), driverLocation.getLongitude(), driverLocation.getDriverEmail(), carIcon));
+                                if(updateCounter == 0) {
+                                    List<RouteItemDTO> stops = ride.getLocations();
+                                    List<GeoPoint> geoPoints = new ArrayList<>();
+                                    geoPoints.add(new GeoPoint(driverLocation.getLatitude(), driverLocation.getLongitude()));
+                                    for (RouteItemDTO stop : stops) {
+                                        geoPoints.add(new GeoPoint(stop.getLatitude(), stop.getLongitude()));
+                                    }
+                                    routeDrawer.fetchRouteTimeAndDistanceAsync(geoPoints).thenAccept(result -> {
+                                                double totalDuration = result.get(0);
+                                                double totalDistance = result.get(1);
+                                                String timeText = String.format(Locale.getDefault(), "Estimated Time: %.1f mins", totalDuration / 60);
+                                                String distanceText = String.format(Locale.getDefault(), "Estimated Distance: %.1f km", totalDistance / 1000);
+                                                txtEstimatedTime.setText(timeText);
+                                                txtEstimatedDistance.setText(distanceText);
+                                                Log.d("RouteInfo", "Total Duration: " + totalDuration + " sec");
+                                                Log.d("RouteInfo", "Total Distance: " + totalDistance + " m");
+                                            })
+                                            .exceptionally(e -> {
+                                                Log.e("RouteInfo", "Error fetching route info", e);
+                                                return null;
+                                            });
+                                    updateCounter=11;
+                                }
+
+                                updateCounter--;
+                            }
+                        });
+                    }
+                });
+
+
+            }
+            if(status.equals("PANICKED") && ride.getEndTime() == null) {
+                actionCard.setVisibility(View.VISIBLE);
+                actionFrame.setVisibility(View.VISIBLE);
+                ResolvePanicFragment resolvePanicFragment = ResolvePanicFragment.newInstance(ride.getId());
+                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel, resolvePanicFragment).commit();
             }
         }
         private void setUpControlesDriver(String status , RideDTO ride)
@@ -684,7 +739,7 @@
         public void onStop() {
             super.onStop();
             Log.d("RideDetailsFragment", "onStop called, unsubscribing callback");
-            if (callback != null && DriverID != null) {
+            if (callback != null) {
                 WebSocketManager.unsubscribe("/topic/driver-locations/" + DriverID, callback);
             }
             if(sheredLocationViewModel != null) {
@@ -695,7 +750,7 @@
         public void onPause() {
             Log.d("RideDetailsFragment", "onPause called, unsubscribing from WebSocket");
             super.onPause();
-            if (callback != null && DriverID != null) {
+            if (callback != null) {
                 WebSocketManager.unsubscribe("/topic/driver-locations/" + DriverID, callback);
             }
             if(sheredLocationViewModel != null) {

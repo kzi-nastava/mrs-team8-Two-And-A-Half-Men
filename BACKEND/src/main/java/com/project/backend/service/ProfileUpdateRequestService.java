@@ -44,7 +44,9 @@ public class ProfileUpdateRequestService {
         return new ProfileDTO(
                 new PersonalInfoDTO(request.getDriver()),
                 new VehicleInfoDTO(vehicle),
-                new ChangeRequestDTO(request));
+                new ChangeRequestDTO(request),
+                null
+        );
     }
 
     @Transactional

@@ -1,7 +1,10 @@
 package com.project.backend.service.impl;
 
+import com.project.backend.DTO.Ride.RideCancelationDTO;
+import com.project.backend.exceptions.BadRequestException;
 import com.project.backend.models.Driver;
 import com.project.backend.models.DriverActivity;
+import com.project.backend.models.Ride;
 import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.DriverActivityRepository;
@@ -24,6 +27,8 @@ public class ActivityDriverService implements IActivityDriver {
     private DriverActivityRepository driverActivityRepository;
     @Autowired
     private RideRepository rideRepository;
+    @Autowired
+    private CancellationService cancellationService;
     @Override
     public boolean isTakingWork(Driver driver) {
         if(driver.getDriverStatus() == DriverStatus.INACTIVE) return false;
@@ -31,7 +36,8 @@ public class ActivityDriverService implements IActivityDriver {
             deActivateDriver(driver);
             return false;
         }
-        return true;
+        if(driver.getDriverStatus() == DriverStatus.ACTIVE || driver.getDriverStatus() == DriverStatus.BUSY) return true;
+        return false;
     }
 
     @Override
@@ -45,32 +51,45 @@ public class ActivityDriverService implements IActivityDriver {
 
     @Override
     public void deActivateDriver(Driver driver) {
+        if(rideRepository.findFirstByDriverAndStatusIn(driver, List.of(RideStatus.ACTIVE)).isPresent()) throw new IllegalStateException("Driver has active rides and cannot be deactivated.");
         driver.setDriverStatus(DriverStatus.INACTIVE);
         driverRepository.save(driver);
-        lastRide(driver);
+        cancelRides(driver);
+        List<DriverActivity> activities = driverActivityRepository.findByDriverAndEndTimeIsNull(driver);
+        for(DriverActivity activity : activities) {
+                activity.setEndTime(LocalDateTime.now());
+                driverActivityRepository.save(activity);
+            }
+
     }
 
     @Override
     public void activateDriver(Driver driver) {
         if(driver.getDriverStatus() != DriverStatus.INACTIVE || workingHours(driver, 8))
-            return;
+            throw new BadRequestException("Driver is not eligible for activation");
         if(isDriving(driver)) {
             driver.setDriverStatus(DriverStatus.ACTIVE);
             driverRepository.save(driver);
+            return;
         }
-
-
+        DriverActivity activity = new DriverActivity();
+        activity.setDriver(driver);
+        activity.setStartTime(LocalDateTime.now());
+        driverActivityRepository.save(activity);
+        driver.setDriverStatus(DriverStatus.ACTIVE);
+        driverRepository.save(driver);
     }
 
     @Override
-    public void lastRide(Driver driver) {
-        if(!rideRepository.findFirstByDriverAndStatusIn(driver, List.of(RideStatus.ACTIVE , RideStatus.ACCEPTED, RideStatus.PENDING)).isPresent()) {
-            List<DriverActivity> activity = driverActivityRepository.findByDriverAndEndTimeIsNull(driver);
-            for (DriverActivity driverActivity : activity) {
-                driverActivity.setEndTime(LocalDateTime.now());
-                driverActivityRepository.save(driverActivity);
-            }
-        }
+    public void cancelRides(Driver driver) {
+      List<Ride> rides = rideRepository.findByDriverAndStatusIn(driver, List.of(RideStatus.ACCEPTED));
+      if(rides.isEmpty()) return;
+      for(Ride ride : rides) {
+          RideCancelationDTO cancelationDTO = new RideCancelationDTO();
+          cancelationDTO.setCancelledBy("DRIVER");
+          cancelationDTO.setReason("Driver cant continue working");
+          cancellationService.cancelRide(ride.getId(), cancelationDTO, driver);
+      }
     }
     @Override
     public boolean isDriving(Driver driver) {
@@ -78,4 +97,5 @@ public class ActivityDriverService implements IActivityDriver {
         if(activities.isEmpty()) return false;
         return true;
     }
+
 }

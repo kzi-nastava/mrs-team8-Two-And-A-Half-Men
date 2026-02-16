@@ -1,9 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component,inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { routeAnimations } from '@core/animations/route-animation';
 import { NavbarComponent } from "./layout/navbar/component/navbar.component";
 import { NotificationSidebarComponent } from './layout/notifications-sidebar/notifications-sidebar.component';
 import { UserChatComponent } from './layout/user-chat/user-chat.component';
+import { PanicsService } from '@shared/services/panics/panics.service';
 
 @Component({
 	selector: 'app-root',
@@ -13,6 +14,7 @@ import { UserChatComponent } from './layout/user-chat/user-chat.component';
 	animations: [routeAnimations],
 })
 export class App {
+	private panicsService = inject(PanicsService);
 	protected readonly title = signal('WEB');
 	// Signal to control notification sidebar visibility
 	notificationSidebarOpen = signal<boolean>(false);

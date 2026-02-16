@@ -1,6 +1,6 @@
-package e2e.RideRating.tests;
+package e2e.tests;
 
-import e2e.RideRating.pages.*;
+import e2e.pages.*;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RideRatingTest extends TestSetup {
 
-    protected static final String TEST_USERNAME = "ana@gmail.com";
+    protected static final String TEST_USERNAME = "customer@test.com";
     protected static final String TEST_PASSWORD = "password";
     protected static final int DRIVER_RATING = 5;
     protected static final int VEHICLE_RATING = 4;

@@ -294,8 +294,8 @@ export class NotificationService {
 		if ('Notification' in window && Notification.permission === 'granted') {
 			const browserNotification = new Notification(notification.title, {
 				body: notification.message,
-				icon: '/assets/notification-icon.png',
-				badge: '/assets/notification-badge.png',
+				icon: 'assets/notification-icon.png',
+				badge: 'assets/notification-badge.png',
 				tag: notification.id.toString(),
 				requireInteraction: false,
 			});
@@ -314,7 +314,7 @@ export class NotificationService {
 	 */
 	private playNotificationSound(): void {
 		try {
-			const audio = new Audio('/assets/notification-sound.mp3');
+			const audio = new Audio('assets/notification-sound.mp3');
 			audio.volume = 0.5;
 			audio.play().catch(() => {
 				// Ignore errors (e.g., user hasn't interacted with page yet)

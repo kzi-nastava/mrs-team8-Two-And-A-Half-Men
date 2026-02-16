@@ -5,6 +5,7 @@
 			@for (tab of leftTabs; track tab.id) {
 				<button
 					class="tab-button"
+					[attr.data-testid]="'tab-button-' + tab.id"
 					[class.active]="activeTab() === tab.id"
 					(click)="onTabClick(tab.id)">
 					@if (getIconForTab(tab.id); as icon) {
@@ -21,6 +22,7 @@
 			@for (tab of rightTabs; track tab.id) {
 				<button
 					class="tab-button"
+					[attr.data-testid]="'tab-button-' + tab.id"
 					[class.active]="activeTab() === tab.id"
 					(click)="onTabClick(tab.id)">
 					@if (getIconForTab(tab.id); as icon) {
@@ -39,6 +41,7 @@
 		@for (tab of tabs(); track tab.id) {
 			<button
 				class="tab-button"
+				[attr.data-testid]="'tab-button-' + tab.id"
 				[class.active]="activeTab() === tab.id"
 				(click)="onTabClick(tab.id)">
 				@if (getIconForTab(tab.id); as icon) {

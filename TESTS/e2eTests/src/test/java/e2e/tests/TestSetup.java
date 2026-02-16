@@ -1,4 +1,4 @@
-package e2e.RideRating.tests;
+package e2e.tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
@@ -14,9 +14,10 @@ public class TestSetup {
 
     @BeforeEach
     public void initializeWebDriver() {
-        WebDriverManager.chromedriver().browserVersion("144").setup();
+        WebDriverManager.chromedriver().browserVersion("143").setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--incognito");
+        options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
 
         driver.manage().window().maximize();

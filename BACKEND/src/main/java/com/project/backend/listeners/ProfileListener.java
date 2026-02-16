@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Component
 public class ProfileListener {
@@ -25,7 +27,9 @@ public class ProfileListener {
             if (event.getPicturePath() == null) {
                 return;
             }
-            Files.delete(Path.of(event.getPicturePath()));
+            var segments = event.getPicturePath().split("/");
+            Path path = Paths.get(String.join(File.separator, segments));
+            Files.delete(path);
         } catch (Exception e) {
             // Handle exceptions appropriately
         }

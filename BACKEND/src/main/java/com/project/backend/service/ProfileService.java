@@ -241,7 +241,7 @@ public class ProfileService {
 
         return Map.of(
                 "ok", true,
-                "filePath", Paths.get("files", PROFILE_PICTURE_DIR, filePath.getFileName().toString()).toString()
+                "filePath", "files/" + PROFILE_PICTURE_DIR + "/" + filePath.getFileName().toString()
         );
     }
 }

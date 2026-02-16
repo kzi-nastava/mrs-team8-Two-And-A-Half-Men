@@ -90,7 +90,7 @@ export class PanicsService {
 	private handleNewNotification(notification: PanicNotification): void {
 		console.log('[PanicService] New notification received:', notification);
 		this.showBrowserNotification(notification);
-		//this.playPanicSound();
+		this.playPanicSound();
 	}
 
 	private showBrowserNotification(notification: PanicNotification): void {
@@ -118,7 +118,7 @@ export class PanicsService {
 
 	private playPanicSound(): void {
 		try {
-			const audio = new Audio('/assets/panic-sound.mp3');
+			const audio = new Audio('assets/panic-sound.mp3');
 			audio.volume = 0.5;
 			audio.play().catch(() => {
 				// Ignore errors (e.g., user hasn't interacted with page yet)

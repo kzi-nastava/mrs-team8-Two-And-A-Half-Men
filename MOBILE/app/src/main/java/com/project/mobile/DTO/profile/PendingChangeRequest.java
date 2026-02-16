@@ -11,16 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProfileUpdateRequest {
+public class PendingChangeRequest {
+    private long id;
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String address;
     private String email;
     private String imgSrc;
+    private String vehicleType;
+    private Integer numberOfSeats;
     private String model;
     private String licensePlate;
-    private Integer numberOfSeats;
-    private Long vehicleTypeId;
-    private List<Long> additionalServiceIds;
+    private List<String> additionalServices;
 }

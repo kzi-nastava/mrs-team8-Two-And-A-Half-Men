@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityDriverBinding;
 import com.project.mobile.fragments.HistoryFragment;
-import com.project.mobile.fragments.profile.ProfileFragment;
+import com.project.mobile.fragments.profile.ProfilePageFragment;
 
 public class DriverActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,7 +40,7 @@ public class DriverActivity extends AppCompatActivity implements NavigationView.
                 return true;
             } else if(itemId == R.id.nav_profile)
             {
-                FragmentTransition.to(new ProfileFragment(), this, false, containerId);
+                FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
 
                 return true;
             }

@@ -1,4 +1,4 @@
-package com.project.mobile.DTO.profile;
+package com.project.mobile.DTO.vehicles;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ImageUploadResponse {
-    private boolean ok;
-    private String message;
-    private String filePath;
+public class AdditionalService {
+    private long id;
+    private String name;
+    private String description;
 }

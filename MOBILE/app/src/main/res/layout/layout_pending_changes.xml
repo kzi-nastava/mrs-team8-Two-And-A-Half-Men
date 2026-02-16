@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/pending_background"
+    android:padding="@dimen/banner_padding"
+    android:layout_marginBottom="@dimen/spacing_medium">
+
+    <!-- Icon -->
+    <FrameLayout
+        android:layout_width="@dimen/banner_icon_size"
+        android:layout_height="@dimen/banner_icon_size"
+        android:background="@drawable/bg_pending_icon">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="!"
+            android:textSize="24sp"
+            android:textColor="@color/pending_text"
+            android:textStyle="bold"/>
+
+    </FrameLayout>
+
+    <!-- Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pending_review_title"
+            android:textColor="@color/pending_text"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/spacing_small"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pending_review_message"
+            android:textColor="@color/pending_text"
+            android:textSize="@dimen/text_size_normal"
+            android:layout_marginBottom="@dimen/spacing_medium"/>
+
+        <!-- Pending Changes List -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/pending_item_bg"
+            android:padding="@dimen/spacing_medium">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPendingChanges"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Cancel Button -->
+    <Button
+        android:id="@+id/btnCancelRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_cancel_request"
+        android:textColor="@color/button_text"
+        android:background="@drawable/bg_button_primary"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/spacing_medium"
+        />
+
+</LinearLayout>

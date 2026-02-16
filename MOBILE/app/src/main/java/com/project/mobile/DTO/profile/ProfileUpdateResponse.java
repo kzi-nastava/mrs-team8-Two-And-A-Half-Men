@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PasswordChangeRequest {
-    private String oldPassword;
-    private String newPassword;
-    private String confirmNewPassword;
+public class ProfileUpdateResponse {
+    private String accessToken;
+    private ProfileResponse profile;
 }

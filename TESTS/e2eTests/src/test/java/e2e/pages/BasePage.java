@@ -1,4 +1,4 @@
-package e2e.RideRating.pages;
+package e2e.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

@@ -116,7 +116,7 @@
 					<app-route-form></app-route-form>
 
 					<div class="action-buttons">
-						<button class="more-options-btn" (click)="toggleMoreOptions()">
+						<button data-testId="more-options-button" class="more-options-btn" (click)="toggleMoreOptions()">
 							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
 								<path
 									d="M12 5v14M5 12h14"
@@ -127,7 +127,7 @@
 							</svg>
 							More options
 						</button>
-						<button class="get-estimate-btn" (click)="getEstimate()">
+						<button data-testId="estimate-button" class="get-estimate-btn" (click)="getEstimate()">
 							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
 								<path
 									d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
@@ -138,7 +138,7 @@
 							</svg>
 							Get estimate
 						</button>
-						<button class="book-ride-btn" (click)="createRide()" appButton>
+						<button data-testId="book-button" class="book-ride-btn" (click)="createRide()" appButton>
 							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
 								<path
 									d="M5 13l4 4L19 7"
@@ -239,6 +239,7 @@
 							<div class="radio-group">
 								<label
 									class="radio-option"
+									data-testId="schedule-now-option"
 									[class.selected]="scheduleOption() === 'now'"
 								>
 									<input
@@ -254,6 +255,7 @@
 								<label
 									class="radio-option"
 									[class.selected]="scheduleOption() === 'specific'"
+									data-testId="schedule-specific-option"
 								>
 									<input
 										type="radio"
@@ -269,6 +271,7 @@
 							@if (scheduleOption() === 'specific') {
 								<div class="datetime-input-wrapper">
 									<input
+										data-testId="schedule-datetime-input"
 										type="datetime-local"
 										class="datetime-input"
 										[(ngModel)]="scheduledTime"

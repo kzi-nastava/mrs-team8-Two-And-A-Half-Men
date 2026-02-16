@@ -1,6 +1,4 @@
 <div class="favourite-routes-container">
-	<h2 class="routes-title">Select from your favorite routes</h2>
-
 	@if (routes().length === 0) {
 		<div class="empty-state">
 			<svg width="64" height="64" viewBox="0 0 24 24" fill="none">
@@ -13,14 +11,14 @@
 	} @else {
 		<div class="routes-list">
 			@for (route of routes(); track route.id) {
-				<div class="route-card" (click)="handleSelectRoute(route.id)">
+				<div data-favourite-route class="route-card" (click)="handleSelectRoute(route.id)">
 					<!-- Route Start -->
 					<div class="route-endpoint">
 						<svg class="location-icon start" width="20" height="20" viewBox="0 0 24 24" fill="none">
 							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/>
 							<circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
 						</svg>
-						<span class="endpoint-address">{{ getRouteDisplay(route).start }}</span>
+						<span class="endpoint-address" data-favourite-route-start>{{ getRouteDisplay(route).start }}</span>
 					</div>
 
 					<!-- Intermediate Stops -->
@@ -36,7 +34,7 @@
 							<div class="stops-list">
 								@for (stop of getStopPoints(route); track stop) {
 									<div class="stop-point">
-										<span class="stop-address">{{ stop }}</span>
+										<span data-favourite-route-stop class="stop-address">{{ stop }}</span>
 									</div>
 								}
 							</div>
@@ -49,7 +47,7 @@
 							<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/>
 							<circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
 						</svg>
-						<span class="endpoint-address">{{ getRouteDisplay(route).end }}</span>
+						<span class="endpoint-address" data-favourite-route-end>{{ getRouteDisplay(route).end }}</span>
 					</div>
 
 					<!-- Actions -->

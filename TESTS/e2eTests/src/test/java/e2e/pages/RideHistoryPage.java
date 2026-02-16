@@ -1,5 +1,5 @@
-package e2e.RideRating.pages;
-
+package e2e.pages;
+import e2e.pages.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

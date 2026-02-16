@@ -83,4 +83,8 @@ public interface RideService {
     @POST("rides/{id}/panic/resolve")
     Call<Void> resolvePanic(@Path("id") Long id);
 
+    @GET("rides/panics")
+    Call<List<Ride>> getPanicingRides();
+
+
 }

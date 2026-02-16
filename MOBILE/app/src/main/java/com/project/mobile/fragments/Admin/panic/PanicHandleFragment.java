@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.project.mobile.FragmentTransition;
 import com.project.mobile.R;
 import com.project.mobile.RideHistoryAdapter;
 import com.project.mobile.core.retrofitClient.RetrofitClient;
@@ -113,14 +114,8 @@ public class PanicHandleFragment extends Fragment {
 
     private void onRideClick(Ride ride) {
 
-        RideDetailsFragmentActive detailsFragment =
-                RideDetailsFragmentActive.newInstanceWithId(ride.getId());
-
-        getParentFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container_view_tag, detailsFragment)
-                .addToBackStack(null)
-                .commit();
+        RideDetailsFragmentActive rideDetailsFragment = RideDetailsFragmentActive.newInstanceWithId(ride.getId());
+        FragmentTransition.to(rideDetailsFragment, this.getActivity(), true, R.id.fragment_container_view_tag, "DELETE");
     }
 
     private void showLoading(boolean show) {

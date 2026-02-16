@@ -347,6 +347,7 @@
             if(accessToken != null) {
                 setUpContolesAccessToken(status, ride);
             }
+            DriverID = ride.getDriverId();
             updateMapWithStops(ride.getLocations());
         }
         private void displayPassengerReviews(List<PassengerDTO> passengers) {
@@ -387,7 +388,6 @@
                     driverRating.setText("No ratings");
                     vehicleRating.setVisibility(View.GONE);
                 }
-
                 comment.setText(passenger.getComment() != null ? passenger.getComment() : "No comment");
                 if(comment == null || comment.getText().toString().isEmpty()) {
                     comment.setVisibility(View.GONE);
@@ -739,7 +739,7 @@
         public void onStop() {
             super.onStop();
             Log.d("RideDetailsFragment", "onStop called, unsubscribing callback");
-            if (callback != null && DriverID != null) {
+            if (callback != null) {
                 WebSocketManager.unsubscribe("/topic/driver-locations/" + DriverID, callback);
             }
             if(sheredLocationViewModel != null) {
@@ -750,7 +750,7 @@
         public void onPause() {
             Log.d("RideDetailsFragment", "onPause called, unsubscribing from WebSocket");
             super.onPause();
-            if (callback != null && DriverID != null) {
+            if (callback != null) {
                 WebSocketManager.unsubscribe("/topic/driver-locations/" + DriverID, callback);
             }
             if(sheredLocationViewModel != null) {

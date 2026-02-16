@@ -10,6 +10,7 @@ import com.project.backend.models.Driver;
 import com.project.backend.models.UpdateRequest;
 import com.project.backend.models.enums.UserRole;
 import com.project.backend.repositories.*;
+import com.project.backend.service.impl.ActivityDriverService;
 import com.project.backend.util.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -38,6 +39,7 @@ public class ProfileService {
     private final UpdateRequestRepository updateRequestRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
+    private final ActivityDriverService activityDriverService;
     private final static String PROFILE_PICTURE_DIR = "profiles";
 
 
@@ -55,6 +57,8 @@ public class ProfileService {
             updateRequestRepository.findByDriverId(userId).ifPresent(request ->
                     resultBuilder.pendingChangeRequest(new ChangeRequestDTO(request))
             );
+            resultBuilder.isWorking(
+            activityDriverService.isTakingWork((Driver) user));
         }
         return resultBuilder.build();
     }

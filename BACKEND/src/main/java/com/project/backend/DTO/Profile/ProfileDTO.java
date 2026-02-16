@@ -15,4 +15,5 @@ public class ProfileDTO {
     private PersonalInfoDTO personalInfo;
     private VehicleInfoDTO vehicleInfo;
     private ChangeRequestDTO pendingChangeRequest;
+    private Boolean isWorking;
 }

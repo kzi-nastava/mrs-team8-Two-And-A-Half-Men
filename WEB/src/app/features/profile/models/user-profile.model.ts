@@ -6,6 +6,7 @@ export interface UserProfile {
 	personalInfo: PersonalInfo;
 	vehicleInfo?: VehicleInfo;
 	pendingChangeRequest?: PendingChangeRequest;
+	isWorking ?: boolean;
 }
 export interface PasswordChange {
 	oldPassword: string;

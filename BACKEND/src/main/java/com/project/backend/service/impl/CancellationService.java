@@ -29,10 +29,6 @@ public class CancellationService implements ICancellationService {
     @Autowired
     private LocationTransformer locationTransformer;
     @Autowired
-    private RideService rideService;
-    @Autowired
-    private DriverRepository driverRepository;
-    @Autowired
     private DriverLocationService driverLocationService;
     @Autowired
     private DriverMatchingService driverMatchingService;
@@ -88,14 +84,16 @@ public class CancellationService implements ICancellationService {
             List<Coordinates> coordinates = locationTransformer.transformToCoordinates(route);
             filter.setLatitude(coordinates.get(0).getLatitude());
             filter.setLongitude(coordinates.get(0).getLongitude());
-            driver.setDriverStatus(DriverStatus.INACTIVE);
             driverLocationService.removeDriverLocation(driver.getId());
-            driverRepository.save(driver);
-            FindDriverDTO foundDriver = driverMatchingService.findBestDriver(filter).orElseThrow(() -> new ResourceNotFoundException("No suitable driver found"));
-            Driver newDriver = foundDriver.getDriver();
-            ride.setDriver(newDriver);
+            try {
+                FindDriverDTO foundDriver = driverMatchingService.findBestDriver(filter).orElseThrow(() -> new ResourceNotFoundException("No suitable driver found"));
+                Driver newDriver = foundDriver.getDriver();
+                ride.setDriver(newDriver);
+            } catch (Exception e) {
+                ride.setStatus(RideStatus.CANCELLED);
+                ride.setCancellationReason(reason.getReason());
+            }
             rideRepository.save(ride);
-            //NOt sure what this mean ? but ok go on
         } else {
             throw new BadRequestException("Invalid cancellation initiator");
         }

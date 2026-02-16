@@ -21,6 +21,7 @@ import { VehiclesService } from '@shared/services/vehicles/vehicles.service';
 import { PopupsService } from '@shared/services/popups/popups.service';
 import { Router } from '@angular/router';
 import { LoggedInUser } from '@core/models/loggedInUser.model';
+import { DriverActivityService } from '@features/profile/services/driver-activity.service';
 
 @Component({
 	selector: 'app-profile',
@@ -45,6 +46,7 @@ export class ProfileComponent implements OnInit {
 	private vehicleService = inject(VehiclesService);
 	private router = inject(Router);
 	private popupsService = inject(PopupsService);
+	private activityService = inject(DriverActivityService);
 
 	// Active tab
 	activeTab = signal<string>('personal');
@@ -64,6 +66,7 @@ export class ProfileComponent implements OnInit {
 	originalVehicleInfo = signal<VehicleInfo | null>(null);
 
 	vehicleInfo = signal<VehicleInfo | null>(null);
+	isWorking = signal<boolean | null>(null);
 	passwordForm = signal<PasswordChange>({
 		oldPassword: '',
 		newPassword: '',
@@ -106,7 +109,12 @@ export class ProfileComponent implements OnInit {
 		if (profile.pendingChangeRequest) {
 			this.changeRequest.set(profile?.pendingChangeRequest ?? null);
 		}
-		this.authService.updateUserInfo(profile.personalInfo as Partial<LoggedInUser>);
+		if(profile.isWorking !== undefined && profile.isWorking !== null) {
+			this.isWorking.set(profile.isWorking);
+		}
+		else {
+			this.isWorking.set(null);
+		}
 	}
 
 	loadProfileData() {
@@ -299,4 +307,29 @@ export class ProfileComponent implements OnInit {
 				},
 			});
 	}
+	public startWorking(): void {
+		this.activityService.activateDriver().subscribe({
+			next: () => {
+				this.isWorking.set(true);
+				this.popupsService.success('Status Updated', 'You are now marked as working.');
+			},
+			error: (err) => {
+				console.error('Failed to start working', err);
+				this.popupsService.error('Error', 'Failed to update status. Please try again later.');
+			},
+		});
+	}
+	public stopWorking(): void { 
+		this.activityService.deactivateDriver().subscribe({
+			next: () => {
+				this.isWorking.set(false);
+				this.popupsService.success('Status Updated', 'You are now marked as not working.');
+			}
+			,error: (err) => {
+				console.error('Failed to stop working', err);
+				this.popupsService.error('Error', 'Failed to update status. Please try again later.');
+			}
+		});
+	}
+
 }

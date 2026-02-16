@@ -99,7 +99,7 @@ export class PanicsService {
 			console.log('[PanicService] Showing browser notification');
 			const browserNotification = new Notification("Panic Alert", {
 				body: `Driver:`,
-				icon: '/assets/panic-icon.png',
+				icon: 'assets/panic-icon.png',
 				tag: notification.rideId,
 				requireInteraction: false,
 			});

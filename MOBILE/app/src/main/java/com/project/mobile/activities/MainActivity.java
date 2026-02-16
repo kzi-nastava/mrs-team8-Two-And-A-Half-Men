@@ -15,8 +15,8 @@ import com.project.mobile.LiveChat;
 import com.project.mobile.R;
 import com.project.mobile.databinding.ActivityMainBinding;
 import com.project.mobile.fragments.HistoryFragment;
-import com.project.mobile.fragments.profile.ProfileFragment;
 import com.project.mobile.fragments.Registered.Rides.BookedRidesFragment;
+import com.project.mobile.fragments.profile.ProfilePageFragment;
 import com.project.mobile.viewModels.AuthModel;
 
 
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             } else if(itemId == R.id.nav_profile)
             {
-                FragmentTransition.to(new ProfileFragment(), this, false, containerId);
+                FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_active_drive)

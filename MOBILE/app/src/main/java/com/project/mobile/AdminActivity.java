@@ -13,7 +13,7 @@ import androidx.core.view.GravityCompat;
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityAdminBinding;
 import com.project.mobile.fragments.HistoryFragment;
-import com.project.mobile.fragments.profile.ProfileFragment;
+import com.project.mobile.fragments.profile.ProfilePageFragment;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityAdminBinding binding;
@@ -51,7 +51,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
                 return true;
             } else if(itemId == R.id.nav_profile)
             {
-                FragmentTransition.to(new ProfileFragment(), this, false, containerId);
+                FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_active_drive)

@@ -61,6 +61,8 @@ public class ProfileUpdateRequestService {
                     Paths.get(System.getProperty("user.dir"), "public", request.getImgSrc()).toString()
             ));
         }
+        request.getDriver().setUpdateRequest(null);
+        userRepository.save(request.getDriver());
         requestRepository.delete(request);
         return Map.of("ok", true);
     }
@@ -84,6 +86,7 @@ public class ProfileUpdateRequestService {
                         false
                 )
         );
+        userRepository.save(request.getDriver());
         requestRepository.delete(request);
         return Map.of("ok", true);
     }

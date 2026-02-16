@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_medium">
+
+    <!-- Left Column: Form Fields -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="@dimen/spacing_medium"
+        android:orientation="vertical">
+
+        <!-- First Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_first_name"
+            android:textColor="@color/label_text"
+            android:textSize="@dimen/text_size_normal"
+            android:layout_marginBottom="@dimen/spacing_small"/>
+
+        <EditText
+            android:id="@+id/etFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height"
+            android:autofillHints=""
+            android:background="@drawable/bg_input"
+            android:hint="@string/hint_first_name"
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint"
+            android:padding="@dimen/input_padding"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:inputType="textPersonName"/>
+
+        <!-- Last Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_last_name"
+            android:textColor="@color/label_text"
+            android:textSize="@dimen/text_size_normal"
+            android:layout_marginBottom="@dimen/spacing_small"/>
+
+        <EditText
+            android:id="@+id/etLastName"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height"
+            android:autofillHints=""
+            android:background="@drawable/bg_input"
+            android:hint="@string/hint_last_name"
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint"
+            android:padding="@dimen/input_padding"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:inputType="textPersonName"/>
+
+        <!-- Phone Number -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_phone_number"
+            android:textColor="@color/label_text"
+            android:textSize="@dimen/text_size_normal"
+            android:layout_marginBottom="@dimen/spacing_small"/>
+
+        <EditText
+            android:id="@+id/etPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height"
+            android:autofillHints=""
+            android:background="@drawable/bg_input"
+            android:hint="@string/hint_phone_number"
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint"
+            android:padding="@dimen/input_padding"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:inputType="phone"/>
+
+        <!-- Address -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_address"
+            android:textColor="@color/label_text"
+            android:textSize="@dimen/text_size_normal"
+            android:layout_marginBottom="@dimen/spacing_small"/>
+
+        <EditText
+            android:id="@+id/etAddress"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height"
+            android:autofillHints=""
+            android:background="@drawable/bg_input"
+            android:hint="@string/hint_address"
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint"
+            android:padding="@dimen/input_padding"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:inputType="textPostalAddress"/>
+
+        <!-- Email -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_email"
+            android:textColor="@color/label_text"
+            android:textSize="@dimen/text_size_normal"
+            android:layout_marginBottom="@dimen/spacing_small"/>
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/input_height"
+            android:autofillHints=""
+            android:background="@drawable/bg_input"
+            android:hint="@string/hint_email"
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint"
+            android:padding="@dimen/input_padding"
+            android:inputType="textEmailAddress"/>
+
+    </LinearLayout>
+
+    <!-- Right Column: Profile Photo -->
+    <FrameLayout
+        android:id="@+id/photoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <ImageView
+            android:id="@+id/ivProfilePhoto"
+            android:layout_width="@dimen/profile_photo_size"
+            android:layout_height="@dimen/profile_photo_size"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:contentDescription="@string/btn_upload_photo"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnUploadPhoto"
+            android:layout_width="@dimen/upload_button_size"
+            android:layout_height="@dimen/upload_button_size"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/spacing_medium"
+            android:contentDescription="@string/profile_picture_upload_button"
+            android:src="@android:drawable/ic_menu_camera"
+            android:backgroundTint="@color/button_primary"
+            android:tint="@color/button_text"/>
+
+    </FrameLayout>
+
+</LinearLayout>

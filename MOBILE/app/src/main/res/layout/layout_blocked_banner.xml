@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/blocked_background"
+    android:padding="@dimen/banner_padding"
+    android:layout_marginBottom="@dimen/spacing_medium"
+    android:gravity="center_vertical">
+
+    <!-- Icon -->
+    <FrameLayout
+        android:layout_width="@dimen/banner_icon_size"
+        android:layout_height="@dimen/banner_icon_size"
+        android:background="@drawable/bg_blocked_icon">
+
+        <!-- You can replace this with an actual SVG/Vector drawable -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="⊘"
+            android:textSize="24sp"
+            android:textColor="@color/blocked_text"/>
+
+    </FrameLayout>
+
+    <!-- Content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/blocked_title"
+            android:textColor="@color/blocked_text"
+            android:textSize="@dimen/text_size_large"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/spacing_small"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/blocked_reason_label"
+                android:textColor="@color/blocked_text_secondary"
+                android:textSize="@dimen/text_size_normal"
+                android:textStyle="bold"
+                android:layout_marginEnd="@dimen/spacing_small"/>
+
+            <TextView
+                android:id="@+id/tvBlockReason"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/blocked_text_secondary"
+                android:textSize="@dimen/text_size_normal"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/blocked_contact_support"
+            android:textColor="@color/blocked_text_secondary"
+            android:textSize="@dimen/text_size_normal"
+            android:layout_marginTop="@dimen/spacing_small"/>
+
+    </LinearLayout>
+
+</LinearLayout>

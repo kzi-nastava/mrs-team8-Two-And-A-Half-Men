@@ -10,9 +10,11 @@ import java.sql.Statement;
 import java.util.stream.Collectors;
 
 public class DatabaseResetUtility {
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/test";
-    private static final String DB_USER = "devuser";
-    private static final String DB_PASSWORD = "devpassword";
+
+    private static final String DB_URL = System.getenv("DB_URL");
+    private static final String DB_USER = System.getenv("DB_USER");
+    private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
+
 
     /**
      * Execute the SQL reset script

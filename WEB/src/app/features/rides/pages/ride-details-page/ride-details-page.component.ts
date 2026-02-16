@@ -270,6 +270,20 @@ export class RideDetailsComponent implements OnInit {
 			},
 		});
 	}
+	protected handlePanic() {
+		this.rideService.handlePanic(this.ride()!.id).subscribe({
+			next: () => {
+				this.popupService.success('Panic Resolved', 'The panic alert has been resolved.');
+				this.loadRideDetails(this.ride()!.id);
+			},
+			error: (error) => {
+				this.popupService.error(
+					'Error!',
+					'There was a problem resolving the panic. ' + error?.error?.message,
+				);
+			},
+		});
+	}
 
 	protected leaveANote() {
 		Swal.fire({

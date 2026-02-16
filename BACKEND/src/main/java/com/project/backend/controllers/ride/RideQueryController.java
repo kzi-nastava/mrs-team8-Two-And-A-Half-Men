@@ -9,6 +9,7 @@ import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
 import com.project.backend.service.IHistoryService;
 import com.project.backend.service.IRideService;
+import com.project.backend.service.impl.PanicService;
 import com.project.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class RideQueryController {
     private final IHistoryService historyService;
     private final IRideService rideService;
     private final AuthUtils authUtils;
+    private final PanicService panicService;
 
     @GetMapping("/{id}")
     public ResponseEntity<RideResponseDTO> getRide(
@@ -92,5 +94,11 @@ public class RideQueryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("error", e.getMessage()));
         }
+    }
+    @GetMapping("/panics")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<RideResponseDTO>> getPanicingRides() {
+        List<RideResponseDTO> panicingRides = panicService.getAllUnresolvedPanicAlerts();
+        return ResponseEntity.ok(panicingRides);
     }
 }

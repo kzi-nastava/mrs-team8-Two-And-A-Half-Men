@@ -91,4 +91,7 @@ export class RideService {
 			{},
 		);
 	}
+	handlePanic(rideId: number): Observable<void> {
+		return this.http.post<void>(`/api/${environment.apiVersion}/rides/${rideId}/panic/resolve`, {});
+	}
 }

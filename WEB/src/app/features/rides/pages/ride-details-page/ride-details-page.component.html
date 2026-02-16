@@ -93,6 +93,15 @@
 					PANIC!
 				</button>
 			}
+			@if(actionsConfig().handlePanic && !loadingDetails() && ride() && ride()) {
+				<button
+					appButton
+					class="btn btn-handle-panic"
+					(click)="handlePanic()"
+				>
+					Handle Panic
+				</button>
+			}
 		</div>
 	</div>
 

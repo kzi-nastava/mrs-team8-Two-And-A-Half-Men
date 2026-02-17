@@ -4,6 +4,7 @@ import { UnregisteredAuthService } from './unregistered-auth.service';
 import { AuthService } from '@core/services/auth.service';
 import { environment } from '@environments/environment';
 import { User } from '@features/unregistered/models/auth.model';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('[Student3] UnregisteredAuthService', () => {
 	let service: UnregisteredAuthService;
@@ -12,8 +13,9 @@ describe('[Student3] UnregisteredAuthService', () => {
 	beforeEach(() => {
 		authServiceMock = jasmine.createSpyObj('AuthService', ['saveLogin']);
 		TestBed.configureTestingModule({
-			imports: [provideHttpClientTesting()],
 			providers: [
+				provideHttpClient(),
+        		provideHttpClientTesting(),
 				UnregisteredAuthService,
 				{ provide: AuthService, useValue: authServiceMock },
 			],

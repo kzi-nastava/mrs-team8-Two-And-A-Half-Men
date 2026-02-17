@@ -10,6 +10,7 @@ import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.enums.RideStatus;
 import com.project.backend.service.IRideService;
 import com.project.backend.service.impl.CancellationService;
+import com.project.backend.service.impl.PanicService;
 import com.project.backend.service.security.CustomUserDetailsService;
 import com.project.backend.util.AuthUtils;
 import com.project.backend.util.TokenUtils;
@@ -61,6 +62,8 @@ public class RideCommandControllerFinishRideTests {
 
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
+    @MockitoBean
+    private PanicService panicService;
 
     private final ObjectMapper objectMapper = new JsonMapper();
 

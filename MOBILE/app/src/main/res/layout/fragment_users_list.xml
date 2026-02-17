@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/profile_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_large">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/spacing_medium">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/users_title"
+                android:textColor="@color/primary_text"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/spacing_medium">
+            <Button
+                android:id="@+id/btnToggleFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_show_filters"
+                android:background="@drawable/bg_button_primary"
+                android:textColor="@color/primary_text"
+                android:layout_marginEnd="@dimen/spacing_small"/>
+
+            <Button
+                android:id="@+id/btnCreateDriver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_create_driver"
+                android:background="@drawable/bg_button_primary"
+                android:textColor="@color/primary_text"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Filters Section -->
+        <LinearLayout
+            android:id="@+id/filtersSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/box_background"
+            android:padding="@dimen/card_padding"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:visibility="gone">
+
+            <!-- First Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="@dimen/spacing_small">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_email"
+                        android:textColor="@color/label_text"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_marginBottom="@dimen/spacing_small"/>
+
+                    <EditText
+                        android:id="@+id/etFilterEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:background="@drawable/bg_input"
+                        android:hint="@string/hint_filter_email"
+                        android:textColor="@color/input_text"
+                        android:textColorHint="@color/input_hint"
+                        android:padding="@dimen/input_padding"
+                        android:inputType="textEmailAddress"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/spacing_small">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_first_name"
+                        android:textColor="@color/label_text"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_marginBottom="@dimen/spacing_small"/>
+
+                    <EditText
+                        android:id="@+id/etFilterFirstName"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:background="@drawable/bg_input"
+                        android:hint="@string/hint_filter_first_name"
+                        android:textColor="@color/input_text"
+                        android:textColorHint="@color/input_hint"
+                        android:padding="@dimen/input_padding"
+                        android:inputType="textPersonName"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Second Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/spacing_medium">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="@dimen/spacing_small">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_last_name"
+                        android:textColor="@color/label_text"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_marginBottom="@dimen/spacing_small"/>
+
+                    <EditText
+                        android:id="@+id/etFilterLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:background="@drawable/bg_input"
+                        android:hint="@string/hint_filter_last_name"
+                        android:textColor="@color/input_text"
+                        android:textColorHint="@color/input_hint"
+                        android:padding="@dimen/input_padding"
+                        android:inputType="textPersonName"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/spacing_small">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_role"
+                        android:textColor="@color/label_text"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_marginBottom="@dimen/spacing_small"/>
+
+                    <Spinner
+                        android:id="@+id/spinnerFilterRole"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:background="@drawable/bg_input"
+                        android:padding="@dimen/input_padding"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Third Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/spacing_medium">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="@dimen/spacing_small">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_driver_status"
+                        android:textColor="@color/label_text"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_marginBottom="@dimen/spacing_small"/>
+
+                    <Spinner
+                        android:id="@+id/spinnerFilterDriverStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:background="@drawable/bg_input"
+                        android:padding="@dimen/input_padding"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/spacing_small">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_account_status"
+                        android:textColor="@color/label_text"
+                        android:textSize="@dimen/text_size_normal"
+                        android:layout_marginBottom="@dimen/spacing_small"/>
+
+                    <Spinner
+                        android:id="@+id/spinnerFilterBlocked"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:background="@drawable/bg_input"
+                        android:padding="@dimen/input_padding"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Fourth Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/spacing_medium">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_pending_requests"
+                    android:textColor="@color/label_text"
+                    android:textSize="@dimen/text_size_normal"
+                    android:layout_marginBottom="@dimen/spacing_small"/>
+
+                <Spinner
+                    android:id="@+id/spinnerFilterPending"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/input_height"
+                    android:background="@drawable/bg_input"
+                    android:padding="@dimen/input_padding"/>
+
+            </LinearLayout>
+
+            <!-- Filter Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:layout_marginTop="@dimen/spacing_large">
+
+                <Button
+                    android:id="@+id/btnClearFilters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_height"
+                    android:text="@string/btn_clear_filters"
+                    android:textColor="@color/primary_text"
+                    android:background="@drawable/bg_button_primary"
+                    android:paddingStart="@dimen/button_padding_horizontal"
+                    android:paddingEnd="@dimen/button_padding_horizontal"
+                    android:layout_marginEnd="@dimen/spacing_small"/>
+
+                <Button
+                    android:id="@+id/btnApplyFilters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/button_height"
+                    android:text="@string/btn_apply_filters"
+                    android:textColor="@color/button_primary"
+                    android:background="@drawable/bg_button_primary"
+                    android:paddingStart="@dimen/button_padding_horizontal"
+                    android:paddingEnd="@dimen/button_padding_horizontal"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Loading Indicator -->
+        <LinearLayout
+            android:id="@+id/loadingView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/spacing_xlarge"
+            android:background="@color/box_background"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:indeterminateTint="@color/button_primary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading_users"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_marginTop="@dimen/spacing_medium"/>
+
+        </LinearLayout>
+
+        <!-- No users -->
+        <TextView
+            android:id="@+id/noUserFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_users_found_with_these_filters"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/text_size_normal"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_medium"/>
+
+        <!-- Users List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/box_background"
+            android:padding="@dimen/spacing_small"/>
+
+        <!-- Pagination -->
+        <LinearLayout
+            android:id="@+id/paginationContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/box_background"
+            android:padding="@dimen/card_padding"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:visibility="visible">
+
+            <!-- Pagination Info -->
+            <TextView
+                android:id="@+id/tvPaginationInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Showing 1 to 10 of 100 users"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/text_size_normal"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/spacing_medium"/>
+
+            <!-- Page Controls -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <!-- Page Size Selector -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_items_per_page"
+                    android:textColor="@color/label_text"
+                    android:textSize="@dimen/text_size_normal"
+                    android:layout_marginEnd="@dimen/spacing_small"/>
+
+                <Spinner
+                    android:id="@+id/spinnerPageSize"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/input_height"
+                    android:background="@drawable/bg_input"
+                    android:layout_weight="1"
+                    android:minWidth="80dp"/>
+
+
+                </LinearLayout>
+                <!-- Page Buttons -->
+                <LinearLayout
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:padding="0dp"
+                        android:gravity="center"
+                        android:id="@+id/btnFirstPage"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="@dimen/spacing_tiny"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_button_primary"
+                        android:text="@string/pagination_first_page"
+                        android:textColor="@color/primary_text" />
+
+                    <Button
+                        android:id="@+id/btnPrevPage"
+                        android:padding="0dp"
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="@dimen/spacing_tiny"
+                        android:layout_weight="1"
+                        android:text="@string/pagination_previous_page"
+                        android:background="@drawable/bg_button_primary"
+                        android:textColor="@color/button_text"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvPageNumber"                        android:layout_marginEnd="@dimen/spacing_tiny"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:text="1"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/text_size_large"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:minWidth="50dp"
+                        />
+
+                    <Button
+                        android:id="@+id/btnNextPage"
+                        android:padding="0dp"
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="@dimen/spacing_tiny"
+                        android:layout_weight="1"
+                        android:text="@string/pagination_next_page"
+                        android:background="@drawable/bg_button_primary"
+                        android:textColor="@color/button_text"
+                        />
+
+                    <Button
+                        android:id="@+id/btnLastPage"
+                        android:padding="0dp"
+                        android:gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="@dimen/spacing_tiny"
+                        android:layout_weight="1"
+                        android:text="@string/pagination_last_page"
+                        android:background="@drawable/bg_button_primary"
+                        android:textColor="@color/button_text"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

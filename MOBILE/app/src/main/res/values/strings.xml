@@ -165,4 +165,84 @@
     <string name="active_support_chats">Active Support Chats</string>
     <string name="support_chat">Support Chat</string>
     <string name="nselect_a_chat_to_start_messaging">\nSelect a chat to start messaging</string>
+
+
+    <!-- Users List -->
+    <string name="users_title">User Management</string>
+    <string name="btn_show_filters">Show Filters</string>
+    <string name="btn_hide_filters">Hide Filters</string>
+    <string name="btn_create_driver">Create New Driver</string>
+    <string name="btn_apply_filters">Apply Filters</string>
+    <string name="btn_clear_filters">Clear Filters</string>
+
+    <!-- Filters -->
+    <string name="filter_email">Email</string>
+    <string name="filter_first_name">First Name</string>
+    <string name="filter_last_name">Last Name</string>
+    <string name="filter_role">Role</string>
+    <string name="filter_driver_status">Driver Status</string>
+    <string name="filter_account_status">Account Status</string>
+    <string name="filter_pending_requests">Pending Requests</string>
+
+    <string name="hint_filter_email">Filter by email</string>
+    <string name="hint_filter_first_name">Filter by first name</string>
+    <string name="hint_filter_last_name">Filter by last name</string>
+
+    <string name="filter_all_roles">All Roles</string>
+    <string name="filter_all_statuses">All Statuses</string>
+    <string name="filter_all">All</string>
+    <string name="filter_blocked">Blocked</string>
+    <string name="filter_active">Active</string>
+    <string name="filter_has_pending">Has Pending</string>
+    <string name="filter_no_pending">No Pending</string>
+
+    <!-- User roles -->
+    <string name="role_admin">ADMIN</string>
+    <string name="role_customer">CUSTOMER</string>
+    <string name="role_driver">DRIVER</string>
+
+    <!-- Driver statuses -->
+    <string name="status_busy">BUSY</string>
+    <string name="status_inactive">INACTIVE</string>
+    <string name="status_available">AVAILABLE</string>
+
+    <!-- Table/List -->
+    <string name="label_user_id">ID</string>
+    <string name="label_user_name">Name</string>
+    <string name="label_user_email">Email</string>
+    <string name="label_user_role">Role</string>
+    <string name="label_driver_status">Driver Status</string>
+    <string name="label_blocked">Blocked</string>
+    <string name="label_pending_requests">Pending Requests</string>
+    <string name="btn_view">View</string>
+
+    <!-- Pagination -->
+    <string name="pagination_showing">Showing %1$d to %2$d of %3$d users</string>
+    <string name="label_items_per_page">Items per page:</string>
+    <string name="btn_first_page">First</string>
+    <string name="btn_prev_page">Previous</string>
+    <string name="btn_next_page">Next</string>
+    <string name="btn_last_page">Last</string>
+
+    <!-- Messages -->
+    <string name="loading_users">Loading users…</string>
+    <string name="no_users_found">No users found. Try adjusting your filters.</string>
+    <string name="error_loading_users">Failed to load users. Please try again.</string>
+
+    <!-- Sort indicators -->
+    <string name="sort_none">↕️</string>
+    <string name="sort_asc">↑</string>
+    <string name="sort_desc">↓</string>
+
+    <!-- Status indicators -->
+    <string name="status_yes">Yes</string>
+    <string name="status_no">No</string>
+    <string name="status_na">N/A</string>
+    <string name="pagination_first_page">⏮️</string>
+    <string name="pagination_last_page">⏭️</string>
+    <string name="pagination_next_page">▶️</string>
+    <string name="pagination_previous_page">◀️</string>
+    <string name="no_users_found_with_these_filters">No users found with these filters</string>
+
+
 </resources>

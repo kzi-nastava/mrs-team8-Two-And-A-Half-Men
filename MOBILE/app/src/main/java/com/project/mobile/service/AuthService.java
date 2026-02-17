@@ -1,5 +1,7 @@
 package com.project.mobile.service;
 
+import com.project.mobile.DTO.Auth.DriverActivationRequestDTO;
+import com.project.mobile.DTO.MessageResponse;
 import com.project.mobile.DTO.Ride.ActivateRequestDTO;
 import com.project.mobile.DTO.Auth.ForgotPasswordDTO;
 import com.project.mobile.DTO.Auth.MeInfo;
@@ -12,6 +14,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 
 public interface AuthService {
@@ -32,5 +35,8 @@ public interface AuthService {
 
     @POST("reset-password")
     Call<ResponseBody> resetPassword(@Body ResetPasswordDTO dto);
+
+    @PATCH("activate/drivers")
+    Call<MessageResponse> activateDriverAccount(@Body DriverActivationRequestDTO request);
 
 }

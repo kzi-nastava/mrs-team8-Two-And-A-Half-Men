@@ -67,6 +67,28 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.DriverActivationActivity"
+            android:exported="true"
+            android:launchMode="singleTask" >
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Handle localhost:4200 links -->
+                <data
+                    android:scheme="http"
+                    android:host="localhost"
+                    android:port="4200"
+                    android:pathPrefix="/driver-activation"
+                    tools:ignore="AppLinkUrlError" />
+
+            </intent-filter>
+
+        </activity>
+
+        <activity
             android:name=".activities.RestartPassword"
             android:exported="true"
             android:launchMode="singleTask" >

@@ -55,6 +55,8 @@ public class RideEndControllerTests {
 
     private RideEndRideControllerTestFixture fixture;
     @MockitoBean
+    private PanicService panicService;
+    @MockitoBean
     private  IRideService rideService;
     @MockitoBean
     private  AuthUtils authUtils;

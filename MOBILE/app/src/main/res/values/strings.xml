@@ -307,5 +307,22 @@
     <string name="error_rejecting_changes">Failed to reject changes. Please try again.</string>
     <string name="error_block_reason_required">Please enter a reason for blocking.</string>
     <string name="pending_changes_title">Pending changes</string>
+  
+  <!-- Driver Activation -->
+    <string name="driver_activation_title">Driver Account Activation</string>
+    <string name="driver_activation_subtitle">Set Your New Password</string>
+    <string name="btn_activate_account">Activate Account</string>
+
+    <!-- Errors -->
+    <string name="error_no_token">Invalid activation link. No token provided.</string>
+    <string name="error_password_empty">Please enter both passwords</string>
+    <string name="error_activation_failed">Activation failed. Please try again.</string>
+    <string name="refresh">Refresh</string>
+    <string name="clear_filter">Clear filter</string>
+    <string name="no_active_rides_found">No active rides found</string>
+    <string name="filter_by_driver_name">Filter by driver name</string>
+    <string name="active_rides">Active Rides</string>
+    <string name="panic">⚠</string>
+  
 
 </resources>

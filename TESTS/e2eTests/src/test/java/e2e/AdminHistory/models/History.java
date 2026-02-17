@@ -113,4 +113,18 @@ public class History {
         return endLocation.equals(history.endLocation);
     }
 
+    @Override
+    public String toString() {
+        return "History{" +
+                "startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", cost=" + cost +
+                ", scheculedTime='" + scheculedTime + '\'' +
+                ", status='" + status + '\'' +
+                ", driverName='" + driverName + '\'' +
+                ", customerOwner='" + customerOwner + '\'' +
+                ", startLocation='" + startLocation + '\'' +
+                ", endLocation='" + endLocation + '\'' +
+                '}';
+    }
 }

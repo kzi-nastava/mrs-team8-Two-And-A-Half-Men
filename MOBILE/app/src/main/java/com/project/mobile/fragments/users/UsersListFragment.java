@@ -25,6 +25,7 @@ import com.project.mobile.DTO.users.UserPageResponse;
 import com.project.mobile.R;
 import com.project.mobile.activities.LoginActivity;
 import com.project.mobile.activities.NewDriverActivity;
+import com.project.mobile.activities.UserDetailsActivity;
 import com.project.mobile.adapters.UsersAdapter;
 import com.project.mobile.core.retrofitClient.RetrofitClient;
 import com.project.mobile.service.AdminUserService;
@@ -356,13 +357,9 @@ public class UsersListFragment extends Fragment {
     }
 
     private void onUserClick(User user) {
-        // TODO: Navigate to user details page
-        Toast.makeText(requireContext(), "View user: " + user.getEmail(), Toast.LENGTH_SHORT).show();
-        
-        // Example navigation:
-        // Intent intent = new Intent(requireContext(), UserDetailsActivity.class);
-        // intent.putExtra("USER_ID", user.getId());
-        // startActivity(intent);
+        Intent intent = new Intent(requireContext(), UserDetailsActivity.class);
+        intent.putExtra(UserDetailsActivity.EXTRA_USER_ID, user.getId());
+        startActivity(intent);
     }
 
     private void createDriver() {

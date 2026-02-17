@@ -257,4 +257,55 @@
     <!-- Success -->
     <string name="success_driver_registered">Driver registered successfully!</string>
 
+    <!-- User Details Activity -->
+    <string name="user_details_title">User Details</string>
+    <string name="loading_user_details">Loading user details…</string>
+
+    <!-- Action Buttons -->
+    <string name="btn_view_chat">💬 View Chat</string>
+    <string name="btn_block_user">Block User</string>
+    <string name="btn_unblock_user">Unblock User</string>
+    <string name="btn_approve_changes">✔ Approve Changes</string>
+    <string name="btn_reject_changes">✕ Reject Changes</string>
+
+    <!-- Blocked Banner -->
+    <string name="blocked_banner_title">User is Blocked</string>
+    <string name="label_block_reason">Reason:</string>
+
+    <!-- Pending Changes -->
+    <string name="pending_changes_admin_subtitle">Review the requested changes and approve or reject them.</string>
+
+    <!-- Block Dialog -->
+    <string name="dialog_block_title">Block User</string>
+    <string name="dialog_block_message">Please provide a reason for blocking this user:</string>
+    <string name="hint_block_reason">Reason for blocking</string>
+
+    <!-- Unblock Dialog -->
+    <string name="dialog_unblock_title">Unblock User</string>
+    <string name="dialog_unblock_message">Are you sure you want to unblock this user?</string>
+
+    <!-- Approve Dialog -->
+    <string name="dialog_approve_title">Approve Changes</string>
+    <string name="dialog_approve_message">Are you sure you want to approve these changes? This action cannot be undone.</string>
+
+    <!-- Reject Dialog -->
+    <string name="dialog_reject_title">Reject Changes</string>
+    <string name="dialog_reject_message">Are you sure you want to reject these changes? This action cannot be undone.</string>
+
+    <!-- Success Messages -->
+    <string name="success_user_blocked">User has been blocked successfully.</string>
+    <string name="success_user_unblocked">User has been unblocked successfully.</string>
+    <string name="success_changes_approved">Changes have been approved successfully.</string>
+    <string name="success_changes_rejected">Changes have been rejected successfully.</string>
+
+    <!-- Error Messages -->
+    <string name="error_invalid_user_id">Invalid user ID.</string>
+    <string name="error_loading_user_details">Failed to load user details. Please try again.</string>
+    <string name="error_blocking_user">Failed to block user. Please try again.</string>
+    <string name="error_unblocking_user">Failed to unblock user. Please try again.</string>
+    <string name="error_approving_changes">Failed to approve changes. Please try again.</string>
+    <string name="error_rejecting_changes">Failed to reject changes. Please try again.</string>
+    <string name="error_block_reason_required">Please enter a reason for blocking.</string>
+    <string name="pending_changes_title">Pending changes</string>
+
 </resources>

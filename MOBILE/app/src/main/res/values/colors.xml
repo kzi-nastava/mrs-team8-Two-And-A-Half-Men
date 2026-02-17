@@ -100,11 +100,13 @@
 
     <!-- Status Colors -->
     <color name="success_green">#28a745</color>
+    <color name="secondary_green">#2d7a52</color>
     <color name="warning_yellow">#f4d03f</color>
 
     <!-- Users List Specific -->
     <color name="user_item_background">#1a5c3a</color>
     <color name="user_item_selected">#2d7a52</color>
+
 
 
 </resources>

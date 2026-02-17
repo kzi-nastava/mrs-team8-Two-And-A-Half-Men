@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,14 +31,16 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.project.mobile.DTO.Auth.MeInfo;
 import com.project.mobile.DTO.reports.AggregatedReportDTO;
-import com.project.mobile.DTO.reports.AggregatedUserReportDTO;
 import com.project.mobile.DTO.reports.DailyRideStats;
 import com.project.mobile.DTO.reports.RideReportDTO;
 import com.project.mobile.R;
 import com.project.mobile.adapters.UserReportCardAdapter;
 import com.project.mobile.core.retrofitClient.RetrofitClient;
+import com.project.mobile.service.AuthService;
 import com.project.mobile.service.ReportsService;
+import com.project.mobile.viewModels.AuthModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +56,12 @@ import retrofit2.Retrofit;
 public class ReportsFragment extends Fragment {
 
     // Services
+    private AuthModel authModel;
     private ReportsService reportsService;
+
+    // User Info
+    private MeInfo currentUser;
+    private boolean isAdmin = false;
 
     // UI Components
     private EditText etStartDate, etEndDate;
@@ -83,34 +91,64 @@ public class ReportsFragment extends Fragment {
     private String endDate;
     private String selectedUserType = "DRIVER";
     private Long selectedUserId = null;
-    private boolean isAdmin = false;
     private RideReportDTO currentReport;
     private AggregatedReportDTO aggregatedReport;
+
+    private View rootView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_reports, container, false);
+        rootView = inflater.inflate(R.layout.fragment_reports, container, false);
 
-        // Initialize service
-        Retrofit retrofit = getRetrofitInstance(); // TODO: Implement this
+        // Initialize services
+        Retrofit retrofit = getRetrofitInstance();
+        authModel = new ViewModelProvider(this).get(AuthModel.class);
         reportsService = retrofit.create(ReportsService.class);
-
-        // Check if user is admin
-        isAdmin = checkIfUserIsAdmin(); // TODO: Implement this
 
         // Initialize dates
         initializeDates();
 
-        initViews(view);
+        // Fetch user info first, then initialize UI
+        fetchUserInfo();
+
+        return rootView;
+    }
+
+    private void fetchUserInfo() {
+        authModel.getMeInfo().thenAccept(meInfo -> {
+            if (!isAdded()) return;
+
+            currentUser = meInfo;
+            isAdmin = "ADMIN".equals(meInfo.getRole());
+
+            // Initialize UI on main thread
+            requireActivity().runOnUiThread(this::initializeUI);
+
+        }).exceptionally(throwable -> {
+            if (!isAdded()) return null;
+
+            requireActivity().runOnUiThread(() -> {
+                Toast.makeText(requireContext(),
+                        "Failed to load user info: " + throwable.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+
+                // Default to non-admin if fetch fails
+                isAdmin = false;
+                initializeUI();
+            });
+            return null;
+        });
+    }
+
+    private void initializeUI() {
+        initViews(rootView);
         setupDatePickers();
         setupQuickFilters();
         setupAdminFilters();
         setupUserReportsList();
         loadData();
-
-        return view;
     }
 
     private void initViews(View view) {
@@ -167,9 +205,9 @@ public class ReportsFragment extends Fragment {
     private void initializeDates() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        
+
         endDate = sdf.format(cal.getTime());
-        
+
         cal.set(Calendar.DAY_OF_MONTH, 1);
         startDate = sdf.format(cal.getTime());
     }
@@ -182,32 +220,32 @@ public class ReportsFragment extends Fragment {
     private void showDatePicker(boolean isStartDate) {
         Calendar cal = Calendar.getInstance();
         String currentDate = isStartDate ? startDate : endDate;
-        
+
         if (currentDate != null && !currentDate.isEmpty()) {
             String[] parts = currentDate.split("-");
             if (parts.length == 3) {
-                cal.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) - 1, 
-                    Integer.parseInt(parts[2]));
+                cal.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) - 1,
+                        Integer.parseInt(parts[2]));
             }
         }
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
-            requireContext(),
-            (view, year, month, dayOfMonth) -> {
-                String date = String.format(Locale.getDefault(), "%04d-%02d-%02d", 
-                    year, month + 1, dayOfMonth);
-                if (isStartDate) {
-                    startDate = date;
-                    etStartDate.setText(date);
-                } else {
-                    endDate = date;
-                    etEndDate.setText(date);
-                }
-                loadData();
-            },
-            cal.get(Calendar.YEAR),
-            cal.get(Calendar.MONTH),
-            cal.get(Calendar.DAY_OF_MONTH)
+                requireContext(),
+                (view, year, month, dayOfMonth) -> {
+                    String date = String.format(Locale.getDefault(), "%04d-%02d-%02d",
+                            year, month + 1, dayOfMonth);
+                    if (isStartDate) {
+                        startDate = date;
+                        etStartDate.setText(date);
+                    } else {
+                        endDate = date;
+                        etEndDate.setText(date);
+                    }
+                    loadData();
+                },
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
         );
         datePickerDialog.show();
     }
@@ -242,13 +280,13 @@ public class ReportsFragment extends Fragment {
         userTypes.add("PASSENGER");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-            android.R.layout.simple_spinner_item, userTypes);
+                android.R.layout.simple_spinner_item, userTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerUserType.setAdapter(adapter);
 
         spinnerUserType.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, 
+            public void onItemSelected(android.widget.AdapterView<?> parent, View view,
                                        int position, long id) {
                 selectedUserType = userTypes.get(position);
                 selectedUserId = null;
@@ -278,6 +316,7 @@ public class ReportsFragment extends Fragment {
             }
         });
     }
+
     // ─── DATA LOADING ──────────────────────────────────────────────────────
 
     private void loadData() {
@@ -295,7 +334,7 @@ public class ReportsFragment extends Fragment {
     private void loadMyReport() {
         reportsService.getMyReport(startDate, endDate).enqueue(new Callback<RideReportDTO>() {
             @Override
-            public void onResponse(@NonNull Call<RideReportDTO> call, 
+            public void onResponse(@NonNull Call<RideReportDTO> call,
                                    @NonNull Response<RideReportDTO> response) {
                 if (!isAdded()) return;
 
@@ -305,8 +344,8 @@ public class ReportsFragment extends Fragment {
                     currentReport = response.body();
                     updateUI();
                 } else {
-                    Toast.makeText(requireContext(), R.string.error_loading_report, 
-                        Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.error_loading_report,
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -314,43 +353,43 @@ public class ReportsFragment extends Fragment {
             public void onFailure(@NonNull Call<RideReportDTO> call, @NonNull Throwable t) {
                 if (!isAdded()) return;
                 showLoading(false);
-                Toast.makeText(requireContext(), 
-                    getString(R.string.error_loading_report) + " " + t.getMessage(), 
-                    Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(),
+                        getString(R.string.error_loading_report) + " " + t.getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loadAggregatedReport() {
         reportsService.getAggregatedReport(startDate, endDate, selectedUserType)
-            .enqueue(new Callback<AggregatedReportDTO>() {
-                @Override
-                public void onResponse(@NonNull Call<AggregatedReportDTO> call, 
-                                       @NonNull Response<AggregatedReportDTO> response) {
-                    if (!isAdded()) return;
+                .enqueue(new Callback<AggregatedReportDTO>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AggregatedReportDTO> call,
+                                           @NonNull Response<AggregatedReportDTO> response) {
+                        if (!isAdded()) return;
 
-                    showLoading(false);
+                        showLoading(false);
 
-                    if (response.isSuccessful() && response.body() != null) {
-                        aggregatedReport = response.body();
-                        currentReport = aggregatedReport.getCombinedStats();
-                        updateAdminUserSection();
-                        updateUI();
-                    } else {
-                        Toast.makeText(requireContext(), R.string.error_loading_report, 
-                            Toast.LENGTH_SHORT).show();
+                        if (response.isSuccessful() && response.body() != null) {
+                            aggregatedReport = response.body();
+                            currentReport = aggregatedReport.getCombinedStats();
+                            updateAdminUserSection();
+                            updateUI();
+                        } else {
+                            Toast.makeText(requireContext(), R.string.error_loading_report,
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(@NonNull Call<AggregatedReportDTO> call, @NonNull Throwable t) {
-                    if (!isAdded()) return;
-                    showLoading(false);
-                    Toast.makeText(requireContext(), 
-                        getString(R.string.error_loading_report) + " " + t.getMessage(), 
-                        Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onFailure(@NonNull Call<AggregatedReportDTO> call, @NonNull Throwable t) {
+                        if (!isAdded()) return;
+                        showLoading(false);
+                        Toast.makeText(requireContext(),
+                                getString(R.string.error_loading_report) + " " + t.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void loadSpecificUserReport(long userId) {
@@ -359,32 +398,32 @@ public class ReportsFragment extends Fragment {
         userReportCardAdapter.setSelectedUserId(userId);
 
         reportsService.getUserReport(userId, startDate, endDate)
-            .enqueue(new Callback<RideReportDTO>() {
-                @Override
-                public void onResponse(@NonNull Call<RideReportDTO> call, 
-                                       @NonNull Response<RideReportDTO> response) {
-                    if (!isAdded()) return;
+                .enqueue(new Callback<RideReportDTO>() {
+                    @Override
+                    public void onResponse(@NonNull Call<RideReportDTO> call,
+                                           @NonNull Response<RideReportDTO> response) {
+                        if (!isAdded()) return;
 
-                    showLoading(false);
+                        showLoading(false);
 
-                    if (response.isSuccessful() && response.body() != null) {
-                        currentReport = response.body();
-                        updateUI();
-                    } else {
-                        Toast.makeText(requireContext(), R.string.error_loading_report, 
-                            Toast.LENGTH_SHORT).show();
+                        if (response.isSuccessful() && response.body() != null) {
+                            currentReport = response.body();
+                            updateUI();
+                        } else {
+                            Toast.makeText(requireContext(), R.string.error_loading_report,
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(@NonNull Call<RideReportDTO> call, @NonNull Throwable t) {
-                    if (!isAdded()) return;
-                    showLoading(false);
-                    Toast.makeText(requireContext(), 
-                        getString(R.string.error_loading_report) + " " + t.getMessage(), 
-                        Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onFailure(@NonNull Call<RideReportDTO> call, @NonNull Throwable t) {
+                        if (!isAdded()) return;
+                        showLoading(false);
+                        Toast.makeText(requireContext(),
+                                getString(R.string.error_loading_report) + " " + t.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     // ─── UI UPDATE ─────────────────────────────────────────────────────────
@@ -393,18 +432,18 @@ public class ReportsFragment extends Fragment {
         if (!isAdmin || aggregatedReport == null) return;
 
         // Update title
-        String title = selectedUserType.equals("DRIVER") ? 
-            getString(R.string.section_drivers_report) : 
-            getString(R.string.section_passengers_report);
+        String title = selectedUserType.equals("DRIVER") ?
+                getString(R.string.section_drivers_report) :
+                getString(R.string.section_passengers_report);
         tvUsersTitle.setText(title);
 
         // Update combined stats card
         RideReportDTO combined = aggregatedReport.getCombinedStats();
         tvCombinedRides.setText(String.valueOf(combined.getTotalRides()));
-        tvCombinedDistance.setText(String.format(Locale.getDefault(), "%.2f km", 
-            combined.getTotalDistance()));
-        tvCombinedAmount.setText(String.format(Locale.getDefault(), "%.2f RSD", 
-            combined.getTotalAmount()));
+        tvCombinedDistance.setText(String.format(Locale.getDefault(), "%.2f km",
+                combined.getTotalDistance()));
+        tvCombinedAmount.setText(String.format(Locale.getDefault(), "%.2f RSD",
+                combined.getTotalAmount()));
 
         // Update user cards
         userReportCardAdapter.setUserReports(aggregatedReport.getUserReports());
@@ -417,38 +456,38 @@ public class ReportsFragment extends Fragment {
         contentView.setVisibility(View.VISIBLE);
         updateSummaryStats();
         renderCharts();
-        
+
         // Update amount chart title based on user type
-        if (!isAdmin) {
-            String amountLabel = getUserRole().equals("DRIVER") ? 
-                getString(R.string.chart_amount_earned_title) :
-                getString(R.string.chart_amount_spent_title);
+        if (!isAdmin && currentUser != null) {
+            String amountLabel = "DRIVER".equals(currentUser.getRole()) ?
+                    getString(R.string.chart_amount_earned_title) :
+                    getString(R.string.chart_amount_spent_title);
             tvAmountChartTitle.setText(amountLabel);
         }
     }
 
     private void updateSummaryStats() {
         // Cumulative totals
-        setStat(statTotalRides, getString(R.string.stat_total_rides), 
-            String.valueOf(currentReport.getTotalRides()));
-        setStat(statTotalDistance, getString(R.string.stat_total_distance), 
-            String.format(Locale.getDefault(), "%.2f km", currentReport.getTotalDistance()));
-        setStat(statTotalAmount, getString(R.string.stat_total_amount), 
-            String.format(Locale.getDefault(), "%.2f RSD", currentReport.getTotalAmount()));
+        setStat(statTotalRides, getString(R.string.stat_total_rides),
+                String.valueOf(currentReport.getTotalRides()));
+        setStat(statTotalDistance, getString(R.string.stat_total_distance),
+                String.format(Locale.getDefault(), "%.2f km", currentReport.getTotalDistance()));
+        setStat(statTotalAmount, getString(R.string.stat_total_amount),
+                String.format(Locale.getDefault(), "%.2f RSD", currentReport.getTotalAmount()));
 
         // Daily averages
-        setStat(statAvgRidesPerDay, getString(R.string.stat_avg_rides_per_day), 
-            String.format(Locale.getDefault(), "%.2f", currentReport.getAverageRidesPerDay()));
-        setStat(statAvgDistancePerDay, getString(R.string.stat_avg_distance_per_day), 
-            String.format(Locale.getDefault(), "%.2f km", currentReport.getAverageDistancePerDay()));
-        setStat(statAvgAmountPerDay, getString(R.string.stat_avg_amount_per_day), 
-            String.format(Locale.getDefault(), "%.2f RSD", currentReport.getAverageAmountPerDay()));
+        setStat(statAvgRidesPerDay, getString(R.string.stat_avg_rides_per_day),
+                String.format(Locale.getDefault(), "%.2f", currentReport.getAverageRidesPerDay()));
+        setStat(statAvgDistancePerDay, getString(R.string.stat_avg_distance_per_day),
+                String.format(Locale.getDefault(), "%.2f km", currentReport.getAverageDistancePerDay()));
+        setStat(statAvgAmountPerDay, getString(R.string.stat_avg_amount_per_day),
+                String.format(Locale.getDefault(), "%.2f RSD", currentReport.getAverageAmountPerDay()));
 
         // Per ride averages
-        setStat(statAvgDistancePerRide, getString(R.string.stat_avg_distance_per_ride), 
-            String.format(Locale.getDefault(), "%.2f km", currentReport.getAverageDistancePerRide()));
-        setStat(statAvgAmountPerRide, getString(R.string.stat_avg_amount_per_ride), 
-            String.format(Locale.getDefault(), "%.2f RSD", currentReport.getAverageAmountPerRide()));
+        setStat(statAvgDistancePerRide, getString(R.string.stat_avg_distance_per_ride),
+                String.format(Locale.getDefault(), "%.2f km", currentReport.getAverageDistancePerRide()));
+        setStat(statAvgAmountPerRide, getString(R.string.stat_avg_amount_per_ride),
+                String.format(Locale.getDefault(), "%.2f RSD", currentReport.getAverageAmountPerRide()));
     }
 
     private void setStat(View statView, String label, String value) {
@@ -457,6 +496,7 @@ public class ReportsFragment extends Fragment {
         tvLabel.setText(label);
         tvValue.setText(value);
     }
+
     // ─── CHART RENDERING ───────────────────────────────────────────────────
 
     private void renderCharts() {
@@ -464,7 +504,7 @@ public class ReportsFragment extends Fragment {
 
         List<DailyRideStats> dailyStats = currentReport.getDailyStats();
         List<String> labels = new ArrayList<>();
-        
+
         for (DailyRideStats stat : dailyStats) {
             labels.add(formatDate(stat.getDate()));
         }
@@ -476,7 +516,7 @@ public class ReportsFragment extends Fragment {
 
     private void renderRidesChart(List<DailyRideStats> dailyStats, List<String> labels) {
         List<BarEntry> entries = new ArrayList<>();
-        
+
         for (int i = 0; i < dailyStats.size(); i++) {
             entries.add(new BarEntry(i, dailyStats.get(i).getNumberOfRides()));
         }
@@ -496,7 +536,7 @@ public class ReportsFragment extends Fragment {
 
     private void renderDistanceChart(List<DailyRideStats> dailyStats, List<String> labels) {
         List<Entry> entries = new ArrayList<>();
-        
+
         for (int i = 0; i < dailyStats.size(); i++) {
             entries.add(new Entry(i, (float) dailyStats.get(i).getTotalDistance()));
         }
@@ -521,7 +561,7 @@ public class ReportsFragment extends Fragment {
 
     private void renderAmountChart(List<DailyRideStats> dailyStats, List<String> labels) {
         List<Entry> entries = new ArrayList<>();
-        
+
         for (int i = 0; i < dailyStats.size(); i++) {
             entries.add(new Entry(i, (float) dailyStats.get(i).getTotalAmount()));
         }
@@ -544,15 +584,15 @@ public class ReportsFragment extends Fragment {
         chartAmount.invalidate();
     }
 
-    private void configureChart(com.github.mikephil.charting.charts.Chart<?> chart, 
+    private void configureChart(com.github.mikephil.charting.charts.Chart<?> chart,
                                 List<String> labels) {
         // General settings
         chart.getDescription().setEnabled(false);
-        //chart.setDrawGridBackground(false);
+//        chart.setDrawGridBackground(false);
         chart.setTouchEnabled(true);
-        //chart.setDragEnabled(true);
-        //chart.setScaleEnabled(true);
-        //chart.setPinchZoom(true);
+//        chart.setDragEnabled(true);
+//        chart.setScaleEnabled(true);
+//        chart.setPinchZoom(true);
 
         // X-Axis
         XAxis xAxis = chart.getXAxis();
@@ -563,9 +603,9 @@ public class ReportsFragment extends Fragment {
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
 
         // Y-Axis (Left)
-        //chart.getAxisLeft().setTextColor(Color.WHITE);
-        //chart.getAxisLeft().setDrawGridLines(true);
-        //chart.getAxisLeft().setGridColor(Color.parseColor("#33FFFFFF"));
+//        chart.getAxisLeft().setTextColor(Color.WHITE);
+//        chart.getAxisLeft().setDrawGridLines(true);
+//        chart.getAxisLeft().setGridColor(Color.parseColor("#33FFFFFF"));
 
         // Y-Axis (Right) - disable
         //chart.getAxisRight().setEnabled(false);
@@ -594,20 +634,8 @@ public class ReportsFragment extends Fragment {
         }
     }
 
+    // TODO: Implement this to return your Retrofit instance
     private Retrofit getRetrofitInstance() {
-        // return RetrofitClient.retrofit;
         return RetrofitClient.retrofit;
-    }
-
-    private boolean checkIfUserIsAdmin() {
-        // return currentUserRole.equals("ADMIN");
-        // For now, return false. Replace with actual check.
-        return false;
-    }
-
-    private String getUserRole() {
-        // return currentUserRole;
-        // For now, return "CUSTOMER". Replace with actual role.
-        return "CUSTOMER";
     }
 }

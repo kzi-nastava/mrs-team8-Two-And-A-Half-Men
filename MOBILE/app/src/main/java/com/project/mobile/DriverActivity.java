@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityDriverBinding;
 import com.project.mobile.fragments.HistoryFragment;
+import com.project.mobile.fragments.chat.ChatFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
 
 public class DriverActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -58,7 +59,7 @@ public class DriverActivity extends AppCompatActivity implements NavigationView.
             }
             else if(itemId == R.id.nav_live_chat)
             {
-                FragmentTransition.to(new LiveChat(), this, false, containerId);
+                FragmentTransition.to(ChatFragment.newInstanceForUser(), this, false, containerId);
                 return true;
             }
             return false;

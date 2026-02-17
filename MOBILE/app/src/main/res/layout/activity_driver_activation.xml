@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/profile_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_large"
+        android:gravity="center_horizontal">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/driver_activation_title"
+            android:textColor="@color/button_primary"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_xlarge"/>
+
+        <!-- Password Form -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/box_background"
+            android:orientation="vertical"
+            android:padding="@dimen/card_padding"
+            android:maxWidth="600dp">
+
+            <!-- Section Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/driver_activation_subtitle"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/text_size_large"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_large"/>
+
+            <EditText
+                android:contentDescription="@string/new_password_input"
+                android:id="@+id/etNewPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height"
+                android:autofillHints=""
+                android:background="@drawable/bg_input"
+                android:textColor="@color/input_text"
+                android:padding="@dimen/input_padding"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:inputType="textPassword"
+                tools:ignore="LabelFor" />
+
+            <!-- Confirm Password -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_confirm_password"
+                android:textColor="@color/label_text"
+                android:textSize="@dimen/text_size_normal"
+                android:layout_marginBottom="@dimen/spacing_small"/>
+
+            <EditText
+                android:contentDescription="@string/confrim_new_password_input"
+                android:id="@+id/etConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_height"
+                android:autofillHints=""
+                android:background="@drawable/bg_input"
+                android:textColor="@color/input_text"
+                android:padding="@dimen/input_padding"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:inputType="textPassword"
+                tools:ignore="LabelFor" />
+
+            <!-- Activate Button -->
+            <Button
+                android:id="@+id/btnActivate"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:text="@string/btn_activate_account"
+                android:textColor="@color/button_text"
+                android:background="@drawable/bg_button_primary"
+                android:layout_gravity="center_horizontal"
+                android:paddingStart="@dimen/button_padding_horizontal"
+                android:paddingEnd="@dimen/button_padding_horizontal"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -15,6 +15,7 @@ import com.project.backend.repositories.VehicleRepository;
 import com.project.backend.repositories.VehicleTypeRepository;
 import com.project.backend.util.TokenUtils;
 import jakarta.transaction.Transactional;
+import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -244,7 +245,8 @@ public class AuthService {
         if (body.getPersonalInfo().getEmail() == null || body.getPersonalInfo().getEmail().isEmpty()) {
             throw new BadRequestException("Email is required");
         }
-        if (body.getPersonalInfo().getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        EmailValidator emailValidator = new EmailValidator();
+        if (!emailValidator.isValid(body.getPersonalInfo().getEmail(), null)) {
             throw new BadRequestException("Invalid email format");
         }
         if (body.getPersonalInfo().getAddress() == null || body.getPersonalInfo().getAddress().isEmpty()) {
@@ -330,7 +332,7 @@ public class AuthService {
                         .orElseThrow(() -> new BadRequestException("Vehicle type not found"))
                 );
 
-        if (vehicle.getAdditionalServices() != null && !vehicle.getAdditionalServices().isEmpty()) {
+        if (vehicleInfo.getAdditionalServicesIds() != null && !vehicleInfo.getAdditionalServicesIds().isEmpty()) {
             vehicle.setAdditionalServices(
                     new HashSet<>(
                             additionalServiceRepository

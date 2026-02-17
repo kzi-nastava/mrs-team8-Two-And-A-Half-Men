@@ -158,4 +158,14 @@
     <string name="old_password_input">Old password input</string>
     <string name="start_driving">Start Driving</string>
     <string name="stop_driving">Stop Driving</string>
+
+    <!-- Driver Activation -->
+    <string name="driver_activation_title">Driver Account Activation</string>
+    <string name="driver_activation_subtitle">Set Your New Password</string>
+    <string name="btn_activate_account">Activate Account</string>
+
+    <!-- Errors -->
+    <string name="error_no_token">Invalid activation link. No token provided.</string>
+    <string name="error_password_empty">Please enter both passwords</string>
+    <string name="error_activation_failed">Activation failed. Please try again.</string>
 </resources>

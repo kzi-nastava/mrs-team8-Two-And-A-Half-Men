@@ -67,6 +67,9 @@ public class HistorySorter {
                     if (toValueDate != null && startTime.isAfter((LocalDateTime) toValueDate)) {
                         matches = false;
                     }
+                    if(startTime.equals(LocalDateTime.parse("1970-01-01T00:00"))) {
+                        matches = true;
+                    }
                     break;
 
                 case END_TIME:
@@ -78,6 +81,9 @@ public class HistorySorter {
                     }
                     if (toValueDateEnd != null && endTime.isAfter((LocalDateTime) toValueDateEnd)) {
                         matches = false;
+                    }
+                    if(endTime.equals(LocalDateTime.parse("1970-01-01T00:00"))) {
+                        matches = true;
                     }
                     break;
 

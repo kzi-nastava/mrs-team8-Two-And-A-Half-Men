@@ -63,8 +63,7 @@ public class RideHistoryPage {
 
     public List<History> getRidesOnPage() {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.visibilityOfAllElements(rideCards));
-        List<History> ridesOnPage = new ArrayList<History>();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".ride-card")));        List<History> ridesOnPage = new ArrayList<History>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm");
         for (WebElement rideCard : rideCards) {
             String status = rideCard.findElement(By.cssSelector(".status-badge")).getText().trim();

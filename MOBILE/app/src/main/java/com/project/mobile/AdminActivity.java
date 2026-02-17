@@ -14,6 +14,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityAdminBinding;
 import com.project.mobile.fragments.Admin.panic.PanicHandleFragment;
 import com.project.mobile.fragments.Admin.rides.ActiveRidesFragment;
+import com.project.mobile.fragments.Admin.settings.VehiclePricingFragment;
 import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.chat.AdminChatsFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
@@ -113,7 +114,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         } else if (menuItem.getItemId() == R.id.price_management) {
-            FragmentTransition.to(new LiveChat(), this, false, binding.fragmentContainerViewTag.getId());
+            FragmentTransition.to(new VehiclePricingFragment(), this, false, binding.fragmentContainerViewTag.getId());
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         }

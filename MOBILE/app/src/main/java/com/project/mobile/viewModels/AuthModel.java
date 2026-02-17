@@ -56,6 +56,10 @@ public class AuthModel extends ViewModel {
         });
 
     }
+    public void updateJwtToken(String token) {
+        JwtToken.SaveToken(token);
+        cachedMeInfo = null;
+    }
 
     public CompletableFuture<MeInfo> getMeInfo() {
         CompletableFuture<MeInfo> future = new CompletableFuture<>();

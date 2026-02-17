@@ -32,6 +32,23 @@
     <color name="marker_stop">#FF9800</color>
     <color name="marker_end">#F44336</color>
 
+    <color name="primary_dark">#1976D2</color>
+    <color name="primary_light">#BBDEFB</color>
+
+    <color name="gray">#9E9E9E</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="divider_gray">#E0E0E0</color>
+    <color name="dark_gray">#616161</color>
+
+    <color name="message_own_bg">#DCF8C6</color>
+    <color name="message_other_bg">#FFFFFF</color>
+    <color name="message_time_text">#999999</color>
+
+    <color name="unread_indicator">#FF5722</color>
+    <color name="read_checkmark">#4CAF50</color>
+
+    <color name="chat_item_selected">#E3F2FD</color>
+
     <!--  Profile Page Colors  -->
     <color name="profile_background">#2a2a2a</color>
     <color name="box_background">#3a3a3a</color>

@@ -11,11 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.FragmentTransition;
 import com.project.mobile.HomeRegistered;
-import com.project.mobile.LiveChat;
 import com.project.mobile.R;
 import com.project.mobile.databinding.ActivityMainBinding;
 import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.Registered.Rides.BookedRidesFragment;
+import com.project.mobile.fragments.chat.ChatFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
 import com.project.mobile.viewModels.AuthModel;
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             else if(itemId == R.id.nav_live_chat)
             {
-                FragmentTransition.to(new LiveChat(), this, false, containerId);
+                FragmentTransition.to(ChatFragment.newInstanceForUser(), this, false, containerId);
                 return true;
             }
             return false;

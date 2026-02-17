@@ -158,4 +158,11 @@
     <string name="old_password_input">Old password input</string>
     <string name="start_driving">Start Driving</string>
     <string name="stop_driving">Stop Driving</string>
+    <string name="no_messages_yet">No messages yet</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="send">Send</string>
+    <string name="no_active_chats">No active chats</string>
+    <string name="active_support_chats">Active Support Chats</string>
+    <string name="support_chat">Support Chat</string>
+    <string name="nselect_a_chat_to_start_messaging">\nSelect a chat to start messaging</string>
 </resources>

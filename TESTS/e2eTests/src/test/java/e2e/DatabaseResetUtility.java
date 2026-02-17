@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class DatabaseResetUtility {
 
     private static final String DB_URL = System.getenv("DB_URL");
-    private static final String DB_USER = System.getenv("DB_USER");
+    private static final String DB_USER = System.getenv("DB_USERNAME");
     private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
 
 
@@ -21,9 +21,10 @@ public class DatabaseResetUtility {
      */
     public static void resetDatabase() throws Exception {
         // Read SQL file from classpath
-        System.out.println("Executing SQL script:\n"); // Debug output
+        System.out.println("Resetting and populating the database..."); // Debug output
+        // System.out.println("Executing SQL script:\n"); // Debug output
         String sql = readSqlFile("/sql/reset_and_populate_db.sql");
-        System.out.println(sql);
+        //System.out.println(sql);
         // Execute SQL
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              Statement stmt = conn.createStatement()) {

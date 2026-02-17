@@ -14,13 +14,18 @@ public class TestSetup {
     protected WebDriver driver;
 
     protected static final String BASE_URL = System.getenv("BASE_URL");
+    private final String CHROME_VERSION = System.getenv("CHROME_VERSION");
 
     @BeforeEach
     public void initializeWebDriver() {
         if (BASE_URL == null || BASE_URL.isEmpty()) {
             throw new IllegalStateException("BASE_URL environment variable is not set.");
         }
-        WebDriverManager.chromedriver().browserVersion("143").setup();
+        var driverManager = WebDriverManager.chromedriver();
+        if (CHROME_VERSION != null && !CHROME_VERSION.isEmpty()) {
+            driverManager.browserVersion(CHROME_VERSION);
+        }
+        driverManager.setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--incognito");
         options.addArguments("--start-maximized");

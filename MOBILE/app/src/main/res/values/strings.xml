@@ -165,8 +165,150 @@
     <string name="active_support_chats">Active Support Chats</string>
     <string name="support_chat">Support Chat</string>
     <string name="nselect_a_chat_to_start_messaging">\nSelect a chat to start messaging</string>
+
+
+    <!-- Users List -->
+    <string name="users_title">User Management</string>
+    <string name="btn_show_filters">Show Filters</string>
+    <string name="btn_hide_filters">Hide Filters</string>
+    <string name="btn_create_driver">Create New Driver</string>
+    <string name="btn_apply_filters">Apply Filters</string>
+    <string name="btn_clear_filters">Clear Filters</string>
+
+    <!-- Filters -->
+    <string name="filter_email">Email</string>
+    <string name="filter_first_name">First Name</string>
+    <string name="filter_last_name">Last Name</string>
+    <string name="filter_role">Role</string>
+    <string name="filter_driver_status">Driver Status</string>
+    <string name="filter_account_status">Account Status</string>
+    <string name="filter_pending_requests">Pending Requests</string>
+
+    <string name="hint_filter_email">Filter by email</string>
+    <string name="hint_filter_first_name">Filter by first name</string>
+    <string name="hint_filter_last_name">Filter by last name</string>
+
+    <string name="filter_all_roles">All Roles</string>
+    <string name="filter_all_statuses">All Statuses</string>
+    <string name="filter_all">All</string>
+    <string name="filter_blocked">Blocked</string>
+    <string name="filter_active">Active</string>
+    <string name="filter_has_pending">Has Pending</string>
+    <string name="filter_no_pending">No Pending</string>
+
+    <!-- User roles -->
+    <string name="role_admin">ADMIN</string>
+    <string name="role_customer">CUSTOMER</string>
+    <string name="role_driver">DRIVER</string>
+
+    <!-- Driver statuses -->
+    <string name="status_busy">BUSY</string>
+    <string name="status_inactive">INACTIVE</string>
+    <string name="status_available">AVAILABLE</string>
+
+    <!-- Table/List -->
+    <string name="label_user_id">ID</string>
+    <string name="label_user_name">Name</string>
+    <string name="label_user_email">Email</string>
+    <string name="label_user_role">Role</string>
+    <string name="label_driver_status">Driver Status</string>
+    <string name="label_blocked">Blocked</string>
+    <string name="label_pending_requests">Pending Requests</string>
+    <string name="btn_view">View</string>
+
+    <!-- Pagination -->
+    <string name="pagination_showing">Showing %1$d to %2$d of %3$d users</string>
+    <string name="label_items_per_page">Items per page:</string>
+    <string name="btn_first_page">First</string>
+    <string name="btn_prev_page">Previous</string>
+    <string name="btn_next_page">Next</string>
+    <string name="btn_last_page">Last</string>
+
+    <!-- Messages -->
+    <string name="loading_users">Loading users…</string>
+    <string name="no_users_found">No users found. Try adjusting your filters.</string>
+    <string name="error_loading_users">Failed to load users. Please try again.</string>
+
+    <!-- Sort indicators -->
+    <string name="sort_none">↕️</string>
+    <string name="sort_asc">↑</string>
+    <string name="sort_desc">↓</string>
+
+    <!-- Status indicators -->
+    <string name="status_yes">Yes</string>
+    <string name="status_no">No</string>
+    <string name="status_na">N/A</string>
+    <string name="pagination_first_page">⏮️</string>
+    <string name="pagination_last_page">⏭️</string>
+    <string name="pagination_next_page">▶️</string>
+    <string name="pagination_previous_page">◀️</string>
+    <string name="no_users_found_with_these_filters">No users found with these filters</string>
+
+
+    <!-- New Driver Activity -->
+    <string name="new_driver_title">Create New Driver</string>
+    <string name="btn_save_driver">Save Driver</string>
+
+    <!-- Validation Errors -->
+    <string name="error_fill_personal_info">Please fill in all personal info fields.</string>
+    <string name="error_fill_vehicle_info">Please fill in all vehicle info fields.</string>
+    <string name="error_registering_driver">Failed to register driver. Please try again.</string>
+
+    <!-- Success -->
+    <string name="success_driver_registered">Driver registered successfully!</string>
+
+    <!-- User Details Activity -->
+    <string name="user_details_title">User Details</string>
+    <string name="loading_user_details">Loading user details…</string>
+
+    <!-- Action Buttons -->
+    <string name="btn_view_chat">💬 View Chat</string>
+    <string name="btn_block_user">Block User</string>
+    <string name="btn_unblock_user">Unblock User</string>
+    <string name="btn_approve_changes">✔ Approve Changes</string>
+    <string name="btn_reject_changes">✕ Reject Changes</string>
+
+    <!-- Blocked Banner -->
+    <string name="blocked_banner_title">User is Blocked</string>
+    <string name="label_block_reason">Reason:</string>
+
+    <!-- Pending Changes -->
+    <string name="pending_changes_admin_subtitle">Review the requested changes and approve or reject them.</string>
+
+    <!-- Block Dialog -->
+    <string name="dialog_block_title">Block User</string>
+    <string name="dialog_block_message">Please provide a reason for blocking this user:</string>
+    <string name="hint_block_reason">Reason for blocking</string>
+
+    <!-- Unblock Dialog -->
+    <string name="dialog_unblock_title">Unblock User</string>
+    <string name="dialog_unblock_message">Are you sure you want to unblock this user?</string>
+
+    <!-- Approve Dialog -->
+    <string name="dialog_approve_title">Approve Changes</string>
+    <string name="dialog_approve_message">Are you sure you want to approve these changes? This action cannot be undone.</string>
+
+    <!-- Reject Dialog -->
+    <string name="dialog_reject_title">Reject Changes</string>
+    <string name="dialog_reject_message">Are you sure you want to reject these changes? This action cannot be undone.</string>
+
+    <!-- Success Messages -->
+    <string name="success_user_blocked">User has been blocked successfully.</string>
+    <string name="success_user_unblocked">User has been unblocked successfully.</string>
+    <string name="success_changes_approved">Changes have been approved successfully.</string>
+    <string name="success_changes_rejected">Changes have been rejected successfully.</string>
+
+    <!-- Error Messages -->
+    <string name="error_invalid_user_id">Invalid user ID.</string>
+    <string name="error_loading_user_details">Failed to load user details. Please try again.</string>
+    <string name="error_blocking_user">Failed to block user. Please try again.</string>
+    <string name="error_unblocking_user">Failed to unblock user. Please try again.</string>
+    <string name="error_approving_changes">Failed to approve changes. Please try again.</string>
+    <string name="error_rejecting_changes">Failed to reject changes. Please try again.</string>
+    <string name="error_block_reason_required">Please enter a reason for blocking.</string>
+    <string name="pending_changes_title">Pending changes</string>
   
-    <!-- Driver Activation -->
+  <!-- Driver Activation -->
     <string name="driver_activation_title">Driver Account Activation</string>
     <string name="driver_activation_subtitle">Set Your New Password</string>
     <string name="btn_activate_account">Activate Account</string>
@@ -181,4 +323,6 @@
     <string name="filter_by_driver_name">Filter by driver name</string>
     <string name="active_rides">Active Rides</string>
     <string name="panic">⚠</string>
+  
+
 </resources>

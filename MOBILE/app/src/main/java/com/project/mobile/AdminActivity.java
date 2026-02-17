@@ -17,6 +17,7 @@ import com.project.mobile.fragments.Admin.rides.ActiveRidesFragment;
 import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.chat.AdminChatsFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
+import com.project.mobile.fragments.users.UsersListFragment;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActivityAdminBinding binding;
@@ -95,7 +96,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
         int containerId = binding.fragmentContainerViewTag.getId();
         if(menuItem.getItemId() == R.id.registe_driver)
         {
-            FragmentTransition.to(new LiveChat(), this, false, containerId);
+            FragmentTransition.to(new UsersListFragment(), this, false, containerId);
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
 

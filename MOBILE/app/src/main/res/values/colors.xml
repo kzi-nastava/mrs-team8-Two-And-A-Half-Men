@@ -88,4 +88,25 @@
 
     <color name="button_danger">#dc2626</color>
     <color name="button_danger_pressed">#b91c1c</color>
+
+    <!-- Badge Colors (same as profile page) -->
+    <color name="badge_admin">#2d7a52</color>
+    <color name="badge_customer">#3a8f64</color>
+    <color name="badge_driver">#d4af37</color>
+
+    <color name="badge_busy">#dc2626</color>
+    <color name="badge_inactive">#6c757d</color>
+    <color name="badge_available">#28a745</color>
+
+    <!-- Status Colors -->
+    <color name="success_green">#28a745</color>
+    <color name="secondary_green">#2d7a52</color>
+    <color name="warning_yellow">#f4d03f</color>
+
+    <!-- Users List Specific -->
+    <color name="user_item_background">#1a5c3a</color>
+    <color name="user_item_selected">#2d7a52</color>
+
+
+
 </resources>

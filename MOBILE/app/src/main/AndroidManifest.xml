@@ -121,6 +121,17 @@
                     android:pathPrefix="/rides" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.NewDriverActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name=".activities.UserDetailsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+
     </application>
 
 </manifest>

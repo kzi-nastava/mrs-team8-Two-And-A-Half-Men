@@ -13,6 +13,7 @@ import { ConfigService } from '@features/rides/services/config.service';
 import { RatingFormData } from '@shared/components/forms/rating-form/rating-form.component';
 import { Ride, RideStatus } from '@shared/models/ride.model';
 
+(window as any).global = window;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const mockRide: Ride = {
@@ -76,6 +77,7 @@ const popupServiceStub = {
 	success: jasmine.createSpy('success'),
 	error: jasmine.createSpy('error'),
 	confirm: jasmine.createSpy('confirm'),
+	formPopup: jasmine.createSpy('formPopup'),
 };
 
 const authServiceStub = {
@@ -155,27 +157,38 @@ describe('RideDetailsComponent — Rating form', () => {
 
 	describe('Automatic opening of popup with query param view=rate', () => {
 		it('should set showRatingPopup on true if view=rate query param is presented', async () => {
+			// Override the route stub with view=rate
+			const routeWithViewParam = {
+				paramMap: of({ get: (key: string) => (key === 'id' ? '42' : null) }),
+				snapshot: {
+					queryParams: { view: 'rate' },
+				},
+			};
+
+			await TestBed.resetTestingModule();
+			await TestBed.configureTestingModule({
+				imports: [RideDetailsComponent],
+				providers: [
+					{ provide: ActivatedRoute, useValue: routeWithViewParam },
+					{ provide: Router, useValue: routerSpy },
+					{ provide: Location, useValue: locationSpy },
+					{ provide: RideService, useValue: rideServiceStub },
+					{ provide: PopupsService, useValue: popupServiceStub },
+					{ provide: AuthService, useValue: authServiceStub },
+					{ provide: ConfigService, useValue: actionsConfigStub },
+				],
+			}).compileComponents();
+
 			const fixture2 = TestBed.createComponent(RideDetailsComponent);
-			const component2 = fixture2.componentInstance;
-
-			// Simulating ngOnInit handling queryParams
-			(component2 as any).shouldOpenRatingPopup = true;
-			(component2 as any).ride.set(mockRide);
-
-			// Directly calling private logic
-			(component2 as any).loadingDetails.set(false);
-			component2.showRatingPopup.set(true);
-
 			fixture2.detectChanges();
-			expect(component2.showRatingPopup()).toBeTrue();
+
+			expect(fixture2.componentInstance.showRatingPopup()).toBeTrue();
 		});
 
 		it('should leave showRatingPopup false if view query param is not presented', () => {
-			// activatedRouteStub.snapshot.queryParams doesn't have 'view' key
 			expect(component.showRatingPopup()).toBeFalse();
 		});
 	});
-
 	// ─── onRatingSubmitted() ─────────────────────────────────────────────────
 
 	describe('onRatingSubmitted()', () => {

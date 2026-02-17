@@ -9,6 +9,8 @@ import { RideConfig } from '@features/history/models/ride-config';
 import { AdminHomepageService } from '@features/admin/home/services/admin-homepage.service';
 import { RidesListComponent } from '@shared/components/rides/ride-list/ride-list.component';
 import { BoxDirective } from '@shared/directives/box/box.directive';
+import { PanicNotification } from '@shared/services/panics/panics.service';
+import { WebSocketService } from '@core/services/web-socket.service';
 
 @Component({
 	selector: 'app-driver-home-page',
@@ -39,6 +41,9 @@ export class AdminHomePageComponent {
 	public adminHomepageService = inject(AdminHomepageService);
 	private popupsService = inject(PopupsService);
 	public router = inject(Router);
+	private webSocketService = inject(WebSocketService);
+	private unsubscribeFn: (() => void) | null = null;
+
 
 	rideConfig = {
 		showDriverInfo: true,
@@ -54,6 +59,7 @@ export class AdminHomePageComponent {
 
 	ngOnInit(): void {
 		this.loadRides();
+		this.subscribeToRideUpdates();
 	}
 	loadRides(): void {
 		this.loading.set(true);
@@ -87,5 +93,32 @@ export class AdminHomePageComponent {
 	}
 	onRideClick(ride: Ride) {
 		this.router.navigate(['rides', ride.id]).then();
+	}
+	async subscribeToRideUpdates() {
+		try {
+			this.unsubscribeFn = await this.webSocketService.subscribe<any>(
+				`/topic/panic`,
+				(panic: any) => {
+					console.log('Received panic notification:', panic);
+						this.loadRides();
+					},
+			);
+		} catch (error) {
+			console.error('[PanicService] Error subscribing to panic:', error);
+				}
+	}
+	unsubscribeFromRideUpdates() {
+		try {
+			if(this.unsubscribeFn) {
+				this.unsubscribeFn();
+				this.unsubscribeFn = null;
+			}
+		} catch (error) {
+			console.error('[PanicService] Error unsubscribing from panic:', error);
+		}
+	}
+
+	ngOnDestroy(): void {
+		this.unsubscribeFromRideUpdates();
 	}
 }

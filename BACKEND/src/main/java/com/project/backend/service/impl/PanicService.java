@@ -6,6 +6,7 @@ import com.project.backend.exceptions.ResourceNotFoundException;
 import com.project.backend.models.*;
 import com.project.backend.models.enums.DriverStatus;
 import com.project.backend.models.enums.RideStatus;
+import com.project.backend.repositories.DriverRepository;
 import com.project.backend.repositories.PassengerRepository;
 import com.project.backend.repositories.RideRepository;
 import com.project.backend.repositories.redis.DriverLocationsRepository;
@@ -31,6 +32,8 @@ public class PanicService implements IPanicService {
     private final DateTimeService dateTimeService;
     private final RideMapper rideMapper;
     private final RideTracingService rideTracingService;
+    private final DriverRepository driverRepository;
+    private final ActivityDriverService driverActivityService;
 
 
     public void triggerPanicAlert(AppUser user, String accessToken) {
@@ -50,11 +53,19 @@ public class PanicService implements IPanicService {
             if(activeRide == null) {
                 throw new IllegalArgumentException("No active ride found for the driver.");
             }
+            driver.setDriverStatus(DriverStatus.PANICKING);
             activeRide.setStatus(RideStatus.PANICKED);
             rideRepository.save(activeRide);
+            driverActivityService.cancelRides(driver);
+            driverRepository.save(driver);
+            String driverLocation = "Unknown";
             // driverLocationsRepository.setLocations(driver.getId(), 10 , 10) ; // Mock location
-            Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
-            String driverLocation = driverPoint.getX() + "," + driverPoint.getY();
+            try {
+                Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
+                driverLocation = driverPoint.getX() + "," + driverPoint.getY();
+            } catch (Exception e) {
+                System.out.println("Could not retrieve driver location: " + e.getMessage());
+            }
             Map<String, String> panicAlert = Map.of(
                     "driverName", driver.getEmail(),
                     "driverLocation", driverLocation,
@@ -71,9 +82,17 @@ public class PanicService implements IPanicService {
         passenger.getRide().setStatus(RideStatus.PANICKED);
         rideRepository.save(passenger.getRide());
         Driver driver = passenger.getRide().getDriver();
+        driver.setDriverStatus(DriverStatus.PANICKING);
+        driverRepository.save(driver);
+        driverActivityService.cancelRides(driver);
+        String driverLocation = "Unknown";
         driverLocationsRepository.setLocations(driver.getId(), 10 , 10) ; // Mock location
-        Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
-        String driverLocation = driverPoint.getX() + "," + driverPoint.getY();
+        try {
+            Point driverPoint = driverLocationsRepository.getLocation(driver.getId());
+            driverLocation = driverPoint.getX() + "," + driverPoint.getY();
+        } catch (Exception e) {
+            System.out.println("Could not retrieve driver location: " + e.getMessage());
+        }
         Map<String, String> panicAlert = Map.of(
                 "passengerName", passenger.getUser() != null ? passenger.getUser().getEmail() : passenger.getEmail(),
                 "driverName", driver.getEmail(),
@@ -82,14 +101,12 @@ public class PanicService implements IPanicService {
         );
         System.out.println("Sending panic alert to admins: " + panicAlert);
         simpMessagingTemplate.convertAndSend("/topic/panic", panicAlert);
-
         System.out.println("Panic alert sent to admins.");
     }
     public void resolvePanicAlert(Long rideId)
     {
         Ride ride = rideRepository.findById(rideId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ride with id " + rideId + " not found"));
-
         if (ride.getStatus() != RideStatus.PANICKED) {
             throw new IllegalStateException("Ride is not in panicked state");
         }
@@ -97,7 +114,11 @@ public class PanicService implements IPanicService {
             throw new IllegalStateException("Ride has already ended");
         }
         ride.setEndTime(dateTimeService.getCurrentDateTime());
+        ride.setPath(null); // Clear the path to prevent further tracking
         rideTracingService.finishRoute(ride.getDriver().getId());
+        Driver driver = ride.getDriver();
+        driverActivityService.deActivateDriver(driver);
+        driverRepository.save(driver);
         rideRepository.save(ride);
     }
     public List<RideResponseDTO> getAllUnresolvedPanicAlerts() {

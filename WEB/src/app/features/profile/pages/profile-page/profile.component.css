@@ -480,3 +480,7 @@ select.form-input option {
 		justify-content: center;
 	}
 }
+
+.working-activity-section {
+	margin-top: 2rem;
+}

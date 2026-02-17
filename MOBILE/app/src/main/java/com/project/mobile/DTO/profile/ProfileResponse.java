@@ -14,6 +14,7 @@ public class ProfileResponse {
     private VehicleInfo vehicleInfo;
     private PendingChangeRequest pendingChangeRequest;
     private String accessToken;
+    private Boolean isWorking;
 
     public boolean isDriver() {
         return personalInfo != null && personalInfo.isDriver();

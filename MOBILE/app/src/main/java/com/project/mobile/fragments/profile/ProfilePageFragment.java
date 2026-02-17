@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -40,10 +41,13 @@ import com.project.mobile.core.retrofitClient.RetrofitClient;
 import com.project.mobile.fragments.shared.forms.PersonalInfoFormFragment;
 import com.project.mobile.fragments.shared.forms.VehicleInfoFormFragment;
 import com.project.mobile.helpers.DialogHelper;
+import com.project.mobile.service.ActivityService;
 import com.project.mobile.service.ProfileService;
 import com.project.mobile.service.VehicleService;
+import com.project.mobile.viewModels.AuthModel;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +71,11 @@ public class ProfilePageFragment extends Fragment {
     private ViewPager2 viewPager;
     private Button btnSave, btnChangePassword, btnLogout;
     private EditText etOldPassword, etNewPassword, etConfirmPassword;
-    private LinearLayout blockedBanner, pendingChangesPreview;
+    private LinearLayout blockedBanner, pendingChangesPreview, workingStatusLayout;
     private TextView tvBlockReason;
     private Button btnCancelRequest;
+
+    private Button btnToggleStopWorking;
 
     // Fragments
     private PersonalInfoFormFragment personalInfoFragment;
@@ -85,7 +91,9 @@ public class ProfilePageFragment extends Fragment {
     private List<AdditionalService> availableServices = new ArrayList<>();
     private PendingChangesAdapter pendingChangesAdapter;
     private TabsPagerAdapter pagerAdapter;
-
+    private AuthModel authModel;
+    private ActivityService activityService;
+    private Button btnToggleWorking;
     // State
     private boolean isSaving = false;
     private Uri selectedImageUri;
@@ -98,6 +106,8 @@ public class ProfilePageFragment extends Fragment {
         Retrofit retrofit = getRetrofitInstance(); // You need to implement this
         profileService = retrofit.create(ProfileService.class);
         vehicleService = retrofit.create(VehicleService.class);
+        activityService = retrofit.create(ActivityService.class);
+        authModel = new ViewModelProvider(this).get(AuthModel.class);
     }
 
     @Override
@@ -125,8 +135,10 @@ public class ProfilePageFragment extends Fragment {
         pendingChangesPreview = view.findViewById(R.id.pendingChangesPreview);
         tvBlockReason = view.findViewById(R.id.tvBlockReason);
         btnCancelRequest = view.findViewById(R.id.btnCancelRequest);
+        btnToggleWorking = view.findViewById(R.id.btn_driver_activate);
+        btnToggleStopWorking = view.findViewById(R.id.btn_driver_deactivate);
         RecyclerView rvPendingChanges = view.findViewById(R.id.rvPendingChanges);
-
+        workingStatusLayout = view.findViewById(R.id.driver_activity_controls);
         // Setup pending changes RecyclerView
         pendingChangesAdapter = new PendingChangesAdapter();
         rvPendingChanges.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -188,6 +200,7 @@ public class ProfilePageFragment extends Fragment {
 
         setupBlockedBanner();
         setupPendingChanges();
+        setUpActivity(profile);
     }
     private void setupTabs() {
         pagerAdapter = new TabsPagerAdapter(this);
@@ -425,6 +438,9 @@ public class ProfilePageFragment extends Fragment {
                 
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(requireContext(), R.string.success_profile_updated_message, Toast.LENGTH_SHORT).show();
+                    if(response.body().getProfile() != null && response.body().getProfile().getAccessToken() != null) {
+                        authModel.updateJwtToken(response.body().getProfile().getAccessToken());
+                    }
                     updateProfileData(response.body().getProfile());
                     selectedImageUri = null;
                 } else {
@@ -545,6 +561,80 @@ public class ProfilePageFragment extends Fragment {
         clone.setAdditionalServices(new ArrayList<>(original.getAdditionalServices()));
         return clone;
     }
+    private void setUpActivity(ProfileResponse profile)
+    {
+        if(!profile.isDriver())
+            return;
+        if(profile.getIsWorking() == null)
+            return;
+        workingStatusLayout.setVisibility(View.VISIBLE);
+        if(profile.getIsWorking())
+        {
+            btnToggleWorking.setVisibility(View.GONE);
+            btnToggleStopWorking.setVisibility(View.VISIBLE);
+            btnToggleStopWorking.setOnClickListener(v -> {
+                activityService.stopWorkingStatus().enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+                        if(response.isSuccessful())
+                        {
+                            Toast.makeText(requireContext(), "Working stop", Toast.LENGTH_SHORT).show();
+                            loadProfileData();
+                        }
+                        else
+                        {
+                            try {
+                                String errorMsg = response.errorBody() != null
+                                        ? response.errorBody().string()
+                                        : "Unknown error";
+                                Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Toast.makeText(requireContext(), "Unknown error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                        Toast.makeText(requireContext(),   "Error " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        } else {
+            btnToggleStopWorking.setVisibility(View.GONE);
+            btnToggleWorking.setVisibility(View.VISIBLE);
+            btnToggleWorking.setOnClickListener(v -> {
+                activityService.startWorkingStatus().enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+                        if(response.isSuccessful())
+                        {
+                            Toast.makeText(requireContext(), "Working start", Toast.LENGTH_SHORT).show();
+                            loadProfileData();
+                        }
+                        else
+                        {
+                            try {
+                                String errorMsg = response.errorBody() != null
+                                        ? response.errorBody().string()
+                                        : "Unknown error";
+                                Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Toast.makeText(requireContext(), "Unknown error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                        Toast.makeText(requireContext(),   "Error " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        }
+    }
 
     private Retrofit getRetrofitInstance() {
         return RetrofitClient.retrofit;
@@ -554,6 +644,7 @@ public class ProfilePageFragment extends Fragment {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         assert getActivity() != null;
+        authModel.logout();
         getActivity().finish();
     }
 }

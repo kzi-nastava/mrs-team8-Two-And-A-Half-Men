@@ -156,6 +156,8 @@
     <string name="new_password_input">New password input</string>
     <string name="confrim_new_password_input">Confrim new password input</string>
     <string name="old_password_input">Old password input</string>
+    <string name="start_driving">Start Driving</string>
+    <string name="stop_driving">Stop Driving</string>
     <string name="no_messages_yet">No messages yet</string>
     <string name="type_a_message">Type a message...</string>
     <string name="send">Send</string>

@@ -16,7 +16,6 @@ export interface RatingFormData {
 	styleUrls: ['./rating-form.component.css'],
 })
 export class RatingFormComponent {
-
 	@Output() ratingSubmitted = new EventEmitter<RatingFormData>();
 	@Output() closePopup = new EventEmitter<void>();
 

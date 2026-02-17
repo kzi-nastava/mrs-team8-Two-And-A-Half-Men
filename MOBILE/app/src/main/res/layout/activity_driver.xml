@@ -47,7 +47,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/bottom_menu_registerd"
+            app:menu="@menu/bottom_menu_driver"
             android:background="@color/background_dark"
             app:itemIconTint="@color/white"
             app:itemTextColor="@color/white"

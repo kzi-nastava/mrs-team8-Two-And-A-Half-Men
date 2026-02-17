@@ -344,6 +344,65 @@
 
     <!-- Vehicle Pricing Success -->
     <string name="success_price_updated">price updated successfully</string>
-  
+
+
+    <!-- Reports Page -->
+    <string name="reports_title">📊 Ride Statistics Report</string>
+
+    <!-- Sections -->
+    <string name="section_filters">🔍 Filters</string>
+    <string name="section_summary">📈 Summary Statistics</string>
+    <string name="section_user_reports">👥 User Reports</string>
+    <string name="section_drivers_report">🚗 Drivers Report</string>
+    <string name="section_passengers_report">👤 Passengers Report</string>
+
+    <!-- Filters -->
+    <string name="label_start_date">Start Date</string>
+    <string name="label_end_date">End Date</string>
+    <string name="label_user_type">User Type</string>
+    <string name="label_quick_filters">Quick Filters</string>
+    <string name="btn_last_week">Last Week</string>
+    <string name="btn_last_month">Last Month</string>
+    <string name="btn_last_quarter">Last Quarter</string>
+    <string name="btn_last_year">Last Year</string>
+
+    <!-- User Card Labels -->
+    <string name="label_rides">Rides:</string>
+    <string name="label_distance">Distance:</string>
+    <string name="label_amount">Amount:</string>
+    <string name="label_all_users">📈 All Users (Combined)</string>
+    <string name="label_total_rides">Total Rides:</string>
+    <string name="label_total_distance">Total Distance:</string>
+    <string name="label_total_amount">Total Amount:</string>
+
+    <!-- Summary Stats -->
+    <string name="label_cumulative_totals">Cumulative Totals</string>
+    <string name="label_daily_averages">Daily Averages</string>
+    <string name="label_per_ride_averages">Per Ride Averages</string>
+
+    <string name="stat_total_rides">Total Rides</string>
+    <string name="stat_total_distance">Total Distance</string>
+    <string name="stat_total_amount">Total Amount</string>
+    <string name="stat_avg_rides_per_day">Rides per Day</string>
+    <string name="stat_avg_distance_per_day">Distance per Day</string>
+    <string name="stat_avg_amount_per_day">Amount per Day</string>
+    <string name="stat_avg_distance_per_ride">Distance per Ride</string>
+    <string name="stat_avg_amount_per_ride">Amount per Ride</string>
+
+    <!-- Charts -->
+    <string name="chart_rides_title">🚗 Number of Rides per Day</string>
+    <string name="chart_distance_title">📏 Distance Covered per Day (km)</string>
+    <string name="chart_amount_title">💰 Amount per Day (RSD)</string>
+    <string name="chart_amount_earned_title">💰 Amount Earned per Day (RSD)</string>
+    <string name="chart_amount_spent_title">💰 Amount Spent per Day (RSD)</string>
+
+    <string name="chart_rides_label">Number of Rides</string>
+    <string name="chart_distance_label">Distance (km)</string>
+    <string name="chart_amount_label">Amount (RSD)</string>
+
+    <!-- Loading & Errors -->
+    <string name="loading_report_data">Loading report data…</string>
+    <string name="error_loading_report">Failed to load report data. Please try again.</string>
+
 
 </resources>

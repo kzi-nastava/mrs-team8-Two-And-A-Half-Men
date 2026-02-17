@@ -4,31 +4,20 @@
     tools:showIn="navigation_view">
     <group>
         <item
-            android:id="@+id/registe_driver"
+            android:id="@+id/nav_users"
             android:title="Users"
             android:orderInCategory="100"
-            android:icon="@drawable/ic_register_driver"
+            android:icon="@drawable/ic_users"
             />
+
         <item
-            android:id="@+id/driver_profile_change_approval"
-            android:title="Driver profile change approval"
-            android:orderInCategory="200"
-            android:icon="@drawable/ic_driver_changes"
-            />
-        <item
-            android:id="@+id/blocking"
-            android:title="Blocking"
-            android:orderInCategory="300"
-            android:icon="@drawable/ic_blocking"
-            />
-        <item
-            android:id="@+id/nav_history"
-            android:title="History"
+            android:id="@+id/nav_reports"
+            android:title="Reports"
             android:orderInCategory="400"
-            android:icon="@android:drawable/ic_menu_recent_history"
+            android:icon="@drawable/ic_reports_chart_line"
             />
         <item
-            android:id="@+id/price_management"
+            android:id="@+id/nav_price_management"
             android:title="Price management"
             android:orderInCategory="500"
             android:icon="@drawable/ic_price"

@@ -10,14 +10,8 @@
             android:icon="@drawable/ic_home"
             />
         <item
-            android:id="@+id/nav_profile"
-            android:title="Profile"
-            android:orderInCategory="500"
-            android:icon="@drawable/ic_profile"
-            />
-        <item
-            android:id="@+id/nav_active_drive"
-            android:title="Active drive"
+            android:id="@+id/nav_booked_rides"
+            android:title="Booked rides"
             android:orderInCategory="200"
             android:icon="@drawable/ic_active_drive"
             />
@@ -33,7 +27,19 @@
             android:orderInCategory="400"
             android:icon="@android:drawable/ic_menu_send"
             />
+        <item
+            android:id="@+id/nav_reports"
+            android:title="Reports"
+            android:orderInCategory="500"
+            android:icon="@drawable/ic_reports_chart_line"
+            />
 
+        <item
+            android:id="@+id/nav_profile"
+            android:title="Profile"
+            android:orderInCategory="600"
+            android:icon="@drawable/ic_profile"
+            />
     </group>
 
 

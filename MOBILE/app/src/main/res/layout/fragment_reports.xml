@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/profile_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_medium">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reports_title"
+            android:textColor="@color/button_primary"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/spacing_large"/>
+
+        <!-- Filters Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/box_background"
+            android:padding="@dimen/card_padding"
+            android:layout_marginBottom="@dimen/spacing_medium">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/section_filters"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/text_size_large"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/spacing_medium"/>
+
+            <!-- Date Range -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/spacing_medium">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_start_date"
+                        android:textColor="@color/label_text"
+                        android:textSize="@dimen/text_size_small"
+                        android:layout_marginBottom="@dimen/spacing_tiny"/>
+
+                    <EditText
+                        android:id="@+id/etStartDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:background="@drawable/bg_input"
+                        android:textColor="@color/input_text"
+                        android:padding="@dimen/input_padding"
+                        android:inputType="date"
+                        android:focusable="false"
+                        android:clickable="true"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_end_date"
+                        android:textColor="@color/label_text"
+                        android:textSize="@dimen/text_size_small"
+                        android:layout_marginBottom="@dimen/spacing_tiny"/>
+
+                    <EditText
+                        android:id="@+id/etEndDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_height"
+                        android:background="@drawable/bg_input"
+                        android:textColor="@color/input_text"
+                        android:padding="@dimen/input_padding"
+                        android:inputType="date"
+                        android:focusable="false"
+                        android:clickable="true"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Admin-only: User Type Filter -->
+            <LinearLayout
+                android:id="@+id/adminFilters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_user_type"
+                    android:textColor="@color/label_text"
+                    android:textSize="@dimen/text_size_small"
+                    android:layout_marginBottom="@dimen/spacing_tiny"/>
+
+                <Spinner
+                    android:id="@+id/spinnerUserType"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/input_height"
+                    android:background="@drawable/bg_input"
+                    android:padding="@dimen/input_padding"/>
+
+            </LinearLayout>
+
+            <!-- Quick Filter Buttons -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_quick_filters"
+                android:textColor="@color/label_text"
+                android:textSize="@dimen/text_size_small"
+                android:layout_marginBottom="@dimen/spacing_small"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <Button
+                    android:layout_marginRight="4dp"
+                    android:id="@+id/btnLastWeek"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/btn_last_week"
+                    android:textColor="@color/primary_text"
+                    android:background="@color/secondary_green"
+                    android:textSize="@dimen/text_size_small"/>
+
+                <Button
+                    android:layout_marginLeft="4dp"
+                    android:id="@+id/btnLastMonth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/btn_last_month"
+                    android:textColor="@color/primary_text"
+                    android:background="@color/secondary_green"
+                    android:textSize="@dimen/text_size_small"/>
+                </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginTop="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                <Button
+                    android:layout_marginRight="4dp"
+                    android:id="@+id/btnLastQuarter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/btn_last_quarter"
+                    android:textColor="@color/primary_text"
+                    android:background="@color/secondary_green"
+                    android:textSize="@dimen/text_size_small"/>
+
+                <Button
+                    android:layout_marginLeft="4dp"
+                    android:id="@+id/btnLastYear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/btn_last_year"
+                    android:textColor="@color/primary_text"
+                    android:background="@color/secondary_green"
+                    android:textSize="@dimen/text_size_small"/>
+                    </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Loading State -->
+        <LinearLayout
+            android:id="@+id/loadingView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/spacing_xlarge"
+            android:background="@color/box_background"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:indeterminateTint="@color/button_primary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/loading_report_data"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_marginTop="@dimen/spacing_medium"/>
+
+        </LinearLayout>
+
+        <!-- Content Container (hidden while loading) -->
+        <LinearLayout
+            android:id="@+id/contentView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Admin: User Cards + Combined Card -->
+            <LinearLayout
+                android:id="@+id/adminUserSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/box_background"
+                android:padding="@dimen/card_padding"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvUsersTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_user_reports"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                <!-- Combined Stats Card -->
+                <LinearLayout
+                    android:id="@+id/combinedStatsCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_user_report_card"
+                    android:padding="@dimen/card_padding"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_all_users"
+                        android:textColor="@color/button_primary"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_total_rides"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/text_size_small"/>
+
+                        <TextView
+                            android:id="@+id/tvCombinedRides"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/text_size_normal"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/spacing_small">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_total_distance"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/text_size_small"/>
+
+                        <TextView
+                            android:id="@+id/tvCombinedDistance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0.00 km"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/text_size_normal"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/spacing_small">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/label_total_amount"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/text_size_small"/>
+
+                        <TextView
+                            android:id="@+id/tvCombinedAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0.00 RSD"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/text_size_normal"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- User Cards RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvUserReports"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <!-- Summary Stats -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/box_background"
+                android:padding="@dimen/card_padding"
+                android:layout_marginBottom="@dimen/spacing_medium">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_summary"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                <!-- Cumulative Totals -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_cumulative_totals"
+                    android:textColor="@color/button_primary"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/spacing_small"/>
+
+                <include layout="@layout/summary_stat_item"
+                    android:id="@+id/statTotalRides"/>
+                <include layout="@layout/summary_stat_item"
+                    android:id="@+id/statTotalDistance"/>
+                <include layout="@layout/summary_stat_item"
+                    android:id="@+id/statTotalAmount"/>
+
+                <!-- Daily Averages -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_daily_averages"
+                    android:textColor="@color/button_primary"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:layout_marginBottom="@dimen/spacing_small"/>
+
+                <include layout="@layout/summary_stat_item"
+                    android:id="@+id/statAvgRidesPerDay"/>
+                <include layout="@layout/summary_stat_item"
+                    android:id="@+id/statAvgDistancePerDay"/>
+                <include layout="@layout/summary_stat_item"
+                    android:id="@+id/statAvgAmountPerDay"/>
+
+                <!-- Per Ride Averages -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_per_ride_averages"
+                    android:textColor="@color/button_primary"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:layout_marginBottom="@dimen/spacing_small"/>
+
+                <include layout="@layout/summary_stat_item"
+                    android:id="@+id/statAvgDistancePerRide"/>
+                <include layout="@layout/summary_stat_item"
+                    android:id="@+id/statAvgAmountPerRide"/>
+
+            </LinearLayout>
+
+            <!-- Charts -->
+            <!-- Rides Chart -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/box_background"
+                android:padding="@dimen/card_padding"
+                android:layout_marginBottom="@dimen/spacing_medium">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chart_rides_title"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/chartRides"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"/>
+
+            </LinearLayout>
+
+            <!-- Distance Chart -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/box_background"
+                android:padding="@dimen/card_padding"
+                android:layout_marginBottom="@dimen/spacing_medium">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chart_distance_title"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chartDistance"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"/>
+
+            </LinearLayout>
+
+            <!-- Amount Chart -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/box_background"
+                android:padding="@dimen/card_padding"
+                android:layout_marginBottom="@dimen/spacing_medium">
+
+                <TextView
+                    android:id="@+id/tvAmountChartTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chart_amount_title"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chartAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

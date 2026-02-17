@@ -18,6 +18,7 @@ import com.project.mobile.fragments.Admin.settings.VehiclePricingFragment;
 import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.chat.AdminChatsFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
+import com.project.mobile.fragments.reports.ReportsFragment;
 import com.project.mobile.fragments.users.UsersListFragment;
 
 public class AdminActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -45,6 +46,8 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
+        int containerId = binding.fragmentContainerViewTag.getId();
+        FragmentTransition.to(new ActiveRidesFragment(), this, false, containerId);
     }
     private void setupBottomNavBarRegistered(){
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
@@ -52,16 +55,16 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             int itemId = item.getItemId();
             if(itemId == R.id.nav_home)
             {
-                FragmentTransition.to(new LiveChat(), this, false, containerId);
+                FragmentTransition.to(new ActiveRidesFragment(), this, false, containerId);
                 return true;
             } else if(itemId == R.id.nav_profile)
             {
                 FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
                 return true;
             }
-            else if(itemId == R.id.nav_active_drive)
+            else if(itemId == R.id.nav_history)
             {
-                FragmentTransition.to(new ActiveRidesFragment(), this, false, containerId);
+                FragmentTransition.to(new HistoryFragment(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_panic_button)
@@ -95,25 +98,17 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
         int containerId = binding.fragmentContainerViewTag.getId();
-        if(menuItem.getItemId() == R.id.registe_driver)
+        if(menuItem.getItemId() == R.id.nav_users)
         {
             FragmentTransition.to(new UsersListFragment(), this, false, containerId);
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
 
-        } else if (menuItem.getItemId() == R.id.driver_profile_change_approval) {
-            FragmentTransition.to(new LiveChat(), this, false, containerId);
+        } else if (menuItem.getItemId() == R.id.nav_reports) {
+            FragmentTransition.to(new ReportsFragment(), this, false, containerId);
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;
-        } else if (menuItem.getItemId() == R.id.blocking) {
-            FragmentTransition.to(new LiveChat(), this, false, containerId);
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
-            return true;
-        } else if (menuItem.getItemId() == R.id.nav_history) {
-            FragmentTransition.to(new HistoryFragment(), this, false, containerId);
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
-            return true;
-        } else if (menuItem.getItemId() == R.id.price_management) {
+        } else if (menuItem.getItemId() == R.id.nav_price_management) {
             FragmentTransition.to(new VehiclePricingFragment(), this, false, binding.fragmentContainerViewTag.getId());
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             return true;

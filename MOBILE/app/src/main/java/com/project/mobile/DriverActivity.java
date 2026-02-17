@@ -13,6 +13,7 @@ import com.project.mobile.databinding.ActivityDriverBinding;
 import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.chat.ChatFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
+import com.project.mobile.fragments.reports.ReportsFragment;
 
 public class DriverActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -29,6 +30,8 @@ public class DriverActivity extends AppCompatActivity implements NavigationView.
 
         setupBottomNavBarRegistered();
 
+        int containerId = binding.fragmentContainerViewTag.getId();
+        FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
 
     }
     private void setupBottomNavBarRegistered(){
@@ -37,24 +40,21 @@ public class DriverActivity extends AppCompatActivity implements NavigationView.
             int itemId = item.getItemId();
             if(itemId == R.id.nav_home)
             {
-                FragmentTransition.to(new LiveChat(), this, false, containerId);
+                FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
                 return true;
             } else if(itemId == R.id.nav_profile)
             {
                 FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
-
                 return true;
             }
-            else if(itemId == R.id.nav_active_drive)
+            else if(itemId == R.id.nav_reports)
             {
-                FragmentTransition.to(new LiveChat(), this, false, containerId);
-
+                FragmentTransition.to(new ReportsFragment(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_history)
             {
                 FragmentTransition.to(new HistoryFragment(), this, false, containerId);
-
                 return true;
             }
             else if(itemId == R.id.nav_live_chat)

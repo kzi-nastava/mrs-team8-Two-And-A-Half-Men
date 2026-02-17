@@ -10,13 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.FragmentTransition;
-import com.project.mobile.HomeRegistered;
 import com.project.mobile.R;
 import com.project.mobile.databinding.ActivityMainBinding;
 import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.Registered.Rides.BookedRidesFragment;
 import com.project.mobile.fragments.chat.ChatFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
+import com.project.mobile.fragments.reports.ReportsFragment;
 import com.project.mobile.viewModels.AuthModel;
 
 
@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(binding.toolbar);
 
         setupBottomNavBarRegistered();
+
+        int containerId = binding.fragmentContainerViewTag.getId();
+        FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
     }
     private void setupBottomNavBarRegistered(){
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
@@ -41,14 +44,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int itemId = item.getItemId();
             if(itemId == R.id.nav_home)
             {
-                FragmentTransition.to(new HomeRegistered(), this, false, containerId);
+                FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
                 return true;
             } else if(itemId == R.id.nav_profile)
             {
                 FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
                 return true;
             }
-            else if(itemId == R.id.nav_active_drive)
+            else if(itemId == R.id.nav_booked_rides)
             {
                 FragmentTransition.to(new BookedRidesFragment(), this, false, containerId);
                 return true;
@@ -61,6 +64,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             else if(itemId == R.id.nav_live_chat)
             {
                 FragmentTransition.to(ChatFragment.newInstanceForUser(), this, false, containerId);
+                return true;
+            }
+            else if(itemId == R.id.nav_reports) {
+                FragmentTransition.to(new ReportsFragment(), this, false, containerId);
                 return true;
             }
             return false;

@@ -107,6 +107,8 @@
     <color name="user_item_background">#1a5c3a</color>
     <color name="user_item_selected">#2d7a52</color>
 
-
+    <!-- Vehicle Pricing accent colors -->
+    <color name="pricing_accent">#C8A800</color>
+    <color name="pricing_accent_dim">#2D4A2D</color>
 
 </resources>

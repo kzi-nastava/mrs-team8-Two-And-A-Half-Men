@@ -12,14 +12,8 @@ import com.project.mobile.R;
 import com.project.mobile.models.chat.Message;
 import com.project.mobile.models.chat.SupportChat;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 public class ChatsListAdapter extends RecyclerView.Adapter<ChatsListAdapter.ChatViewHolder> {
@@ -60,7 +54,7 @@ public class ChatsListAdapter extends RecyclerView.Adapter<ChatsListAdapter.Chat
 
         // Find old and new positions
         for (int i = 0; i < chats.size(); i++) {
-            if (chats.get(i).getId() == selectedChatId) {
+            if (Objects.equals(chats.get(i).getId(), selectedChatId)) {
                 oldPosition = i;
             }
             if (Objects.equals(chats.get(i).getId(), chatId)) {
@@ -90,7 +84,7 @@ public class ChatsListAdapter extends RecyclerView.Adapter<ChatsListAdapter.Chat
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         SupportChat chat = chats.get(position);
-        holder.bind(chat, chat.getId() == selectedChatId);
+        holder.bind(chat, Objects.equals(chat.getId(), selectedChatId));
 
         holder.itemView.setOnClickListener(v -> {
             if (clickListener != null) {
@@ -106,11 +100,11 @@ public class ChatsListAdapter extends RecyclerView.Adapter<ChatsListAdapter.Chat
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView userEmailTextView;
-        private TextView userTypeTextView;
-        private TextView lastMessageTextView;
-        private TextView lastMessageTimeTextView;
-        private View unreadIndicator;
+        private final TextView userEmailTextView;
+        private final TextView userTypeTextView;
+        private final TextView lastMessageTextView;
+        private final TextView lastMessageTimeTextView;
+        private final View unreadIndicator;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -134,46 +128,20 @@ public class ChatsListAdapter extends RecyclerView.Adapter<ChatsListAdapter.Chat
                     preview = preview.substring(0, 50) + "...";
                 }
                 lastMessageTextView.setText(preview);
-                lastMessageTimeTextView.setText(formatTime(lastMessage.getTimestamp()));
+                lastMessageTimeTextView.setText(lastMessage.getTimestamp());
 
                 // Show unread indicator if last message is not read by admin
-                boolean hasUnread = !lastMessage.getAdminRead() &&
+                boolean hasUnread = !lastMessage.isAdminRead() &&
                         lastMessage.getSenderType() != Message.SenderType.ADMIN;
                 unreadIndicator.setVisibility(hasUnread ? View.VISIBLE : View.GONE);
             } else {
-                lastMessageTextView.setText("No messages yet");
+                lastMessageTextView.setText(R.string.no_messages_yet);
                 lastMessageTimeTextView.setText("");
                 unreadIndicator.setVisibility(View.GONE);
             }
 
             // Highlight selected chat
             itemView.setSelected(isSelected);
-        }
-
-        private String formatTime(LocalDateTime timestamp) {
-            if (timestamp == null) return "";
-
-            Calendar now = Calendar.getInstance();
-            Calendar msgTime = Calendar.getInstance();
-            msgTime.setTime(Date.from(Instant.from(timestamp)));
-
-            // If today, show time
-            if (now.get(Calendar.DAY_OF_YEAR) == msgTime.get(Calendar.DAY_OF_YEAR) &&
-                    now.get(Calendar.YEAR) == msgTime.get(Calendar.YEAR)) {
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                return timeFormat.format(timestamp);
-            }
-
-            // If yesterday
-            now.add(Calendar.DAY_OF_YEAR, -1);
-            if (now.get(Calendar.DAY_OF_YEAR) == msgTime.get(Calendar.DAY_OF_YEAR) &&
-                    now.get(Calendar.YEAR) == msgTime.get(Calendar.YEAR)) {
-                return "Yesterday";
-            }
-
-            // Otherwise show date
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            return dateFormat.format(timestamp);
         }
     }
 }

@@ -111,12 +111,21 @@ public class ChatService {
                     chats.add(response.body());
                     callback.onSuccess(response.body());
                 } else {
-                    callback.onError("Failed to load chat");
+                    String errorMsg = "Failed to load chat - Code: " + response.code();
+                    try {
+                        if (response.errorBody() != null) {
+                            errorMsg += " - " + response.errorBody().string();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    callback.onError(errorMsg);
                 }
             }
 
             @Override
             public void onFailure(Call<SupportChat> call, Throwable t) {
+                t.printStackTrace();
                 callback.onError(t.getMessage());
             }
         });

@@ -1,5 +1,6 @@
 package com.project.mobile.fragments.chat;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,39 +13,39 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.project.mobile.R;
 import com.project.mobile.models.chat.Message;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
 
     private List<Message> messages = new ArrayList<>();
-    private Long currentUserId;
+    private final Long currentUserId;
 
     private static final int VIEW_TYPE_OWN = 1;
     private static final int VIEW_TYPE_OTHER = 2;
 
     public MessagesAdapter(Long currentUserId) {
         this.currentUserId = currentUserId;
+        Log.d("MessagesAdapter", "📱 Adapter created with userId: " + currentUserId);
     }
 
     public void setMessages(List<Message> messages) {
         this.messages = new ArrayList<>(messages);
+        Log.d("MessagesAdapter", "📨 Messages set: " + messages.size() + " messages");
         notifyDataSetChanged();
-    }
-
-    public void addMessage(Message message) {
-        messages.add(message);
-        notifyItemInserted(messages.size() - 1);
     }
 
     @Override
     public int getItemViewType(int position) {
         Message message = messages.get(position);
-        return isOwnMessage(message) ? VIEW_TYPE_OWN : VIEW_TYPE_OTHER;
+        boolean isOwn = isOwnMessage(message);
+
+        Log.d("MessagesAdapter", "🔍 Message #" + position +
+                " - SenderId: " + message.getSenderId() +
+                ", CurrentUserId: " + currentUserId +
+                ", IsOwn: " + isOwn);
+
+        return isOwn ? VIEW_TYPE_OWN : VIEW_TYPE_OTHER;
     }
 
     @NonNull
@@ -52,13 +53,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
+        View view;
         if (viewType == VIEW_TYPE_OWN) {
-            View view = inflater.inflate(R.layout.item_message_own, parent, false);
-            return new MessageViewHolder(view);
+            view = inflater.inflate(R.layout.item_message_own, parent, false);
         } else {
-            View view = inflater.inflate(R.layout.item_message_other, parent, false);
-            return new MessageViewHolder(view);
+            view = inflater.inflate(R.layout.item_message_other, parent, false);
         }
+        return new MessageViewHolder(view);
     }
 
     @Override
@@ -73,14 +74,15 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     }
 
     private boolean isOwnMessage(Message message) {
-        return Objects.equals(message.getSenderId(), currentUserId);
+        return message.getSenderId() != null &&
+                message.getSenderId().equals(currentUserId);
     }
 
     static class MessageViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView contentTextView;
-        private TextView timeTextView;
-        private ImageView readIndicator;
+        private final TextView contentTextView;
+        private final TextView timeTextView;
+        private final ImageView readIndicator;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,7 +93,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
         public void bind(Message message, boolean isOwnMessage) {
             contentTextView.setText(message.getContent());
-            timeTextView.setText(formatTime(message.getTimestamp()));
+            timeTextView.setText(message.getFormattedTime());
 
             // Show read indicator only for own messages
             if (readIndicator != null && isOwnMessage) {
@@ -112,20 +114,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             }
         }
 
-        private String formatTime(LocalDateTime timestamp) {
-            if (timestamp == null) return "";
-
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            return timeFormat.format(timestamp);
-        }
-
         private boolean isMessageRead(Message message) {
             switch (message.getSenderType()) {
                 case ADMIN:
-                    return message.getUserRead();
+                    return message.isUserRead();
                 case DRIVER:
                 case CUSTOMER:
-                    return message.getAdminRead();
+                    return message.isAdminRead();
                 default:
                     return false;
             }

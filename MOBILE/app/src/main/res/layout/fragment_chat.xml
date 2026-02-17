@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/background_dark">
 
     <!-- Messages Area -->
     <FrameLayout
@@ -23,9 +23,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/no_messages_yet"
+            android:text="No messages yet"
             android:textSize="16sp"
-            android:textColor="@color/accent"
+            android:textColor="@color/gray"
+            android:visibility="gone" />
+
+        <!-- ✅ DODAJ OVO -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:visibility="gone" />
 
     </FrameLayout>
@@ -36,7 +44,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="8dp"
-        android:background="@color/chip_background"
+        android:background="@color/dark_gray"
         android:elevation="4dp">
 
         <EditText
@@ -46,16 +54,19 @@
             android:layout_weight="1"
             android:hint="@string/type_a_message"
             android:padding="12dp"
-            android:background="@drawable/bg_message_input"
+            android:background="@color/light_gray"
             android:maxLines="4"
-            android:inputType="textCapSentences|textMultiLine" />
-
+            android:inputType="textCapSentences|textMultiLine"
+            android:textColor="@color/black"
+            android:textColorHint="@color/dark_gray"/>
         <Button
             android:id="@+id/sendButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/send"
+            android:background="@drawable/bg_send_button"
+            android:textColor="@color/white"
             android:enabled="false" />
 
     </LinearLayout>

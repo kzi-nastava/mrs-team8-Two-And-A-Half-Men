@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_chat_item"
+    android:background="@color/dark_gray"
     android:clickable="true"
     android:focusable="true">
 
@@ -64,7 +64,7 @@
                 android:layout_marginTop="4dp"
                 android:text="Last message preview..."
                 android:textSize="14sp"
-                android:textColor="@color/dark_gray"
+                android:textColor="@color/black"
                 android:ellipsize="end"
                 android:maxLines="2" />
 

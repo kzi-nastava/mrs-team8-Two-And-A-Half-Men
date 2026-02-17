@@ -1,11 +1,10 @@
 package com.project.mobile.models.chat;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SendMessageRequest {
+    @SerializedName("content")
     private String content;
-
-    public SendMessageRequest() {
-
-    }
 
     public SendMessageRequest(String content) {
         this.content = content;

@@ -1,5 +1,6 @@
 package com.project.mobile.fragments.users;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.project.mobile.DTO.users.User;
 import com.project.mobile.DTO.users.UserFilters;
 import com.project.mobile.DTO.users.UserPageResponse;
 import com.project.mobile.R;
+import com.project.mobile.activities.LoginActivity;
+import com.project.mobile.activities.NewDriverActivity;
 import com.project.mobile.adapters.UsersAdapter;
 import com.project.mobile.core.retrofitClient.RetrofitClient;
 import com.project.mobile.service.AdminUserService;
@@ -363,13 +366,10 @@ public class UsersListFragment extends Fragment {
     }
 
     private void createDriver() {
-        // TODO: Navigate to create driver page
-        Toast.makeText(requireContext(), "Create driver functionality", Toast.LENGTH_SHORT).show();
-        
-        // Example navigation:
-        // Intent intent = new Intent(requireContext(), CreateDriverActivity.class);
-        // startActivity(intent);
+        Intent intent = new Intent(requireContext(), NewDriverActivity.class);
+        startActivity(intent);
     }
+
 
     // TODO: Implement this method to get your Retrofit instance
     private Retrofit getRetrofitInstance() {

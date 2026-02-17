@@ -245,4 +245,16 @@
     <string name="no_users_found_with_these_filters">No users found with these filters</string>
 
 
+    <!-- New Driver Activity -->
+    <string name="new_driver_title">Create New Driver</string>
+    <string name="btn_save_driver">Save Driver</string>
+
+    <!-- Validation Errors -->
+    <string name="error_fill_personal_info">Please fill in all personal info fields.</string>
+    <string name="error_fill_vehicle_info">Please fill in all vehicle info fields.</string>
+    <string name="error_registering_driver">Failed to register driver. Please try again.</string>
+
+    <!-- Success -->
+    <string name="success_driver_registered">Driver registered successfully!</string>
+
 </resources>

@@ -86,5 +86,8 @@ public interface RideService {
     @GET("rides/panics")
     Call<List<Ride>> getPanicingRides();
 
-
+    @GET("rides/active")
+    Call<List<Ride>> getActiveRides(
+            @Query("name") String driverName
+    );
 }

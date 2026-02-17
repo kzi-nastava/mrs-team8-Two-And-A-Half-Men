@@ -13,6 +13,7 @@ import androidx.core.view.GravityCompat;
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.databinding.ActivityAdminBinding;
 import com.project.mobile.fragments.Admin.panic.PanicHandleFragment;
+import com.project.mobile.fragments.Admin.rides.ActiveRidesFragment;
 import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.chat.AdminChatsFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
@@ -58,7 +59,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             }
             else if(itemId == R.id.nav_active_drive)
             {
-                FragmentTransition.to(new LiveChat(), this, false, containerId);
+                FragmentTransition.to(new ActiveRidesFragment(), this, false, containerId);
                 return true;
             }
             else if(itemId == R.id.nav_panic_button)

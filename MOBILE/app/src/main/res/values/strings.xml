@@ -175,4 +175,10 @@
     <string name="error_no_token">Invalid activation link. No token provided.</string>
     <string name="error_password_empty">Please enter both passwords</string>
     <string name="error_activation_failed">Activation failed. Please try again.</string>
+    <string name="refresh">Refresh</string>
+    <string name="clear_filter">Clear filter</string>
+    <string name="no_active_rides_found">No active rides found</string>
+    <string name="filter_by_driver_name">Filter by driver name</string>
+    <string name="active_rides">Active Rides</string>
+    <string name="panic">⚠</string>
 </resources>

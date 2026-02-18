@@ -21,7 +21,7 @@ INSERT INTO app_user (
     id, role, first_name, last_name, email, password,
     address, phone_number, img_src,
     token, token_expiration,
-    is_active, is_blocked
+    is_active, is_blocked, driver_status
 ) VALUES
 -- ADMIN
 (
@@ -37,7 +37,8 @@ INSERT INTO app_user (
     NULL,
     NULL,
     true,
-    false
+    false,
+    NULL
 ),
 
 -- CUSTOMER
@@ -54,7 +55,8 @@ INSERT INTO app_user (
     NULL,
     NULL,
     true,
-    false
+    false,
+    NULL
 ),
 
 -- DRIVER
@@ -71,7 +73,8 @@ INSERT INTO app_user (
     NULL,
     NULL,
     true,
-    false
+    false,
+    'ACTIVE'
 );
 
 INSERT INTO vehicle (

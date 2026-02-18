@@ -304,7 +304,8 @@
 				<app-map
 					[rideLocations]="rideLocations()"
 					[path]="ride()!.path"
-					[config]="mapConfig()">
+					[config]="mapConfig()"
+					[trackingDriverId]="ride()?.driverId">
 				</app-map>
 			</div>
 		</div>

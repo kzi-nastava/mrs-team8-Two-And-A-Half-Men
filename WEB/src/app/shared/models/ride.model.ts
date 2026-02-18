@@ -15,6 +15,7 @@ export interface Ride {
 	scheduledTime: Date;
 
 	driverName: string;
+	driverId: number;
 	rideOwnerName: string;
 	rideOwnerId: number;
 

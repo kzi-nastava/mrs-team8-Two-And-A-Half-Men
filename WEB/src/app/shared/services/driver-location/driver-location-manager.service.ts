@@ -1,98 +1,155 @@
-import { Injectable, OnDestroy, effect } from '@angular/core';
+import { Injectable, OnDestroy, effect, inject } from '@angular/core';
 import { DriverLocation } from '../../models/driver-location';
 import { DriverLocationService } from './driver-location.service';
-import { DriverLocationWebsocketService } from './driver-location-websocket.service';
+import { DriverLocationWebsocketService } from '@shared/services/driver-location/driver-location-websocket.service';
 import { DriverMarkerService } from '@shared/components/map/services/driver-marker.service';
-import { WebSocketService } from '@core/services/web-socket.service';
 
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root',
 })
 export class DriverLocationManagerService implements OnDestroy {
-  private isInitialized = false;
+	private allDriversInitialized = false;
+	private trackedDriverId?: number;
+	private trackingUnsubscribe?: () => void;
 
-  constructor(
-    private driverLocationService: DriverLocationService,
-    private driverLocationWebSocket: DriverLocationWebsocketService,
-    private driverMarkerService: DriverMarkerService,
-    private webSocket: WebSocketService // koristi postojeći WS
-  ) {
-    // update map markers whenever driverLocations Signal changes
-    effect(() => {
-      const locations = this.driverLocationWebSocket.driverLocations();
-      this.updateMarkers(locations);
-    });
-  }
+	private driverLocationService = inject(DriverLocationService);
+	private driverLocationWebsocketService = inject(DriverLocationWebsocketService);
+	private driverMarkerService = inject(DriverMarkerService);
 
-  initialize(): void {
-    if (this.isInitialized) {
-      console.warn('DriverLocationManager already initialized');
-      return;
-    }
+	constructor() {
+		// React to WebSocket location updates for "all drivers" mode
+		effect(() => {
+			const locations = this.driverLocationWebsocketService.driverLocations();
 
-    console.log('Initializing DriverLocationManager...');
+			if (this.allDriversInitialized) {
+				this.syncAllMarkers(locations);
+			} else if (this.trackedDriverId != null) {
+				this.syncSingleMarker(locations, this.trackedDriverId);
+			}
+		});
+	}
 
-    this.loadInitialLocations();
-    // this.webSocket.connect(); // start STOMP connection
+	/**
+	 * Initialize display of ALL active drivers (enableActiveDriverMarkers).
+	 * Loads initial locations via HTTP then keeps in sync via WebSocket.
+	 */
+	initializeAllDrivers(): void {
+		if (this.allDriversInitialized) {
+			console.warn('DriverLocationManager: all-drivers mode already initialized');
+			return;
+		}
 
+		console.log('DriverLocationManager: initializing all-drivers mode');
+		this.loadInitialLocations();
+		this.allDriversInitialized = true;
+	}
 
-    this.isInitialized = true;
-  }
+	/**
+	 * Clean up all-drivers mode markers without touching the WebSocket subscription
+	 * (WebSocket is managed by DriverLocationWebsocketService itself).
+	 */
+	cleanupAllDrivers(): void {
+		console.log('DriverLocationManager: cleaning up all-drivers mode');
+		this.driverMarkerService.clearAllMarkers();
+		this.allDriversInitialized = false;
+	}
 
-  private loadInitialLocations(): void {
-    this.driverLocationService.getAllDriverLocations().subscribe({
-      next: (locations: DriverLocation[]) => {
-        locations.forEach((loc) =>
-          this.driverLocationWebSocket.updateDriverLocation(loc)
-        );
-      },
-      error: (error) => console.error('Error loading initial driver locations:', error),
-    });
-  }
+	/**
+	 * Initialize tracking of a SINGLE driver (enableDriverTracking).
+	 * Subscribes to that driver's WebSocket topic and shows only their marker.
+	 */
+	async initializeDriverTracking(driverId: number): Promise<void> {
+		if (this.trackedDriverId === driverId) {
+			console.warn(`DriverLocationManager: already tracking driver ${driverId}`);
+			return;
+		}
 
-  private updateMarkers(locationsMap: Map<number, DriverLocation>): void {
-    locationsMap.forEach((location) => {
-      if (location.latitude != null && location.longitude != null) {
-        this.driverMarkerService.addOrUpdateMarker(location);
-      }
-    });
+		// Clean up any previous single-driver tracking
+		this.cleanupDriverTracking();
 
-    // remove markers for drivers no longer present
-    const currentMarkers = this.driverMarkerService.getAllMarkers();
-    currentMarkers.forEach((_, driverId) => {
-      if (!locationsMap.has(driverId)) {
-        this.driverMarkerService.removeMarker(driverId);
-      }
-    });
-  }
+		console.log(`DriverLocationManager: initializing tracking for driver ${driverId}`);
+		this.trackedDriverId = driverId;
 
-  highlightDriver(driverId: number): void {
-    this.driverMarkerService.highlightMarker(driverId);
-  }
+		// Load last known position via HTTP
+		this.driverLocationService.getDriverLocation(driverId).subscribe({
+			next: (location) => this.driverLocationWebsocketService.updateDriverLocation(location),
+			error: (err) =>
+				console.error(`DriverLocationManager: error loading driver ${driverId}:`, err),
+		});
 
-  getAllDriverLocations(): DriverLocation[] {
-    return Array.from(this.driverLocationWebSocket.driverLocations().values());
-  }
+		// Subscribe to live updates for this specific driver
+		try {
+			this.trackingUnsubscribe =
+				await this.driverLocationWebsocketService.subscribeToSpecificDriver(driverId);
+		} catch (err) {
+			console.error(`DriverLocationManager: error subscribing to driver ${driverId}:`, err);
+		}
+	}
 
-  // isWebSocketConnected(): boolean {
-  //   return this.driverLocationWebSocket.connected();
-  // }
+	/**
+	 * Stop tracking a single driver and remove their marker.
+	 */
+	cleanupDriverTracking(): void {
+		if (this.trackedDriverId == null) return;
 
-  // reconnectWebSocket(): void {
-  //   this.driverLocationWebSocket.clearAll();
-  //   this.webSocket.disconnect();
-  //   this.webSocket.connect();
-  // }
+		console.log(
+			`DriverLocationManager: cleaning up tracking for driver ${this.trackedDriverId}`,
+		);
 
-  cleanup(): void {
-    console.log('Cleaning up DriverLocationManager...');
-    this.driverLocationWebSocket.clearAll();
-    // this.webSocket.disconnect();
-    this.driverMarkerService.clearAllMarkers();
-    this.isInitialized = false;
-  }
+		if (this.trackingUnsubscribe) {
+			this.trackingUnsubscribe();
+			this.trackingUnsubscribe = undefined;
+		}
 
-  ngOnDestroy(): void {
-    this.cleanup();
-  }
+		this.driverMarkerService.removeMarker(this.trackedDriverId);
+		this.driverLocationWebsocketService.unsubscribeFromSpecificDriver(this.trackedDriverId);
+		this.trackedDriverId = undefined;
+	}
+
+	// ===== Private helpers =====
+
+	private loadInitialLocations(): void {
+		this.driverLocationService.getAllDriverLocations().subscribe({
+			next: (locations: DriverLocation[]) => {
+				locations.forEach((loc) =>
+					this.driverLocationWebsocketService.updateDriverLocation(loc),
+				);
+			},
+			error: (error) =>
+				console.error('DriverLocationManager: error loading initial locations:', error),
+		});
+	}
+
+	/** Update markers for all drivers, removing stale ones. */
+	private syncAllMarkers(locationsMap: Map<number, DriverLocation>): void {
+		locationsMap.forEach((location) => {
+			if (location.latitude != null && location.longitude != null) {
+				this.driverMarkerService.addOrUpdateMarker(location);
+			}
+		});
+
+		// Remove markers for drivers that are no longer in the map
+		const currentMarkers = this.driverMarkerService.getAllMarkers();
+		currentMarkers.forEach((_, driverId) => {
+			if (!locationsMap.has(driverId)) {
+				this.driverMarkerService.removeMarker(driverId);
+			}
+		});
+	}
+
+	/** Update marker for only the tracked driver. */
+	private syncSingleMarker(locationsMap: Map<number, DriverLocation>, driverId: number): void {
+		const location = locationsMap.get(driverId);
+		if (location && location.latitude != null && location.longitude != null) {
+			this.driverMarkerService.addOrUpdateMarker(location);
+		} else {
+			// Driver went offline — remove their marker
+			this.driverMarkerService.removeMarker(driverId);
+		}
+	}
+
+	ngOnDestroy(): void {
+		this.cleanupAllDrivers();
+		this.cleanupDriverTracking();
+	}
 }

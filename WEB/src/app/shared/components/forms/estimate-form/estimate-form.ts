@@ -1,9 +1,9 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
+import { LocationsService } from '@shared/services/locations/locations.service';
 import { EstimateService } from './service/estimate-service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -17,7 +17,7 @@ import { NominatimResult } from '@shared/models/nominatim-results.model';
 	templateUrl: './estimate-form.html',
 	styleUrl: './estimate-form.css',
 })
-export class EstimateForm {
+export class EstimateForm implements OnDestroy {
 	estimateForm: FormGroup;
 	startQuery = signal('');
 	endQuery = signal('');
@@ -27,16 +27,17 @@ export class EstimateForm {
 
 	showStartSuggestions = signal(false);
 	showEndSuggestions = signal(false);
-	estimatedTime = signal<number | null>(null);
 
 	private startQuerySubject = new Subject<string>();
 	private endQuerySubject = new Subject<string>();
 	private popupsService = inject(PopupsService);
 
+	private suppressLocationSync = false;
+
 	constructor(
 		private fb: FormBuilder,
 		private http: HttpClient,
-		private sharedLocationsService: SharedLocationsService,
+		private sharedLocationsService: LocationsService,
 		private estimateService: EstimateService,
 		private nominatimService: NominatimService,
 	) {
@@ -44,18 +45,17 @@ export class EstimateForm {
 			startpoint: ['', Validators.required],
 			endpoint: ['', Validators.required],
 		});
+
+		// ── Autocomplete pipelines ──────────────────────────────────────────
+
 		this.startQuerySubject
 			.pipe(
 				debounceTime(500),
 				distinctUntilChanged(),
-				switchMap((query) => {
-					if (query.length > 3) {
-						return this.searchLocation(query);
-					}
-					return [];
-				}),
+				switchMap((query) => (query.length > 3 ? this.searchLocation(query) : [])),
 			)
 			.subscribe((results) => {
+				// Don't show dropdown if the current text already matches the selected result
 				if (results.length === 1 && this.startQuery() === results[0].display_name) {
 					this.showStartSuggestions.set(false);
 					return;
@@ -63,16 +63,12 @@ export class EstimateForm {
 				this.startSuggestions.set(results);
 				this.showStartSuggestions.set(results.length > 0);
 			});
+
 		this.endQuerySubject
 			.pipe(
 				debounceTime(500),
 				distinctUntilChanged(),
-				switchMap((query) => {
-					if (query.length > 3) {
-						return this.searchLocation(query);
-					}
-					return [];
-				}),
+				switchMap((query) => (query.length > 3 ? this.searchLocation(query) : [])),
 			)
 			.subscribe((results) => {
 				if (results.length === 1 && this.endQuery() === results[0].display_name) {
@@ -83,7 +79,8 @@ export class EstimateForm {
 				this.showEndSuggestions.set(results.length > 0);
 			});
 
-		// Watch for start query changes
+		// ── Trigger search on query change ──────────────────────────────────
+
 		effect(() => {
 			const query = this.startQuery();
 			if (query.length > 3) {
@@ -94,7 +91,6 @@ export class EstimateForm {
 			}
 		});
 
-		// Watch for end query changes
 		effect(() => {
 			const query = this.endQuery();
 			if (query.length > 3) {
@@ -105,86 +101,121 @@ export class EstimateForm {
 			}
 		});
 
-		// Sync with shared locations
+		// ── Sync form display when shared locations change (e.g. map click) ─
+		// The map can only add/remove pins for start (index 0) and end (index 1).
+		// If somehow more than 2 locations slip in, we trim to first + last here.
+
 		effect(() => {
 			const locations = this.sharedLocationsService.locations();
+
+			if (this.suppressLocationSync) return;
+
 			if (locations.length > 2) {
+				// Defensive: keep only start + end, let service + map stay in sync
 				this.sharedLocationsService.locations.set([
 					locations[0],
 					locations[locations.length - 1],
 				]);
-			} else if (locations.length === 2) {
+				return; // effect will re-run after the set()
+			}
+
+			if (locations.length === 2) {
 				this.startQuery.set(locations[0].display_name);
 				this.endQuery.set(locations[1].display_name);
+				this.estimateForm.patchValue({
+					startpoint: locations[0].display_name,
+					endpoint: locations[1].display_name,
+				});
 			} else if (locations.length === 1) {
 				this.startQuery.set(locations[0].display_name);
 				this.endQuery.set('');
-			} else if (locations.length === 0) {
+				this.estimateForm.patchValue({
+					startpoint: locations[0].display_name,
+					endpoint: '',
+				});
+			} else {
 				this.startQuery.set('');
 				this.endQuery.set('');
+				this.estimateForm.patchValue({ startpoint: '', endpoint: '' });
 			}
 		});
 	}
+
+	// ── Helpers ─────────────────────────────────────────────────────────────
 
 	searchLocation(query: string) {
 		return this.nominatimService.search(query, 5);
 	}
 
-	selectStartSuggestion(suggestion: NominatimResult) {
+	// ── Suggestion selection ─────────────────────────────────────────────────
+
+	selectStartSuggestion(suggestion: NominatimResult): void {
 		this.startQuery.set(suggestion.display_name);
+		this.estimateForm.patchValue({ startpoint: suggestion.display_name });
 		this.showStartSuggestions.set(false);
 		this.startSuggestions.set([]);
-		this.sharedLocationsService.locations.update(
-			(list) => [suggestion, list[list.length - 1]].filter(Boolean) as NominatimResult[],
-		);
+
+		this.suppressLocationSync = true;
+		this.sharedLocationsService.locations.update((list) => {
+			// Replace or set start (index 0); keep end (index 1) if present
+			const end = list[1] ?? list[list.length - 1];
+			return end ? [suggestion, end] : [suggestion];
+		});
+		this.suppressLocationSync = false;
 	}
 
-	selectEndSuggestion(suggestion: NominatimResult) {
+	selectEndSuggestion(suggestion: NominatimResult): void {
 		this.endQuery.set(suggestion.display_name);
+		this.estimateForm.patchValue({ endpoint: suggestion.display_name });
 		this.showEndSuggestions.set(false);
 		this.endSuggestions.set([]);
+
+		this.suppressLocationSync = true;
 		this.sharedLocationsService.locations.update((list) => {
-			if (list.length === 0) {
-				return [suggestion];
-			}
-			return [list[0], suggestion].filter(Boolean) as NominatimResult[];
+			// Replace or set end (index 1); keep start (index 0) if present
+			const start = list[0];
+			return start ? [start, suggestion] : [suggestion];
+		});
+		this.suppressLocationSync = false;
+	}
+
+	// ── Form actions ─────────────────────────────────────────────────────────
+
+	onSubmit(): void {
+		if (!this.estimateForm.valid) {
+			console.log('Form is invalid');
+			return;
+		}
+
+		const locations = this.sharedLocationsService.locations();
+		if (locations.length < 2) {
+			this.popupsService.error(
+				'Missing Locations',
+				'Please select both a start and end location.',
+			);
+			return;
+		}
+
+		const [startpointLocation, endpointLocation] = locations;
+
+		this.estimateService.estimateTime(startpointLocation, endpointLocation).subscribe({
+			next: (response) => {
+				this.popupsService.success(
+					'Estimated Time',
+					`The estimated time for your ride is ${Math.ceil(response.time)} minutes.`,
+				);
+			},
+			error: (err) => {
+				this.popupsService.error(
+					'Estimation Failed',
+					err.error?.error ||
+						'An error occurred while estimating your ride time. Please try again.',
+				);
+			},
 		});
 	}
 
-	onSubmit() {
-		if (this.estimateForm.valid) {
-			const startpoint = this.estimateForm.get('startpoint')?.value ?? '';
-			const endpoint = this.estimateForm.get('endpoint')?.value ?? '';
-			if (!startpoint || !endpoint) {
-				console.log('Startpoint or endpoint is missing');
-				return;
-			}
-			const startEnd = this.sharedLocationsService.locations();
-			const startpointLocation = startEnd[0];
-			const endpointLocation = startEnd[1];
-			console.log('Estimate Form Submitted', { startpoint, endpoint });
-
-			this.estimateService.estimateTime(startpointLocation, endpointLocation).subscribe({
-				next: (response) => {
-					this.popupsService.success(
-						'Estimated Time',
-						`The estimated time for your ride is ${Math.ceil(response.time)} minutes.`,
-					);
-				},
-				error: (err) => {
-					this.popupsService.error(
-						'Estimation Failed',
-						err.error?.error ||
-							'An error occurred while estimating your ride time. Please try again.',
-					);
-				},
-			});
-		} else {
-			console.log('Form is invalid');
-		}
-	}
-
-	onBlur(field: 'start' | 'end') {
+	onBlur(field: 'start' | 'end'): void {
 		setTimeout(() => {
 			if (field === 'start') {
 				this.showStartSuggestions.set(false);
@@ -194,7 +225,7 @@ export class EstimateForm {
 		}, 200);
 	}
 
-	onReset() {
+	onReset(): void {
 		this.estimateForm.reset();
 		this.startQuery.set('');
 		this.endQuery.set('');
@@ -205,7 +236,7 @@ export class EstimateForm {
 		this.sharedLocationsService.locations.set([]);
 	}
 
-	ngOnDestroy() {
+	ngOnDestroy(): void {
 		this.startQuerySubject.complete();
 		this.endQuerySubject.complete();
 	}

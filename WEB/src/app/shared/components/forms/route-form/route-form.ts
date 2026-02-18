@@ -2,7 +2,7 @@ import { Component, effect, inject, input, OnDestroy, signal } from '@angular/co
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
+import { LocationsService } from '@shared/services/locations/locations.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { NominatimService } from '@shared/services/locations/nominatim-service';
@@ -20,7 +20,7 @@ export class RouteForm implements OnDestroy {
 	allowReordering = input<boolean>(true);
 
 	// Injectables
-	private sharedLocationsService = inject(SharedLocationsService);
+	private sharedLocationsService = inject(LocationsService);
 	private nominatimService = inject(NominatimService);
 
 	routeForm = new FormGroup({

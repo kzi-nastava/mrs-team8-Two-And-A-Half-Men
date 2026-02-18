@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, delay, retry, tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, retry, tap } from 'rxjs/operators';
 import { NominatimResult } from '@shared/models/nominatim-results.model';
 
 @Injectable({
@@ -11,19 +11,12 @@ export class NominatimService {
 	private readonly baseUrl = 'https://nominatim.openstreetmap.org';
 	private readonly userAgent = 'RouteEstimateApp/1.0 (your-email@example.com)';
 
-	private MOCK_MODE = false;
-
 	private lastRequestTime = 0;
-	private readonly minRequestInterval = 2000; // 2 sekunde
+	private readonly minRequestInterval = 2000; // 2 seconds
 
-	constructor(private http: HttpClient) {}
+	private http = inject(HttpClient);
 
 	search(query: string, limit: number = 5): Observable<NominatimResult[]> {
-		if (this.MOCK_MODE) {
-			console.log('MOCK MODE: Search', query);
-			return of(this.getMockSearchResults(query)).pipe(delay(300));
-		}
-
 		this.waitForRateLimit();
 
 		const url = `${this.baseUrl}/search`;
@@ -31,7 +24,7 @@ export class NominatimService {
 			format: 'json',
 			q: query,
 			limit: limit.toString(),
-			addressdetails: '1',
+			addressDetails: '1',
 		};
 
 		return this.http
@@ -54,11 +47,6 @@ export class NominatimService {
 	}
 
 	reverse(lat: number, lon: number): Observable<NominatimResult> {
-		if (this.MOCK_MODE) {
-			console.log('MOCK MODE: Reverse', lat, lon);
-			return of(this.getMockReverseResult(lat, lon)).pipe(delay(300));
-		}
-
 		this.waitForRateLimit();
 
 		const url = `${this.baseUrl}/reverse`;
@@ -66,7 +54,7 @@ export class NominatimService {
 			format: 'json',
 			lat: lat.toString(),
 			lon: lon.toString(),
-			addressdetails: '1',
+			addressDetails: '1',
 		};
 
 		return this.http
@@ -87,40 +75,6 @@ export class NominatimService {
 			);
 	}
 
-	private getMockReverseResult(lat: number, lon: number): NominatimResult {
-		const streets = [
-			'Bulevar oslobođenja',
-			'Булевар деспота Стефана',
-			'Максима Горког',
-			'Zmaj Jovina',
-			'Народних Хероја',
-		];
-		const randomStreet = streets[Math.floor(Math.random() * streets.length)];
-		const randomNumber = Math.floor(Math.random() * 100) + 1;
-
-		return {
-			place_id: Math.floor(Math.random() * 1000000),
-			display_name: `${randomStreet} ${randomNumber}, Нови Сад, Јужнобачки управни округ, Војводина, Србија`,
-			lat: lat.toString(),
-			lon: lon.toString(),
-		};
-	}
-
-	private getMockSearchResults(query: string): NominatimResult[] {
-		const results: NominatimResult[] = [];
-
-		for (let i = 0; i < 3; i++) {
-			results.push({
-				place_id: Math.floor(Math.random() * 1000000),
-				display_name: `${query} ${i + 1}, Нови Сад, Србија`,
-				lat: (45.25 + Math.random() * 0.05).toString(),
-				lon: (19.83 + Math.random() * 0.05).toString(),
-			});
-		}
-
-		return results;
-	}
-
 	private waitForRateLimit(): void {
 		const now = Date.now();
 		const timeSinceLastRequest = now - this.lastRequestTime;
@@ -138,11 +92,11 @@ export class NominatimService {
 			errorMessage = `Client Error: ${error.error.message}`;
 		} else if (error.status === 0) {
 			errorMessage =
-				'Network error - Nominatim je možda nedostupan. Pokušajte ponovo za 10-15 minuta.';
+				'Network error - Nominatim is potentially unavailable. Try again in few minutes.';
 		} else if (error.status === 429) {
-			errorMessage = 'Previše zahteva ka Nominatim API-ju. Sačekajte 10-15 minuta.';
+			errorMessage = 'Too much requests for Nominatim API. Try again in few minutes.';
 		} else if (error.status === 403) {
-			errorMessage = 'Nominatim API je blokirao zahtev.';
+			errorMessage = 'Nominatim API blocked request.';
 		} else {
 			errorMessage = `Server Error: ${error.status} - ${error.message}`;
 		}

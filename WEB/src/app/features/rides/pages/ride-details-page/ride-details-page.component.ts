@@ -16,7 +16,7 @@ import { AuthService } from '@core/services/auth.service';
 import { ConfigService } from '@features/rides/services/config.service';
 import { FavouriteRoutesService } from '@shared/services/routes/favourite-routes.service';
 import { ButtonDirective } from '@shared/directives/button/button.directive';
-import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
+import { LocationsService } from '@shared/services/locations/locations.service';
 import Swal from 'sweetalert2';
 import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 import { NominatimResult } from '@shared/models/nominatim-results.model';
@@ -34,7 +34,7 @@ export class RideDetailsComponent implements OnInit {
 	private router = inject(Router);
 	private actionsConfigService = inject(ConfigService);
 	private favouriteRoutesService = inject(FavouriteRoutesService);
-	private sharedLocationService = inject(SharedLocationsService);
+	private sharedLocationService = inject(LocationsService);
 
 	rideService = inject(RideService);
 	popupService = inject(PopupsService);

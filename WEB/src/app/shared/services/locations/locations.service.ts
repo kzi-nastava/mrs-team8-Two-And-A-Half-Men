@@ -1,5 +1,4 @@
-import { Injectable, Signal, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { NominatimService } from './nominatim-service';
@@ -8,15 +7,12 @@ import { NominatimResult } from '@shared/models/nominatim-results.model';
 @Injectable({
 	providedIn: 'root',
 })
-export class SharedLocationsService {
-	constructor(
-		private http: HttpClient,
-		private nominatimService: NominatimService,
-	) {}
+export class LocationsService {
+	private nominatimService = inject(NominatimService);
 
 	public locations = signal<NominatimResult[]>([]);
 
-	setLocation(location: NominatimResult) {
+	addLocation(location: NominatimResult) {
 		this.locations.update((list) => [...list, location]);
 	}
 

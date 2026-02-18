@@ -92,6 +92,7 @@ public class FormStops extends Fragment {
                 sheredLocationViewModel.RemoveLocation(1);
                 return;
             }
+            Log.d("FormStops", "Stops updated, count: " + (stops != null ? stops.size() : "null"));
             updateStopsList(stops);
         });
     }
@@ -114,6 +115,7 @@ public class FormStops extends Fragment {
 
         for (int i = 0; i < stops.size(); i++) {
             NominatimResult stop = stops.get(i);
+            Log.d("FormStops", "Adding stop to list: " + stop.display_name);
             View stopRow = createStopRow(stop, i, stops.size());
             if (stopRow != null) {
                 stopsContainer.addView(stopRow);

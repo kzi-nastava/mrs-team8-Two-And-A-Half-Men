@@ -238,6 +238,11 @@
 
         private void setupObservers() {
             rideModel.getRideDetails().observe(getViewLifecycleOwner(), rideTracking -> {
+                //Remove from map
+                    routeDrawer.removeRoute("route_" + rideTracking.getId());
+                    markerDrawer.clearMarkers();
+                    sheredLocationViewModel.clearStops();
+                    Log.d(TAG, "Ride details updated: " +  sheredLocationViewModel.getStops().getValue().size());
                 if (rideTracking != null) {
                     displayRideTracking(rideTracking);
                     contentContainer.setVisibility(View.VISIBLE);
@@ -831,6 +836,19 @@
                     return false; // Allow ScrollView to handle the event normally
                 }
             });
+        }
+        @Override
+        public void onDetach() {
+            Log.d("RideDetailsFragment", "onDetach called, unsubscribing from WebSocket");
+            if (callback != null && DriverID != null) {
+                WebSocketManager.unsubscribe("/topic/driver-locations/" + DriverID, callback);
+                callback = null;
+            }
+            if (sheredLocationViewModel != null) {
+                sheredLocationViewModel.clearStops();
+            }
+            routeDrawer.clearRoutes();
+            super.onDetach();
         }
 
         private void triggerRefresh() {

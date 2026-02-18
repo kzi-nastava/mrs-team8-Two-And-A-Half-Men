@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Use real database, not in-memory
 @ActiveProfiles("test")
+@Tag("Student2")
 public class RideRepositoryFinishRideTests {
 
     @Autowired

@@ -21,7 +21,7 @@ import java.util.List;
 @ActiveProfiles("test")
 @Tag("Repository")
 @Tag("Student3")
-public class RideRepositoryTestFindActiveRides {
+public class RideRepositoryFindActiveRidesTest {
     @Autowired
     private TestEntityManager entityManager;
 

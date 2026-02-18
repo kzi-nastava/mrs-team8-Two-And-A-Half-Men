@@ -13,6 +13,7 @@ import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.RideRepository;
 import com.project.backend.service.impl.RideService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+
+@Tag("Student2")
 public class RideServiceFinishRideTests {
 
     @Mock

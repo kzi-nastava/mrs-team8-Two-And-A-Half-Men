@@ -43,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 @AutoConfigureMockMvc(addFilters = false)
 @Tag("Controller")
+@Tag("Student2")
 public class RideCommandControllerFinishRideTests {
 
     @Autowired

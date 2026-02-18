@@ -4,5 +4,6 @@ public enum DriverStatus {
     WAITING_ACTIVATION,
     BUSY,
     INACTIVE,
-    ACTIVE
+    ACTIVE,
+    PANICKING
 }

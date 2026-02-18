@@ -88,6 +88,9 @@ public class CancellationService implements ICancellationService {
             try {
                 FindDriverDTO foundDriver = driverMatchingService.findBestDriver(filter).orElseThrow(() -> new ResourceNotFoundException("No suitable driver found"));
                 Driver newDriver = foundDriver.getDriver();
+                if(newDriver == null || newDriver.getId() == null) {
+                    throw new ResourceNotFoundException("No suitable driver found");
+                }
                 ride.setDriver(newDriver);
             } catch (Exception e) {
                 ride.setStatus(RideStatus.CANCELLED);

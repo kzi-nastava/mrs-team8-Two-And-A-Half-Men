@@ -76,12 +76,12 @@
 		<div class="active-header">
 			<h2>Panics</h2>
 			<p class="subheader">List of all panics that occurred during rides</p>
-			<app-rides-list
+		</div>
+		<app-rides-list
 				[rides]="panics()"
 				[config]="rideConfig"
 				[loading]="loading()"
 				(rideClick)="onRideClick($event)"
 			/>
-		</div>
 	</app-tab-content>
 </div>

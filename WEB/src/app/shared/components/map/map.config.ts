@@ -47,13 +47,13 @@ export function getMapConfigForRideStatus(status: RideStatus): MapConfig {
 
 	switch (status) {
 		case RideStatus.PENDING:
-		case RideStatus.ACCEPTED:
 		case RideStatus.CANCELLED:
 			return {
 				...baseConfig,
 			};
 
 		case RideStatus.ACTIVE:
+		case RideStatus.ACCEPTED:
 			return {
 				...baseConfig,
 				enableDriverTracking: true,

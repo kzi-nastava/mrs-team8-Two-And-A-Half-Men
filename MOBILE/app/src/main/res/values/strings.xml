@@ -1,0 +1,408 @@
+<resources>
+    <string name="app_name">Taxi App</string>
+    <string name="personal_data">Personal data</string>
+    <string name="vehicle_data">Vehicle data</string>
+    <string name="pending_review">Pending Review</string>
+    <string name="cancel_request">Cancel Request</string>
+    <string name="save_changes">Save changes</string>
+    <string name="change_password">Change password</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">Taxi App</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="register_text">Don\'t have an account? Sign Up</string>
+    <string name="paswort_forgot_string">Forgot your password?</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="remember_me">remember me</string>
+    <string name="login_title">Login</string>
+    <string name="sign_in">You have an account? Sign In</string>
+    <string name="next">Next</string>
+    <string name="register">Register</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="address">Address</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="back">Back</string>
+    <string name="restart_password">Restart Password</string>
+    <string name="activating_your_account">Activating your account...</string>
+    <string name="enter_your_new_password">Enter your new password</string>
+    <string name="route_stops">Route Stops</string>
+    <string name="estimate">Estimate</string>
+    <string name="restart">Restart</string>
+    <string name="search_for_a_location">Search for a location...</string>
+    <string name="search_icon">Search icon</string>
+    <string name="drag_to_reorder">Drag to reorder</string>
+    <string name="move_down">Move down</string>
+    <string name="move_up">Move up</string>
+    <string name="delete_stop">Delete stop</string>
+    <string name="route_map">Route Map</string>
+    <string name="additional_services">Additional Services</string>
+    <string name="passengers">Passengers:</string>
+    <string name="ride_owner">Ride Owner:</string>
+    <string name="driver">Driver:</string>
+    <string name="people">People</string>
+    <string name="total_cost">Total Cost:</string>
+    <string name="price">Price:</string>
+    <string name="end_time">End Time:</string>
+    <string name="start_time">Start Time:</string>
+    <string name="back_button_text">← Back</string>
+    <string name="ride_details">Ride Details</string>
+    <string name="failed_to_load_ride_details">Failed to load ride details</string>
+    <string name="retry">Retry</string>
+    <string name="basic_information">Basic Information</string>
+    <string name="ride_id">Ride ID:</string>
+    <string name="start_point">Start Point:</string>
+    <string name="destination">Destination:</string>
+    <string name="scheduled">Scheduled:</string>
+    <string name="cancellation_information">Cancellation Information</string>
+    <string name="profile_save_changes">Save Changes</string>
+    <string name="book_again">Book again</string>
+    <string name="mark_as_favorite">Mark as Favorite</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
+    <string name="leave_a_rate">Leave a rate</string>
+    <string name="close">Close</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="rate">Rate</string>
+    <string name="cancel">Cancel</string>
+    <string name="start_ride">Start Ride</string>
+    <string name="enter_your_reason_here">Enter your reason here...</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="ride_cost">Ride Cost:</string>
+    <string name="ride_duration_min">Ride Duration (min):</string>
+    <string name="was_ride_interrupted">Was ride interrupted?</string>
+    <string name="ride_ending">Ride Ending</string>
+
+    <!--  Profile Page  -->
+    <string name="profile_title">Profile</string>
+    <string name="tab_personal_data">Personal data</string>
+    <string name="tab_vehicle_data">Vehicle data</string>
+    <!--  Personal Info Form  -->
+    <string name="label_first_name">First name</string>
+    <string name="label_last_name">Last name</string>
+    <string name="label_phone_number">Phone number</string>
+    <string name="label_address">Address</string>
+    <string name="label_email">Email</string>
+    <string name="hint_first_name">Enter first name</string>
+    <string name="hint_last_name">Enter last name</string>
+    <string name="hint_phone_number">+381…</string>
+    <string name="hint_address">Enter address</string>
+    <string name="hint_email">email@example.com</string>
+    <!--  Vehicle Info Form  -->
+    <string name="label_vehicle_type">Type</string>
+    <string name="label_vehicle_model">Model</string>
+    <string name="label_license_plate">License plate</string>
+    <string name="label_number_of_seats">Number of seats</string>
+    <string name="label_additional_services">Additional services</string>
+    <string name="hint_vehicle_model">e.g., Toyota Prius</string>
+    <string name="hint_license_plate">e.g., NS-123-AB</string>
+    <string name="hint_number_of_seats">4</string>
+    <!--  Password Change  -->
+    <string name="section_change_password">Change password</string>
+    <string name="label_old_password">Old Password</string>
+    <string name="label_new_password">New Password</string>
+    <string name="label_confirm_password">Confirm new password</string>
+    <!--  Buttons  -->
+    <string name="btn_save_changes">Save changes</string>
+    <string name="btn_cancel_request">Cancel Request</string>
+    <string name="btn_upload_photo">Upload Photo</string>
+    <!--  Blocked Banner  -->
+    <string name="blocked_title">Your account is blocked</string>
+    <string name="blocked_reason_label">Reason:</string>
+    <string name="blocked_contact_support">Contact support for more details and help unblocking.</string>
+    <!--  Pending Changes  -->
+    <string name="pending_review_title">Pending Review</string>
+    <string name="pending_review_message">Your profile changes are currently under review by the administrator. You will be notified once they are approved.</string>
+    <string name="change_arrow">→</string>
+    <!--  Change fields  -->
+    <string name="change_field_first_name">First name</string>
+    <string name="change_field_last_name">Last name</string>
+    <string name="change_field_phone">Phone number</string>
+    <string name="change_field_address">Address</string>
+    <string name="change_field_email">Email</string>
+    <string name="change_field_vehicle_type">Vehicle type</string>
+    <string name="change_field_model">Vehicle model</string>
+    <string name="change_field_license_plate">License plate</string>
+    <string name="change_field_seats">Number of seats</string>
+    <string name="change_field_services">Additional services</string>
+    <string name="change_field_profile_image">Profile image</string>
+    <string name="no_image">No Image</string>
+    <!--  Dialogs  -->
+    <string name="dialog_cancel_request_title">Cancel Request</string>
+    <string name="dialog_cancel_request_message">Are you sure you want to cancel this change request?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <!--  Validation Messages  -->
+    <string name="error_passwords_not_match">Passwords do not match</string>
+    <string name="error_password_too_short">Password must be at least 8 characters</string>
+    <string name="error_loading_profile">Failed to load profile data. Please try again later.</string>
+    <string name="error_updating_profile">Failed to update profile information. Please try again later.</string>
+    <string name="error_uploading_photo">Failed to upload profile picture. Please try again later.</string>
+    <string name="error_changing_password">Failed to change password. Please try again later.</string>
+    <string name="error_loading_vehicle_options">Failed to load vehicle options</string>
+    <!--  Success Messages  -->
+    <string name="success_profile_updated">Profile Updated</string>
+    <string name="success_profile_updated_message">Your profile information has been updated successfully!</string>
+    <string name="success_password_changed">Password Changed</string>
+    <string name="success_password_changed_message">Your password has been changed successfully!</string>
+    <!--  General  -->
+    <string name="loading">Loading…</string>
+    <string name="saving">Saving…</string>
+    <string name="error">Error</string>
+    <string name="profile_picture_upload_button">Upload button</string>
+    <string name="btn_logout">Logout</string>
+    <string name="new_password_input">New password input</string>
+    <string name="confrim_new_password_input">Confrim new password input</string>
+    <string name="old_password_input">Old password input</string>
+    <string name="start_driving">Start Driving</string>
+    <string name="stop_driving">Stop Driving</string>
+    <string name="no_messages_yet">No messages yet</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="send">Send</string>
+    <string name="no_active_chats">No active chats</string>
+    <string name="active_support_chats">Active Support Chats</string>
+    <string name="support_chat">Support Chat</string>
+    <string name="nselect_a_chat_to_start_messaging">\nSelect a chat to start messaging</string>
+
+
+    <!-- Users List -->
+    <string name="users_title">User Management</string>
+    <string name="btn_show_filters">Show Filters</string>
+    <string name="btn_hide_filters">Hide Filters</string>
+    <string name="btn_create_driver">Create New Driver</string>
+    <string name="btn_apply_filters">Apply Filters</string>
+    <string name="btn_clear_filters">Clear Filters</string>
+
+    <!-- Filters -->
+    <string name="filter_email">Email</string>
+    <string name="filter_first_name">First Name</string>
+    <string name="filter_last_name">Last Name</string>
+    <string name="filter_role">Role</string>
+    <string name="filter_driver_status">Driver Status</string>
+    <string name="filter_account_status">Account Status</string>
+    <string name="filter_pending_requests">Pending Requests</string>
+
+    <string name="hint_filter_email">Filter by email</string>
+    <string name="hint_filter_first_name">Filter by first name</string>
+    <string name="hint_filter_last_name">Filter by last name</string>
+
+    <string name="filter_all_roles">All Roles</string>
+    <string name="filter_all_statuses">All Statuses</string>
+    <string name="filter_all">All</string>
+    <string name="filter_blocked">Blocked</string>
+    <string name="filter_active">Active</string>
+    <string name="filter_has_pending">Has Pending</string>
+    <string name="filter_no_pending">No Pending</string>
+
+    <!-- User roles -->
+    <string name="role_admin">ADMIN</string>
+    <string name="role_customer">CUSTOMER</string>
+    <string name="role_driver">DRIVER</string>
+
+    <!-- Driver statuses -->
+    <string name="status_busy">BUSY</string>
+    <string name="status_inactive">INACTIVE</string>
+    <string name="status_available">AVAILABLE</string>
+
+    <!-- Table/List -->
+    <string name="label_user_id">ID</string>
+    <string name="label_user_name">Name</string>
+    <string name="label_user_email">Email</string>
+    <string name="label_user_role">Role</string>
+    <string name="label_driver_status">Driver Status</string>
+    <string name="label_blocked">Blocked</string>
+    <string name="label_pending_requests">Pending Requests</string>
+    <string name="btn_view">View</string>
+
+    <!-- Pagination -->
+    <string name="pagination_showing">Showing %1$d to %2$d of %3$d users</string>
+    <string name="label_items_per_page">Items per page:</string>
+    <string name="btn_first_page">First</string>
+    <string name="btn_prev_page">Previous</string>
+    <string name="btn_next_page">Next</string>
+    <string name="btn_last_page">Last</string>
+
+    <!-- Messages -->
+    <string name="loading_users">Loading users…</string>
+    <string name="no_users_found">No users found. Try adjusting your filters.</string>
+    <string name="error_loading_users">Failed to load users. Please try again.</string>
+
+    <!-- Sort indicators -->
+    <string name="sort_none">↕️</string>
+    <string name="sort_asc">↑</string>
+    <string name="sort_desc">↓</string>
+
+    <!-- Status indicators -->
+    <string name="status_yes">Yes</string>
+    <string name="status_no">No</string>
+    <string name="status_na">N/A</string>
+    <string name="pagination_first_page">⏮️</string>
+    <string name="pagination_last_page">⏭️</string>
+    <string name="pagination_next_page">▶️</string>
+    <string name="pagination_previous_page">◀️</string>
+    <string name="no_users_found_with_these_filters">No users found with these filters</string>
+
+
+    <!-- New Driver Activity -->
+    <string name="new_driver_title">Create New Driver</string>
+    <string name="btn_save_driver">Save Driver</string>
+
+    <!-- Validation Errors -->
+    <string name="error_fill_personal_info">Please fill in all personal info fields.</string>
+    <string name="error_fill_vehicle_info">Please fill in all vehicle info fields.</string>
+    <string name="error_registering_driver">Failed to register driver. Please try again.</string>
+
+    <!-- Success -->
+    <string name="success_driver_registered">Driver registered successfully!</string>
+
+    <!-- User Details Activity -->
+    <string name="user_details_title">User Details</string>
+    <string name="loading_user_details">Loading user details…</string>
+
+    <!-- Action Buttons -->
+    <string name="btn_view_chat">💬 View Chat</string>
+    <string name="btn_block_user">Block User</string>
+    <string name="btn_unblock_user">Unblock User</string>
+    <string name="btn_approve_changes">✔ Approve Changes</string>
+    <string name="btn_reject_changes">✕ Reject Changes</string>
+
+    <!-- Blocked Banner -->
+    <string name="blocked_banner_title">User is Blocked</string>
+    <string name="label_block_reason">Reason:</string>
+
+    <!-- Pending Changes -->
+    <string name="pending_changes_admin_subtitle">Review the requested changes and approve or reject them.</string>
+
+    <!-- Block Dialog -->
+    <string name="dialog_block_title">Block User</string>
+    <string name="dialog_block_message">Please provide a reason for blocking this user:</string>
+    <string name="hint_block_reason">Reason for blocking</string>
+
+    <!-- Unblock Dialog -->
+    <string name="dialog_unblock_title">Unblock User</string>
+    <string name="dialog_unblock_message">Are you sure you want to unblock this user?</string>
+
+    <!-- Approve Dialog -->
+    <string name="dialog_approve_title">Approve Changes</string>
+    <string name="dialog_approve_message">Are you sure you want to approve these changes? This action cannot be undone.</string>
+
+    <!-- Reject Dialog -->
+    <string name="dialog_reject_title">Reject Changes</string>
+    <string name="dialog_reject_message">Are you sure you want to reject these changes? This action cannot be undone.</string>
+
+    <!-- Success Messages -->
+    <string name="success_user_blocked">User has been blocked successfully.</string>
+    <string name="success_user_unblocked">User has been unblocked successfully.</string>
+    <string name="success_changes_approved">Changes have been approved successfully.</string>
+    <string name="success_changes_rejected">Changes have been rejected successfully.</string>
+
+    <!-- Error Messages -->
+    <string name="error_invalid_user_id">Invalid user ID.</string>
+    <string name="error_loading_user_details">Failed to load user details. Please try again.</string>
+    <string name="error_blocking_user">Failed to block user. Please try again.</string>
+    <string name="error_unblocking_user">Failed to unblock user. Please try again.</string>
+    <string name="error_approving_changes">Failed to approve changes. Please try again.</string>
+    <string name="error_rejecting_changes">Failed to reject changes. Please try again.</string>
+    <string name="error_block_reason_required">Please enter a reason for blocking.</string>
+    <string name="pending_changes_title">Pending changes</string>
+  
+  <!-- Driver Activation -->
+    <string name="driver_activation_title">Driver Account Activation</string>
+    <string name="driver_activation_subtitle">Set Your New Password</string>
+    <string name="btn_activate_account">Activate Account</string>
+
+    <!-- Errors -->
+    <string name="error_no_token">Invalid activation link. No token provided.</string>
+    <string name="error_password_empty">Please enter both passwords</string>
+    <string name="error_activation_failed">Activation failed. Please try again.</string>
+    <string name="refresh">Refresh</string>
+    <string name="clear_filter">Clear filter</string>
+    <string name="no_active_rides_found">No active rides found</string>
+    <string name="filter_by_driver_name">Filter by driver name</string>
+    <string name="active_rides">Active Rides</string>
+    <string name="panic">⚠</string>
+
+    <!-- Vehicle Pricing Section -->
+    <string name="section_vehicle_pricing">Vehicle Type Pricing</string>
+    <string name="section_vehicle_pricing_desc">Manage pricing for different vehicle types.</string>
+    <string name="loading_vehicle_types">Loading vehicle types...</string>
+    <string name="btn_refresh">Refresh</string>
+    <string name="btn_retry">Retry</string>
+    <string name="btn_edit_price">✎ Edit Price</string>
+    <string name="btn_save">✓ Save</string>
+    <string name="btn_cancel">✕ Cancel</string>
+    <string name="label_price">Price:</string>
+
+    <!-- Vehicle Pricing Errors -->
+    <string name="error_loading_vehicle_types">Failed to load vehicle types</string>
+    <string name="error_updating_price">Failed to update price. Please try again.</string>
+    <string name="error_invalid_price">Price must be a positive number</string>
+    <string name="error_no_permission">You do not have permission to update prices</string>
+    <string name="error_vehicle_type_not_found">Vehicle type not found</string>
+
+    <!-- Vehicle Pricing Success -->
+    <string name="success_price_updated">price updated successfully</string>
+
+
+    <!-- Reports Page -->
+    <string name="reports_title">📊 Ride Statistics Report</string>
+
+    <!-- Sections -->
+    <string name="section_filters">🔍 Filters</string>
+    <string name="section_summary">📈 Summary Statistics</string>
+    <string name="section_user_reports">👥 User Reports</string>
+    <string name="section_drivers_report">🚗 Drivers Report</string>
+    <string name="section_passengers_report">👤 Passengers Report</string>
+
+    <!-- Filters -->
+    <string name="label_start_date">Start Date</string>
+    <string name="label_end_date">End Date</string>
+    <string name="label_user_type">User Type</string>
+    <string name="label_quick_filters">Quick Filters</string>
+    <string name="btn_last_week">Last Week</string>
+    <string name="btn_last_month">Last Month</string>
+    <string name="btn_last_quarter">Last Quarter</string>
+    <string name="btn_last_year">Last Year</string>
+
+    <!-- User Card Labels -->
+    <string name="label_rides">Rides:</string>
+    <string name="label_distance">Distance:</string>
+    <string name="label_amount">Amount:</string>
+    <string name="label_all_users">📈 All Users (Combined)</string>
+    <string name="label_total_rides">Total Rides:</string>
+    <string name="label_total_distance">Total Distance:</string>
+    <string name="label_total_amount">Total Amount:</string>
+
+    <!-- Summary Stats -->
+    <string name="label_cumulative_totals">Cumulative Totals</string>
+    <string name="label_daily_averages">Daily Averages</string>
+    <string name="label_per_ride_averages">Per Ride Averages</string>
+
+    <string name="stat_total_rides">Total Rides</string>
+    <string name="stat_total_distance">Total Distance</string>
+    <string name="stat_total_amount">Total Amount</string>
+    <string name="stat_avg_rides_per_day">Rides per Day</string>
+    <string name="stat_avg_distance_per_day">Distance per Day</string>
+    <string name="stat_avg_amount_per_day">Amount per Day</string>
+    <string name="stat_avg_distance_per_ride">Distance per Ride</string>
+    <string name="stat_avg_amount_per_ride">Amount per Ride</string>
+
+    <!-- Charts -->
+    <string name="chart_rides_title">🚗 Number of Rides per Day</string>
+    <string name="chart_distance_title">📏 Distance Covered per Day (km)</string>
+    <string name="chart_amount_title">💰 Amount per Day (RSD)</string>
+    <string name="chart_amount_earned_title">💰 Amount Earned per Day (RSD)</string>
+    <string name="chart_amount_spent_title">💰 Amount Spent per Day (RSD)</string>
+
+    <string name="chart_rides_label">Number of Rides</string>
+    <string name="chart_distance_label">Distance (km)</string>
+    <string name="chart_amount_label">Amount (RSD)</string>
+
+    <!-- Loading & Errors -->
+    <string name="loading_report_data">Loading report data…</string>
+    <string name="error_loading_report">Failed to load report data. Please try again.</string>
+
+
+</resources>

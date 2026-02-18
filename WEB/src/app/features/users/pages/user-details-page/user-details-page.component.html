@@ -1,0 +1,144 @@
+<div class="user-detail-container">
+	<!-- Header with navigation -->
+	<div class="header">
+		<button class="btn-back" (click)="goBack()">
+			← Back to Users
+		</button>
+		<div class="header-title">
+			<h1>User Details</h1>
+			<div class="header-actions">
+				<button class="btn-chat" (click)="openChat()">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+						<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+							  stroke="currentColor" stroke-width="2"/>
+					</svg>
+					View Chat
+				</button>
+
+				@if (personalInfo() && !personalInfo()!.blocked) {
+					<button class="btn-block" (click)="blockUser()" [disabled]="isProcessing()">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+							<path d="M4.93 4.93l14.14 14.14" stroke="currentColor" stroke-width="2"/>
+						</svg>
+						Block User
+					</button>
+				}
+
+				@if (personalInfo() && personalInfo()!.blocked) {
+					<button class="btn-unblock" (click)="unblockUser()" [disabled]="isProcessing()">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"
+								  stroke="currentColor" stroke-width="2"/>
+							<path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2"/>
+						</svg>
+						Unblock User
+					</button>
+				}
+			</div>
+		</div>
+	</div>
+
+	<!-- Loading State -->
+	@if (isLoading()) {
+		<div class="loading" appBox>
+			<div class="spinner"></div>
+			<p>Loading user details...</p>
+		</div>
+	}
+
+	<!-- Content -->
+	@if (!isLoading() && personalInfo()) {
+		<div class="user-content">
+
+			<!-- Block Reason Banner -->
+			@if (personalInfo()!.blocked && personalInfo()!.blockReason) {
+				<div class="blocked-banner" appBox>
+					<div class="blocked-icon">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+							<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+							<path d="M4.93 4.93l14.14 14.14" stroke="currentColor" stroke-width="2"/>
+						</svg>
+					</div>
+					<div class="blocked-content">
+						<h3>User is Blocked</h3>
+						<p><strong>Reason:</strong> {{ personalInfo()!.blockReason }}</p>
+					</div>
+				</div>
+			}
+
+			<!-- Pending Change Request -->
+			@if (pendingChangeRequest()) {
+				<app-request-change-preview
+					[personalInfo]="personalInfo()!"
+					[vehicleInfo]="vehicleInfo()!"
+					[request]="pendingChangeRequest()"
+					title="Review pending changes requested by the user and decide whether to approve or reject them."
+				>
+					<button class="btn-reject" (click)="rejectChangeRequest()" [disabled]="isProcessing()">
+						✕ Reject Changes
+					</button>
+					<button class="btn-approve" (click)="approveChangeRequest()" [disabled]="isProcessing()">
+						✓ Approve Changes
+					</button>
+				</app-request-change-preview>
+			}
+
+			<!-- Tab Navigation - Using reusable component -->
+			<app-tab-navigation
+				[tabs]="tabs"
+				[activeTab]="activeTab()"
+				[alignment]="'left'"
+				(tabChange)="onTabChange($event)">
+
+				<!-- Icon for 'personal' tab - Using inline SVG -->
+				<ng-template appTabIcon="personal">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+						<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+							  stroke="currentColor" stroke-width="2"/>
+					</svg>
+				</ng-template>
+
+				@if (vehicleInfo()) {
+					<!-- Icon for 'vehicle' tab - Using inline SVG -->
+					<ng-template appTabIcon="vehicle">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<path d="M5 17h14M5 17a2 2 0 1 1 0-4M5 17a2 2 0 1 0 0-4m14 4a2 2 0 1 0 0-4m0 4a2 2 0 1 1 0-4M3 11l2-7h14l2 7M5 13h14"
+								  stroke="currentColor" stroke-width="2"/>
+						</svg>
+					</ng-template>
+				}
+
+			</app-tab-navigation>
+
+			<div appBox style="margin-bottom: 2rem;">
+
+				<!-- Personal Data Tab -->
+				<app-tab-content [tabId]="'personal'" [activeTab]="activeTab()">
+					<app-personal-info-form
+						[readonly]="true"
+						[personalInfo]="personalInfo()!"
+						[showPhotoUpload]="true"
+					>
+					</app-personal-info-form>
+				</app-tab-content>
+
+				@if (vehicleInfo()) {
+					<!-- Vehicle Data Tab -->
+					<app-tab-content [tabId]="'vehicle'" [activeTab]="activeTab()">
+						<app-vehicle-info-form
+							[readonly]="true"
+							[vehicleInfo]="vehicleInfo()!"
+							[vehicleTypes]="vehicleTypes()"
+							[availableServices]="availableServices()">
+						</app-vehicle-info-form>
+					</app-tab-content>
+				}
+			</div>
+
+		</div>
+	}
+</div>
+
+<!-- Block User Modal -->
+

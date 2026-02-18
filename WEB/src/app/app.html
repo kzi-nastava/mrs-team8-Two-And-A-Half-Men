@@ -1,0 +1,9 @@
+<app-navbar [notificationClick]="openNotificationSidebar.bind(this)"/>
+<div [@routeAnimations]="prepareRoute(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>
+<!-- Notification Sidebar -->
+@if (notificationSidebarOpen()) {
+	<app-notification-sidebar (close)="closeNotificationSidebar()" />
+}
+<app-user-chat/>

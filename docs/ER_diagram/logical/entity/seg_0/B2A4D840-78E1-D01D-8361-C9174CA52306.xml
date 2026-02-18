@@ -1,0 +1,58 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B2A4D840-78E1-D01D-8361-C9174CA52306" name="ROUTE">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-11 17:14:39 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="CD2251FC-3938-D90D-3072-44012B9E74CF">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-11 17:15:00 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="geoHash" id="7FEB7E60-89B7-2CC7-3885-91D08ED729F4">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-11 17:15:34 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="7A805B2F-A511-4E12-6F2C-E80B7A504609" name="ROUTE PK">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-11 17:15:31 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>CD2251FC-3938-D90D-3072-44012B9E74CF</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

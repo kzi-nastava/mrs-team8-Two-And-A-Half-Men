@@ -1,0 +1,13 @@
+<div class="ride-history-container">
+	<div class="history-header">
+		<h2>Your future rides</h2>
+	</div>
+
+	<!-- Reusable Rides List Component -->
+	<app-rides-list
+		[rides]="bookedRides()"
+		[config]="rideConfig"
+		[loading]="loading()"
+		(rideClick)="onRideClick($event)"
+	/>
+</div>

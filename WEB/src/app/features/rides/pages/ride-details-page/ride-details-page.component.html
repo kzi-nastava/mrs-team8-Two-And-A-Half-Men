@@ -1,0 +1,312 @@
+<div class="ride-details-container">
+	<div class="details-header">
+		<div class="header-group group-left">
+			@if (canGoBack()) {
+				<button appButton (click)="goBack()">
+					← Back
+				</button>
+			}
+			@if (actionsConfig().favourite && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					[class.is-favorite]="ride()!.favourite"
+					(click)="toggleFavorite()"
+				>
+					@if (ride()!.favourite) {
+						⭐ Favorite Route
+					} @else {
+						☆ Mark as Favorite
+					}
+				</button>
+			}
+
+			@if (actionsConfig().rate && ride()
+			&& (ride()!.status === RideStatus.FINISHED
+				|| ride()!.status === RideStatus.PANICKED
+				|| ride()!.status === RideStatus.INTERRUPTED)) {
+				<button
+					class="btn-rate"
+					(click)="openRatingPopup()"
+				>
+					⭐ Rate ride
+				</button>
+			}
+
+			@if (actionsConfig().rebook && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="rebookRide()"
+				>
+					Book again
+				</button>
+			}
+
+
+			@if (actionsConfig().note && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="leaveANote()"
+				>
+					Leave a note
+				</button>
+			}
+			@if (actionsConfig().cancel && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="cancelRide()"
+				>
+					Cancel
+				</button>
+			}
+			@if (actionsConfig().start && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="startRide()"
+				>
+					Start Ride
+				</button>
+			}
+			@if (actionsConfig().end && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn"
+					(click)="endRide()"
+				>
+					End Ride
+				</button>
+			}
+		</div>
+
+		<div class="header-group group-right">
+
+			@if (actionsConfig().panic && !loadingDetails() && ride()) {
+				<button
+					appButton
+					class="btn btn-panic"
+					(click)="panic()"
+				>
+					PANIC!
+				</button>
+			}
+			@if(actionsConfig().handlePanic && !loadingDetails() && ride() && ride()) {
+				<button
+					appButton
+					class="btn btn-handle-panic"
+					(click)="handlePanic()"
+				>
+					Handle Panic
+				</button>
+			}
+		</div>
+	</div>
+
+	@if (loadingDetails()) {
+		<div class="loading-spinner">
+			<div class="spinner"></div>
+			<p>Loading ride details...</p>
+		</div>
+	}
+
+	@if (!loadingDetails() && !ride()) {
+		<div class="error-message">
+			<p>Ride not found</p>
+			<button (click)="goBack()">Go Back</button>
+		</div>
+	}
+
+	@if (!loadingDetails() && ride()) {
+		<div class="details-content">
+			@if (showRatingPopup()) {
+				<div class="popup-overlay" (click)="closeRatingPopup()">
+					<div class="popup-content" (click)="$event.stopPropagation()">
+						<app-rating-form
+							(ratingSubmitted)="onRatingSubmitted($event)"
+							(closePopup)="closeRatingPopup()"
+						/>
+					</div>
+				</div>
+			}
+
+			<!-- Status Badge -->
+			<div class="status-section">
+            <span class="status-badge" [ngClass]="getStatusClass(ride()!.status)">
+                {{ getStatusText(ride()!.status) }}
+            </span>
+				@if (ride()!.status === RideStatus.PANICKED) {
+					<span class="panic-indicator">⚠️</span>
+				}
+			</div>
+
+			<!-- Main Info Card -->
+			<div class="info-card">
+				<h3>Basic Information</h3>
+
+				<div class="info-grid">
+					<div class="info-item">
+						<span class="label">Ride ID:</span>
+						<span class="value">{{ ride()!.id }}</span>
+					</div>
+
+					<div class="info-item full-width">
+						<span class="label">Route:</span>
+						<div class="route-list">
+							@for (location of ride()!.locations; track location.address; let i = $index) {
+								<div class="route-step">
+									<span class="route-number">{{ i + 1 }}.</span>
+									<span class="route-address">{{ location.address }}</span>
+									@if (i === 0) {
+										<span class="route-badge start">Start</span>
+									}
+									@if (i === ride()!.locations.length - 1) {
+										<span class="route-badge end">Destination</span>
+									}
+								</div>
+							}
+						</div>
+					</div>
+
+					@if (ride()!.scheduledTime) {
+						<div class="info-item">
+							<span class="label">Scheduled Time:</span>
+							<span class="value">{{ formatDate(ride()!.scheduledTime) }}</span>
+						</div>
+					}
+
+					@if (ride()!.startTime) {
+						<div class="info-item">
+							<span class="label">Start Time:</span>
+							<span class="value">{{ formatDate(ride()!.startTime) }}</span>
+						</div>
+					}
+
+					@if (ride()!.endTime) {
+						<div class="info-item">
+							<span class="label">End Time:</span>
+							<span class="value">{{ formatDate(ride()!.endTime) }}</span>
+						</div>
+					}
+
+					<div class="info-item">
+						<span class="label">Price:</span>
+						<span class="value price">{{ ride()!.price }} RSD</span>
+					</div>
+
+					<div class="info-item">
+						<span class="label">Total Cost:</span>
+						<span class="value price">{{ ride()!.totalCost }} RSD</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- People Info -->
+			<div class="info-card">
+				<h3>People</h3>
+
+				<div class="info-grid">
+					<div class="info-item">
+						<span class="label">Driver:</span>
+						<span class="value">{{ ride()!.driverName }}</span>
+					</div>
+
+					<div class="info-item">
+						<span class="label">Ride Owner:</span>
+						<span class="value">{{ ride()!.rideOwnerName }}</span>
+					</div>
+
+					@if (ride() && ride()!.passengers.length > 0) {
+						<div class="info-item full-width">
+							<span class="label">Passengers:</span>
+							<div class="passengers-list">
+								@for (passenger of ride()!.passengers; track passenger.email) {
+									<span class="passenger-badge">{{ passenger.email }}</span>
+								}
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+
+			<!-- Passenger Ratings & Comments (only for roles with showRatings) -->
+			@if (ride()!.passengers.length > 0) {
+				<div class="info-card">
+					<h3>Passenger Reviews</h3>
+
+					@for (passenger of ride()!.passengers; track passenger.email) {
+						<div class="passenger-review">
+							<div class="review-header">
+								<span class="passenger-email-review">{{ passenger.email }}</span>
+							</div>
+
+							<div class="review-content">
+								@if (passenger.driverRating || passenger.vehicleRating) {
+									<div class="ratings-row">
+										@if (passenger.driverRating) {
+											<div class="rating-item">
+												<span class="rating-label">Driver:</span>
+												<span class="rating-value">⭐ {{ passenger.driverRating }}/5</span>
+											</div>
+										}
+										@if (passenger.vehicleRating) {
+											<div class="rating-item">
+												<span class="rating-label">Vehicle:</span>
+												<span class="rating-value">⭐ {{ passenger.vehicleRating }}/5</span>
+											</div>
+										}
+									</div>
+								}
+
+								@if (passenger.comment) {
+									<div class="passenger-comment">
+										<span class="comment-label">Comment:</span>
+										<p class="comment-text">{{ passenger.comment }}</p>
+									</div>
+								}
+
+								@if (passenger.inconsistencyNote) {
+									<div class="inconsistency-note">
+										<span class="inconsistency-label">⚠️ Inconsistency Report:</span>
+										<p class="inconsistency-text">{{ passenger.inconsistencyNote }}</p>
+									</div>
+								}
+							</div>
+						</div>
+					}
+				</div>
+			}
+
+			<!-- Additional Services -->
+			@if (ride()!.additionalServices.length > 0) {
+				<div class="info-card">
+					<h3>Additional Services</h3>
+					<div class="services-grid">
+						@for (service of ride()!.additionalServices; track service) {
+							<span class="service-badge">{{ service }}</span>
+						}
+					</div>
+				</div>
+			}
+
+			<!-- Cancellation Info -->
+			@if (ride()!.status === RideStatus.CANCELLED && ride()!.cancellationReason) {
+				<div class="info-card cancellation">
+					<h3>Cancellation Information</h3>
+					<p>{{ ride()!.cancellationReason }}</p>
+				</div>
+			}
+
+			<!-- Map Section -->
+			<div class="map-container">
+				<app-map
+					[rideLocations]="rideLocations()"
+					[path]="ride()!.path"
+					[config]="mapConfig()">
+				</app-map>
+			</div>
+		</div>
+	}
+</div>

@@ -1,0 +1,127 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="2A5A5925-87CC-A722-6E3D-1FC1FBC3B8B7" name="NOTIFICATION">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 18:25:54 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="4BAB9FBE-AFA1-6C5C-5E06-05294199FF5C">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 18:27:00 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>50,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="timeStamp" id="10F04ADB-D456-E372-149C-DA49F680EDC5">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 18:26:04 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="title" id="0BB810B4-B341-FAD4-E7D6-214108CEB8E5">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 18:27:25 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="message" id="BC6CD8D1-B2D5-3680-4DE8-87F81B33C0F1">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 18:27:38 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="isRead" id="98C2FA23-95FA-02B1-5B27-2B10CF0B4F4C">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 18:27:59 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="userId" id="4133ED5B-A7B2-3232-6F1A-A201717A643F">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 18:29:42 UTC</createdTime>
+<generatorID>0E70DB44-7C3A-832C-86C7-8E5AFBE41917</generatorID>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<referedAttribute>77F72364-15EC-A404-9CF9-E5676DEA9B5D</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="settings" id="57F81AE0-4ED8-D647-73BA-77DB29C5DCB3">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 18:36:29 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>47823B89-BECE-2D4A-B641-EE3BE6149078</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="C8E9AB90-D636-71C3-B11A-C29B6490FEA4" name="NOTIFICATION PK">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 18:28:47 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>4BAB9FBE-AFA1-6C5C-5E06-05294199FF5C</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,224 @@
+.route-form-container {
+	width: 100%;
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.form-group {
+	position: relative;
+	margin-bottom: 1rem;
+	transition: opacity 0.2s ease;
+}
+
+.form-group.dragging {
+	opacity: 0.5;
+}
+
+.point-input-wrapper {
+	position: relative;
+	width: 100%;
+	display: flex;
+	align-items: stretch;
+}
+
+.drag-handle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 0.75rem;
+	background-color: #2d5f3f;
+	border-radius: 8px 0 0 8px;
+	color: #a8c5b3;
+	cursor: grab;
+	transition: background-color 0.2s ease, color 0.2s ease;
+	flex-shrink: 0;
+}
+
+.drag-handle:hover {
+	background-color: #356b47;
+	color: #ffffff;
+}
+
+.drag-handle:active {
+	cursor: grabbing;
+}
+
+.point-input {
+	width: 100%;
+	padding: 1.5rem 1.5rem 0.75rem 1rem;
+	font-size: 1rem;
+	background-color: #2d5f3f;
+	color: #ffffff;
+	border: none;
+	border-radius: 8px;
+	outline: none;
+	box-sizing: border-box;
+	transition: background-color 0.2s ease;
+}
+
+.point-input.with-drag-handle {
+	border-radius: 0 8px 8px 0;
+}
+
+.point-input:focus {
+	background-color: #356b47;
+}
+
+.point-input::placeholder {
+	color: transparent;
+}
+
+/* Ensure input text is always visible */
+.point-input {
+	-webkit-text-fill-color: #ffffff;
+	opacity: 1;
+}
+
+.point-label {
+	position: absolute;
+	left: 1rem;
+	top: 0.5rem;
+	font-size: 0.75rem;
+	color: #a8c5b3;
+	pointer-events: none;
+	transition: all 0.2s ease;
+	z-index: 1;
+}
+
+.with-drag-handle ~ .point-label {
+	left: 3rem;
+}
+
+.remove-point-btn {
+	position: absolute;
+	right: -15px;
+	top: -15px;
+	background: #2d2d2d;
+	border: 1px solid rgba(255, 255, 255, 0.30);
+	border-radius: 50%;
+	color: #e74c3c;
+	font-size: 36px;
+	line-height: 1;
+	cursor: pointer;
+	padding: 3px;
+	width: 2rem;
+	height: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: color 0.2s ease, transform 0.1s ease;
+	z-index: 10;
+}
+
+.remove-point-btn:hover {
+	color: #c0392b;
+	transform: translateY(-5px) scale(1.1);
+}
+
+.remove-point-btn:active {
+	transform: translateY(-50%) scale(0.95);
+}
+
+.autocomplete-dropdown {
+	position: absolute;
+	top: calc(100% + 0.25rem);
+	left: 0;
+	right: 0;
+	background-color: #1a1a1a;
+	border: 1px solid #2d5f3f;
+	border-radius: 8px;
+	max-height: 200px;
+	overflow-y: auto;
+	z-index: 1000;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.autocomplete-item {
+	padding: 0.75rem 1rem;
+	cursor: pointer;
+	color: #ffffff;
+	transition: background-color 0.15s ease;
+	font-size: 0.9rem;
+}
+
+.autocomplete-item:hover {
+	background-color: #2d5f3f;
+}
+
+.autocomplete-item:not(:last-child) {
+	border-bottom: 1px solid #2a2a2a;
+}
+
+.add-point-btn {
+	width: 100%;
+	padding: 0.75rem 1rem;
+	background: transparent;
+	border: 2px dashed #2d5f3f;
+	border-radius: 8px;
+	color: #a8c5b3;
+	font-size: 0.95rem;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	transition: all 0.2s ease;
+	margin-top: 1rem;
+}
+
+.add-point-btn:hover:not(:disabled) {
+	background-color: rgba(45, 95, 63, 0.2);
+	border-color: #356b47;
+	color: #ffffff;
+}
+
+.add-point-btn:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.add-icon {
+	font-size: 1.25rem;
+	font-weight: bold;
+	line-height: 1;
+}
+
+/* Scrollbar styling for autocomplete */
+.autocomplete-dropdown::-webkit-scrollbar {
+	width: 8px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-track {
+	background: #1a1a1a;
+	border-radius: 0 8px 8px 0;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb {
+	background: #2d5f3f;
+	border-radius: 4px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
+	background: #356b47;
+}
+
+/* Drag and drop visual feedback */
+.form-group.drag-over {
+	border-top: 2px solid #4a9d6f;
+	padding-top: 0.5rem;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+	.route-form-container {
+		padding: 0 1rem;
+	}
+
+	.point-input {
+		font-size: 0.95rem;
+	}
+
+	.remove-point-btn {
+		font-size: 1.5rem;
+	}
+}

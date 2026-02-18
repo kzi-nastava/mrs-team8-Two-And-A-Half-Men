@@ -1,0 +1,140 @@
+<div class="ride-history-container">
+	<div class="history-header">
+		<h2>Ride History</h2>
+
+		<div class="history-controls">
+			<!-- Sort Field Dropdown -->
+			<select
+				class="sort-field-select"
+				[value]="sortField()"
+				(change)="onSortFieldChange($any($event.target).value)"
+			>
+				@for (option of sortOptions(); track option.field) {
+					<option [value]="option.field">{{ option.label }}</option>
+				}
+			</select>
+
+			<!-- Sort Direction Button -->
+			<button class="btn-sort" (click)="toggleSortDirection()">
+				@if (sortDirection() === 'ASC') {
+					↑ Ascending
+				} @else {
+					↓ Descending
+				}
+			</button>
+
+			<!-- Filter Toggle Button -->
+			<button class="btn-filter" (click)="toggleFilters()">
+				🔍 Filters
+				@if (showFilters()) {
+					▲
+				} @else {
+					▼
+				}
+			</button>
+		</div>
+	</div>
+
+	<!-- Filters Panel -->
+	@if (showFilters()) {
+		<div class="filters-panel">
+			<div class="filter-group">
+				<label for="startDate">Start Date:</label>
+				<input
+					type="date"
+					id="startDate"
+					[(ngModel)]="filterStartDate"
+					class="date-input"
+				/>
+			</div>
+
+			<div class="filter-group">
+				<label for="endDate">End Date:</label>
+				<input
+					type="date"
+					id="endDate"
+					[(ngModel)]="filterEndDate"
+					class="date-input"
+				/>
+			</div>
+
+			@if (config().showUserFilters) {
+				<div class="filter-group">
+					<label for="driverId">Driver ID:</label>
+					<input
+						type="number"
+						id="driverId"
+						[(ngModel)]="filterDriverId"
+						class="date-input"
+						placeholder="Enter driver ID"
+					/>
+				</div>
+
+				<div class="filter-group">
+					<label for="customerId">Customer ID:</label>
+					<input
+						type="number"
+						id="customerId"
+						[(ngModel)]="filterCustomerId"
+						class="date-input"
+						placeholder="Enter customer ID"
+					/>
+				</div>
+			}
+
+			<div class="filter-actions">
+				<button class="btn-apply" (click)="applyFilters()">
+					Apply Filters
+				</button>
+				<button class="btn-clear" (click)="clearFilters()">
+					Clear Filters
+				</button>
+			</div>
+		</div>
+	}
+
+	<!-- Reusable Rides List Component -->
+	<app-rides-list
+		[rides]="rides()"
+		[config]="ridesListConfig()"
+		[loading]="loading()"
+		(rideClick)="onRideClick($event)"
+		(reorderClick)="onReorderNow($event)"
+	/>
+
+	<!-- Pagination -->
+	@if (totalElements() > 0 && !loading()) {
+		<div class="pagination">
+			<button
+				class="btn-pagination"
+				[disabled]="page() === 0"
+				(click)="previousPage()"
+			>
+				Previous
+			</button>
+
+			<span class="pagination-info">
+				Page {{ page() + 1 }} of {{ Math.ceil(totalElements() / size()) }}
+				({{ totalElements() }} total rides)
+			</span>
+
+			<button
+				class="btn-pagination"
+				[disabled]="(page() + 1) * size() >= totalElements()"
+				(click)="nextPage()"
+			>
+				Next
+			</button>
+
+			<select
+				class="page-size-select"
+				[value]="size()"
+				(change)="onPageSizeChange(+$any($event.target).value)"
+			>
+				@for (option of pageSizeOptions; track option) {
+					<option [value]="option">{{ option }} per page</option>
+				}
+			</select>
+		</div>
+	}
+</div>

@@ -1,0 +1,89 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+	--bg-main: #2c2725;
+	--bg-card: #2f2a28;
+
+	--green-primary: #1c6331;
+	--green-border: #2c8a4c;
+
+	--yellow-accent: #d4af37;
+
+	--text-primary: #ffffff;
+	--text-muted: #b5b5b5;
+
+	--radius: 10px;
+}
+
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+	'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+	sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: #2a2a2a;
+	color: #ffffff;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: #2a2a2a;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #1a5c3a;
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #235c42;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.app-box {
+	display: block;
+	background: #3a3a3a;
+	border: 2px solid #1a5c3a;
+	border-radius: 12px;
+	padding: 2rem;
+}
+
+.app-button {
+	padding: 0.5rem 1.25rem;
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	border-radius: 6px;
+	background: #1a5c3a;
+	color: white;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	display: inline-block;
+}
+
+/* Hover via class */
+.app-button--hover {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.5);
+	transform: translateY(-1px);
+}

@@ -21,7 +21,7 @@ Nothing from the previous sprint.
 | S3.2 | Login into the system | Medium | 5 |
 | S3.3 | User registration | Medium | 8 |
 
-## Tasks
+## Added Tasks
 
 | ID | User Story ID | Title | Priority | Estimation (Story Points) |
 |----|------|------|----------|---------------------------|
@@ -35,7 +35,7 @@ Nothing from the previous sprint.
 | S1.3-4 | S1.3 | Connect frontend with backend for user profile | Low | 2 |
 | S2.5-1 | S2.5 | Drivers ride history list page - web - visual | Medium | 2 |
 | S2.5-2 | S2.5 | Drivers ride history list page - mobile - visual | Low | 2 |
-| S2.5-3 | S2.5 | Drivers ride history details page - web - visual | Medium | 2 |
+| S2.5-3 | S2.5 | Drivers ride history details page - web - visual | Low | 2 |
 | S2.5-4 | S2.5 | Drivers ride history details page - mobile - visual | Low | 2 |
 | S2.5-5 | S2.5 | Backend drivers ride history endpoints | Low | 3 |
 | S2.5-6 | S2.5 | Connect frontend with backend for drivers ride history | Low | 2 |
@@ -57,7 +57,6 @@ Nothing from the previous sprint.
 - S2.10 - Web navbar - KT1
 - S1.3-1 - User profile page - web - visual
 - S2.5-1 - Drivers ride history list page - web - visual
-- S2.5-3 - Drivers ride history details page - web - visual
 - S3.2-1 - Login page - web - visual
 - S3.3-1 - Registration page - web - visual
 

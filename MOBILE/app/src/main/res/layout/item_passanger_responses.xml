@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/rouded_edittext"
+    android:backgroundTint="#333333"> <TextView
+    android:id="@+id/review_email"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="#8BC34A"
+    android:textStyle="bold"
+    android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp">
+
+        <TextView
+            android:id="@+id/review_driver_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:text="Driver: ⭐ 5/5"
+            android:layout_marginEnd="16dp"/>
+
+        <TextView
+            android:id="@+id/review_vehicle_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:text="Vehicle: ⭐ 5/5" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/review_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:background="#444444"
+        android:textColor="#FFFFFF"
+        android:hint="Comment" />
+
+    <TextView
+        android:id="@+id/review_inconsistency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:padding="8dp"
+        android:background="#5D4037"
+        android:textColor="#FFB74D"
+        android:textStyle="italic" />
+</LinearLayout>

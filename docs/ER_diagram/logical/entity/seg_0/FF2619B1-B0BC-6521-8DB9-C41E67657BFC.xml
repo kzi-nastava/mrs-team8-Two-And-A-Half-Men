@@ -183,6 +183,19 @@
 <dataTypeSize>1</dataTypeSize>
 <ownDataTypeParameters>1,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="driverState" id="29233751-E448-464E-C5DE-558B8AF9CEFC">
+<createdBy>pepi</createdBy>
+<createdTime>2025-12-12 17:31:12 UTC</createdTime>
+<ownerDesignName>ER_diagram</ownerDesignName>
+<engineerTo>
+<item key="7007075D-9CA2-7723-104F-437005497FD3" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="CC1D7971-EA36-F387-652C-68C9B216E4D3" name="USER PK">

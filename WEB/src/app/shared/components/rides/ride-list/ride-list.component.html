@@ -1,0 +1,111 @@
+@if (loading()) {
+	<div class="loading-spinner">
+		<div class="spinner"></div>
+		<p>Loading...</p>
+	</div>
+}
+
+@if (!loading()) {
+	<div class="rides-list">
+		@if (rides().length === 0) {
+			<div class="no-rides">
+				<p>There are no rides</p>
+			</div>
+		}
+
+		@for (ride of rides(); track ride.id) {
+			<div
+				class="ride-card"
+				[class.clickable]="config().canViewDetails"
+				(click)="onRideClick(ride)"
+			>
+				<!-- Status badge -->
+				<div class="ride-header">
+					<span class="status-badge" [ngClass]="getStatusClass(ride.status)">
+						{{ getStatusText(ride.status) }}
+					</span>
+					@if (ride.status === RideStatus.PANICKED && config().showPanicButton) {
+						<span class="panic-indicator">⚠️</span>
+					}
+				</div>
+
+				<!-- BASIC INFO -->
+				<div class="ride-info">
+					<div class="info-row">
+						<span class="label">Start point:</span>
+						<span class="value">{{ ride.locations[0].address }}</span>
+					</div>
+					<div class="info-row">
+						<span class="label">Destination:</span>
+						<span class="value">{{
+								ride.locations[ride.locations.length - 1].address
+							}}</span>
+					</div>
+
+					@if (ride.startTime) {
+						<div class="info-row">
+							<span class="label">Start time:</span>
+							<span class="value">{{ formatDate(ride.startTime) }}</span>
+						</div>
+					}
+
+					@if (ride.endTime) {
+						<div class="info-row">
+							<span class="label">End time:</span>
+							<span class="value">{{ formatDate(ride.endTime) }}</span>
+						</div>
+					}
+
+					<div class="info-row">
+						<span class="label">Total cost:</span>
+						<span class="value price">{{ ride.totalCost }} RSD</span>
+					</div>
+
+					<!-- DRIVER INFO -->
+					@if (config().showDriverInfo) {
+						<div class="info-row">
+							<span class="label">Driver:</span>
+							<span class="value">{{ ride.driverName }}</span>
+						</div>
+					}
+
+					<!-- PASSENGER INFO -->
+					@if (config().showPassengerInfo) {
+						<div class="info-row">
+							<span class="label">Ride owner:</span>
+							<span class="value">{{ ride.rideOwnerName }}</span>
+						</div>
+						<div class="info-row">
+							<span class="label">Passengers:</span>
+							<div class="passengers-list">
+								@for (passenger of ride.passengers; track passenger) {
+									<span class="passenger-email">{{ passenger.email }}</span>
+								}
+							</div>
+						</div>
+					}
+
+					<!-- Cancellation reason -->
+					@if (ride.status === RideStatus.CANCELLED && ride.cancellationReason) {
+						<div class="info-row cancellation">
+							<span class="label">Cancellation reason:</span>
+							<span class="value">{{ ride.cancellationReason }}</span>
+						</div>
+					}
+
+					<!-- Additional services -->
+					@if (ride.additionalServices.length > 0) {
+						<div class="info-row">
+							<span class="label">Additional services:</span>
+							<div class="services-list">
+								@for (service of ride.additionalServices; track service) {
+									<span class="service-tag">{{ service }}</span>
+								}
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+		}
+	</div>
+}

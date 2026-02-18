@@ -1,0 +1,56 @@
+@if (alignment() === 'split') {
+	<!-- Split layout: tabs on left and right -->
+	<div class="tab-navigation align-split">
+		<div class="tab-group tab-group-left">
+			@for (tab of leftTabs; track tab.id) {
+				<button
+					class="tab-button"
+					[attr.data-testid]="'tab-button-' + tab.id"
+					[class.active]="activeTab() === tab.id"
+					(click)="onTabClick(tab.id)">
+					@if (getIconForTab(tab.id); as icon) {
+						<span class="tab-icon">
+              <ng-container *ngTemplateOutlet="icon.templateRef"></ng-container>
+            </span>
+					}
+					<span>{{ tab.label }}</span>
+				</button>
+			}
+		</div>
+
+		<div class="tab-group tab-group-right">
+			@for (tab of rightTabs; track tab.id) {
+				<button
+					class="tab-button"
+					[attr.data-testid]="'tab-button-' + tab.id"
+					[class.active]="activeTab() === tab.id"
+					(click)="onTabClick(tab.id)">
+					@if (getIconForTab(tab.id); as icon) {
+						<span class="tab-icon">
+              <ng-container *ngTemplateOutlet="icon.templateRef"></ng-container>
+            </span>
+					}
+					<span>{{ tab.label }}</span>
+				</button>
+			}
+		</div>
+	</div>
+} @else {
+	<!-- Standard layout: all tabs in one row -->
+	<div class="tab-navigation" [class]="alignmentClass">
+		@for (tab of tabs(); track tab.id) {
+			<button
+				class="tab-button"
+				[attr.data-testid]="'tab-button-' + tab.id"
+				[class.active]="activeTab() === tab.id"
+				(click)="onTabClick(tab.id)">
+				@if (getIconForTab(tab.id); as icon) {
+					<span class="tab-icon">
+            <ng-container *ngTemplateOutlet="icon.templateRef"></ng-container>
+          </span>
+				}
+				<span>{{ tab.label }}</span>
+			</button>
+		}
+	</div>
+}

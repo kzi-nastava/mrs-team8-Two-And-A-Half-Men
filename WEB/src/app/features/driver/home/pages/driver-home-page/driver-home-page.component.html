@@ -1,0 +1,12 @@
+<div class="ride-active-container">
+	<div class="active-header">
+		<h2>Your rides</h2>
+	</div>
+
+	<app-rides-list
+		[rides]="rides()"
+		[config]="rideConfig"
+		[loading]="loading()"
+		(rideClick)="onRideClick($event)"
+	/>
+</div>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary">#1a5c3a</color>
+    <color name="background_dark">#2a2a2a</color>
+    <color name="card_background">#3a3a3a</color>
+    <color name="accent">#d4af37</color>
+    <color name="text_gray">#9ca3af</color>
+    <color name="text_dark">#1a1a1a</color>
+    <color name="text_medium">#4a4a4a</color>
+    <color name="error_red">#dc2626</color>
+    <color name="warning_background">#fef3cd</color>
+    <color name="warning_border">#f59e0b</color>
+    <color name="white_transparent">#99ffffff</color>
+    <color name="input_background">#1a5c3a</color>
+
+    <color name="status_pending">#FFC107</color>
+    <color name="status_accepted">#2196F3</color>
+    <color name="status_active">#4CAF50</color>
+    <color name="status_finished">#9E9E9E</color>
+    <color name="status_interrupted">#FF9800</color>
+    <color name="status_cancelled">#F44336</color>
+    <color name="status_panicked">#D32F2F</color>
+    <color name="status_default">#757575</color>
+
+    <color name="chip_background">#E3F2FD</color>
+    <color name="chip_text">#1976D2</color>
+    <color name="route_color">#3498db</color>
+    <color name="route_color_alternative">#673AB7</color>
+    <color name="marker_start">#4CAF50</color>
+    <color name="marker_stop">#FF9800</color>
+    <color name="marker_end">#F44336</color>
+
+    <color name="primary_dark">#1976D2</color>
+    <color name="primary_light">#BBDEFB</color>
+
+    <color name="gray">#9E9E9E</color>
+    <color name="light_gray">#F5F5F5</color>
+    <color name="divider_gray">#E0E0E0</color>
+    <color name="dark_gray">#616161</color>
+
+    <color name="message_own_bg">#DCF8C6</color>
+    <color name="message_other_bg">#FFFFFF</color>
+    <color name="message_time_text">#999999</color>
+
+    <color name="unread_indicator">#FF5722</color>
+    <color name="read_checkmark">#4CAF50</color>
+
+    <color name="chat_item_selected">#E3F2FD</color>
+
+    <!--  Profile Page Colors  -->
+    <color name="profile_background">#2a2a2a</color>
+    <color name="box_background">#3a3a3a</color>
+    <color name="input_text">#FFFFFF</color>
+    <color name="input_hint">#6b7280</color>
+    <color name="label_text">#d1d5db</color>
+    <color name="primary_text">#FFFFFF</color>
+    <color name="secondary_text">#9ca3af</color>
+    <!--  Button Colors  -->
+    <color name="button_primary">#d4af37</color>
+    <color name="button_primary_pressed">#e5c34a</color>
+    <color name="button_text">#1a1a1a</color>
+    <!--  Tab Colors  -->
+    <color name="tab_active">#d4af37</color>
+    <color name="tab_inactive">#6b7280</color>
+    <color name="tab_indicator">#d4af37</color>
+    <!--  Blocked Banner Colors  -->
+    <color name="blocked_background">#dc3545</color>
+    <color name="blocked_border">#f59e0b</color>
+    <color name="blocked_icon_bg">#f59e0b</color>
+    <color name="blocked_text">#fff</color>
+    <color name="blocked_text_secondary">#eee</color>
+    <!--  Pending Changes Colors  -->
+    <color name="pending_background">#9D9078</color>
+    <color name="pending_border">#f59e0b</color>
+    <color name="pending_icon_bg">#f59e0b</color>
+    <color name="pending_text">#1a1a1a</color>
+    <color name="pending_item_bg">#ffffff99</color>
+    <color name="pending_change_field">#1a1a1a</color>
+    <color name="pending_change_value">#4a4a4a</color>
+    <!--  Checkbox Colors  -->
+    <color name="checkbox_checked">#d4af37</color>
+    <color name="checkbox_unchecked">#6b7280</color>
+    <!--  General Colors  -->
+    <color name="divider">#2a4a3a</color>
+    <color name="overlay">#80000000</color>
+
+    <color name="button_danger">#dc2626</color>
+    <color name="button_danger_pressed">#b91c1c</color>
+
+    <!-- Badge Colors (same as profile page) -->
+    <color name="badge_admin">#2d7a52</color>
+    <color name="badge_customer">#3a8f64</color>
+    <color name="badge_driver">#d4af37</color>
+
+    <color name="badge_busy">#dc2626</color>
+    <color name="badge_inactive">#6c757d</color>
+    <color name="badge_available">#28a745</color>
+
+    <!-- Status Colors -->
+    <color name="success_green">#28a745</color>
+    <color name="secondary_green">#2d7a52</color>
+    <color name="warning_yellow">#f4d03f</color>
+
+    <!-- Users List Specific -->
+    <color name="user_item_background">#1a5c3a</color>
+    <color name="user_item_selected">#2d7a52</color>
+
+    <!-- Vehicle Pricing accent colors -->
+    <color name="pricing_accent">#C8A800</color>
+    <color name="pricing_accent_dim">#2D4A2D</color>
+
+</resources>

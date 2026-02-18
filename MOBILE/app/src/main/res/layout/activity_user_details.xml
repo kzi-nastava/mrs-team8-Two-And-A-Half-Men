@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/profile_background">
+
+    <!-- Toolbar with back button -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/box_background"
+        android:elevation="4dp"
+        app:titleTextColor="@color/primary_text"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_medium">
+
+            <!-- Loading indicator -->
+            <LinearLayout
+                android:id="@+id/loadingView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="@dimen/spacing_xlarge"
+                android:background="@color/box_background"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:indeterminateTint="@color/button_primary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loading_user_details"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/text_size_medium"
+                    android:layout_marginTop="@dimen/spacing_medium"/>
+
+            </LinearLayout>
+
+            <!-- Content (hidden while loading) -->
+            <LinearLayout
+                android:id="@+id/contentView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <!-- Action Buttons Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/spacing_medium">
+
+                    <!-- Chat Button -->
+                    <Button
+                        android:id="@+id/btnChat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/button_height"
+                        android:text="@string/btn_view_chat"
+                        android:textColor="@color/primary_text"
+                        android:background="@color/secondary_green"
+                        android:paddingStart="@dimen/spacing_medium"
+                        android:paddingEnd="@dimen/spacing_medium"
+                        android:layout_marginEnd="@dimen/spacing_small"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"/>
+
+                    <!-- Block Button -->
+                    <Button
+                        android:id="@+id/btnBlock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/button_height"
+                        android:text="@string/btn_block_user"
+                        android:textColor="@color/primary_text"
+                        android:background="@color/button_danger"
+                        android:paddingStart="@dimen/spacing_medium"
+                        android:paddingEnd="@dimen/spacing_medium"
+                        android:visibility="gone"/>
+
+                    <!-- Unblock Button -->
+                    <Button
+                        android:id="@+id/btnUnblock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/button_height"
+                        android:text="@string/btn_unblock_user"
+                        android:textColor="@color/primary_text"
+                        android:background="@color/success_green"
+                        android:paddingStart="@dimen/spacing_medium"
+                        android:paddingEnd="@dimen/spacing_medium"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+                <!-- Blocked Banner -->
+                <LinearLayout
+                    android:id="@+id/blockedBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/box_background"
+                    android:padding="@dimen/card_padding"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⊘"
+                        android:textColor="@color/error_red"
+                        android:textSize="24sp"
+                        android:layout_marginEnd="@dimen/spacing_medium"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/blocked_banner_title"
+                            android:textColor="@color/error_red"
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="@dimen/spacing_small"/>
+
+                        <TextView
+                            android:id="@+id/tvBlockReason"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/text_size_normal"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Pending Changes Banner -->
+                <LinearLayout
+                    android:id="@+id/pendingBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/pending_background"
+                    android:padding="@dimen/card_padding"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:visibility="gone">
+
+                    <!-- Pending Header -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="@dimen/spacing_medium">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⏳"
+                            android:textSize="24sp"
+                            android:layout_marginEnd="@dimen/spacing_medium"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pending_changes_title"
+                                android:textColor="@color/button_primary"
+                                android:textSize="@dimen/text_size_large"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="@dimen/spacing_tiny"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pending_changes_admin_subtitle"
+                                android:textColor="@color/primary_text"
+                                android:textSize="@dimen/text_size_normal"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Changes List -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvPendingChanges"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/secondary_green"
+                        android:layout_marginBottom="@dimen/spacing_medium"/>
+
+                    <!-- Approve / Reject Buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="end">
+
+                        <Button
+                            android:id="@+id/btnRejectChanges"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="@string/btn_reject_changes"
+                            android:textColor="@color/primary_text"
+                            android:background="@color/button_danger"
+                            android:paddingStart="@dimen/spacing_medium"
+                            android:paddingEnd="@dimen/spacing_medium"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="@dimen/spacing_small"/>
+
+                        <Button
+                            android:id="@+id/btnApproveChanges"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="@string/btn_approve_changes"
+                            android:textColor="@color/primary_text"
+                            android:background="@color/success_green"
+                            android:layout_weight="1"
+                            android:paddingStart="@dimen/spacing_medium"
+                            android:paddingEnd="@dimen/spacing_medium"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Tab Layout -->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/box_background"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    app:tabTextColor="@color/secondary_text"
+                    app:tabSelectedTextColor="@color/button_primary"
+                    app:tabIndicatorColor="@color/button_primary"/>
+
+                <!-- ViewPager for tabs -->
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

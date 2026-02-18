@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/spacing_small"
+    android:gravity="center_vertical">
+
+    <CheckBox
+        android:id="@+id/checkboxService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/checkbox_checked"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvServiceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/label_text"
+            android:textSize="@dimen/text_size_normal"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvServiceDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginTop="@dimen/spacing_tiny"/>
+
+    </LinearLayout>
+
+</LinearLayout>

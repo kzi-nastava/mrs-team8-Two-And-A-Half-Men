@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- bg_icon_container.xml -->
+<!-- Dark rounded square background for vehicle icon, matching the web card icon style -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#142314" />
+    <corners android:radius="10dp" />
+</shape>

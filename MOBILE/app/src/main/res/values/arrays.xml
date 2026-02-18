@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="cancelled_by_options">
+        <item>Select..</item>
+        <item>CUSTOMER</item>
+        <item>DRIVER</item>
+    </string-array>
+</resources>

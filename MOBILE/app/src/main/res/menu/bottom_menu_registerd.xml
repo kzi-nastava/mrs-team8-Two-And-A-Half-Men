@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group>
+        <item
+            android:id="@+id/nav_home"
+            android:title="Home"
+            android:orderInCategory="100"
+            android:icon="@drawable/ic_home"
+            />
+        <item
+            android:id="@+id/nav_booked_rides"
+            android:title="Booked rides"
+            android:orderInCategory="200"
+            android:icon="@drawable/ic_active_drive"
+            />
+        <item
+            android:id="@+id/nav_history"
+            android:title="History"
+            android:orderInCategory="300"
+            android:icon="@android:drawable/ic_menu_recent_history"
+            />
+        <item
+            android:id="@+id/nav_live_chat"
+            android:title="Live chat"
+            android:orderInCategory="400"
+            android:icon="@android:drawable/ic_menu_send"
+            />
+        <item
+            android:id="@+id/nav_reports"
+            android:title="Reports"
+            android:orderInCategory="500"
+            android:icon="@drawable/ic_reports_chart_line"
+            />
+
+        <item
+            android:id="@+id/nav_profile"
+            android:title="Profile"
+            android:orderInCategory="600"
+            android:icon="@drawable/ic_profile"
+            />
+    </group>
+
+
+</menu>

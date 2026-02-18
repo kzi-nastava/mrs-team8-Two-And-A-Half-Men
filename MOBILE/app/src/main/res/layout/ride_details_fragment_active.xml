@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/card_background">
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <!-- Error View -->
+    <TextView
+        android:id="@+id/error_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="#FF0000"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <!-- Content Container -->
+    <ScrollView
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/card_background"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@color/card_background">
+
+            <!-- Basic Information Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/rouded_edittext">
+
+                    <TextView
+                        android:id="@+id/txt_ride_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ride #123"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Status:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_ride_status"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Scheduled Time -->
+                    <LinearLayout
+                        android:id="@+id/layout_scheduled_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Scheduled Time:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_scheduled_time"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Start Time -->
+                    <LinearLayout
+                        android:id="@+id/layout_start_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Start Time:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_start_time"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- End Time -->
+                    <LinearLayout
+                        android:id="@+id/layout_end_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="End Time:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_end_time"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Price -->
+                    <LinearLayout
+                        android:id="@+id/layout_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Price:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_price"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Total Cost -->
+                    <LinearLayout
+                        android:id="@+id/layout_total_cost"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Total Cost:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_total_cost"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Path -->
+                    <LinearLayout
+                        android:id="@+id/layout_path"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Path:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_path"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp"
+                            android:maxLines="3"
+                            android:ellipsize="end" />
+                    </LinearLayout>
+
+                    <!-- Estimated Time (Active rides only) -->
+                    <LinearLayout
+                        android:id="@+id/layout_estimated_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/txt_estimated_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Estimated Time: -"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Estimated Distance (Active rides only) -->
+                    <LinearLayout
+                        android:id="@+id/layout_estimated_distance"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/txt_estimated_distance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Estimated Distance: -"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- People Information Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_people"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/rouded_edittext">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="People"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Driver -->
+                    <LinearLayout
+                        android:id="@+id/layout_driver"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Driver:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_driver_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Ride Owner -->
+                    <LinearLayout
+                        android:id="@+id/layout_ride_owner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Ride Owner:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txt_ride_owner_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Passengers -->
+                    <LinearLayout
+                        android:id="@+id/layout_passengers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Passengers:"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/txt_passengers"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="-"
+                            android:textColor="@color/primary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Additional Services Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_services"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/rouded_edittext">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Additional Services"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:id="@+id/txt_services"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@color/primary"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Cancellation Reason Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_cancellation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/rouded_edittext">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancellation Reason"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#F44336"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:id="@+id/txt_cancellation_reason"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@color/primary"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Map Container -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <FrameLayout
+                    android:id="@+id/map_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Stops Container -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                android:background="@color/card_background"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/rouded_edittext"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Route"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary"
+                        android:layout_marginBottom="12dp" />
+
+                    <FrameLayout
+                        android:id="@+id/stops_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_reviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/reviews_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@drawable/rouded_edittext">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Passenger Reviews"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary"
+                        android:layout_marginBottom="12dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/action_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="4dp"
+                android:visibility="gone"
+                android:background="@color/card_background">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/rouded_edittext"
+                    >
+                    <FrameLayout
+                        android:id="@+id/actions_panel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

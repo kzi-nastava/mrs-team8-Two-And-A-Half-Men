@@ -1,0 +1,87 @@
+<div class="ride-active-container">
+	<app-tab-navigation
+		[activeTab]="activeTab()"
+		[alignment]="'left'"
+		[tabs]="tabs"
+		(tabChange)="setActiveTab($event)"
+	>
+		<!-- Icon for 'active rides' tab -->
+		<ng-template appTabIcon="active-rides">
+			<svg width="25" height="25" viewBox="0 0 24 24" fill="none">
+				<path
+					d="M5 17h14M5 17a2 2 0 1 1 0-4M5 17a2 2 0 1 0 0-4m14 4a2 2 0 1 0 0-4m0 4a2 2 0 1 1 0-4M3 11l2-7h14l2 7M5 13h14"
+					stroke="currentColor"
+					stroke-width="2"
+				/>
+			</svg>
+		</ng-template>
+		<!-- Icon for 'panics' tab -->
+		<ng-template appTabIcon="panics">
+			<svg width="25" height="25" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+				<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+				<g id="SVGRepo_iconCarrier">
+					<path
+						d="M2.20164 18.4695L10.1643 4.00506C10.9021 2.66498 13.0979 2.66498 13.8357 4.00506L21.7984 18.4695C22.4443 19.6428 21.4598 21 19.9627 21H4.0373C2.54022 21 1.55571 19.6428 2.20164 18.4695Z"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					></path>
+					<path
+						d="M12 9V13"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					></path>
+					<path
+						d="M12 17.0195V17"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					></path>
+				</g>
+			</svg>
+		</ng-template>
+	</app-tab-navigation>
+
+	<app-tab-content [activeTab]="activeTab()" tabId="active-rides">
+		<div class="active-header">
+			<h2>Currently active rides</h2>
+		</div>
+
+		<div class="chat-input-container" style="margin-bottom: 1rem;" appBox>
+			<input
+				type="text"
+				class="chat-input"
+				placeholder="Type text..."
+				[value]="driverNameFilter()"
+				(input)="driverNameFilter.set($any($event.target).value)"
+				(keyup.enter)="loadRides()"
+			/>
+			<button class="send-btn" (click)="loadRides()">Filter</button>
+		</div>
+
+		<app-rides-list
+			[rides]="rides()"
+			[config]="rideConfig"
+			[loading]="loading()"
+			(rideClick)="onRideClick($event)"
+		/>
+	</app-tab-content>
+
+	<app-tab-content [activeTab]="activeTab()" tabId="panics">
+		<div class="active-header">
+			<h2>Panics</h2>
+			<p class="subheader">List of all panics that occurred during rides</p>
+		</div>
+		<app-rides-list
+				[rides]="panics()"
+				[config]="rideConfig"
+				[loading]="loading()"
+				(rideClick)="onRideClick($event)"
+			/>
+	</app-tab-content>
+</div>

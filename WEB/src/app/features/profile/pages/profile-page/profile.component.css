@@ -1,0 +1,486 @@
+/* src/app/renderer/profile/profile.component.css */
+
+.profile-container {
+	min-height: 100vh;
+	background: #2a2a2a;
+	color: #ffffff;
+}
+
+/* Blocked Banner */
+.blocked-banner {
+	background: rgba(220, 53, 69, 0.1) !important;
+	border-color: rgba(220, 53, 69, 0.5) !important;
+	display: flex;
+	gap: 1rem;
+	align-items: flex-start;
+	margin-bottom: 2rem;
+}
+
+.blocked-icon {
+	color: #ff6b6b;
+	flex-shrink: 0;
+}
+
+.blocked-content h3 {
+	color: #ff6b6b;
+	margin: 0 0 0.5rem 0;
+	font-size: 1.25rem;
+}
+
+.blocked-content p {
+	color: #ffffff;
+	margin: 0;
+	line-height: 1.6;
+}
+
+.blocked-content strong {
+	color: #ff6b6b;
+}
+
+/* Header */
+.profile-header {
+	background: #1a5c3a;
+	padding: 1rem 2rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.header-left .logo {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: white;
+}
+
+.header-right {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+}
+
+.notification-icon {
+	position: relative;
+	cursor: pointer;
+	padding: 0.5rem;
+}
+
+.notification-icon:hover {
+	opacity: 0.8;
+}
+
+.notification-badge {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: #dc2626;
+	color: white;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.75rem;
+	font-weight: 600;
+}
+
+.profile-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 2px solid rgba(255, 255, 255, 0.3);
+	cursor: pointer;
+}
+
+.profile-avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Content */
+.profile-content {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem;
+}
+
+/* Tabs */
+.tab-navigation {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 2rem;
+	border-bottom: 2px solid #3a3a3a;
+}
+
+.tab-button {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1rem 1.5rem;
+	background: transparent;
+	border: none;
+	color: #9ca3af;
+	font-size: 1rem;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+	transition: all 0.3s ease;
+}
+
+.tab-button svg {
+	width: 20px;
+	height: 20px;
+}
+
+.tab-button:hover {
+	color: #d4af37;
+}
+
+.tab-button.active {
+	color: #d4af37;
+	border-bottom-color: #d4af37;
+}
+
+/* Save Message */
+.save-message {
+	background: #1a5c3a;
+	color: white;
+	padding: 1rem;
+	border-radius: 8px;
+	margin-bottom: 1.5rem;
+	text-align: center;
+	animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Tab Content */
+.tab-content {
+	animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* Form Section */
+.form-section {
+
+}
+
+.section-title {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 1.125rem;
+	font-weight: 600;
+	margin-bottom: 1.5rem;
+	color: #ffffff;
+}
+
+.form-grid {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 2rem;
+	margin-bottom: 1.5rem;
+}
+
+.form-column {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.form-group label {
+	font-size: 0.875rem;
+	color: #d1d5db;
+}
+
+.form-input {
+	background: #1a5c3a;
+	border: none;
+	border-radius: 8px;
+	padding: 0.875rem 1rem;
+	color: white;
+	font-size: 1rem;
+	transition: all 0.3s ease;
+}
+
+.form-input:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+}
+
+.form-input::placeholder {
+	color: #6b7280;
+}
+
+select.form-input {
+	cursor: pointer;
+}
+
+select.form-input option {
+	background: #1a5c3a;
+	color: white;
+}
+
+/* Photo Column */
+.photo-column {
+	display: flex;
+	align-items: center;
+}
+
+.photo-container {
+	position: relative;
+	width: 300px;
+	height: 300px;
+	border-radius: 12px;
+	overflow: hidden;
+	background: #e5e7eb;
+}
+
+.photo-container img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.upload-button {
+	position: absolute;
+	bottom: 1rem;
+	right: 1rem;
+	background: #d4af37;
+	border: none;
+	border-radius: 50%;
+	width: 48px;
+	height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.upload-button svg {
+	color: #1a1a1a;
+}
+
+.upload-button:hover {
+	transform: scale(1.1);
+	background: #e5c34a;
+}
+
+/* Password Section */
+.password-section .form-group {
+	max-width: 600px;
+}
+
+/* Form Actions */
+.form-actions {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 1.5rem;
+}
+
+.save-button {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: #d4af37;
+	color: #1a1a1a;
+	border: none;
+	border-radius: 8px;
+	padding: 0.875rem 2rem;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.save-button svg {
+	width: 20px;
+	height: 20px;
+}
+
+.save-button:hover:not(:disabled) {
+	background: #e5c34a;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+.save-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Vehicle Grid */
+.vehicle-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 3rem;
+}
+
+.vehicle-info {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+/* Additional Services */
+.services-title {
+	font-size: 1.125rem;
+	font-weight: 600;
+	margin-bottom: 1.5rem;
+	color: #ffffff;
+}
+
+.services-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.service-item {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	cursor: pointer;
+	position: relative;
+	padding-left: 2rem;
+}
+
+.service-item input[type="checkbox"] {
+	position: absolute;
+	left: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.service-item input[type="checkbox"]:checked ~ .checkmark {
+	color: #d4af37;
+}
+
+.service-item .checkmark {
+	position: absolute;
+	left: 0;
+	color: #6b7280;
+	transition: color 0.3s ease;
+}
+
+.service-item span {
+	color: #d1d5db;
+	font-size: 0.9375rem;
+}
+
+.service-item:hover span {
+	color: #ffffff;
+}
+
+.password-section .form-group {
+	margin-bottom: 1rem;
+}
+
+.cancel-button {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	background: #dc2626;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 0.75rem 1.25rem;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	height: fit-content;
+}
+
+.cancel-button svg {
+	width: 16px;
+	height: 16px;
+}
+
+.cancel-button:hover {
+	background: #b91c1c;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.cancel-button:active {
+	transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+	.form-grid,
+	.vehicle-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.photo-container {
+		width: 100%;
+		max-width: 300px;
+		margin: 0 auto;
+	}
+}
+
+@media (max-width: 640px) {
+	.profile-content {
+		padding: 1rem;
+	}
+
+	.profile-header {
+		padding: 1rem;
+	}
+
+	.tab-button {
+		padding: 0.75rem 1rem;
+		font-size: 0.875rem;
+	}
+
+	.tab-button svg {
+		width: 16px;
+		height: 16px;
+	}
+
+	.form-section {
+		padding: 1.5rem;
+	}
+
+	.cancel-button {
+		width: 100%;
+		justify-content: center;
+	}
+}
+
+.working-activity-section {
+	margin-top: 2rem;
+}

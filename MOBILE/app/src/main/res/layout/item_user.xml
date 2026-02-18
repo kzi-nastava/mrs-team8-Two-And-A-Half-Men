@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/user_item_background"
+    android:padding="@dimen/spacing_medium"
+    android:layout_marginBottom="@dimen/spacing_small">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- ID -->
+        <TextView
+            android:id="@+id/tvUserId"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/text_size_normal"
+            android:textStyle="bold"/>
+
+        <!-- Name and Email -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/spacing_small">
+
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="John Doe"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvUserEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="john@example.com"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/text_size_small"
+                android:layout_marginTop="@dimen/spacing_tiny"/>
+
+        </LinearLayout>
+
+        <!-- Role Badge -->
+        <FrameLayout
+            android:id="@+id/roleBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/badge_admin"
+            android:padding="@dimen/spacing_small"
+            android:layout_marginStart="@dimen/spacing_small">
+
+            <TextView
+                android:id="@+id/tvUserRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ADMIN"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <!-- Additional Info Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:gravity="center_vertical">
+
+        <!-- Driver Status (if applicable) -->
+        <FrameLayout
+            android:id="@+id/statusBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/badge_available"
+            android:padding="@dimen/spacing_small"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvDriverStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AVAILABLE"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/text_size_small"
+                android:textStyle="bold"/>
+
+        </FrameLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <!-- Blocked Indicator -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginEnd="@dimen/spacing_medium">
+
+            <View
+                android:id="@+id/blockedIndicator"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@color/success_green"
+                android:layout_marginEnd="@dimen/spacing_tiny"/>
+
+            <TextView
+                android:id="@+id/tvBlocked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✅ No"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/text_size_small"/>
+
+        </LinearLayout>
+
+        <!-- Pending Requests -->
+        <TextView
+            android:id="@+id/tvPendingRequests"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="N/A"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/text_size_small"/>
+
+    </LinearLayout>
+
+</LinearLayout>

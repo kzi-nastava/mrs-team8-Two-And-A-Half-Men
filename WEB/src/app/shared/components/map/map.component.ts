@@ -13,7 +13,7 @@ import { LocationPinService } from './services/location-pin.service';
 import { DriverMarkerService } from './services/driver-marker.service';
 import { RouteService } from './services/route.service';
 import { DriverLocationManagerService } from '@shared/services/driver-location/driver-location-manager.service';
-import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
+import { LocationsService } from '@shared/services/locations/locations.service';
 import { DEFAULT_MAP_CONFIG, MapConfig } from '@shared/components/map/map.config';
 import { PopupsService } from '@shared/services/popups/popups.service';
 import { NominatimResult } from '@shared/models/nominatim-results.model';
@@ -32,6 +32,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 	@Input() path?: string;
 	@Input() config: MapConfig = DEFAULT_MAP_CONFIG;
 	@Input() rideLocations?: NominatimResult[];
+	@Input() trackingDriverId?: number;
 
 	private currentRouteId?: string;
 	private currentPathId?: string;
@@ -39,42 +40,49 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 
 	private mapService = inject(MapService);
 	private locationPinService = inject(LocationPinService);
-	private driverMarkerService = inject(DriverMarkerService);
 	private routeService = inject(RouteService);
 	private driverLocationManagerService = inject(DriverLocationManagerService);
-	private sharedLocationsService = inject(SharedLocationsService);
+	private locationsService = inject(LocationsService);
 	private popupsService = inject(PopupsService);
 
 	constructor() {
 		effect(() => {
-			const locations = this.sharedLocationsService.locations();
+			const locations = this.locationsService.locations();
 
-			// Only use shared locations if we don't have rideLocations (booking mode)
-			if (
-				!this.rideLocations &&
-				this.config.enableRouting &&
-				locations.length >= 2 &&
-				this.mapInitialized
-			) {
-				this.updateRouteFromLocations(locations);
-			} else if (!this.rideLocations) {
-				this.clearCurrentRoute();
+			// Wait until the map is ready (effect runs once on construction too)
+			if (!this.mapInitialized || this.rideLocations) return;
+
+			// ── Pins ────────────────────────────────────────────────────────
+			if (this.config.enableLocationPins) {
+				this.locationPinService.clearAllPins();
+				locations.forEach((loc) => {
+					this.locationPinService.addPin(
+						parseFloat(loc.lat),
+						parseFloat(loc.lon),
+						{ popupContent: loc.display_name },
+					);
+				});
+			}
+
+			// ── Route ───────────────────────────────────────────────────────
+			if (this.config.enableRouting) {
+				if (locations.length >= 2) {
+					this.updateRouteFromLocations(locations);
+				} else {
+					this.clearCurrentRoute();
+				}
 			}
 		});
 	}
 
 	ngAfterViewInit(): void {
-		console.log('Initializing map...');
-
 		this.config = { ...DEFAULT_MAP_CONFIG, ...this.config };
 
 		this.mapService.initMap('map', MAP_CENTER.center, MAP_CENTER.zoom);
-
 		this.mapInitialized = true;
 
 		this.initializeEnabledServices();
 
-		// If we have rideLocations, set them up
 		if (this.rideLocations && this.rideLocations.length > 0) {
 			this.setupRideLocations(this.rideLocations);
 		}
@@ -82,133 +90,38 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		if (this.path && this.config.enablePath) {
 			this.drawPath();
 		}
+		console.log(this.config)
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
-		// Handle config changes
 		if (changes['config'] && !changes['config'].firstChange) {
-			console.log('Map config changed:', this.config);
 			this.handleConfigChange(changes['config'].previousValue, this.config);
 		}
 
-		// Handle rideLocations changes
 		if (changes['rideLocations'] && this.mapInitialized) {
 			const newLocations = changes['rideLocations'].currentValue;
 			if (newLocations && newLocations.length > 0) {
 				this.setupRideLocations(newLocations);
-			}
-		}
-
-		// Handle path changes
-		if (changes['path'] && this.path && this.mapInitialized && this.config.enablePath) {
-			this.drawPath();
-		}
-	}
-
-	private setupRideLocations(locations: NominatimResult[]): void {
-		console.log('Setting up ride locations:', locations);
-
-		// Clear existing pins and routes
-		this.locationPinService.clearAllPins();
-		this.clearCurrentRoute();
-
-		// Add pins for each location
-		if (this.config.enableLocationPins) {
-			locations.forEach((location) => {
-				this.locationPinService.addPin(parseFloat(location.lat), parseFloat(location.lon), {
-					popupContent: location.display_name,
-				});
-			});
-		}
-
-		// Create route between locations
-		if (this.config.enableRouting && locations.length >= 2) {
-			this.updateRouteFromLocations(locations);
-		}
-	}
-
-	private handleConfigChange(oldConfig: MapConfig, newConfig: MapConfig): void {
-		if (!this.mapInitialized) return;
-
-		// Handle location pins
-		if (oldConfig.enableLocationPins !== newConfig.enableLocationPins) {
-			if (newConfig.enableLocationPins) {
-				this.locationPinService.initialize();
-				// Re-add ride locations if they exist
-				if (this.rideLocations && this.rideLocations.length > 0) {
-					this.rideLocations.forEach((location) => {
-						this.locationPinService.addPin(
-							parseFloat(location.lat),
-							parseFloat(location.lon),
-							{
-								popupContent: location.display_name,
-							},
-						);
-					});
-				}
 			} else {
-				this.locationPinService.cleanup();
-			}
-		}
-
-		// Handle driver markers
-		if (oldConfig.enableActiveDriverMarkers !== newConfig.enableActiveDriverMarkers) {
-			if (newConfig.enableActiveDriverMarkers) {
-				this.driverMarkerService.initialize();
-			} else {
-				this.driverMarkerService.cleanup();
-			}
-		}
-
-		// Handle routing
-		if (oldConfig.enableRouting !== newConfig.enableRouting) {
-			if (newConfig.enableRouting) {
-				this.routeService.initialize();
-				// Re-create route if we have locations
-				if (this.rideLocations && this.rideLocations.length >= 2) {
-					this.updateRouteFromLocations(this.rideLocations);
-				}
-			} else {
-				this.routeService.cleanup();
+				// rideLocations cleared — remove pins and route
+				this.locationPinService.clearAllPins();
 				this.clearCurrentRoute();
 			}
 		}
 
-		// Handle driver tracking
-		if (oldConfig.enableDriverTracking !== newConfig.enableDriverTracking) {
-			if (newConfig.enableDriverTracking) {
-				this.driverLocationManagerService.initialize();
-			} else {
-				this.driverLocationManagerService.cleanup();
-			}
+		if (changes['path'] && this.mapInitialized && this.config.enablePath) {
+			this.drawPath();
 		}
 
-		// Handle click handlers
-		if (oldConfig.enableClickToAddLocation !== newConfig.enableClickToAddLocation) {
-			if (newConfig.enableClickToAddLocation) {
-				this.setupMapClickHandler();
-			} else {
-				this.removeMapClickHandler();
-			}
-		}
-
-		if (oldConfig.enableRightClickToRemove !== newConfig.enableRightClickToRemove) {
-			if (newConfig.enableRightClickToRemove) {
-				this.setupMapRightClickHandler();
-			} else {
-				this.removeMapRightClickHandler();
-			}
-		}
-
-		// Handle path display
-		if (oldConfig.enablePath !== newConfig.enablePath) {
-			if (newConfig.enablePath && this.path) {
-				this.drawPath();
-			} else {
-				this.clearPath();
-			}
+		if (changes['trackingDriverId'] && this.mapInitialized && this.config.enableDriverTracking) {
+			this.handleTrackingDriverChange(
+				changes['trackingDriverId'].previousValue,
+				changes['trackingDriverId'].currentValue,
+			);
 		}
 	}
+
+	// ===== Private setup =====
 
 	private initializeEnabledServices(): void {
 		if (this.config.enableLocationPins) {
@@ -216,7 +129,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		}
 
 		if (this.config.enableActiveDriverMarkers) {
-			this.driverMarkerService.initialize();
+			// Show all active drivers from WebSocket
+			this.driverLocationManagerService.initializeAllDrivers();
+		}
+
+		if (this.config.enableDriverTracking && this.trackingDriverId != null) {
+			// Track only the specific driver for this ride
+			this.driverLocationManagerService.initializeDriverTracking(this.trackingDriverId).then();
 		}
 
 		if (this.config.enableRouting) {
@@ -230,24 +149,121 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		if (this.config.enableRightClickToRemove) {
 			this.setupMapRightClickHandler();
 		}
+	}
 
-		if (this.config.enableDriverTracking) {
-			this.driverLocationManagerService.initialize();
+	private setupRideLocations(locations: NominatimResult[]): void {
+		this.locationPinService.clearAllPins();
+		this.clearCurrentRoute();
+
+		if (this.config.enableLocationPins) {
+			locations.forEach((location) => {
+				this.locationPinService.addPin(parseFloat(location.lat), parseFloat(location.lon), {
+					popupContent: location.display_name,
+				});
+			});
+		}
+
+		if (this.config.enableRouting && locations.length >= 2) {
+			this.updateRouteFromLocations(locations);
 		}
 	}
 
+	private handleConfigChange(oldConfig: MapConfig, newConfig: MapConfig): void {
+		if (!this.mapInitialized) return;
+
+		// Location pins
+		if (oldConfig.enableLocationPins !== newConfig.enableLocationPins) {
+			if (newConfig.enableLocationPins) {
+				this.locationPinService.initialize();
+				if (this.rideLocations) {
+					this.rideLocations.forEach((loc) =>
+						this.locationPinService.addPin(parseFloat(loc.lat), parseFloat(loc.lon), {
+							popupContent: loc.display_name,
+						}),
+					);
+				}
+			} else {
+				this.locationPinService.cleanup();
+			}
+		}
+
+		// Click to add
+		if (oldConfig.enableClickToAddLocation !== newConfig.enableClickToAddLocation) {
+			if (newConfig.enableClickToAddLocation) {
+				this.setupMapClickHandler();
+			} else {
+				this.removeMapClickHandler();
+			}
+		}
+
+		// Right click to remove
+		if (oldConfig.enableRightClickToRemove !== newConfig.enableRightClickToRemove) {
+			if (newConfig.enableRightClickToRemove) {
+				this.setupMapRightClickHandler();
+			} else {
+				this.removeMapRightClickHandler();
+			}
+		}
+
+		// All active driver markers
+		if (oldConfig.enableActiveDriverMarkers !== newConfig.enableActiveDriverMarkers) {
+			if (newConfig.enableActiveDriverMarkers) {
+				this.driverLocationManagerService.initializeAllDrivers();
+			} else {
+				this.driverLocationManagerService.cleanupAllDrivers();
+			}
+		}
+
+		// Single driver tracking
+		if (oldConfig.enableDriverTracking !== newConfig.enableDriverTracking) {
+			if (newConfig.enableDriverTracking && this.trackingDriverId != null) {
+				this.driverLocationManagerService.initializeDriverTracking(this.trackingDriverId);
+			} else {
+				this.driverLocationManagerService.cleanupDriverTracking();
+			}
+		}
+
+		// Routing
+		if (oldConfig.enableRouting !== newConfig.enableRouting) {
+			if (newConfig.enableRouting) {
+				this.routeService.initialize();
+				if (this.rideLocations && this.rideLocations.length >= 2) {
+					this.updateRouteFromLocations(this.rideLocations);
+				}
+			} else {
+				this.clearCurrentRoute();
+				this.routeService.cleanup();
+			}
+		}
+
+		// Path (polyline from geohash)
+		if (oldConfig.enablePath !== newConfig.enablePath) {
+			if (newConfig.enablePath && this.path) {
+				this.drawPath();
+			} else {
+				this.clearPath();
+			}
+		}
+	}
+
+	private handleTrackingDriverChange(oldDriverId?: number, newDriverId?: number): void {
+		if (oldDriverId != null) {
+			this.driverLocationManagerService.cleanupDriverTracking();
+		}
+		if (newDriverId != null) {
+			this.driverLocationManagerService.initializeDriverTracking(newDriverId);
+		}
+	}
+
+	// ===== Click handlers =====
+
 	private setupMapClickHandler(): void {
 		const map = this.mapService.getMap();
-
 		map.on('click', (e: L.LeafletMouseEvent) => {
 			const { lat, lng } = e.latlng;
-
-			console.log('Map clicked at:', lat, lng);
-
-			this.sharedLocationsService.addLocationFromCoordinates(lat, lng).subscribe({
-				next: (nominatimResult) => {
-					console.log('Location added from map click:', nominatimResult.display_name);
-				},
+			// Only update the locations signal — the constructor effect will
+			// redraw all pins and the route automatically.
+			this.locationsService.addLocationFromCoordinates(lat, lng).subscribe({
 				error: (error) => {
 					console.error('Error getting location:', error);
 					this.popupsService.error('Error getting location:', error);
@@ -257,107 +273,23 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 	}
 
 	private removeMapClickHandler(): void {
-		const map = this.mapService.getMap();
-		map.off('click');
+		this.mapService.getMap().off('click');
 	}
 
 	private setupMapRightClickHandler(): void {
 		const map = this.mapService.getMap();
-
 		map.on('contextmenu', (e: L.LeafletMouseEvent) => {
 			e.originalEvent.preventDefault();
-			console.log('Right click - removing last location');
-			this.sharedLocationsService.removeLastLocation();
+			this.locationsService.removeLastLocation();
+			this.locationPinService.removeLastPin();
 		});
 	}
 
 	private removeMapRightClickHandler(): void {
-		const map = this.mapService.getMap();
-		map.off('contextmenu');
+		this.mapService.getMap().off('contextmenu');
 	}
 
-	ngOnDestroy(): void {
-		console.log('Destroying map component...');
-
-		if (this.config.enableLocationPins) {
-			this.locationPinService.cleanup();
-		}
-
-		if (this.config.enableActiveDriverMarkers) {
-			this.driverMarkerService.cleanup();
-		}
-
-		if (this.config.enableRouting) {
-			this.routeService.cleanup();
-		}
-
-		if (this.config.enableDriverTracking) {
-			this.driverLocationManagerService.cleanup();
-		}
-
-		this.mapService.destroyMap();
-		this.mapInitialized = false;
-	}
-
-	// ===== Public API Methods =====
-
-	addLocationPin(lat: number, lng: number): string {
-		return this.locationPinService.addPin(lat, lng);
-	}
-
-	removeLocationPin(id: string): void {
-		this.locationPinService.removePin(id);
-	}
-
-	clearAllLocationPins(): void {
-		this.locationPinService.clearAllPins();
-		this.sharedLocationsService.clearLocations();
-	}
-
-	getLocationPins() {
-		return this.locationPinService.getAllPins();
-	}
-
-	highlightDriver(driverId: number): void {
-		this.driverMarkerService.highlightMarker(driverId);
-	}
-
-	createRoute(waypoints: [number, number][], options?: any): string {
-		return this.routeService.createRoute(waypoints, options);
-	}
-
-	createSimpleRoute(start: [number, number], end: [number, number]): string {
-		return this.routeService.createSimpleRoute(start, end);
-	}
-
-	removeRoute(routeId: string): void {
-		this.routeService.removeRoute(routeId);
-	}
-
-	clearAllRoutes(): void {
-		this.routeService.clearAllRoutes();
-		this.currentRouteId = undefined;
-	}
-
-	fitRouteInView(routeId: string): void {
-		this.routeService.fitRouteInView(routeId);
-	}
-
-	toggleLocationPinClick(enable: boolean): void {
-		if (enable) {
-			this.locationPinService.enableClickToAdd();
-		} else {
-			this.locationPinService.disableClickToAdd();
-		}
-	}
-
-	toggleLocationPinRightClick(enable: boolean): void {
-		if (enable) {
-			this.locationPinService.enableRightClickToRemoveLast();
-		} else {
-			this.locationPinService.disableRightClickToRemoveLast();
-		}
-	}
+	// ===== Route helpers =====
 
 	private updateRouteFromLocations(locations: any[]): void {
 		this.clearCurrentRoute();
@@ -372,15 +304,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 			weight: 6,
 			opacity: 0.7,
 		});
-
-		console.log(`Route created with ${waypoints.length} waypoints`);
 	}
 
 	private clearCurrentRoute(): void {
 		if (this.currentRouteId) {
 			this.routeService.removeRoute(this.currentRouteId);
 			this.currentRouteId = undefined;
-			console.log('Current route cleared');
 		}
 	}
 
@@ -388,23 +317,43 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnChanges {
 		if (this.currentPathId) {
 			this.routeService.removeRoute(this.currentPathId);
 			this.currentPathId = undefined;
-			console.log('Current path cleared');
 		}
 	}
 
 	private drawPath(): void {
 		this.clearPath();
-
 		if (!this.path) return;
 
-		console.log('Drawing geohash path:', this.path);
-
 		this.currentPathId = this.routeService.drawLineFromGeohash(this.path, 12, {
-			color: '#e74c3c', // Different color for actual path (red)
+			color: '#e74c3c',
 			weight: 4,
 			opacity: 0.8,
 		});
 
 		this.routeService.fitRouteInView(this.currentPathId);
+	}
+
+	// ===== Lifecycle =====
+
+	ngOnDestroy(): void {
+		if (this.config.enableLocationPins) {
+			this.locationPinService.cleanup();
+		}
+
+		if (this.config.enableActiveDriverMarkers) {
+			this.driverLocationManagerService.cleanupAllDrivers();
+		}
+
+		if (this.config.enableDriverTracking) {
+			this.driverLocationManagerService.cleanupDriverTracking();
+		}
+
+		if (this.config.enableRouting) {
+			this.routeService.cleanup();
+		}
+
+		this.locationsService.clearLocations();
+		this.mapService.destroyMap();
+		this.mapInitialized = false;
 	}
 }

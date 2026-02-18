@@ -1,15 +1,12 @@
 import { effect, inject, Injectable, signal, computed } from '@angular/core';
 import { WebSocketService } from '@core/services/web-socket.service';
-import { AuthService } from '@core/services/auth.service';
 import { DriverLocation } from '@shared/models/driver-location';
-import { LoggedInUserRole } from '@core/models/loggedInUser.model';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class DriverLocationWebsocketService {
 	private webSocketService = inject(WebSocketService);
-	private authService = inject(AuthService);
 
 	// Map of driver ID to their location
 	private _driverLocations = signal<Map<number, DriverLocation>>(new Map());
@@ -33,21 +30,7 @@ export class DriverLocationWebsocketService {
 	 */
 	private setupDriverLocationSubscription(): void {
 		effect(() => {
-			const user = this.authService.user();
-
-			if (user) {
-				// Subscribe to all driver locations for admins and customers
-				if (
-					user.role === LoggedInUserRole.ADMIN ||
-					user.role === LoggedInUserRole.CUSTOMER
-				) {
-					this.subscribeToAllDrivers();
-				}
-			} else {
-				// User logged out - unsubscribe from everything
-				this.unsubscribeFromAllDrivers();
-				this.clearAll();
-			}
+			this.subscribeToAllDrivers().then();
 		});
 	}
 

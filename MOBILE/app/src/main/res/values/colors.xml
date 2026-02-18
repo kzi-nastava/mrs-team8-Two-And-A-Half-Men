@@ -111,4 +111,9 @@
     <color name="pricing_accent">#C8A800</color>
     <color name="pricing_accent_dim">#2D4A2D</color>
 
+    <color name="notification_unread_bg">#1a4d2e</color>
+    <color name="notification_read_bg">#3a3a3a</color>
+    <color name="notification_icon_bg">#33D4AF37</color>
+
+
 </resources>

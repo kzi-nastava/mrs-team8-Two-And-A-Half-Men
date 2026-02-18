@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouteForm } from '@shared/components/forms/route-form/route-form';
 import { MapComponent } from '@shared/components/map/map.component';
 import { ButtonDirective } from '@shared/directives/button/button.directive';
-import { SharedLocationsService } from '@shared/services/locations/shared-locations.service';
+import { LocationsService } from '@shared/services/locations/locations.service';
 import { BookRideRequest } from '@features/customer/home/models/ride.model';
 import { RideService } from '@features/customer/home/services/ride.service';
 import { PopupsService } from '@shared/services/popups/popups.service';
@@ -43,7 +43,7 @@ import { NominatimResult } from '@shared/models/nominatim-results.model';
 export class CustomerHomePageComponent implements OnInit {
 	mapConfig = BOOKING_MAP_CONFIG;
 
-	private sharedLocationService = inject(SharedLocationsService);
+	private sharedLocationService = inject(LocationsService);
 	private rideService = inject(RideService);
 	private popupsService = inject(PopupsService);
 	private router = inject(Router);

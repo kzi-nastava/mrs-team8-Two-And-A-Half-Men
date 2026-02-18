@@ -48,7 +48,7 @@ public class RideInteractionController {
     public ResponseEntity<NoteResponseDTO> addRideNote(
             @PathVariable Long id,
             @RequestParam(name = "accessToken", required = false) String accessToken,
-            @RequestBody NoteRequestDTO noteRequest
+            @Valid @RequestBody NoteRequestDTO noteRequest
     ) {
         PassengerActor actor = getPassengerActor(accessToken);
 

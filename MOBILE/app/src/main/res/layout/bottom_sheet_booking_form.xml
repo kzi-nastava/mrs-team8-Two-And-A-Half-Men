@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Drag Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_drag_handle" />
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Book a Ride"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Search Container -->
+    <FrameLayout
+        android:id="@+id/search_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Route Stops Container -->
+    <FrameLayout
+        android:id="@+id/stops_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+        <!-- More Options Button -->
+        <Button
+            android:id="@+id/btn_more_options"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="More options"
+            android:textColor="@color/gold"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/btn_more_options"
+            android:drawableEnd="@drawable/ic_expand_more"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Get Estimate Button -->
+        <Button
+            android:id="@+id/btn_estimate"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Get estimate"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/btn_estimate"
+            android:drawableStart="@drawable/ic_calculator"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Book Ride Button -->
+        <Button
+            android:id="@+id/btn_book_ride"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Book a ride"
+            android:textColor="@color/button_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/btn_book_ride"
+            android:drawableStart="@drawable/ic_check"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp" />
+
+    </LinearLayout>
+
+    <!-- More Options Container (Initially Hidden) -->
+    <LinearLayout
+        android:id="@+id/more_options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Time Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🕐 Schedule Time"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="12dp" />
+
+        <RadioGroup
+            android:id="@+id/rg_schedule_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <RadioButton
+                android:id="@+id/rb_now"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Now"
+                android:checked="true"
+                android:textColor="@color/white"
+                android:buttonTint="@color/gold" />
+
+            <RadioButton
+                android:id="@+id/rb_specific_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Specific time"
+                android:textColor="@color/white"
+                android:buttonTint="@color/gold" />
+
+        </RadioGroup>
+
+        <!-- DateTime Picker (Initially Hidden) -->
+        <EditText
+            android:id="@+id/et_scheduled_time"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Select date and time"
+            android:textColorHint="@color/hint_text"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_input_datetime"
+            android:padding="16dp"
+            android:focusable="false"
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Passengers Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="👥 Passengers"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Passengers List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_passengers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Add Passenger Input -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+
+            <EditText
+                android:id="@+id/et_passenger_email"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="56dp"
+                android:hint="Enter passenger email"
+                android:textColorHint="@color/hint_text"
+                android:textColor="@color/white"
+                android:background="@drawable/bg_input"
+                android:inputType="textEmailAddress"
+                android:padding="16dp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btn_add_passenger"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:text="Add"
+                android:textColor="@color/gold"
+                android:background="@drawable/btn_add_passenger"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp" />
+
+        </LinearLayout>
+
+        <!-- Services Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🛎️ Additional Services"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_services"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Vehicle Type Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🚗 Vehicle Type"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_vehicle_types"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

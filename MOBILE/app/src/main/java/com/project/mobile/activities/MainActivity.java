@@ -1,16 +1,25 @@
 package com.project.mobile.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.navigation.NavigationView;
 import com.project.mobile.DTO.notifications.Notification;
@@ -19,26 +28,14 @@ import com.project.mobile.R;
 import com.project.mobile.databinding.ActivityMainBinding;
 import com.project.mobile.fragments.HistoryFragment;
 import com.project.mobile.fragments.Registered.Rides.BookedRidesFragment;
+import com.project.mobile.fragments.RideBookingFragment;
 import com.project.mobile.fragments.chat.ChatFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
 import com.project.mobile.fragments.reports.ReportsFragment;
-
-import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
-import com.project.mobile.DTO.Auth.MeInfo;
-import com.project.mobile.activities.NotificationsActivity;
 import com.project.mobile.helpers.NotificationNavigationHelper;
-import com.project.mobile.managers.NotificationManager;
 import com.project.mobile.viewModels.AuthModel;
+
+import com.project.mobile.managers.NotificationManager;
 
 import java.util.List;
 
@@ -95,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupBottomNavBarRegistered();
 
         int containerId = binding.fragmentContainerViewTag.getId();
-        FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
+        FragmentTransition.to(new RideBookingFragment(), this, false, containerId);
         handleNotificationNavigation();
     }
     private void setupBottomNavBarRegistered(){
@@ -104,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int itemId = item.getItemId();
             if(itemId == R.id.nav_home)
             {
-                FragmentTransition.to(new ProfilePageFragment(), this, false, containerId);
+                FragmentTransition.to(new RideBookingFragment(), this, false, containerId);
                 return true;
             } else if(itemId == R.id.nav_profile)
             {

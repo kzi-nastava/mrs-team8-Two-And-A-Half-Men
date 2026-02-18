@@ -69,6 +69,7 @@ public class WebSecurityConfig {
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(restAuthenticationEntryPoint));
         http.authorizeHttpRequests(request -> {
             request.requestMatchers("/files/**").permitAll()
+                    .requestMatchers("/api-docs/**").permitAll()
                     .requestMatchers( "/api/v1/login").permitAll()
                     .requestMatchers("/api/v1/users/register").permitAll()
                     .requestMatchers("/api/v1/reset-password").permitAll()

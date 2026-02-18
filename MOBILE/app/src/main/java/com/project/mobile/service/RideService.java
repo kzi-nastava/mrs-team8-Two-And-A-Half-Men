@@ -90,4 +90,7 @@ public interface RideService {
     Call<List<Ride>> getActiveRides(
             @Query("name") String driverName
     );
+
+    @GET("rides/my")
+    Call<List<Ride>> getMyActiveRides();
 }

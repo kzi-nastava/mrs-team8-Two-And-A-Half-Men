@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_notification_item"
+    android:padding="@dimen/card_padding"
+    android:layout_marginBottom="@dimen/spacing_small"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Unread Indicator -->
+    <View
+        android:id="@+id/unreadIndicator"
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:background="@color/button_primary"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:visibility="gone"/>
+
+    <!-- Notification Icon -->
+    <TextView
+        android:id="@+id/tvNotificationIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="🔔"
+        android:textSize="24sp"
+        android:background="@drawable/bg_notification_icon"
+        android:layout_marginEnd="@dimen/spacing_small"/>
+
+    <!-- Notification Content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Title and Time -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/spacing_tiny">
+
+            <TextView
+                android:id="@+id/tvNotificationTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Notification Title"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/text_size_normal"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvNotificationTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5m ago"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/text_size_small"
+                android:layout_marginStart="@dimen/spacing_small"/>
+
+        </LinearLayout>
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/tvNotificationMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is the notification message content"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/text_size_normal"
+            android:lineSpacingMultiplier="1.2"/>
+
+        <!-- Action Link -->
+        <TextView
+            android:id="@+id/tvActionLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_details"
+            android:textColor="@color/button_primary"
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <!-- Delete Button -->
+    <ImageButton
+        android:id="@+id/btnDelete"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_delete"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/delete_notification"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_gravity="center_vertical"
+        android:tint="@color/error_red"/>
+
+</LinearLayout>

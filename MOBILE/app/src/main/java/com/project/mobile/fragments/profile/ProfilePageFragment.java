@@ -41,6 +41,7 @@ import com.project.mobile.core.retrofitClient.RetrofitClient;
 import com.project.mobile.fragments.shared.forms.PersonalInfoFormFragment;
 import com.project.mobile.fragments.shared.forms.VehicleInfoFormFragment;
 import com.project.mobile.helpers.DialogHelper;
+import com.project.mobile.managers.NotificationManager;
 import com.project.mobile.service.ActivityService;
 import com.project.mobile.service.ProfileService;
 import com.project.mobile.service.VehicleService;
@@ -98,10 +99,16 @@ public class ProfilePageFragment extends Fragment {
     private boolean isSaving = false;
     private Uri selectedImageUri;
 
+    private NotificationManager notificationManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
+        // Initialize managers
+        notificationManager = NotificationManager.getInstance(this.getContext());
+        authModel = new ViewModelProvider(this).get(AuthModel.class);
+
         // Initialize services (get from Retrofit instance)
         Retrofit retrofit = getRetrofitInstance(); // You need to implement this
         profileService = retrofit.create(ProfileService.class);
@@ -640,6 +647,8 @@ public class ProfilePageFragment extends Fragment {
         return RetrofitClient.retrofit;
     }
     private void logout() {
+        notificationManager.cleanup();
+        notificationManager.unsubscribeFromNotifications();
         Intent intent = new Intent(getActivity(), UnregisterActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

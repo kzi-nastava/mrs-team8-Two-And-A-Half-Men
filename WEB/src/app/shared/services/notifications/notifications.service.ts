@@ -294,8 +294,8 @@ export class NotificationService {
 		if ('Notification' in window && Notification.permission === 'granted') {
 			const browserNotification = new Notification(notification.title, {
 				body: notification.message,
-				icon: 'assets/notification-icon.png',
-				badge: 'assets/notification-badge.png',
+				icon: 'assets/taxi.svg',
+				badge: 'assets/taxi.svg',
 				tag: notification.id.toString(),
 				requireInteraction: false,
 			});

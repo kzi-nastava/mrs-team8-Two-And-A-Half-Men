@@ -1,0 +1,1 @@
+import{a as o}from"./chunk-KYBL6UOY.js";import"./chunk-DMUBA5XY.js";import"./chunk-5IMUJISG.js";import"./chunk-WZWIJEA2.js";import"./chunk-GHGVHUHC.js";import"./chunk-TSRGIXR5.js";var r=[{path:"",canActivate:[o],loadComponent:()=>import("./chunk-4SWIIDA7.js").then(t=>t.ProfileComponent)}];export{r as PROFILE_ROUTES};

@@ -42,6 +42,7 @@ public class CancelledRideControls extends Fragment {
         args.putString("accessToken", accessToken);
         args.putString("rate", String.valueOf(rate));
         args.putString("abelToOrder", String.valueOf(abelToOrder));
+        args.putString("abelToAddToFavorites", String.valueOf(true));
         fragment.setArguments(args);
         return fragment;
     }

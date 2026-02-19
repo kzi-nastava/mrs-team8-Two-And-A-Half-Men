@@ -1,7 +1,9 @@
 import requests
+import os
+
 class Movment:
 
-    BASE_URL = "http://localhost:8080/api/v1"
+    BASE_URL = os.getenv("BASE_URL") or "http://localhost:4200/api/v1"
     LOGIN_ENDPOINT = "/login"
     access_token = ""
     headers = {}

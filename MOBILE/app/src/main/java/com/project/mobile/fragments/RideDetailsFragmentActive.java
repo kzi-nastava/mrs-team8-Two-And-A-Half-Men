@@ -238,6 +238,11 @@
 
         private void setupObservers() {
             rideModel.getRideDetails().observe(getViewLifecycleOwner(), rideTracking -> {
+                //Remove from map
+                    routeDrawer.removeRoute("route_" + rideTracking.getId());
+                    markerDrawer.clearMarkers();
+                    sheredLocationViewModel.clearStops();
+                    Log.d(TAG, "Ride details updated: " +  sheredLocationViewModel.getStops().getValue().size());
                 if (rideTracking != null) {
                     displayRideTracking(rideTracking);
                     contentContainer.setVisibility(View.VISIBLE);
@@ -409,7 +414,7 @@
                 actionCard.setVisibility(View.VISIBLE);
                 actionFrame.setVisibility(View.VISIBLE);
                 ActiveRideControls activeRideControls = ActiveRideControls.newInstance(ride.getId(), accessToken);
-                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , activeRideControls).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , activeRideControls).commitAllowingStateLoss();
                 layoutEstimatedDistance.setVisibility(View.VISIBLE);
                 layoutEstimatedTime.setVisibility(View.VISIBLE);
                 txtEstimatedDistance.setVisibility(View.VISIBLE);
@@ -461,7 +466,7 @@
                     actionCard.setVisibility(View.VISIBLE);
                     actionFrame.setVisibility(View.VISIBLE);
                     PendingRideControls pendingRide = PendingRideControls.newInstance(ride.getId());
-                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
+                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commitAllowingStateLoss();
                 }
             }
             else if(status.equals("CANCELLED") || status.equals("PANICKED")) {
@@ -469,14 +474,14 @@
                     actionCard.setVisibility(View.VISIBLE);
                     actionFrame.setVisibility(View.VISIBLE);
                     CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken, false, true);
-                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
+                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commitAllowingStateLoss();
                 }
             } else if (status.equals("FINISHED") || status.equals("INTERRUPTED")) {
                 if(accessToken == null) {
                     actionCard.setVisibility(View.VISIBLE);
                     actionFrame.setVisibility(View.VISIBLE);
                     CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken, true, true);
-                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
+                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commitAllowingStateLoss();
                 }
             }
             else if(status.equals("ACCEPTED")) {
@@ -484,8 +489,12 @@
                     actionCard.setVisibility(View.VISIBLE);
                     actionFrame.setVisibility(View.VISIBLE);
                     CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken, false, false);
-                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
+                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commitAllowingStateLoss();
                 }
+            }
+            else {
+                actionCard.setVisibility(View.GONE);
+                actionFrame.setVisibility(View.GONE);
             }
         }
         private void setUpControlesAdmin(String status , RideDTO ride){
@@ -536,7 +545,11 @@
                 actionCard.setVisibility(View.VISIBLE);
                 actionFrame.setVisibility(View.VISIBLE);
                 ResolvePanicFragment resolvePanicFragment = ResolvePanicFragment.newInstance(ride.getId());
-                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel, resolvePanicFragment).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel, resolvePanicFragment).commitAllowingStateLoss();
+            }
+            else {
+                actionCard.setVisibility(View.GONE);
+                actionFrame.setVisibility(View.GONE);
             }
         }
         private void setUpControlesDriver(String status , RideDTO ride)
@@ -586,12 +599,15 @@
                 actionCard.setVisibility(View.VISIBLE);
                 actionFrame.setVisibility(View.VISIBLE);
                 AceptedRide aceptedRide = AceptedRide.newInstance(ride.getId());
-                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , aceptedRide).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , aceptedRide).commitAllowingStateLoss();
             }else if(status.equals("ACTIVE")) {
                 actionCard.setVisibility(View.VISIBLE);
                 actionFrame.setVisibility(View.VISIBLE);
                 ActiveRideDriver activeRideControls = ActiveRideDriver.newInstance(ride.getId());
-                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , activeRideControls).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , activeRideControls).commitAllowingStateLoss();
+            } else {
+                actionCard.setVisibility(View.GONE);
+                actionFrame.setVisibility(View.GONE);
             }
         }
         private void setUpContolesAccessToken(String status , RideDTO ride)
@@ -601,7 +617,7 @@
                 actionCard.setVisibility(View.VISIBLE);
                 actionFrame.setVisibility(View.VISIBLE);
                 ActiveRideControls activeRideControls = ActiveRideControls.newInstance(ride.getId(), accessToken);
-                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , activeRideControls).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , activeRideControls).commitAllowingStateLoss();
                 layoutEstimatedDistance.setVisibility(View.VISIBLE);
                 layoutEstimatedTime.setVisibility(View.VISIBLE);
                 txtEstimatedDistance.setVisibility(View.VISIBLE);
@@ -651,8 +667,12 @@
                     actionCard.setVisibility(View.VISIBLE);
                     actionFrame.setVisibility(View.VISIBLE);
                     CancelledRideControls pendingRide = CancelledRideControls.newInstance(ride, accessToken);
-                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commit();
+                    getChildFragmentManager().beginTransaction().replace(R.id.actions_panel , pendingRide).commitAllowingStateLoss();
                 }
+            else {
+                actionCard.setVisibility(View.GONE);
+                actionFrame.setVisibility(View.GONE);
+            }
         }
         private void updateMapWithStops(List<RouteItemDTO> stops) {
             if (stops != null && !stops.isEmpty()) {
@@ -831,6 +851,19 @@
                     return false; // Allow ScrollView to handle the event normally
                 }
             });
+        }
+        @Override
+        public void onDetach() {
+            Log.d("RideDetailsFragment", "onDetach called, unsubscribing from WebSocket");
+            if (callback != null && DriverID != null) {
+                WebSocketManager.unsubscribe("/topic/driver-locations/" + DriverID, callback);
+                callback = null;
+            }
+            if (sheredLocationViewModel != null) {
+                sheredLocationViewModel.clearStops();
+            }
+            routeDrawer.clearRoutes();
+            super.onDetach();
         }
 
         private void triggerRefresh() {

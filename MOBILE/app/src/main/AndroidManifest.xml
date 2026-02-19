@@ -62,11 +62,22 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="localhost"
+                    android:host="91.99.127.12"
                     android:pathPrefix="/activation"
-                    android:port="4200"
+                    android:port="8080"
                     android:scheme="http" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http"
+                    android:host="localhost"
+                    android:port="4200"
+                    android:pathPrefix="/activation" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.DriverActivationActivity"
@@ -85,9 +96,17 @@
                     android:port="4200"
                     android:pathPrefix="/driver-activation"
                     tools:ignore="AppLinkUrlError" />
-
             </intent-filter>
-
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="91.99.127.12"
+                    android:port="8080"
+                    android:pathPrefix="/driver-activation"
+                    tools:ignore="AppLinkUrlError" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -105,8 +124,16 @@
                     android:pathPrefix="/reset-password"
                     android:port="4200"
                     android:scheme="http" />
+                </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="91.99.127.12"
+                    android:port="8080"
+                    android:pathPrefix="/reset-password" />
             </intent-filter>
-
         </activity>
         <activity android:name=".activities.RideHandlerActivity"
             android:exported="true"
@@ -121,6 +148,15 @@
                     android:host="localhost"
                     android:port="4200"
                     android:pathPrefix="/rides" />
+            </intent-filter>
+            <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http"
+                android:host="91.99.127.12"
+                android:port="8080"
+                android:pathPrefix="/rides" />
             </intent-filter>
         </activity>
 

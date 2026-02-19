@@ -59,35 +59,49 @@ public class ActiveRideDriver extends Fragment {
         viewModel.getEndRideResult().observe(getViewLifecycleOwner(), costTimeDTO -> {
             if (costTimeDTO != null) {
                 showSummaryDialog(costTimeDTO);
+            } else {
+                Toast.makeText(getContext(), "Error while finishing ride", Toast.LENGTH_SHORT).show();
             }
         });
 
         viewModel.getFinishSuccess().observe(getViewLifecycleOwner(), success -> {
-            if (Boolean.TRUE.equals(success)) {
+            if (success == null) {
+                return;
+            }
+            if (success) {
                 Toast.makeText(getContext(), "Ride Finished Successfully", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getContext(), "Error while finishing a ride", Toast.LENGTH_SHORT).show();
             }
         });
         viewModel.getPanicSuccess().observe(getViewLifecycleOwner(), success -> {;
-            if (Boolean.TRUE.equals(success)) {
+            if (success == null) {
+                return;
+            }
+            if (success) {
                 Toast.makeText(getContext(), "Panic Triggered Successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Error while panicing", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void showConfirmEndDialog() {
-        View v = getLayoutInflater().inflate(R.layout.are_you_sure, null);
-        AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(v).create();
+            View v = getLayoutInflater().inflate(R.layout.are_you_sure, null);
+            AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(v).create();
 
-        v.findViewById(R.id.btn_yes_end).setOnClickListener(view -> {
-            viewModel.endRide(rideId);
-            dialog.dismiss();
-        });
-        TextView tvMessage = v.findViewById(R.id.areYouSureText);
-        tvMessage.setText("Are you sure you want to end the ride?");
-        TextView tvTitle = v.findViewById(R.id.areYouSureTitle);
-        tvTitle.setText("End Ride Confirmation");
-        v.findViewById(R.id.btn_no_cancel).setOnClickListener(view -> dialog.dismiss());
-        dialog.show();
+            v.findViewById(R.id.btn_yes_end).setOnClickListener(view -> {
+                viewModel.endRide(rideId);
+                dialog.dismiss();
+            });
+            TextView tvMessage = v.findViewById(R.id.areYouSureText);
+            tvMessage.setText("Are you sure you want to end this ride?");
+            TextView tvTitle = v.findViewById(R.id.areYouSureTitle);
+            tvTitle.setText("End Ride");
+            v.findViewById(R.id.btn_no_cancel).setOnClickListener(view -> dialog.dismiss());
+            dialog.show();
+
     }
 
     private void showSummaryDialog(CostTimeDTO data) {

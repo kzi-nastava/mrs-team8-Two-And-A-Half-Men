@@ -101,7 +101,7 @@ public class ActiveRidesFragment extends Fragment {
             public void onResponse(@NonNull Call<List<Ride>> call,
                                    @NonNull Response<List<Ride>> response) {
                 showLoading(false);
-
+                if(binding == null) return;
                 if (response.isSuccessful() && response.body() != null) {
                     List<Ride> rides = response.body();
                     rideList.clear();
@@ -140,6 +140,7 @@ public class ActiveRidesFragment extends Fragment {
     }
 
     private void updateRideCount(int count) {
+        if(binding == null) return;
         String label = count + " active ride" + (count != 1 ? "s" : "");
         binding.rideCountText.setText(label);
         binding.rideCountText.setVisibility(View.VISIBLE);

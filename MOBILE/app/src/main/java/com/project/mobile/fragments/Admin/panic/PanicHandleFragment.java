@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.project.mobile.FragmentTransition;
 import com.project.mobile.R;
 import com.project.mobile.RideHistoryAdapter;
+import com.project.mobile.core.WebSocketsMenager.MessageCallback;
+import com.project.mobile.core.WebSocketsMenager.WebSocketManager;
 import com.project.mobile.core.retrofitClient.RetrofitClient;
 import com.project.mobile.fragments.RideDetailsFragmentActive;
 import com.project.mobile.models.Ride;
@@ -38,7 +40,7 @@ public class PanicHandleFragment extends Fragment {
 
     private RideHistoryAdapter adapter;
     private List<Ride> rideList;
-
+    private MessageCallback webSocketCallback;
     private final RideService rideService =
             RetrofitClient.retrofit.create(RideService.class);
 
@@ -53,9 +55,23 @@ public class PanicHandleFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         progressBar = view.findViewById(R.id.progressBar);
         emptyStateText = view.findViewById(R.id.emptyStateText);
-
         setupRecyclerView();
         loadPanicRides();
+        webSocketCallback = WebSocketManager.subscribe("/topic/panic" , message -> {
+            getActivity().runOnUiThread(this::loadPanicRides);
+        });
+
+         view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View v) {
+                // No action needed
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                WebSocketManager.unsubscribe("/topic/panic", webSocketCallback);
+            }
+        });
 
         return view;
     }

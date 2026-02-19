@@ -7,6 +7,7 @@ import com.project.backend.models.AppUser;
 import com.project.backend.models.Customer;
 import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
+import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.AppUserRepository;
 import com.project.backend.repositories.RideRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReportService {
 
+    /**
+     * Statuses that represent rides which were actually driven and should
+     * appear in distance / earnings / spending reports.
+     * CANCELLED is excluded because those rides have no endTime or cost data.
+     */
+    private static final List<RideStatus> BILLABLE_STATUSES = List.of(
+            RideStatus.FINISHED,
+            RideStatus.INTERRUPTED,
+            RideStatus.PANICKED
+    );
+
     private final RideRepository rideRepository;
     private final AppUserRepository appUserRepository;
 
-    /**
-     * Generate report for current user (driver or passenger)
-     */
     public RideReportDTO generateUserReport(Long userId, LocalDate startDate, LocalDate endDate) {
         AppUser user = appUserRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -45,13 +54,15 @@ public class ReportService {
             rides = rideRepository.findCompletedRidesByDriverAndDateRange(
                     userId,
                     startDate.atStartOfDay(),
-                    endDate.plusDays(1).atStartOfDay()
+                    endDate.plusDays(1).atStartOfDay(),
+                    BILLABLE_STATUSES
             );
         } else if (user instanceof Customer) {
             rides = rideRepository.findCompletedRidesByPassengerAndDateRange(
                     userId,
                     startDate.atStartOfDay(),
-                    endDate.plusDays(1).atStartOfDay()
+                    endDate.plusDays(1).atStartOfDay(),
+                    BILLABLE_STATUSES
             );
         } else {
             throw new BadRequestException("Invalid user type");
@@ -60,11 +71,7 @@ public class ReportService {
         return generateReportFromRides(rides, startDate, endDate, user instanceof Driver);
     }
 
-    /**
-     * Admin: Generate aggregated report for all drivers or passengers
-     */
     public AggregatedReportDTO generateAggregatedReport(RideReportRequest request) {
-
         validateDateRange(request.getStartDate(), request.getEndDate());
 
         LocalDateTime startDateTime = request.getStartDate().atStartOfDay();
@@ -81,7 +88,6 @@ public class ReportService {
             throw new BadRequestException("Invalid userType. Must be 'DRIVER' or 'PASSENGER'");
         }
 
-        // Generate combined stats
         RideReportDTO combinedStats = generateReportFromRides(
                 allRides, request.getStartDate(), request.getEndDate(),
                 "DRIVER".equalsIgnoreCase(request.getUserType())
@@ -93,9 +99,6 @@ public class ReportService {
                 .build();
     }
 
-    /**
-     * Generate reports for all drivers
-     */
     private List<Ride> generateDriverReports(
             List<AggregatedUserReportDTO> userReports,
             LocalDateTime startDateTime,
@@ -104,23 +107,21 @@ public class ReportService {
 
         List<Ride> allRides = new ArrayList<>();
         List<Long> driverIds = rideRepository.findDriverIdsWithRidesInDateRange(
-                startDateTime, endDateTime
+                startDateTime, endDateTime, BILLABLE_STATUSES
         );
 
         for (Long driverId : driverIds) {
             try {
                 AppUser driver = appUserRepository.findById(driverId).orElse(null);
-
                 if (driver == null) {
                     log.warn("Driver with ID {} not found, skipping", driverId);
                     continue;
                 }
 
                 List<Ride> driverRides = rideRepository.findCompletedRidesByDriverAndDateRange(
-                        driverId, startDateTime, endDateTime
+                        driverId, startDateTime, endDateTime, BILLABLE_STATUSES
                 );
 
-                // Filter out rides with null driver (safety check)
                 driverRides = driverRides.stream()
                         .filter(ride -> ride.getDriver() != null)
                         .collect(Collectors.toList());
@@ -146,9 +147,6 @@ public class ReportService {
         return allRides;
     }
 
-    /**
-     * Generate reports for all passengers
-     */
     private List<Ride> generatePassengerReports(
             List<AggregatedUserReportDTO> userReports,
             LocalDateTime startDateTime,
@@ -157,20 +155,19 @@ public class ReportService {
 
         List<Ride> allRides = new ArrayList<>();
         List<Long> passengerIds = rideRepository.findPassengerIdsWithRidesInDateRange(
-                startDateTime, endDateTime
+                startDateTime, endDateTime, BILLABLE_STATUSES
         );
 
         for (Long passengerId : passengerIds) {
             try {
                 AppUser passenger = appUserRepository.findById(passengerId).orElse(null);
-
                 if (passenger == null) {
                     log.warn("Passenger with ID {} not found, skipping", passengerId);
                     continue;
                 }
 
                 List<Ride> passengerRides = rideRepository.findCompletedRidesByPassengerAndDateRange(
-                        passengerId, startDateTime, endDateTime
+                        passengerId, startDateTime, endDateTime, BILLABLE_STATUSES
                 );
 
                 allRides.addAll(passengerRides);
@@ -194,9 +191,6 @@ public class ReportService {
         return allRides;
     }
 
-    /**
-     * Admin: Generate report for a specific user
-     */
     public RideReportDTO generateAdminUserReport(RideReportRequest request) {
         if (request.getUserId() == null) {
             throw new BadRequestException("User ID is required");
@@ -204,25 +198,19 @@ public class ReportService {
         return generateUserReport(request.getUserId(), request.getStartDate(), request.getEndDate());
     }
 
-    /**
-     * Core method to generate report from list of rides
-     */
     private RideReportDTO generateReportFromRides(
             List<Ride> rides,
             LocalDate startDate,
             LocalDate endDate,
             boolean isDriver) {
 
-        // Filter out rides with null endTime
         rides = rides.stream()
-                .filter(ride -> ride.getEndTime() != null)
+                .filter(ride -> ride.getEndTime() != null && ride.getTotalCost() != null)
                 .collect(Collectors.toList());
 
-        // Group rides by date
         Map<LocalDate, List<Ride>> ridesByDate = rides.stream()
                 .collect(Collectors.groupingBy(ride -> ride.getEndTime().toLocalDate()));
 
-        // Generate daily stats
         List<DailyRideStats> dailyStats = new ArrayList<>();
         LocalDate currentDate = startDate;
 
@@ -234,15 +222,7 @@ public class ReportService {
                     .mapToDouble(ride -> ride.getDistanceKm() != null ? ride.getDistanceKm() : 0.0)
                     .sum();
             double totalAmount = dayRides.stream()
-                    .mapToDouble(ride -> {
-                        if (isDriver) {
-                            // For drivers: money earned (price)
-                            return ride.getPrice() != null ? ride.getPrice() : 0.0;
-                        } else {
-                            // For passengers: money spent (totalCost)
-                            return ride.getTotalCost() != null ? ride.getTotalCost() : 0.0;
-                        }
-                    })
+                    .mapToDouble(ride -> ride.getTotalCost() != null ? ride.getTotalCost() : 0.0)
                     .sum();
 
             dailyStats.add(DailyRideStats.builder()
@@ -255,73 +235,41 @@ public class ReportService {
             currentDate = currentDate.plusDays(1);
         }
 
-        // Calculate cumulative totals
-        long totalRides = dailyStats.stream()
-                .mapToLong(DailyRideStats::getNumberOfRides)
-                .sum();
+        long totalRides = dailyStats.stream().mapToLong(DailyRideStats::getNumberOfRides).sum();
+        double totalDistance = dailyStats.stream().mapToDouble(DailyRideStats::getTotalDistance).sum();
+        double totalAmount = dailyStats.stream().mapToDouble(DailyRideStats::getTotalAmount).sum();
 
-        double totalDistance = dailyStats.stream()
-                .mapToDouble(DailyRideStats::getTotalDistance)
-                .sum();
-
-        double totalAmount = dailyStats.stream()
-                .mapToDouble(DailyRideStats::getTotalAmount)
-                .sum();
-
-        // Calculate number of days in range
         long numberOfDays = ChronoUnit.DAYS.between(startDate, endDate) + 1;
-
-        // Calculate averages (avoid division by zero)
-        double averageRidesPerDay = numberOfDays > 0 ? (double) totalRides / numberOfDays : 0.0;
-        double averageDistancePerDay = numberOfDays > 0 ? totalDistance / numberOfDays : 0.0;
-        double averageAmountPerDay = numberOfDays > 0 ? totalAmount / numberOfDays : 0.0;
-        double averageDistancePerRide = totalRides > 0 ? totalDistance / totalRides : 0.0;
-        double averageAmountPerRide = totalRides > 0 ? totalAmount / totalRides : 0.0;
 
         return RideReportDTO.builder()
                 .dailyStats(dailyStats)
                 .totalRides(totalRides)
                 .totalDistance(totalDistance)
                 .totalAmount(totalAmount)
-                .averageRidesPerDay(averageRidesPerDay)
-                .averageDistancePerDay(averageDistancePerDay)
-                .averageAmountPerDay(averageAmountPerDay)
-                .averageDistancePerRide(averageDistancePerRide)
-                .averageAmountPerRide(averageAmountPerRide)
+                .averageRidesPerDay(numberOfDays > 0 ? (double) totalRides / numberOfDays : 0.0)
+                .averageDistancePerDay(numberOfDays > 0 ? totalDistance / numberOfDays : 0.0)
+                .averageAmountPerDay(numberOfDays > 0 ? totalAmount / numberOfDays : 0.0)
+                .averageDistancePerRide(totalRides > 0 ? totalDistance / totalRides : 0.0)
+                .averageAmountPerRide(totalRides > 0 ? totalAmount / totalRides : 0.0)
                 .build();
     }
 
-    /**
-     * Helper method to safely get user's full name
-     */
     private String getUserName(AppUser user) {
-        if (user == null) {
-            return "Unknown User";
-        }
-
+        if (user == null) return "Unknown User";
         String firstName = user.getFirstName() != null ? user.getFirstName() : "";
         String lastName = user.getLastName() != null ? user.getLastName() : "";
-
         String fullName = (firstName + " " + lastName).trim();
-
         return fullName.isEmpty() ? "Unknown User" : fullName;
     }
 
-    /**
-     * Validate date range
-     */
     private void validateDateRange(LocalDate startDate, LocalDate endDate) {
         if (startDate == null || endDate == null) {
             throw new BadRequestException("Start date and end date are required");
         }
-
         if (startDate.isAfter(endDate)) {
             throw new BadRequestException("Start date must be before or equal to end date");
         }
-
-        // Optional: Limit the range to prevent performance issues
-        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
-        if (daysBetween > 365) {
+        if (ChronoUnit.DAYS.between(startDate, endDate) > 365) {
             throw new BadRequestException("Date range cannot exceed 365 days");
         }
     }

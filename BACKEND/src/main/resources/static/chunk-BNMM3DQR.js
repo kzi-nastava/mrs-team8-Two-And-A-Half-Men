@@ -1,0 +1,1 @@
+import"./chunk-TSRGIXR5.js";var t=[{path:"not-found",loadComponent:()=>import("./chunk-57X7KTO7.js").then(o=>o.NotFoundPageComponent)},{path:"unauthorized",loadComponent:()=>import("./chunk-LAIKXVAA.js").then(o=>o.UnauthenticatedPageComponent)}];export{t as ERROR_ROUTES};

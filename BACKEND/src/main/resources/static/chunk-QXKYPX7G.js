@@ -1,0 +1,1 @@
+import{Fb as e,Xa as t}from"./chunk-GHGVHUHC.js";var o=class s{baseClass=!0;static \u0275fac=function(i){return new(i||s)};static \u0275dir=t({type:s,selectors:[["","appBox",""]],hostVars:2,hostBindings:function(i,a){i&2&&e("app-box",a.baseClass)}})};export{o as a};

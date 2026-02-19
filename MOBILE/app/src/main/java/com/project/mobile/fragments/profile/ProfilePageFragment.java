@@ -597,7 +597,7 @@ public class ProfilePageFragment extends Fragment {
                                 Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                Toast.makeText(requireContext(), "Unknown error", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Driver cant stop working it have active rides", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -623,11 +623,9 @@ public class ProfilePageFragment extends Fragment {
                         else
                         {
                             try {
-                                String errorMsg = response.errorBody() != null
-                                        ? response.errorBody().string()
-                                        : "Unknown error";
+                                String errorMsg = "Driver cant start working";
                                 Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show();
-                            } catch (IOException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 Toast.makeText(requireContext(), "Unknown error", Toast.LENGTH_SHORT).show();
                             }

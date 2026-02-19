@@ -37,14 +37,8 @@ export class NavbarComponent {
 	navbarConfig = computed(
 		() =>
 			({
-				isSvgLogo: true,
-				logoUrl: `  <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-        <path d="M18 16.5L20 14M20 14L22 11.5M20 14L18 11.5M20 14L22 16.5"
-              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <rect x="2" y="6" width="16" height="12" rx="2" stroke="white" stroke-width="2"/>
-        <path d="M2 10H18M6 14H6.01M10 14H10.01"
-              stroke="white" stroke-width="2" stroke-linecap="round"/>
-      </svg>`,
+				isSvgLogo: false,
+				logoUrl: 'assets/taxi.svg',
 				logoText: 'Taxi Taxi',
 				backgroundColor: '#2d7a4f',
 				textColor: '#ffffff',

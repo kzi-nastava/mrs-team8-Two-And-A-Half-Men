@@ -115,5 +115,9 @@
     <color name="notification_read_bg">#3a3a3a</color>
     <color name="notification_icon_bg">#33D4AF37</color>
 
+    <color name="dark_background">#1a1a1a</color>
+    <color name="dark_green">#1a5c3a</color>
+    <color name="gold">#d4af37</color>
+    <color name="hint_text">#6b7280</color>
 
 </resources>

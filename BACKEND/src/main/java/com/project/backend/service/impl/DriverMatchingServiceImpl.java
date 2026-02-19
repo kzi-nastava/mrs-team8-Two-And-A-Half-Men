@@ -159,7 +159,7 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
      * @param drivers map that holds driver's information, to which the ride information will be added
      */
     private void getRideData(Set<Long> driversIds, Map<Long, DriverInformation> drivers) {
-        var allowedStatuses = List.of(RideStatus.ACCEPTED, RideStatus.ACCEPTED, RideStatus.PANICKED);
+        var allowedStatuses = List.of(RideStatus.ACCEPTED, RideStatus.ACTIVE, RideStatus.PANICKED);
         List<Ride> rides = rideRepository.findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(driversIds);
         for (var ride : rides) {
             if (!allowedStatuses.contains(ride.getStatus())) {

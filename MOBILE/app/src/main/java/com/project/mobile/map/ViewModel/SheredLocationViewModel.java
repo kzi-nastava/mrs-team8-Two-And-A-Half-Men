@@ -94,7 +94,7 @@ public class SheredLocationViewModel extends ViewModel {
         }
     }
     public void clearStops() {
-        stops.postValue(new ArrayList<>());
+        stops.setValue(new ArrayList<>());
     }
 
 

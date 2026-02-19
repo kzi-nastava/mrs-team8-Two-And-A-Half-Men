@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity(debug = false)
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
@@ -83,7 +83,11 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/v1/rides/*/rating").permitAll()
                     .requestMatchers("/api/v1/rides/*/notes").permitAll()
                     .requestMatchers("/socket/**").permitAll()
-                    .anyRequest().authenticated();
+                    // 🔒 ALL OTHER API endpoints require auth
+                    .requestMatchers("/api/**").authenticated()
+
+                    // 🌍 EVERYTHING ELSE (Angular frontend)
+                    .anyRequest().permitAll();
         });
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.authenticationProvider(authenticationProvider());

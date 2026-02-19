@@ -12,6 +12,7 @@ import com.project.backend.repositories.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -59,6 +60,15 @@ public class RideMapper {
                                 .address(l.getAddress())
                                 .build()
                 ).toList();
+        List<LocationDTO> sortedLocations = new ArrayList<>();
+        for (String hash : hashes) {
+            for (LocationDTO location : locations) {
+                if (location.getGeoHash().equals(hash)) {
+                    sortedLocations.add(location);
+                    break;
+                }
+            }
+        }
 
         return RideResponseDTO.builder()
                 .id(ride.getId())
@@ -80,7 +90,7 @@ public class RideMapper {
 
                 .additionalServices(additionalServices)
                 .passengers(passengers)
-                .locations(locations)
+                .locations(sortedLocations)
                 .routeId(ride.getRoute().getId())
 
                 .isFavourite(favourites != null && favourites.contains(ride.getRoute()))

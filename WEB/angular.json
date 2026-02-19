@@ -35,6 +35,7 @@
 					},
 					"configurations": {
 						"production": {
+							"allowedCommonJsDependencies": ["leaflet", "leaflet-routing-machine", "sockjs-client", "sweetalert2"],
 							"budgets": [
 								{
 									"type": "initial",

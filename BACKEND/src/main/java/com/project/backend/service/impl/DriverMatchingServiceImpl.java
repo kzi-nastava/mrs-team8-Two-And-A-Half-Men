@@ -10,6 +10,7 @@ import com.project.backend.models.Driver;
 import com.project.backend.models.Ride;
 import com.project.backend.models.Vehicle;
 import com.project.backend.models.enums.DriverStatus;
+import com.project.backend.models.enums.RideStatus;
 import com.project.backend.repositories.DriverRepository;
 import com.project.backend.repositories.RideRepository;
 import com.project.backend.repositories.VehicleRepository;
@@ -158,9 +159,12 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
      * @param drivers map that holds driver's information, to which the ride information will be added
      */
     private void getRideData(Set<Long> driversIds, Map<Long, DriverInformation> drivers) {
-
+        var allowedStatuses = List.of(RideStatus.ACCEPTED, RideStatus.ACTIVE, RideStatus.PANICKED);
         List<Ride> rides = rideRepository.findByDriverIdInAndEndTimeIsNullOrderByCreatedAtAsc(driversIds);
         for (var ride : rides) {
+            if (!allowedStatuses.contains(ride.getStatus())) {
+                continue;
+            }
             var driverInfo = drivers.get(ride.getDriver().getId());
             if (driverInfo == null) {
                 continue;
@@ -265,6 +269,11 @@ public class DriverMatchingServiceImpl implements DriverMatchingService {
         var dbDrivers = driverRepository.findAllByIdIn(driversIds.stream().toList());
         List<DriverStatus> allowedStatuses = List.of(DriverStatus.ACTIVE, DriverStatus.BUSY);
         for (var driver : dbDrivers) {
+            if (driver.getIsBlocked()) {
+                drivers.remove(driver.getId());
+                driversIds.remove(driver.getId());
+                continue;
+            }
             System.out.println("Checking driver " + driver.getId() + " with status " + driver.getDriverStatus());
             var driverInfo = drivers.get(driver.getId());
             driverInfo.setDriver(driver);

@@ -6,6 +6,7 @@ import com.project.mobile.DTO.Ride.NoteRequestDTO;
 import com.project.mobile.DTO.Ride.NoteResponseDTO;
 import com.project.mobile.DTO.Ride.RatingRequestDTO;
 import com.project.mobile.DTO.Ride.RatingResponseDTO;
+import com.project.mobile.DTO.Ride.RideBookingResponse;
 import com.project.mobile.DTO.Ride.RideDTO;
 import com.project.mobile.models.PagedResponse;
 import com.project.mobile.models.Ride;
@@ -27,6 +28,9 @@ import retrofit2.http.Query;
 public interface RideService {
     @POST("rides/estimates")
     Call<CostTimeDTO> estimateRide(@Body RideBookingParametersDTO rideData);
+
+    @POST("rides")
+    Call<RideBookingResponse> bookRide(@Body RideBookingParametersDTO rideData);
 
     @GET("rides/history")
     Call<PagedResponse<Ride>> getRideHistory(

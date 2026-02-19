@@ -94,7 +94,7 @@ public class RideModel extends ViewModel {
     public void loadRideById(Long rideId) {
         isLoading.setValue(true);
         error.setValue(null);
-
+        resetActionStates();
         Call<RideDTO> call = rideService.getRideDetails(rideId);
 
         call.enqueue(new Callback<RideDTO>() {
@@ -437,6 +437,16 @@ public class RideModel extends ViewModel {
                 finishSuccess.setValue(false);
             }
         });
+    }
+    public void resetActionStates() {
+        cancelSuccess.setValue(null);
+        startSuccess.setValue(null);
+        endSuccess.setValue(null);
+        finishSuccess.setValue(null);
+        panicSuccess.setValue(null);
+        resolvePanicSuccess.setValue(null);
+        ratingSuccess.setValue(null);
+        error.setValue(null);
     }
 
 }

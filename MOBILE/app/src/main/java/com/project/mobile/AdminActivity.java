@@ -31,12 +31,14 @@ import com.project.mobile.fragments.Admin.panic.PanicHandleFragment;
 import com.project.mobile.fragments.Admin.rides.ActiveRidesFragment;
 import com.project.mobile.fragments.Admin.settings.VehiclePricingFragment;
 import com.project.mobile.fragments.HistoryFragment;
+import com.project.mobile.fragments.RideDetailsFragmentActive;
 import com.project.mobile.fragments.chat.AdminChatsFragment;
 import com.project.mobile.fragments.profile.ProfilePageFragment;
 import com.project.mobile.fragments.reports.ReportsFragment;
 import com.project.mobile.fragments.users.UsersListFragment;
 import com.project.mobile.helpers.NotificationNavigationHelper;
 import com.project.mobile.managers.NotificationManager;
+import com.project.mobile.managers.PanicManager;
 import com.project.mobile.viewModels.AuthModel;
 
 import java.util.List;
@@ -45,6 +47,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     private ActivityAdminBinding binding;
     private ActionBarDrawerToggle drawerToggle;
     private NotificationManager notificationManager;
+    private PanicManager panicManager;
     private AuthModel authModel;
     private TextView tvNotificationBadge;
     private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1001;
@@ -59,6 +62,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
         // Initialize managers
         notificationManager = NotificationManager.getInstance(this);
+        panicManager = PanicManager.getInstance(this);
         authModel = new ViewModelProvider(this).get(AuthModel.class);
 
         // Subscribe to notifications
@@ -66,6 +70,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
             if (meInfo != null) {
                 runOnUiThread(() -> {
                     notificationManager.subscribeToNotifications(meInfo.getId());
+                    panicManager.subscribeToPanic(meInfo.getId());
                     requestNotificationPermission();
                 });
             }
@@ -108,6 +113,7 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
 
         handleNotificationNavigation();
     }
+
     private void setupBottomNavBarRegistered(){
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             int containerId = binding.fragmentContainerViewTag.getId();
@@ -264,6 +270,22 @@ public class AdminActivity extends AppCompatActivity implements NavigationView.O
     // Add this method:
     private void handleNotificationNavigation() {
         int containerId = binding.fragmentContainerViewTag.getId();
+
+        String openFragment = getIntent().getStringExtra("openFragment");
+        long rideId = getIntent().getLongExtra("rideId", -1);
+        Log.d("AdminActivity", "handleNotificationNavigation: openFragment=" + openFragment + ", rideId=" + rideId);
+        if (openFragment != null) {
+            if (openFragment.equals("PanicHandleFragment") && rideId != -1) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(binding.fragmentContainerViewTag.getId(), RideDetailsFragmentActive.newInstanceWithId(rideId))
+                        .addToBackStack(null)
+                        .commit();
+                getIntent().removeExtra("openFragment");
+                getIntent().removeExtra("rideId");
+                return;
+            }
+        }
 
         boolean handled = NotificationNavigationHelper.handleNavigationIntent(
                 this,

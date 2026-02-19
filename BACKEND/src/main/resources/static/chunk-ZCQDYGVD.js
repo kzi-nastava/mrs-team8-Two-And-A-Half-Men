@@ -1,0 +1,1 @@
+import{a as r}from"./chunk-WZWIJEA2.js";import{Ac as o,K as e,P as i}from"./chunk-GHGVHUHC.js";var n=class t{http=i(o);getVehicleOptions(){return this.http.get(`/api/${r.apiVersion}/vehicles/options`)}static \u0275fac=function(p){return new(p||t)};static \u0275prov=e({token:t,factory:t.\u0275fac,providedIn:"root"})};export{n as a};

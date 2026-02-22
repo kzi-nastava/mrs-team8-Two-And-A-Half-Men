@@ -2,7 +2,7 @@
 
 ## Sprint Details
 
-- Sprint Number: 4
+- Sprint Number: 5
 - Timespan: 21.01.2026 – 28.01.2026
 - Scrum Master: Petar Popović
 - Product Owner: Mihajlo Milojević

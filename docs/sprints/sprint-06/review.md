@@ -3,51 +3,66 @@
 ## Sprint Details
 
 - Sprint Number: 6
-- Timespan: 05.02.2026 – 11.02.2026
-- Scrum Master: Mihajlo Milojević
-- Product Owner: Stefan Ilić
+- Timespan: 29.01.2026 – 04.02.2026
+- Scrum Master: Stefan Ilić
+- Product Owner: Petar Popović
 - Development Team: All members
 
-## Sprint Goal
+## Sprint Goals
 
-- Finish back and front, handle KT2 mobile, be ready for testing
-s
+- Implement missing functionalities and finish project on Web and Backend
+- Start writing tests
+
 ## Planned User Stories / Tasks
 
 | ID | Title | Priority | Estimation (Story Points) | Status | Notes |
 |----|-------|----------|---------------------------|--------|-------|
-| SA.5 | Web app refactor | Low | 15 | Done | - |
-|S1.1-2|Driver registration web page|Medium|3|Done| - |
-|S1.3-4| Connect frontend with backend for user profile | Low | 2 | Done | - |
-|S1.5-2|User ride booking - web page|Medium|8|Done| - |
-|S1.11-1|Selecting favourite route - web page|Medium|2|Done| - |
-|S1.14-1|Starting a ride - backend page|Medium|1|Done| - |
-|S1.14-2|Starting a ride - web page|Medium|1|Done| - |
-|S2.3-1 |  Notes - backend endpoint | Low | 1 | Done | - |
-|S2.3-2 |  Notes - web page | Low | 1 | Done | - |
-| S2.5-3 | Drivers ride history details page - web - visual | Low | 2 | Done | - |
-| S2.5-6 | Connect frontend with backend for drivers ride history | Low | 2 | Done | - |
-|S3.1-1|Time estimate for unregistered user - backend endpoint|Low|1|Done| - |
-| S3.4-1|Reset forgotten password - WebBackend | Low | 5 | Done | - |
-|S3.5-1|Driver ride cancelation - backend endpoint|Medium|2|Done| - |
-|S3.6-1|User ride cancelation - backend endpoint|Medium|2|Done| - |
+| SA.9 | Navbar | High | 2 | Done | - |
+| SA.10 | Web modals | High | 2 | Done | - |
+| SA.11 | Web app flow | High | 5 | Done | - |
+| S1.2-1 | Driver account activation endpoint | Medium | 2 | Done | - |
+| S1.2-2 | Account activation web page | Medium | 2 | Done | - |
+| S1.3-6 | Implement file upload for profile picture | Medium | 3 | Done | - |
+| S1.4-1 | Driver change request handlers web | Medium | 3 | Done | - |
+| S1.10-1 | Scheduled ride notifications endpoint | Medium | 5 | Done | - |
+| S1.15-1 | Report generation endpoint | Medium | 3 | Done | - |
+| S1.15-2 | Report generation web | Medium | 5 | Done | - |
+| S1.16-1 | User blocking backend | Medium | 3 | Done | - |
+| S1.16-2 | User blocking web | Medium | 3 | Done | - |
+| S1.20 | Admin users endpoints | Medium | 5 | Done | - |
+| S2.2-1 | Backend for ride tracking | Medium | 5 | Done | - |
+| S2.2-2 | Ride tracking web | Medium | 3 | Done | - |
+| S2.8-1 | Active rides backend | Medium | 2 | Done | - |
+| S2.8-2 | Active rides page for admin - web | Medium | 2 | Done | - |
+| S2.12 | Map refactor | Medium | 1 | Done | - |
+| S3.8-1 | Admin PANIC handling - web visual | Medium | 1 | Done | - |
+| S3.8-2 | Admin PANIC handling - backend | Medium | 1 | Done | - |
+| S3.9-1 | Ride ending web/backend | Medium | 3 | Done | - |
+| S3.10-2 | User's ride history backend | Medium | 3 | Done | - |
+| S3.10-3 | User's ride history - web | Medium | 5 | Done | - |
+| S3.11-1 | Admin's ride history - web | Medium | 5 | Done | - |
+| S3.11-2 | Admin's ride history - backend | Medium | 3 | Done | - |
+| B3 | Include driver activity when booking a ride | Low | 3 | Done | - |
+| B4 | User profile update out of sync | Low | 1 | Done | - |
+| B5 | Fix ride navigation issues | Low | 1 | Done | - |
+| B6 | Fix issues with end ride | Low | 0.5 | Done | - |
 
 ## Metrics & Progress
 
-- Planned Story Points: 54
-- Completed Story Points: 50
+- Planned Story Points: 82.5
+- Completed Story Points: 82.5
 
 ## Challenges & Observations
 
-- Unexpected complexities with inconsistency in db 
-- Transition to package per feature on front
+- Increased scope required careful task prioritization across the team
+- Some backend and web tasks had interdependencies that required coordination
 
 ## Feedback & Discussion
 
-- Feedback from TA:  ok
+- Feedback from TA: ok
 - Questions / Suggestions: none
 
 ## Next Steps / Next Sprint
 
-- Quickly do the unfinished so that the team can focus on testing, after which only mobile remains
-
+- Planned stories or tasks for next sprint: Mobile implementations, tests, and remaining bug fixes
+- Carry-over tasks: none

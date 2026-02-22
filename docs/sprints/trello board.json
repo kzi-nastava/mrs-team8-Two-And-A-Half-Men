@@ -1,0 +1,3943 @@
+{
+    "name": "Two and a half men",
+    "defaultLists": false,
+    "labels": [
+        {
+            "id": "69344ea730a72451304bc13a",
+            "name": "Task",
+            "color": "blue"
+        },
+        {
+            "id": "697c1e8fec80c79c0225e314",
+            "name": "Web",
+            "color": "black_dark"
+        },
+        {
+            "id": "69344ea730a72451304bc135",
+            "name": "Backend",
+            "color": "green"
+        },
+        {
+            "id": "697c1ea3a54b41238f56ed5c",
+            "name": "Mobile",
+            "color": "yellow_dark"
+        },
+        {
+            "id": "69344ea730a72451304bc139",
+            "name": "User Story",
+            "color": "purple_light"
+        },
+        {
+            "id": "69344ea730a72451304bc138",
+            "name": "Bug",
+            "color": "red"
+        },
+        {
+            "id": "698f9d0870fd827d6330333f",
+            "name": "Tests",
+            "color": "pink_dark"
+        },
+        {
+            "id": "69344ea730a72451304bc136",
+            "name": "Refactor",
+            "color": "yellow_light"
+        },
+        {
+            "id": "699654ae39bc0ac8d25dd4aa",
+            "name": "MRS",
+            "color": "red_light"
+        }
+    ],
+    "customFields": [],
+    "lists": [
+        {
+            "name": "PRODUCT BACKLOG",
+            "cards": [
+                {
+                    "name": "Backlog",
+                    "desc": "A list of the things we think we want to do, maybe not quite ready for work, but high likelihood of being worked on.\n\nThis is the staging area where specs should get fleshed out.\n\nNo limit on the list size, but we should reconsider if it gets long.",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc136",
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc139",
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                }
+            ]
+        },
+        {
+            "name": "SPRINT BACKLOG",
+            "cards": [
+                {
+                    "name": "Sprint Backlog",
+                    "desc": "A list of the things we think we want to do, maybe not quite ready for work, but high likelihood of being worked on.\n\nThis is the staging area where specs should get fleshed out.\n\nNo limit on the list size, but we should reconsider if it gets long.",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc136",
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc139",
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SS1.5-4 Change vehicle type handling",
+                    "desc": "",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.10-1 Scheduled ride notifications endpoint [5]",
+                    "desc": "Implement sending of notifications for scheduled rides, 10 minutes before the ride's scheduled time.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "System sends notifications to all passangers before scheduled ride",
+                                "Notifications include ride time, ride status (accepted, no drivers found…)"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.10-1 Scheduled ride notifications endpoint [5]",
+                    "desc": "Implement sending of notifications for scheduled rides, 10 minutes before the ride's scheduled time.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "System sends notifications to all passangers before scheduled ride",
+                                "Notifications include ride time, ride status (accepted, no drivers found…)"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.21-1 Ride booking additional settings web [8]",
+                    "desc": "Implement forms that allow users to select more settings for better configuration of booking a ride.",
+                    "idLabels": [
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Form for setting a time of the ride is created",
+                                "Form for linking passangers is created",
+                                "Form for vehicle type selection is created",
+                                "Form for additional services is created",
+                                "Data from all these form is used for estimate and booking"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.5-2  Ride cancelation [2] - backend",
+                    "desc": "Implement backend functionality to support **ride cancellation**.\nThe system must allow authorized users (rider or driver) to cancel a ride under valid conditions and ensure the ride state is updated consistently across the system.\nAll business rules, validations, and error handling must be enforced on the backend",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "A ride can be cancelled only if it is not finished.",
+                                "You cannot cancel a ride that is already completed or already cancelled.",
+                                "Only the rider or the driver of the ride can cancel it.",
+                                "Other users are not allowed to cancel someone else’s ride."
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.6 User ride cancelation [3]",
+                    "desc": "As a ride booker\n\nI want to cancel a ride\n\nso that I don’t have to take it and pay for it",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "If in allowed time window user can cancel a ride",
+                                "The ride is removed from drivers future rides"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                }
+            ]
+        },
+        {
+            "name": "TO DO",
+            "cards": [
+                {
+                    "name": "To Do",
+                    "desc": "This is a list of things that are good to pull off to work on, prioritized.\n\nIf there are too few items here, we should swarm against getting tasks ready for work.",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc136",
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc139",
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "<!-- Driver Activation -->",
+                    "desc": "<!-- Driver Activation -->\n    <string name=\"driver_activation_title\">Driver Account Activation</string>\n    <string name=\"driver_activation_subtitle\">Set Your New Password</string>\n    <string name=\"btn_activate_account\">Activate Account</string>\n\n    <!-- Errors -->\n    <string name=\"error_no_token\">Invalid activation link. No token provided.</string>\n    <string name=\"error_password_empty\">Please enter both passwords</string>\n    <string name=\"error_activation_failed\">Activation failed. Please try again.</string>\n    <string name=\"refresh\">Refresh</string>\n    <string name=\"clear_filter\">Clear filter</string>\n    <string name=\"no_active_rides_found\">No active rides found</string>\n    <string name=\"filter_by_driver_name\">Filter by driver name</string>\n    <string name=\"active_rides\">Active Rides</string>\n    <string name=\"panic\">⚠</string>",
+                    "idLabels": [],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "Fix navbar",
+                    "desc": "",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "Generilize common componets",
+                    "desc": "",
+                    "idLabels": [
+                        "69344ea730a72451304bc136",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.1-2 Time estimation for unregistered backend [2]",
+                    "desc": "#S3.1-2 Time estimation for unregistered backend [2]\n#S3.1-2 Time estimation for unregistered backend [2]\nMembers\nLabels\nTask\nDescription\n\nImplement backend support for time estimation for unregistered users.\nThe system should allow users who are not logged in to get an estimated time for a ride based on provided locations.\nAttachments\n0%\n\n    Inputs are required\n\n    Finished rides cannot be cancelled\n\n    Only authorized users can cancel\n\nComments and activity\n\n    petar popovic added this card to SPRINT BACKLOG\n    41 minutes ago",
+                    "idLabels": [],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                }
+            ]
+        },
+        {
+            "name": "DOING",
+            "cards": [
+                {
+                    "name": "Doing",
+                    "desc": "These are the things that folks are working on.\n\nAll our engineers should have at least one item in this state.\n\nIf there are too few things here, they should be pulled off Todo.\n\nWhen doing is done, cards move to Code Review.",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc136",
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc139",
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "<!-- Driver Activation -->",
+                    "desc": "<!-- Driver Activation -->\n    <string name=\"driver_activation_title\">Driver Account Activation</string>\n    <string name=\"driver_activation_subtitle\">Set Your New Password</string>\n    <string name=\"btn_activate_account\">Activate Account</string>\n\n    <!-- Errors -->\n    <string name=\"error_no_token\">Invalid activation link. No token provided.</string>\n    <string name=\"error_password_empty\">Please enter both passwords</string>\n    <string name=\"error_activation_failed\">Activation failed. Please try again.</string>\n    <string name=\"refresh\">Refresh</string>\n    <string name=\"clear_filter\">Clear filter</string>\n    <string name=\"no_active_rides_found\">No active rides found</string>\n    <string name=\"filter_by_driver_name\">Filter by driver name</string>\n    <string name=\"active_rides\">Active Rides</string>\n    <string name=\"panic\">⚠</string>",
+                    "idLabels": [],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.14 Prepare materials for MRS final defence",
+                    "desc": "",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "699654ae39bc0ac8d25dd4aa"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "č",
+                    "desc": "",
+                    "idLabels": [],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.8-3 Admin PANIC handling [1] - mobile #116",
+                    "desc": "",
+                    "idLabels": [],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                }
+            ]
+        },
+        {
+            "name": "CODE REVIEW",
+            "cards": [
+                {
+                    "name": "Code Review",
+                    "desc": "This list is for items in code review. \n\nWhen a task has gotten approval, it moves off to Testing.\n\nIf there are too many cards here, we should break off from other tasks to get code review done.",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc136",
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc139",
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "http://localhost:4200/",
+                    "desc": "",
+                    "idLabels": [],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                }
+            ]
+        },
+        {
+            "name": "DONE",
+            "cards": [
+                {
+                    "name": "Done",
+                    "desc": "We shipped it to production! ",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc136",
+                        "69344ea730a72451304bc138",
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc139",
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.13 Prepare data for project defences [2]",
+                    "desc": "",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135",
+                        "697c1ea3a54b41238f56ed5c",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.11 Selecting favorite route [3]",
+                    "desc": "As a registered user\n\nI want to select a route from a list of favorites routes\n\nso that I can book my ride on often routes easier",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "When booking a ride, a list of favorite rides is displayed",
+                                "Clicking on a favorite route, route info is automatically is filled"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B-1-18 fix: Mobile panic hendeling",
+                    "desc": "fix panic hendeling and pop up notiffications",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.9 Ride time and cost estimates [5]",
+                    "desc": "As a ride booker\n\nI want to see time and cost estimates for a ride I am tring to book\n\nso that I can decide whether that works for me",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "User is able to request estimate without booking a ride",
+                                "Time and cost estimates are clearly displayed to the user",
+                                "User is able to book a ride quickly (CTA button)"
+                            ]
+                        }
+                    ],
+                    "comments": [
+                        "da li su ispunjeni kriterijumi?"
+                    ],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.8 Additional services [8]",
+                    "desc": "As a ride booker\n\nI want to select some criteriea for a ride (vehicle type, allows pets, baby safe...)\n\nso that my ride can accommodate my nee",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "User can select filters from a predefinied criteries",
+                                "Form elements display avalible values",
+                                "Filters are accepted when looking for avalable drivers"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.7 Linking other fellow passangers [8]",
+                    "desc": "As a ride booker\n\nI want to add other people to the ride\n\nso that we can drive together",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "User is able to add email address of a passanger",
+                                "List of added passangers is displayed to the users",
+                                "User is able to remove passanger from the list",
+                                "Uppon confirmation, each passangers recevies an email and/or notification (if email is linked a registered user)"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.6 Ride scheduling [8]",
+                    "desc": "As a registered user\n\nI want to set a time in the future for my ride\n\nso that I will have it ready at a specific time",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Time selection is displayed",
+                                "User is able to select time within allowed window",
+                                "Uppon confirmation ride is scheduled"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.5 User ride booking [21]",
+                    "desc": "As a registered user\n\nI want to select my route\n\nso that I can book a ride",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "A form for adding route information is displayed",
+                                "User is able to set starting point",
+                                "User is able to add multiple destinations",
+                                "Route is displayed uppon confirmation",
+                                "New ride is created"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.9-2 Ride estimate mobile [1]",
+                    "desc": "Call estimate before booking a ride.",
+                    "idLabels": [
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.22 Ride booking filters mobile",
+                    "desc": "Implement UI elements that allow user to link passangers, filter by vehicle type, additional services and schedule a time for the ride.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Form for time scheduling exists",
+                                "Form for vehicle settings (type and additional services)",
+                                "Form for linking passangers"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.11-2 Selecting favourite route mobile [2]",
+                    "desc": "Implment frontend functionality to allow users to fill in route information from a list of favourite routes.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "User's favourite routes are fetched from the server",
+                                "A list is available to the user",
+                                "Selecting a route fills in route information"
+                            ]
+                        },
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/iMmmhli2"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.10 Scheduled ride notifications [3]",
+                    "desc": "As a passanger\n\nI want to get notifications before scheduled ride\n\nso that it can remind me about a ride and it’s status",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "System sends notifications to all passangers before scheduled ride",
+                                "Notifications include ride time, ride status (accepted, no drivers found…)"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#3.10-1 User’s Ride History – Mobile [5]",
+                    "desc": "Implement the Ride History screen in the mobile application. This screen should allow users to view their past rides in a mobile-optimized list.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "User can open the Ride History screen from the app menu or profile",
+                                "Screen loads ride data using the backend Ride History API",
+                                "Only the logged-in user’s rides are displayed",
+                                "Rides are sorted by most recent first by default",
+                                "Each ride shows pickup, destination, date/time, price, and status",
+                                "User can scroll infinitely through ride history",
+                                "Pull-to-refresh reloads the data",
+                                "Loading indicator is shown while data is being fetched",
+                                "Empty state is shown if the user has no rides",
+                                "Errors are shown in a clear, mobile-friendly way"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B-1-17 testfix [1]",
+                    "desc": "Fix bugs with implementation of test",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "698f9d0870fd827d6330333f"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#3.10-2 User's ride history backend[3]",
+                    "desc": "Implement a backend feature that allows users to retrieve their past rides.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Endpoint returns only rides that belong to the authenticated user",
+                                "Only rides with status COMPLETED or CANCELED are included in history",
+                                "Response contains ride id, start time, end time, pickup location, destination, price, and status",
+                                "Results are sorted by start time descending by default",
+                                "Pagination is supported with page and size parameters",
+                                "Unauthorized users cannot access any ride history data",
+                                "If user has no rides, an empty list is returned",
+                                "Performance is acceptable for users with large ride history",
+                                "Unit and integration tests exist for this endpoint"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#3.10-3User’s Ride History – Web [5]",
+                    "desc": "Implement the Ride History page in the web application. This page should display a list of the user’s past rides with essential information.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "User can open the Ride History page from the main navigation",
+                                "Page loads ride data using the backend Ride History API",
+                                "Only the logged-in user’s rides are displayed",
+                                "Rides are sorted by most recent first by default",
+                                "Each ride shows pickup, destination, date/time, price, and status",
+                                "User can scroll through multiple pages of history",
+                                "Loading state is shown while data is being fetched",
+                                "Empty state is shown if the user has no rides",
+                                "Errors are handled with a user-friendly message",
+                                "Layout is responsive on different screen sizes"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#3.7-1 PANIC for passanger and drivers- webvisual [1]",
+                    "desc": "Add a Panic button for both passengers and drivers in the web app. The button is visible only during an active trip and allows the user to instantly report an emergency situation.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Panic button visible only when trip status = ACTIVE",
+                                "Shown for both Passenger and Driver dashboards",
+                                "Confirmation modal before activation",
+                                "On confirm: send panic event to backend",
+                                "Mark trip as EMERGENCY",
+                                "Notify admin/safety team in real time",
+                                "Log panic event for audit"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#3.7-2 PANIC for passanger and drivers- backend [1]",
+                    "desc": "Implement backend support for **PANIC functionality for passengers and drivers** so they can trigger a PANIC event during an active ride",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Passenger can trigger PANIC",
+                                "Driver can trigger PANIC",
+                                "PANIC can be triggered only during active ride",
+                                "PANIC includes user and ride info",
+                                "Multiple PANICs for same ride are prevented"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B-1-18 fix panic DriverActivity [1]",
+                    "desc": "fix issues with drivers locatios",
+                    "idLabels": [
+                        "697c1e8fec80c79c0225e314",
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B.11 panic access token [0.5]",
+                    "desc": "fix issues with panic access token errors",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc138"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.5-3 User ride booking mobile [8]",
+                    "desc": "Create homepage for registered users that allows them to book a ride according to the specification.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/zZKWHcRx"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Mobile page is created",
+                                "Every logged in user has access to the page",
+                                "Map is visible",
+                                "Form for entering route information exists",
+                                "Submitting a form calls backend enpoint"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B15 Fix reports to include all statuses [1/2]",
+                    "desc": "Fix reports service to include rides with other statuses (not just FINISHED) in the caluculation.",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B.8 names mismatch db [0.5]",
+                    "desc": "App user has list of messages.\n\nMessage has sender (but there are user\\_id instead of app\\_user_id).",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B1 Phone number validation [0.5]",
+                    "desc": "### Description:\n\nWhen enterning a phone number when trying to register on web, “Phone number is required“ even tho one is provided.\n\n### Steps To Reproduce:\n\n1. Open registration form\n2. Enter phone number “0641234567”\n3. Move on to the next field\n\n### Enviorment:\n\n- Platform: Web\n- OS: Arch Linux\n- Browser: Google Chrome Version 142.0.7444.175 (Official Build) (64-bit)\n\n### Expected Result:\n\nOne of the following (product decision):\n\n- The phone number is accepted **if local Serbian format is supported**, **or**\n- A validation error is shown indicating **invalid phone number format**\n\nIn both cases, the error message **must not indicate that the field is empty**.\n\n### Actual Result:\n\nError message displayed:\n**“Phone number is required”**\nSee attached screenshot.\n\n### Additional Notes:\n\n**Open question:**\nShould the application support local Serbian phone number format (`06xxxx`), or only international format (`+381...`)?",
+                    "idLabels": [
+                        "69344ea730a72451304bc138"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B14 Driver matching service [1/2]",
+                    "desc": "Fix driver matching to only allow specific ride statuses and non-blocked drivers.",
+                    "idLabels": [],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.10-3 Scheduled ride notifications mobile [5]",
+                    "desc": "Implement recieving of notifications for scheduled rides, 10 minutes before the ride's scheduled time.",
+                    "idLabels": [
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Notifications are recieved and displayed to the user",
+                                "Notifications are visible in the navbar"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.13 Driver homepage mobile [1]",
+                    "desc": "Driver on his homepage can see active and accepted rides as list, and can click any for details.",
+                    "idLabels": [
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Active and accepted rides list is presented",
+                                "Driver can click one for details"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B2 Email validation [0.5]",
+                    "desc": "### Description:\n\nWhen enterning invalid email, when trying to register on web, “Email is required“ error message is displayed even tho one is provided.\n\n### Steps To Reproduce:\n\n1. Open registration form\n2. Fill in first page with correct data\n3. Move on to the next step (Next button)\n4. Enter invalid email “abc”\n5. Move on to the next field\n\n### Enviorment:\n\n- Platform: Web\n- OS: Arch Linux\n- Browser: Google Chrome Version 142.0.7444.175 (Official Build) (64-bit)\n\n### Expected Result:\n\nA validation error is shown indicating **invalid phone number format not** **that the field is empty**.\n\n### Actual Result:\n\nError message displayed:\n**“Email is required”**\nSee attached screenshot.",
+                    "idLabels": [
+                        "69344ea730a72451304bc138"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B3 Include driver activity when booking a ride [3]",
+                    "desc": "",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B4 Creating and setting passangers",
+                    "desc": "Passangers should be created for ride owner and passangers should be linked with a ride",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B4 User profile update out of sync [1]",
+                    "desc": "User profile update should update the user's information in session (AuthService)",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B5 Fix ride navigation issues",
+                    "desc": "When i click on ride card it need to navigate me on page with more datails",
+                    "idLabels": [
+                        "69344ea730a72451304bc138"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B7 Fix issues with Rides scheduled rides with no driver [0.5]",
+                    "desc": "Fix issues with scheduled rides that have no driver and why they are not showing in menu for selecting rides that are scheduled.",
+                    "idLabels": [
+                        "69344ea730a72451304bc138"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.1 Drivers registration [8]",
+                    "desc": "As an admin\n\n‌\n\nI can add new driver into the system\n\nso that they can drive a taxi",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "New driver form is visible",
+                                "Input is validated",
+                                "Errors are displayed clearly",
+                                "Success message is displayed",
+                                "Activation link is sent to the driver"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.1-1 Driver registration backend endpoint [2]",
+                    "desc": "Design and implement REST endpoints that allow admins to create new drivers.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "REST controllors are created",
+                                "DTO classes are created",
+                                "Service is created",
+                                "New driver is saved to the database",
+                                "Activation email is sent to the driver"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.1-2 Driver registration web page [3]",
+                    "desc": "Implement web page for admins that allows them to create new drivers and connect it to the backend.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/q5Gn2tyd"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Web page is created",
+                                "Only logged in admins have access to the page",
+                                "Form with driver's personal info exists on the page",
+                                "Form with driver's vehicle info exists on the page",
+                                "Submitting a form calls backend endpoint"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.1-3 Driver registration mobile page [3]",
+                    "desc": "Implement mobile page for admins that allows them to create new drivers and connect it to the backend.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/q5Gn2tyd"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Mobile page is created",
+                                "Only logged in admins have access to the page",
+                                "Form with driver's personal info exists on the page",
+                                "Form with driver's vehicle info exists on the page",
+                                "Submitting a form calls backend endpoint"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.10-1 Scheduled ride notifications endpoint [5]",
+                    "desc": "Implement sending of notifications for scheduled rides, 10 minutes before the ride's scheduled time.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "System sends notifications to all passangers before scheduled ride"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.10-2 Scheduled ride notifications web [5]",
+                    "desc": "Implement recieving of notifications for scheduled rides, 10 minutes before the ride's scheduled time.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Notifications are recieved and displayed to the user",
+                                "Notifications are visible in the navbar"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.11-1 Selecting favourite route web [2]",
+                    "desc": "Implment frontend functionality to allow users to fill in route information from a list of favourite routes.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/iMmmhli2"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "User's favourite routes are fetched from the server",
+                                "A list is available to the user",
+                                "Selecting a route fills in route information"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.13 Removing favorite route [3]",
+                    "desc": "As a registered user\n\nI want to remove favorite route\n\nso that it doesn’t clutter my space",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Every favorite route has a remove button",
+                                "Remove button removes a route from a list of user’s favorite route",
+                                "User interface is refreshed to display new list"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.12 Adding a favorite route [3]",
+                    "desc": "As a registed user\n\nI want to add previous ride’s route to a list of favorite routes\n\nso that I can book same route easily",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Add to favorites is displayed for every non-favorite route",
+                                "When route is added it’s marked on the interface"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.14 Starting a ride [2]",
+                    "desc": "As a driver\n\nI want to start a ride when every passanger gets in the vehicle\n\nso that I can start driving and making money",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Start ride button is visible to the driver",
+                                "When the ride is started, ride’s status is changed",
+                                "Passengers are unable to book new rides"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.14-1 Starting a ride backend [1]",
+                    "desc": "Implement backend endpoint for driver’s starting a ride.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Controllers are created",
+                                "Services are created",
+                                "Only driver linked to the ride can start it",
+                                "Update the status of the ride and driver"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.14-2 Starting a ride web [1]",
+                    "desc": "Add button to driver’s next ride info page to start the ride.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/xCj6xJM7"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Button is displayed to the driver on not yet started ride",
+                                "Clicking a button send a request to the server",
+                                "Ride's status change is visible"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.14-3 Starting a ride mobile [1]",
+                    "desc": "Add button to driver’s next ride info page to start the ride.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/xCj6xJM7"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Button is displayed to the driver on not yet started ride",
+                                "Clicking a button send a request to the server",
+                                "Ride's status change is visible"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.15 Report generation [13]",
+                    "desc": "As a every user\n\nI want to generate reports of my activitiy\n\nso that I can have better insight into my activities",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "User can specify criteria for data collection",
+                                "Graph(s) are created"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.15-1 Report generation endpoint [3]",
+                    "desc": "Implement a enpoint for fetching data neccessery to create a graph.",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Users can specify the criteria for data collections",
+                                "Data is fetched from the database",
+                                "DTO is returned"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.15-2 Report generation mobile [5]",
+                    "desc": "Fetch the data from the backend and display a graph.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Users can specify the criteria for data collections",
+                                "Data is fetched from the backend",
+                                "Graph is displayed"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.15-2 Report generation web [5]",
+                    "desc": "Fetch the data from the backend and display a graph.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Users can specify the criteria for data collections",
+                                "Data is fetched from the backend",
+                                "Graph is displayed"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.16 User blocking [3]",
+                    "desc": "As an admin\n\nI want to block users and drivers\n\nso that the bad behaving people are not on the platform",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Admin is shown a list of users",
+                                "Admin can see details about users",
+                                "Admin can block a user",
+                                "Admin can add a note as reason for banning a user",
+                                "Blocked user is unable to book new rides",
+                                "Note is shown the the registered user when trying to book a ride",
+                                "Blocked driver is set to unavaliable and cannot drive new rides",
+                                "Note is displayed on driver’s profile"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.16-1 User blocking backend [3]",
+                    "desc": "Implement endpoint for blocking/unblocking of specific users. Admins should provide a note as a reason of blocking.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Admin can block a user",
+                                "Admin can add a note as reason for banning a user",
+                                "Admin can unblock a user"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.16-2 User blocking web[3]",
+                    "desc": "Implement button on user details page for blocking/unblocking of specific users. Admins should provide a note as a reason of blocking.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Admin can block a user",
+                                "Admin can add a note as reason for banning a user",
+                                "Admin can unblock a user"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.16-3 User blocking mobile[3]",
+                    "desc": "Implement button on user details page for blocking/unblocking of specific users. Admins should provide a note as a reason of blocking.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Admin can block a user",
+                                "Admin can add a note as reason for banning a user",
+                                "Admin can unblock a user"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.17 Setup projects [1]",
+                    "desc": "Create Spring Boot, Angular and Android projects.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135",
+                        "697c1ea3a54b41238f56ed5c",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.18 Favourite routes backend endpoints [8]",
+                    "desc": "Implement backend endpoints for handling user’s favourite routes.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Controllers are created",
+                                "Services are created",
+                                "User can add route of a previous ride to his favourites",
+                                "User can remove route from favourites",
+                                "User can get all favourite routes"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.19 Refactor ride booking email sending [1]",
+                    "desc": "Refactor ride booking to use Event Listeners to send emails only after the ride is successfully created.",
+                    "idLabels": [
+                        "69344ea730a72451304bc136",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.2 Driver account activation [5]",
+                    "desc": "As a driver\n\nI want to open activation link and set up my password\n\nso that I can login into the system\n\n‌\n\nSpecification: 2.2.3",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Driver has magic link for account activation",
+                                "When link is opened, page for password setting shows",
+                                "Uppon confirmation, new password is set and driver can login, same as in #S3.2"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.2-1 Driver account activation endpoint [2]",
+                    "desc": "Implement endpoint that activates driver’s account and set’s driver’s password.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Endpoint is created in the controller",
+                                "Service method is created",
+                                "Access token is checked",
+                                "Password is hased and saved in the database",
+                                "Driver is able to login"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.2-2 Account activation web page [2]",
+                    "desc": "Create page that allows driver’s to activate their accounts and set their passwords.\n\nDriver’s are authenticated using access token in query parameter.",
+                    "idLabels": [
+                        "697c1e8fec80c79c0225e314",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Web page is created",
+                                "Page reads access token from the query",
+                                "Form for setting a password is displayed",
+                                "Form submittion calls backend endpoint",
+                                "On success notification is displayed and driver is redirected to login",
+                                "Errors are shown to the user"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.2-3 Driver account activation mobile [3]",
+                    "desc": "Implement account activation page for drivers and allow it to open from url.",
+                    "idLabels": [
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.20 Admin users endpoints [5]",
+                    "desc": "Implement pagable, filterable endpoint for getting a list of all users with some flags about users (pending approval, hasPendingRequests, hasPanic, isBlocked…)\n\nImplement endpoint for user’s details by id.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Endpoints are created",
+                                "Endpoint allows paging and filters though query parameters",
+                                "Endpoint gets all neccessery information about individual user"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.21 Ride booking filters web",
+                    "desc": "Implement UI elements that allow user to link passangers, filter by vehicle type, additional services and schedule a time for the ride.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Form for time scheduling exists",
+                                "Form for vehicle settings (type and additional services)",
+                                "Form for linking passangers"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.22 Ride booking backend tests [5]",
+                    "desc": "Add testing to the ride booking functionality.\n\nTest should include:\n\n- Unit tests of RideBookingService\n- Unit tests of repositories used by the RideBookingService\n- Integration tests of RideController’s booking endpoint",
+                    "idLabels": [
+                        "698f9d0870fd827d6330333f",
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Service layer test are implemented",
+                                "Repository layer tests are implemented",
+                                "Controller leyer tests are implemented",
+                                "All tests pass"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.23 Booking from favourite route test [3]",
+                    "desc": "Implement end to end test for customers booking from favourite routes.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "698f9d0870fd827d6330333f"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.24 Driver registration tests [3]",
+                    "desc": "Implement angular unit tests for admins drivers registration.",
+                    "idLabels": [
+                        "698f9d0870fd827d6330333f",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.3 User profile [8]",
+                    "desc": "As a user with account (user, driver, admin)\n\n‌\n\nI want to see my profile information and I want to be able to change some of it\n\nso that I can have accurate information in the system\n\n‌\n\nSpecification: 2.3",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Profile page is displayed",
+                                "All neccessery info is displayed",
+                                "User is able to change info",
+                                "Uppon confirmation, appropriate action is taken to persis the changes"
+                            ]
+                        },
+                        {
+                            "name": "Tasks:",
+                            "items": [
+                                "https://trello.com/c/jNkD0Xzi",
+                                "https://trello.com/c/EWG7s81T",
+                                "https://trello.com/c/jVZvaf5k",
+                                "https://trello.com/c/wsTehvV3/55-s13-4-connect-frontend-with-backend-for-user-profile-2"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.3-1 User profile page - web - visual [2]",
+                    "desc": "Implement web page that shows user’s profile in a way to allow users to edit their information.\n\nRegular users and admin have just information about them, while drivers also have information about their vehicle.\n\nUser’s and admin’s information changes are imidietly visible, while driver’s changes need to be approved by the admin.\n\nDriver’s request for change is visible to the driver and he is able to cancel it. Every new change is added to the same unapproved request.\n\nUser is able to change his password on this page.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Web page is created",
+                                "Form with neccessery fields is visible",
+                                "User is able to change informatio displayed",
+                                "Drivers can see requests pending for approval",
+                                "Change password form is visible"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.3-2 User profile page - mobile - visual [2]",
+                    "desc": "Implement mobile page that shows user’s profile in a way that allows users to edit their information.\n\nRegular users and admin have just information about them, while drivers also have information about their vehicle.\n\nUser’s and admin’s information changes are imidietly visible, while driver’s changes need to be approved by the admin.\n\nDriver’s request for change is visible to the driver and he is able to cancel it. Every new change is added to the same unapproved request.\n\nUser is able to change his password on this page.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Mobile page is created",
+                                "Form with neccessery fields is visible",
+                                "Depending on user's role, parts about vehicles are shown or hidden.",
+                                "User is able to change informatio displayed",
+                                "Drivers can see requests pending for approval",
+                                "Drivers can cancel change requests",
+                                "Change password form is vissible"
+                            ]
+                        }
+                    ],
+                    "comments": [
+                        "bravo, brzi ste",
+                        "bilo bi dobro da ako je task gotov i acceptance criteria ispunjeno, da ih otkacite (cekirate)"
+                    ],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.3-3 Backend user profile endpoints [2]",
+                    "desc": "Design and implement REST API endpoints needed for user’s profile.\n\nEndpoint for getting user’s data should return user’s data, vehicles data (only for drivers), pending change request (only for drivers).",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Endpoint's under current api versions exist",
+                                "Authantication and autorization is implemented on every endpoint",
+                                "Endpoint for getting user's data exists",
+                                "Endpoint for changing user's data exists",
+                                "Endpoint for canceling change request exists",
+                                "Endpoints are added to postman",
+                                "Postman includes detailed documentation (successfull responses for each role, different possible errors, description for endpoint...)",
+                                "Endpoints for changing user's password"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.3-4 Connect frontend with backend for user profile [2]",
+                    "desc": "Update web page to use  implemented backend endpoints created.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/jVZvaf5k",
+                                "https://trello.com/c/jNkD0Xzi",
+                                "https://trello.com/c/EWG7s81T"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Frontend fetches real user's data.",
+                                "Updates are performed and saved to the database",
+                                "Changes are visible to other users"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.3-5 Connect mobile with backend for user profile [2]",
+                    "desc": "Update mobile pages to use  implemented backend endpoints created.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/jVZvaf5k",
+                                "https://trello.com/c/jNkD0Xzi",
+                                "https://trello.com/c/EWG7s81T"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Frontend fetches real user's data.",
+                                "Updates are performed and saved to the database",
+                                "Changes are visible to other users"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.3-6 Implement file upload for profile picture [3]",
+                    "desc": "Implement endpoint for upload a profile picture.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Endpoint is added to the profile controller and service",
+                                "User is able to send a new file and get a src of the newly created file",
+                                "Old picture is removed from the server"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.3-7 User profile - block info [1]",
+                    "desc": "Add blocked status and reason to user’s profile pages.",
+                    "idLabels": [
+                        "697c1e8fec80c79c0225e314",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Blocked users have blocked section",
+                                "Blocked section displayed a message that the user is blocked",
+                                "Blocked section displayes a reason for the block",
+                                "Not blocked users cannot see blocked section"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.3-8 Profile changes notifications [1]",
+                    "desc": "Once admin approves or rejects driver’s change request, notification should be sent to the driver.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Approval notification is sent",
+                                "Rejection notification is sent"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.4 Driver info change request approval [5]",
+                    "desc": "As an admin\n\nI want to see all driver’s info change requests\n\nso that I can verified them and approve them",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "All unresolved drivers information changes are displayed",
+                                "User can see all the information for individual driver",
+                                "User can approve or reject the request",
+                                "Driver’s info is changed or reverted and changes are visible publicly",
+                                "Driver is notified about changes"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.4-1 Driver change request handlers web [3]",
+                    "desc": "Implement web elements that allows admins to view profile information change request details and to approve or reject those changes.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Changes are visible to the admins on the user's details page",
+                                "Admin can reject or approve the request"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.4-2 Driver change request handlers mobile [3]",
+                    "desc": "Implement ui elements that allows admins to view profile information change request details and to approve or reject those changes.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Changes are visible to the admins on the user's details page",
+                                "Admin can reject or approve the request"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.5-1 User ride booking backend [8]",
+                    "desc": "Implement backend endpoints for booking a ride",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Controllers are created",
+                                "Services are created",
+                                "Services include method for fetching the best suited driver",
+                                "New ride is created in the database"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.5-2 User ride booking web [8]",
+                    "desc": "Create homepage for registered users that allows them to book a ride according to the specification.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/zZKWHcRx"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Web page is created",
+                                "Every logged in user has access to the page",
+                                "Map is visible",
+                                "Form for entering route information exists",
+                                "Submitting a form calls backend enpoint"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.5-4 Ride booking enhance event listeners [3]",
+                    "desc": "In RideCreatedEventListener and ScheduledRide listener add sending notifications to driver and looking for a driver before scheduled ride is about to start.",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "When driver is added to the ride, he recives a notifications",
+                                "Before scheduled time, system looks for drivers",
+                                "Appropriate notifications are sent"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S1.9-1 Ride estimate web [1]",
+                    "desc": "Call estimate before booking a ride.",
+                    "idLabels": [
+                        "697c1e8fec80c79c0225e314",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.1 Viewing active taxies as a user [21]",
+                    "desc": "As a user\n\nI want to see all currently active vehicles displayed on the home page, along with their positions on a map\n\nso that I can quickly understand which vehicles are available or occupied without creating an account.\n\n‌\n\nSpecification: 2.1.1",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "When a user opens the application, the home page is displayed by default.",
+                                "All currently active vehicles are shown on the map.",
+                                "Each vehicle is represented by a marker or icon on the map.",
+                                "Each vehicle clearly indicates whether it is: available or occupied",
+                                "The position and status of the vehicles should update automatically or upon page refresh."
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.1-1 Backend for drivers tracking on homepage[10]",
+                    "desc": "Implement backend for homepage where unregistered and registered user can see active drivers on map, and can check if they are busy or free.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "REST endpoint",
+                                "Web socket communication",
+                                "Services that handles business logic",
+                                "Appropriate database"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.1-2 Map with active drivers - web [5]",
+                    "desc": "On homepage unregistered and registered user can see map with locations of active drivers with status of their vehicle.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Map is visible (and usable) on homepage",
+                                "Front is in websocket connection for locations",
+                                "User can chose location on map"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.1-3 Map with active drivers - mobile [5]",
+                    "desc": "On homepage unregistered and registered user can see map with locations of active drivers with status of their vehicle.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Map is visible (and usable) on homepage",
+                                "Mobile app is in appropriate connection for locations",
+                                "User can chose location on map"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.10 Web navbar - KT1 [2]",
+                    "desc": "Implement simple navbar component to route between different pages do display functionalities for KT1.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "User can navigate with navbar through pages made for KT1"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.11 WebSocket implementation[1]",
+                    "desc": "For many features, we need WebSocket (live support, panic button, ride tracking, homepage with live locations of drivers).\n\nFor this task we need to implement it on backend side.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [
+                        "Change the Id of the task since the task with the same id already exists ([https://trello.com/c/kEu88a9e](https://trello.com/c/kEu88a9e \"smartCard-inline\") )."
+                    ],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.12 Map refactor [1]",
+                    "desc": "Map component should just coordinate with services for location pin, car markers, routs…",
+                    "idLabels": [
+                        "69344ea730a72451304bc136"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.2 Ride tracking [13]",
+                    "desc": "As a passanger\n\nI want track my ride\n\nso that I can know how close the driver is, before stating the ride, and to know what route we are taking when in the ride",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "User can open magic link and/or notification to open ride tracking page",
+                                "Page shows a map with taxi’s location",
+                                "Ride status is displayed",
+                                "Estimated time to the destination is visible",
+                                "Location is updated"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.2-1 Backend for ride tracking [5]",
+                    "desc": "Ride tracking need some web socket for all passengers to get live data about ride: estimated time and cost, location of driver.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Endpoints",
+                                "Methods in ride service",
+                                "Linked with services for estimation, location...",
+                                "Appropriate communication type"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.2-2 Ride tracking web [3]",
+                    "desc": "Passengers can see location of driver on map, list of stations, estimated time (and cost), panic button.\n\nDriver can see map, stop button, stations and panic.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Passangers can see everything they need",
+                                "Drivers can see everything they need",
+                                "Appropriate communication type is implemented"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.2-3 Ride tracking mobile [3]",
+                    "desc": "Passengers can see location of driver on map, list of stations, estimated time (and cost), panic button, space for leaving note.\n\nDriver can see map, stop button, stations and panic.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Passangers can see everything they need",
+                                "Drivers can see everything they need",
+                                "Appropriate communication type is implemented"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.3 Leaving a note for bad drivers [3]",
+                    "desc": "As a passanger\n\nI want to add note of bad driver\n\nso that he can be sanctioned",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Add note button is displayed to  the passanger",
+                                "Form for notes is opened",
+                                "Note is added to the driver’s record"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.3-1 Notes backend [1]",
+                    "desc": "Backend must save note for each passenger",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Endpoints",
+                                "Service method"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.3-2 Notes web [1]",
+                    "desc": "Passengers can see textbox for leaving note during ride. They can see previous note they saved, and update it.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Textbox is shown and filled if there is need",
+                                "Passenger can send note"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.3-3 Notes mobile [1]",
+                    "desc": "Passengers can see textbox for leaving note during ride. They can see previous note they saved, and update it.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Textbox is shown and filled if there is need",
+                                "Passenger can send note"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.4 Leaving a review [5]",
+                    "desc": "As a passanger\n\nI want to rate a driver/ride/vehicle\n\nso that I can share my opinion",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Users are shown rate form",
+                                "if in a time windows user’s reviews will be saved",
+                                "Review is added to the driver’s record"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.4-1 Backend for leaving a review [3]",
+                    "desc": "When ride is finished, passengers can leave a review.\n\nUnregistered gets mail with link to page for review.\n\nRegistered gets mail and notification for page with review option.\n\nRegistered can leave review for ride from history if ride ended less then 3 days ago.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "REST endpoints for leaving review",
+                                "Leaving review from rides history",
+                                "Service that do the job about reviews",
+                                "Authorization"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.4-2 Page for leaving a review on web [1]",
+                    "desc": "When ride ends, passengers can go on page for leaving review.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Registered user can leave review from rides history",
+                                "Registered user can go on page for review from notification",
+                                "Passenger can leave ratings for driver and ride",
+                                "Passenger can leave message about ride"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.4-3 Page for leaving a review on mobile [1]",
+                    "desc": "When ride ends, passengers can go on page for leaving review.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Registered user can leave review from rides history",
+                                "Registered user can go on page for review from notification",
+                                "Passenger can leave ratings for driver and ride",
+                                "Passenger can leave message about ride"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.5 Driver’s ride history [13]",
+                    "desc": "As a driver\n\nI want to see my ride history\n\nso that I track my activities",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Users is shown a list of his rides",
+                                "Rides display all necessy information",
+                                "User can sort and filter the list",
+                                "User can open detailed ride’s info"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.5-1 Drivers ride history list page - web - visual [2]",
+                    "desc": "Implement web page that shows driver’s ride history in a way to allow drivers to overview their drives, and to chose one to see details.\n\nDriver can see filter form for history by ride creation date and time.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Driver can see list of rides in history",
+                                "Driver can chose one ride to see details",
+                                "Filter form for rides by date and time of creation"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.5-2 Drivers ride history list page - mobile - visual [2]",
+                    "desc": "Implement mobile page that shows driver’s ride history in a way to allow drivers to overview their drives, and to chose one to see details.\n\n‌\n\nDriver can see filter form for history by ride creation date and time.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Driver can see list of rides in history",
+                                "Driver can chose one ride to see details",
+                                "Filter form for rides by date and time of creation"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.5-3 Drivers ride history details page - web - visual [2]",
+                    "desc": "When driver chose one ride from history, he can see almost all details about it. He can see all passangers that participated ride, all ride’s points, start and finish date and time, as well as is ride cancelled (note about reason), price, did anyone press PANIC button, etc.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Driver can easily notice details for chosen ride",
+                                "All specified informations are displayed",
+                                "Map with route is displayed"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.5-4 Drivers ride history details page - mobile - visual [2]",
+                    "desc": "When driver chose one ride from history, he can see almost all details about it. He can see all passangers that participated ride, all ride’s points, start and finish date and time, as well as is ride cancelled (note about reason), price, did anyone press PANIC button, etc.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Driver can easily notice details for chosen ride",
+                                "All specified informations are displayed",
+                                "Map with route is displayed"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.5-5 Backend drivers ride history [3]",
+                    "desc": "Implement a backend API endpoint that handles rides history feature.\n\nThe endpoint which driver wants history, and which ride is chosen for details.\n\nBackend should return appropriate list of rides from drivers history.\n\nBackend should return appropriate details for chosen ride.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "REST API endpoints for drivers history are implemented",
+                                "Services are implemented"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.10 Finish ride unit tests [3]",
+                    "desc": "We must test with for example junit tests our finish ride functionality.\n\nThere must be tests for controller endpoint, service function, repository query.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "698f9d0870fd827d6330333f",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Controller endpoint rides/finish is tested",
+                                "Service function finishRide is tested",
+                                "Repository query that is used in function is tested"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.5-6 Connect frontend with backend for drivers ride history [2]",
+                    "desc": "Update web and mobile pages to use implemented backend endpoints created.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Frontend sends requests to real server"
+                            ]
+                        },
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/OjNkISvM",
+                                "https://trello.com/c/FycNojjB",
+                                "https://trello.com/c/RXi59FIr",
+                                "https://trello.com/c/r8UWX1nb",
+                                "https://trello.com/c/qjuMpygS"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.6 Live support as user or driver [13]",
+                    "desc": "As a registered user or driver\n\nI want to open live support chat\n\nso that I can get help I need",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Chat page is displayed",
+                                "User’s previous messages are shown",
+                                "User can send and receive messages",
+                                "Admin’s are notified"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.6-1 Backend for live support [7]",
+                    "desc": "Appropriate entities, service, endpoints, repo for live supporting with web socket for server-to-client messages and rest endpoints for client-to-server interaction.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "WebSocket integration",
+                                "Endpoints",
+                                "Service",
+                                "Model layer update"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.6-2 Live support tab - web [3]",
+                    "desc": "Every user can see tab for live support and sending messages.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "User can see chat",
+                                "User can see previous data",
+                                "User can see timestamp and read flag"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.6-3 Live support tab - mobile [3]",
+                    "desc": "Every user can see tab for live support and sending messages.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "User can see chat",
+                                "User can see previous data",
+                                "User can see timestamp and read flag"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.7 Live support as admin [8]",
+                    "desc": "As an admin\n\nI want to see all live chat messages\n\nso that I can respond to new messages",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Users is presented with list of all chats",
+                                "New and unread chats are clearly displayed",
+                                "User can open specific chat",
+                                "User can respond to messages"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.7-1 Live support as admin back [4]",
+                    "desc": "Support for users must be expanded for every passenger so admin can chose whether to save chat or not.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Passengers can use existing endpoint",
+                                "Service logic for feature"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.7-2 Admin support page and chat web [2]",
+                    "desc": "Admin can see list with active chats and last messages in them.\n\nWhen open it, admin see same as passenger.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Page with active chats",
+                                "Reuse of previously made component for chat"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.7-3 Admin support page and chat mobile [2]",
+                    "desc": "Admin can see list with active chats and last messages in them.\n\nWhen open it, admin see same as passenger.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteriea:",
+                            "items": [
+                                "Page with active chats",
+                                "Reuse of previously made component for chat"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.8 Admin rides monitoring [6]",
+                    "desc": "As an admin\n\nI want to be able to see all active rides with their information\n\nso that I can monitor driver’s activities",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Admin can see all active drivers",
+                                "Admin can filter drivers",
+                                "Admin can see details about driver’s rides"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.8-1 Active rides back [2]",
+                    "desc": "Appropriate endpoints, services for feature where admin can get active rides with details.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Endpoints",
+                                "Service logic"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.8-2 Active rides page for admin - web [2]",
+                    "desc": "Admin can see page with list of active rides and can chose one of them to see details. Admin can filter result by drivers first and lastname",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Page with active rides",
+                                "Details page",
+                                "Filter"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.8-3 Active rides page for admin - mobile [2]",
+                    "desc": "Admin can see page with list of active rides and can chose one of them to see details. Admin can filter result by drivers first and lastname",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Page with active rides",
+                                "Details page",
+                                "Filter"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.9 Price changing [3]",
+                    "desc": "As a admin\n\nI want to set prices\n\nso that I can make more money",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Admin can see current price list",
+                                "Admin can set new prices",
+                                "New prices are used for every new ride afterwords"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.9-1 Backend for price changing [1]",
+                    "desc": "Admin can change price for specific vehicle type.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "REST endpoints for price changing",
+                                "Validation for price changing",
+                                "Storing new information about price",
+                                "Services that do the job about pricings"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.9-2 Price changing web page [1]",
+                    "desc": "Admin can view page for changing price with combo box for vehicle types and text box for price.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Admin can go on price changing page",
+                                "Admin can chose vehicle type",
+                                "Admin can see current price",
+                                "Admin can see if something isn't right",
+                                "Admin can confirm update",
+                                "Confirmation about update is displayed"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.9-3 Price changing mobile page [1]",
+                    "desc": "Admin can view page for changing price with combo box for vehicle types and text box for price.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Admin can go on price changing page",
+                                "Admin can chose vehicle type",
+                                "Admin can see current price",
+                                "Admin can see if something isn't right",
+                                "Admin can confirm update",
+                                "Confirmation about update is displayed"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3-1-7  Driver activity [1]",
+                    "desc": "Driver can stop or start working",
+                    "idLabels": [
+                        "697c1ea3a54b41238f56ed5c",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3-T1 testing EndRide backend",
+                    "desc": "Write a test for repo services and controlers backend",
+                    "idLabels": [
+                        "698f9d0870fd827d6330333f"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3-T2 testing registrations [3]",
+                    "desc": "Angular testing for registretion form",
+                    "idLabels": [
+                        "698f9d0870fd827d6330333f"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3-T3 History e2e testing",
+                    "desc": "Write test for History pagination and filtering",
+                    "idLabels": [
+                        "698f9d0870fd827d6330333f"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.1 Time estimate for unregistered user [8]",
+                    "desc": "As an _unregistered user_,\n\n‌\n\nI want to enter a start and end location\n\nso that I can see estimated time\n\n‌\n\nSpecification: 2.1.2",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "User can enter starting point and destination",
+                                "Best route is calculated and shown on a map",
+                                "Time estimate is displayed to the user",
+                                "CTA button is displayed (“Register to book”)"
+                            ]
+                        },
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "https://trello.com/c/UBgnmCw9/142-s31-time-estimate-for-unregistered-user-3-mobile",
+                                "https://trello.com/c/s1d21KU1/124-s31-1-time-estimation-for-unregistered-web-3",
+                                "https://trello.com/c/8Bhpnccm/136-s31-2-time-estimation-for-unregistered-backend-2"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.1-1 Time estimation for unregistered web [3]",
+                    "desc": "This feature will provide a visible time estimation (e.g., “Approx. 5 minutes”) for unregistered users. It helps improve user experience, engagement, and encourages informed decision-making without forcing registration",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Unregistered users can see time estimation on relevant pages or tasks.",
+                                "The time estimation is clearly displayed near the task or action button."
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.1-2 Time estimation for unregistered backend [2]",
+                    "desc": "Implement backend support for **time estimation for unregistered users**.\nThe system should allow users who are not logged in to get an estimated time for a ride based on provided locations.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Inputs are required",
+                                "Finished rides cannot be cancelled",
+                                "Only authorized users can cancel"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.1-3 Time estimate for unregistered user [3] - mobile",
+                    "desc": "Implement mobile app support for **time estimation for unregistered users** so they can see how long a ride would take without logging in.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Unregistered user can request estimate",
+                                "App displays estimated time",
+                                "No login is required",
+                                "Invalid inputs show error",
+                                "App does not create a ride",
+                                "Start and destination inputs are required"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.10 User’s ride history [13]",
+                    "desc": "As a registered user\n\nI want to see my ride history\n\nso that I track my activities",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Users is shown a list of his rides",
+                                "Rides display all necessy information",
+                                "User can sort and filter the list",
+                                "User can open detailed ride’s info"
+                            ]
+                        },
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "https://trello.com/c/DpifZw4C/178-users-ride-history-web-5",
+                                "https://trello.com/c/VVubVEku/177-users-ride-history-backend3"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.11 Admin’s ride history [13]",
+                    "desc": "As an admin\n\nI want to see all ride histories\n\nso that I track user’s activities",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Users is shown a list of all rides",
+                                "Rides display all necessy information",
+                                "User can sort and filter the list",
+                                "User can open detailed ride’s info"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.11-1 Admin’s Ride History – Web [5]",
+                    "desc": "Implement the Admin Ride History page in the web application. This page should allow admins to view and manage ride history across all users",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Admin can open the Ride History page from the admin dashboard",
+                                "Page loads data using the Admin Ride History API",
+                                "Only admins can access this page",
+                                "Admin can sort rides by date",
+                                "Admin can filter by date range",
+                                "Admin can search by user id",
+                                "Pagination is available"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.11-2 Admin’s Ride History – Backend [3]",
+                    "desc": "Implement a backend feature that allows admins to retrieve ride history for all users in the system.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Only users with ADMIN role can access this endpoint",
+                                "Endpoint returns rides from all users in the system",
+                                "Response contains ride id, user id, pickup, destination, start time, end time, price, and status",
+                                "Results are sorted by start time descending by default",
+                                "Pagination is supported with page and size parameters",
+                                "Filtering by date range is supported",
+                                "Filtering by user id or email is supported",
+                                "Proper HTTP status codes are returned",
+                                "\\Unit and integration tests exist for this endpoint"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.11-3 Admin’s Ride History – Mobile[5]",
+                    "desc": "Implement the Admin Ride History screen in the mobile application. This screen allows admins to view ride history across all users in a mobile-friendly format.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Admin can open the Ride History screen from the admin menu",
+                                "Only admins can access this screenAdmin can filter by date range",
+                                "Admin can search by user id"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.14 Connecting websocket mobile",
+                    "desc": "Connecting websockets mobile",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Connections are established",
+                                "U can subscribe to topics"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.2 Login into the system [5]",
+                    "desc": "As a user\n\nI want to login to the system\n\nso that I can use all functionalities",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Login form is displayed",
+                                "User’s input is validated",
+                                "User is redirected to appropriate page",
+                                "Errors are displayed clearly"
+                            ]
+                        },
+                        {
+                            "name": "Tasks:",
+                            "items": [
+                                "https://trello.com/c/ofnc3Rg5",
+                                "https://trello.com/c/j8Rd5VR5",
+                                "https://trello.com/c/62QAQmzp/60-s32-3-backend-login-endpoint-1",
+                                "https://trello.com/c/nZYm7Xq7/61-s32-4-connect-frontend-with-backend-for-login-1"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.2-1 Login page - web - visual [2]",
+                    "desc": "Implement web login page that allows all users (regular users, admins, and drivers) to sign into the system.\n\nAfter successful login, user is redirected to the appropriate section .\n\nUser is able to access the password‑reset flow with a \"Forgot password?\" link.\n\nRemember‑me option is available and extends user session.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Web login page is created",
+                                "Form with necessary fields (email, password) is visible",
+                                "“Sign in” button is visible",
+                                "Error message is shown when credentials are incorrect",
+                                "After successful login, user is redirected based on their role",
+                                "“Forgot password?” link is visible and leads to reset flow",
+                                "“Remember me” checkbox is visible"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.2-2 Login page - mobile - visual [2]",
+                    "desc": "Implement mobile login page that allows users to sign into the system from a mobile device.\n\nThe page shows fields for email and password. The layout is optimized for small screens and supports responsive sizing.\n\nAfter successful login, the user is redirected to home page\n\n“Forgot password?” link leads the user to the password-reset flow. “Remember me” option is available.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "☐ Mobile login page is created",
+                                "☐ Form with necessary fields (email, password) is visible on mobile layout",
+                                "☐ “Sign in” button is clearly visible and reachable without scrolling too much",
+                                "☐ “Forgot password?” link is visible and usable on mobile",
+                                "☐ Validation errors are displayed immediately and stay readable on mobile",
+                                "☐ Incorrect credentials show an error message"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.2-3 Backend login endpoint [1]",
+                    "desc": "Design and implement REST API endpoints needed for user’s login\n\nEndpoint for getting user’s login should return info about success of login.\n\nForgot password option sends mail to user with option to change login info.\n\nRemember me save session and automatically log in user.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "REST API endpoints for user login are implemented",
+                                "Login endpoint accepts email and password",
+                                "Login endpoint returns information about success of login",
+                                "Email includes a link or token allowing the user to change login information"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.2-4 Connect frontend with backend for login [1]",
+                    "desc": "Update web and mobile pages to use  implemented backend endpoints created.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/j8Rd5VR5/57-s32-2-login-page-mobile-visual-2",
+                                "https://trello.com/c/ofnc3Rg5/56-s32-1-login-page-web-visual-2",
+                                "https://trello.com/c/62QAQmzp/60-s32-3-backend-login-endpoint-1"
+                            ]
+                        },
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Web frontend sends requests to real server",
+                                "Mobile app sends requests to real server"
+                            ]
+                        }
+                    ],
+                    "comments": [
+                        "This task is not completed. Mobile app is not connected."
+                    ],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.3 User registration [8]",
+                    "desc": "As a user\n\nI want to create an account\n\nso that I can use all functionalities\n\n‌\n\nSpecification: 2.2.2",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Register form is displayed",
+                                "User’s input is validated",
+                                "User is redirected to appropriate page",
+                                "Errors are displayed clearly",
+                                "Verification email has been sent"
+                            ]
+                        },
+                        {
+                            "name": "Tasks:",
+                            "items": [
+                                "https://trello.com/c/e69esPtG/78-s33-1-registration-page-web-visual2",
+                                "https://trello.com/c/vJs4mt0f/63-s33-2-registration-page-mobile-visual-2",
+                                "https://trello.com/c/pxGUIywI/64-s33-3-backed-registration-endpoint-2",
+                                "https://trello.com/c/yIRwMVTw/65-s33-4-connect-frontend-with-backend-for-registration-1",
+                                "https://trello.com/c/7uLEiHsr/66-s33-5-user-account-activation1"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.3-1 Registration page - web - visual[2]",
+                    "desc": "Implement web registration page that allows new users to create an account.\n\nPage contains fields required for account creation\nForm validates user input and shows errors immediately for invalid or missing fields.\n\nWhen user submits valid data, registration request is sent to the backend.\nSuccessful registration shows confirmation message and redirects user to login page.\n\nIf registration fails (email already used or server error), user receives clear error message.\nPassword rules are visible to the user and checked before submission",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Web login page is created",
+                                "Form with necessary fields is visible",
+                                "“Register” button is visible",
+                                "Error message is shown when credentials are incorrect",
+                                "After successful register, user is redirected based on their role"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.3-2 Registration page - mobile - visual [2]",
+                    "desc": "Implement a **mobile registration page** that allows new users to create an account.\n\nThe page contains all fields required for account creation, including email, password, repeated password, and basic user information. The form validates input in real time, showing errors immediately for invalid or missing fields.\n\nIf registration fails (e.g., email already in use or server error), the user receives a clear and actionable error message. Password rules are visible and checked before submission.\n\nThe page follows the mobile design system, ensuring proper layout, spacing, colors, and typography. All elements are responsive and display correctly across standard mobile screen sizes.\n\nThe “Already have an account?” link navigates the user back to the login page.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Mobile register page is created",
+                                "Form with necessary fields (email, password) is visible on mobile layout",
+                                "“Register” button is clearly visible and reachable without scrolling too much",
+                                "Validation errors are displayed immediately and stay readable on mobile",
+                                "Incorrect credentials show an error message"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.3-3 Backed registration endpoint [2]",
+                    "desc": "Implement a backend API endpoint that handles new user registration.\n\nThe endpoint receives user data from the registration form\n\nIf the input is valid and the email is not already registered, the endpoint creates a new user account in the database and returns a success response. On failure (e.g., email already exists, validation errors, or server issues), it returns a clear error message with appropriate HTTP status codes.\n\nAfter successful registration email for account activation is sent",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "REST API endpoints for user login are implemented",
+                                "Login endpoint accepts email and password",
+                                "Login endpoint returns information about success of login",
+                                "After successful registration email for activation is sent",
+                                "Account is active after activation"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.3-4 Connect frontend with backend for registration [1]",
+                    "desc": "Update web and mobile pages to use  implemented backend endpoints created.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Web frontend sends requests to real server",
+                                "Mobile app sends request to real server"
+                            ]
+                        },
+                        {
+                            "name": "Dependencies:",
+                            "items": [
+                                "https://trello.com/c/pxGUIywI/64-s33-3-backed-registration-endpoint-2",
+                                "https://trello.com/c/vJs4mt0f/63-s33-2-registration-page-mobile-visual-2",
+                                "https://trello.com/c/e69esPtG/78-s33-1-registration-page-web-visual2"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.3-5 User account activation[1]",
+                    "desc": "User can click link that was sent to their mail after registration.\nClicking on that link will ensure that account is activated",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "After clicking on the link account is activated",
+                                "If user click on same link multiple times show them message that account is already activated"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.4 Reset forgoten password [8]",
+                    "desc": "As a user\n\n‌\n\nI want to reset my password\n\nso that I can get access to my account\n\nwhen I forget my credentials\n\n‌\n\nSpecification: 2.2.1 paragrph 2",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Link for resetting password is visible",
+                                "Email with magic link is sent",
+                                "New password form is displayed",
+                                "New password is saved",
+                                "User can login same as in #S3.2"
+                            ]
+                        },
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "https://trello.com/c/YuiJGERR/146-s34-1-reset-forgoten-password-5-webbackend",
+                                "https://trello.com/c/MK6l95EP/147-s34-reset-forgoten-password-3-mobile"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.4-1 Reset forgoten password [5] - WebBackend",
+                    "desc": "Implement web and backend support for **resetting a forgotten password** so users can securely regain access to their account.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "User can request password reset",
+                                "Email input is required",
+                                "Reset link is sent to email",
+                                "Reset token is validated",
+                                "New password is required",
+                                "Password is updated successfully",
+                                "Invalid or expired token shows error"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.4-2 Reset forgoten password [3] - Mobile",
+                    "desc": "Implement mobile app support for **resetting a forgotten password** so users can recover access to their account from the app.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "User can request password reset",
+                                "Email input is required",
+                                "Reset link or code is received",
+                                "New password input is required",
+                                "Password is updated successfully",
+                                "Invalid or expired token shows error"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.5  Ride cancelation [8]",
+                    "desc": "As a registered user\n\nI want to cancel a ride\n\nso that I don’t drive that route",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Before ride has started, driver has button for canceling a ride",
+                                "When canceling a ride, driver has to add reason for cancelation",
+                                "If reason is medical, driver is loggoed out"
+                            ]
+                        },
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "https://trello.com/c/68dQfg37/102-s35-2-ride-cancellation-mobile-visual-3",
+                                "https://trello.com/c/YUf75eEJ/101-s35-1-ride-cancelation-web-visual-3",
+                                "https://trello.com/c/fd1Ma9Ca/103-s35-3-ride-cancellation-backend-2"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.5-1  Ride cancelation web visual [3]",
+                    "desc": "Design and implement a web UI that lets a driver cancel a ride. The screen should confirm the action, collect a cancellation reason, and show feedback after successful cancellation.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Requirements",
+                            "items": [
+                                "Driver can click a “Cancel Ride” button",
+                                "A confirmation modal/dialog appears",
+                                "Driver must select or enter a cancellation reason"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.7 PANIC for passangers and drivers [3]",
+                    "desc": "As a passanger or driver\n\nI want to press a PANIC button in a case of emergency\n\nso that appropriate measures can be taken",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "PANIC button is clearly displayed to the users",
+                                "Admins are notified"
+                            ]
+                        },
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "https://trello.com/c/BwdFQ6Vm/109-37-1-panic-for-passanger-and-drivers-webvisual-1",
+                                "https://trello.com/c/WANSa2ZK/139-37-2-panic-for-passanger-and-drivers-backend-1",
+                                "https://trello.com/c/z3Y0KA90/143-s37-3-panic-for-passangers-and-drivers-1-mobile"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.7-3 PANIC for passangers and drivers [1] - mobile",
+                    "desc": "Implement mobile app support for **PANIC functionality** so passengers and drivers can trigger a PANIC during an active ride.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Passenger can trigger PANIC",
+                                "Driver can trigger PANIC",
+                                "PANIC can be triggered only during active ride",
+                                "PANIC shows confirmation to user",
+                                "PANIC includes ride info",
+                                "Unauthorized users cannot trigger PANIC"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.8 Admin PANIC handling [3]",
+                    "desc": "As an admin\n\nI want to see all PANIC notification\n\nso that I can react to them appropriatly",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "List of all PANIC notifications are displayed",
+                                "User can dissmis them as resolved",
+                                "User can add notes (reportes)"
+                            ]
+                        },
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "https://trello.com/c/YvPWYe1q/144-s38-3-admin-panic-handling-1-mobile",
+                                "https://trello.com/c/UxF9BQgl/137-s38-1-admin-panic-handling-1-webvisual",
+                                "https://trello.com/c/8NZkbRkX/138-s38-2-admin-panic-handling-1-backend"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.8-1 Admin PANIC handling [1] - webvisual",
+                    "desc": "Implement web UI support for **Admin PANIC handling** so an admin can clearly see and react to PANIC events triggered in the system.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Admin can see active PANIC alerts",
+                                "PANIC alerts are visible in real time",
+                                "Each PANIC shows user and ride info",
+                                "Admin can mark PANIC as handled",
+                                "UI updates after PANIC is resolved",
+                                "Unauthorized users cannot access PANIC view"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.8-2 Admin PANIC handling [1] - backend",
+                    "desc": "Implement backend support for **Admin PANIC handling** so the system can expose, update, and manage PANIC events for admin users.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "PANIC events can be retrieved by admin",
+                                "Only admin users can access PANIC data",
+                                "PANIC status can be updated to handled",
+                                "PANIC includes user and ride reference"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.8-3 Admin PANIC handling [1] - mobile",
+                    "desc": "Implement mobile app support for **Admin PANIC handling** so admins can view and manage PANIC events on the mobile app.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Admin can see active PANIC alerts",
+                                "PANIC alerts show user and ride info",
+                                "Admin can mark PANIC as handled",
+                                "PANIC view updates in real time",
+                                "Unauthorized users cannot access PANIC view",
+                                "Handled PANICs are removed or marked on UI"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.9 Ride ending [5]",
+                    "desc": "As a driver\n\nI want to end a drive\n\nso that I can take passangers money and go to the next one",
+                    "idLabels": [
+                        "69344ea730a72451304bc139"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "End ride button is displayed",
+                                "Ride’s status is changed",
+                                "Passangers are notified"
+                            ]
+                        },
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "https://trello.com/c/aDytLZmU/145-s39-3-ride-ending-mobile-2",
+                                "https://trello.com/c/sMRzanii/141-ride-ending-web-backend-s39-1-3"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S3.9-3 Ride Ending – Mobile [2]",
+                    "desc": "Implement mobile app support for **ending a ride** so drivers can finish an active ride and see ride completion on the app",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Driver can end an active ride",
+                                "Only active rides can be ended",
+                                "Ride status changes to COMPLETED",
+                                "Ride end time is saved",
+                                "Ride cannot be ended twice",
+                                "Unauthorized users cannot end rides"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.1 ER database diagram [3]",
+                    "desc": "Using specification and user stories design entity-relationship diagram for realtional database.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.10 Web modals [2]",
+                    "desc": "Add generic popup modals for success, error, confirmation…",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.11 Web app flow [5]",
+                    "desc": "Create all missing pages neccessery for the user flow on the web page.",
+                    "idLabels": [
+                        "697c1e8fec80c79c0225e314",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.12 Create E2E test database [1]",
+                    "desc": "Create scripts to setup database for e2e testing.",
+                    "idLabels": [
+                        "698f9d0870fd827d6330333f",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.2 Figma web design - KT1 [13]",
+                    "desc": "Design WEB UIs for first control point and ~50% of pages for each student’s functionality.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.3 Initial mobile navigation setup [13]",
+                    "desc": "Setup basic drawer and bottom navigation that will be used for the rest of the application.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.4 Backend endpoints - KT1 - [13]",
+                    "desc": "Design endpoints and implement rest controller classes for those endpoints without logic (mock data) neccessery for controll point 1.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptence criteria:",
+                            "items": [
+                                "Controller classes are created",
+                                "Approproiate annotations are added to classes and methods",
+                                "Endpoint urls follow rest best practices",
+                                "Endpoints return some (mock) values"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.5 Web app refactor [15]",
+                    "desc": "Refactor web ui to use more reusable components, setup better folder structure, setup global state services.",
+                    "idLabels": [
+                        "69344ea730a72451304bc136",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B13 add S2 validations where is neccessary [0.5]",
+                    "desc": "For final defense of project, we need to have appropriate way of DTO validations (for requests). Student 2 have few endpoints where validation is missing.",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.6 Backend models [3]",
+                    "desc": "",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.7 Database integration - repositories [1]",
+                    "desc": "",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.8 KT1 materials [5]",
+                    "desc": "",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135",
+                        "697c1ea3a54b41238f56ed5c",
+                        "697c1e8fec80c79c0225e314",
+                        "699654ae39bc0ac8d25dd4aa"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#SA.9 Navbar [2]",
+                    "desc": "Implement dynamic navbar that changes depending on the user role.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "Fix issues with end ride #B6 [0.5]",
+                    "desc": "Fix an issues with ride ending Strings bigger than 256 issue",
+                    "idLabels": [
+                        "69344ea730a72451304bc138"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "Ride ending web/backend #S3.9-1 [3]",
+                    "desc": "Implement web and backend support for **ending a ride** so drivers can finish an active ride and the system updates all related data.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Driver can end an active ride",
+                                "Only active rides can be ended",
+                                "Ride status changes to COMPLETED",
+                                "Ride end time is saved",
+                                "Ride cannot be ended twice",
+                                "Unauthorized users cannot end rides"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "S3.1.6 Driver Activity [1]",
+                    "desc": "As a user i want driver to have ability to change its status from active to inactive",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Driver can see 2 buttons",
+                                "On button press Status changes"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "S3.5-2 Ride Cancellation – mobile - visual [3]",
+                    "desc": "Implement a mobile UI that lets a driver cancel an ongoing ride. The flow should include a confirmation screen, a reason selector, and clear feedback after the ride is canceled.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "697c1ea3a54b41238f56ed5c"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Driver can tap a “Cancel Ride” button on the active ride screen",
+                                "A confirmation bottom-sheet or modal appears",
+                                "Driver must choose a cancellation reason (list + optional “Other”)",
+                                "After confirming"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "S3.5-3 Ride Cancellation – Backend [2]",
+                    "desc": "Implement backend logic that processes a driver’s request to cancel a ride, validates state, stores the reason, and updates all related systems.",
+                    "idLabels": [
+                        "69344ea730a72451304bc13a",
+                        "69344ea730a72451304bc135"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Checklist",
+                            "items": [
+                                "Only the assigned driver can cancel their ride",
+                                "Ride must be in a cancellable state (e.g. ASSIGNED, EN_ROUTE)",
+                                "Cancellation reason is required and stored",
+                                "Ride status updated to CANCELLED_BY_DRIVER",
+                                "Events/notifications triggered:"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.11 Rate ride e2e test [3]",
+                    "desc": "We need to e2e test our rate ride functionality when customer enter finished ride details from history and click rate button, after which he enters rating and clicks submit.",
+                    "idLabels": [
+                        "69344ea730a72451304bc135",
+                        "697c1e8fec80c79c0225e314",
+                        "698f9d0870fd827d6330333f",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Happy path test works",
+                                "POM made, ok for expansion"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#S2.12 Rate ride web unit [3]",
+                    "desc": "We must test our rating component (driver rating, vehicle rating, comment) which is presented as popup. Also, we need to test part where this component communicates with web.",
+                    "idLabels": [
+                        "698f9d0870fd827d6330333f",
+                        "697c1e8fec80c79c0225e314",
+                        "69344ea730a72451304bc13a"
+                    ],
+                    "checklists": [
+                        {
+                            "name": "Acceptance criteria:",
+                            "items": [
+                                "Rating form component tests pass",
+                                "Communication logic tests pass"
+                            ]
+                        }
+                    ],
+                    "comments": [],
+                    "customFieldItems": []
+                },
+                {
+                    "name": "#B12 fix map drivers tracking and location pin [1]",
+                    "desc": "With change of web socket and map config, driver tracking, active drivers and location pins features are not working.",
+                    "idLabels": [
+                        "69344ea730a72451304bc138",
+                        "697c1e8fec80c79c0225e314"
+                    ],
+                    "checklists": [],
+                    "comments": [],
+                    "customFieldItems": []
+                }
+            ]
+        }
+    ]
+}

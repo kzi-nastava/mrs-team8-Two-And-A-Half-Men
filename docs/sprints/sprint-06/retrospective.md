@@ -10,11 +10,19 @@
 
 ## What Went Well
 
+- All planned tasks were completed on time
+- Good coordination between backend and frontend developers
+- Team handled a large scope of tasks efficiently
 
 ## What Could Be Improved
 
+- Better upfront identification of task dependencies to avoid bottlenecks
+- More even distribution of workload across team members
 
 ## Challenges Faced
 
+- High number of interdependent tasks required constant communication and coordination
 
 ## Lessons Learned
+
+- Early identification of task dependencies significantly reduces blockers mid-sprint

@@ -31,5 +31,5 @@
 | 4 | 15.01.2026 – 21.01.2026 | Implement most functionalities for KT2 on front and backend | Get most of functionality implemented for KT2. |
 | 5 | 22.01.2026 – 28.01.2026 | Implement functionalities for KT2 on front and backend and do a web refactor | Finish KT2. |
 | 6 | 29.01.2026 – 04.02.2026 | Implement missing functionalities and finish project on Web and Backend start writing tests | Finish project and start testing. |
-| 7 | 05.02.2026 – 11.02.2026 |  |  |
-| 8 | 12.02.2026 – 18.02.2026 |  |  |
+| 7 | 05.02.2026 – 11.02.2026 | Finish tests, start mobile and fix bugs. | Complete project for testing, backend and web. |
+| 8 | 12.02.2026 – 18.02.2026 | Finish mobile app and preperate for the defences. | Done |
